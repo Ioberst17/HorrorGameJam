@@ -35,9 +35,11 @@ public class PlayerController : MonoBehaviour
     //private bool canWalkOnSlope;
     private bool canJump;
     //private bool isAgainstWall;
+    public int StartingHP;
+    public int StartingMP;
 
-    public int HP = 100;
-    public int MP = 100;
+    public int HP;
+    public int MP;
 
     private Rigidbody2D rb;
     private BoxCollider2D cc;
@@ -46,8 +48,8 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         cc = GetComponent<BoxCollider2D>();
-        HP = 100;
-        MP = 100;
+        HP = StartingHP;
+        MP = StartingMP;
     }
     private void Update()
     {
@@ -164,5 +166,13 @@ public class PlayerController : MonoBehaviour
         facingDirection *= -1;
         transform.Rotate(0.0f, 180.0f, 0.0f);
     }
-
+    //processes if the player should take damage, and if so, how much, then calculates for death. damageType Numbers: 0 is one hit damage, 1 is damage over time.
+    public void takeDamage(int damageNumber, int damageType)
+    {
+        HP -= damageNumber;
+        if(HP <= 0)
+        {
+            Debug.Log("Death");
+        }
+    }
 }
