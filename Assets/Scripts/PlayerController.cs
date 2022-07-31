@@ -19,6 +19,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private Transform groundCheck;
     [SerializeField]
+    private Transform cameraFocus;
+    [SerializeField]
     private LayerMask whatIsGround;
 
     private float xInput;
@@ -54,7 +56,6 @@ public class PlayerController : MonoBehaviour
 
         ApplyMovement();
     }
-
     private void CheckInput()
     {
         xInput = Input.GetAxisRaw("Horizontal");
@@ -98,7 +99,7 @@ public class PlayerController : MonoBehaviour
         }
 
     }
-
+    
     private void Jump()
     {
         if (canJump)
