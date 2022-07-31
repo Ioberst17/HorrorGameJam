@@ -15,7 +15,7 @@ public class CameraBehavior : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        transform.position = new Vector3(player.position.x, player.position.y, -5);
+        transform.position = new Vector3(player.position.x, player.position.y, -10);
         Holdcounter = 0;
     }
 
@@ -24,23 +24,7 @@ public class CameraBehavior : MonoBehaviour
     {
         AdjustCameraDown();
 
-        if (((transform.position.x) - (cameraFocus.position.x)) > Hleeway)
-        {
-            transform.position = new Vector3(transform.position.x - ((transform.position.x - cameraFocus.position.x) - Hleeway), transform.position.y, -5);
-        }
-        if (((transform.position.x) - (cameraFocus.position.x)) < -Hleeway)
-        {
-            transform.position = new Vector3(transform.position.x - ((transform.position.x - cameraFocus.position.x) + Hleeway), transform.position.y, -5);
-        }
-        if (((transform.position.y) - (cameraFocus.position.y)) > Vleeway)
-        {
-            transform.position = new Vector3(transform.position.x, transform.position.y - ((transform.position.y - cameraFocus.position.y) - Vleeway), -5);
-        }
-        if (((transform.position.y) - (cameraFocus.position.y)) < 0)
-        {
-            transform.position = new Vector3(transform.position.x, transform.position.y - ((transform.position.y - cameraFocus.position.y) + Vleeway), -5);
-        }
-        //transform.position = new Vector3(player.position.x, player.position.y, -5);
+        transform.position = new Vector3(cameraFocus.position.x, cameraFocus.position.y, -10);
     }
 
     private void AdjustCameraDown()
@@ -50,20 +34,20 @@ public class CameraBehavior : MonoBehaviour
             Holdcounter += 0.01f;
             if (Holdcounter > 1)
             {
-                if (transform.position.y + cameraFocus.position.y > -10)
+                if (cameraFocus.localPosition.y > -3)
                 {
-                    cameraFocus.position = new Vector3(cameraFocus.position.x, cameraFocus.position.y - 0.01f, 0);
-                    Debug.Log("should go down " + (transform.position.y - cameraFocus.position.y));
+                    cameraFocus.localPosition = new Vector3(cameraFocus.localPosition.x, cameraFocus.localPosition.y - 0.01f, 0);
+                    //Debug.Log("should go down " + cameraFocus.localPosition.y);
                 }
             }
         }
         else
         {
             Holdcounter = 0;
-            if (transform.position.y + cameraFocus.position.y < 0)
+            if (cameraFocus.localPosition.y < 0)
             {
                 cameraFocus.position = new Vector3(cameraFocus.position.x, cameraFocus.position.y + 0.01f, 0);
-                Debug.Log("should go up " + (transform.position.y - cameraFocus.position.y));
+                //Debug.Log("should go up " + cameraFocus.localPosition.y);
             }
         }
     }

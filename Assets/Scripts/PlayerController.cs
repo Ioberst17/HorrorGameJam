@@ -59,12 +59,13 @@ public class PlayerController : MonoBehaviour
     private void CheckInput()
     {
         xInput = Input.GetAxisRaw("Horizontal");
+        Debug.Log(xInput);
 
-        if (xInput == 1 && facingDirection == -1 && isGrounded)
+        if (xInput == 1 && facingDirection == -1)
         {
             Flip();
         }
-        else if (xInput == -1 && facingDirection == 1 && isGrounded)
+        else if (xInput == -1 && facingDirection == 1)
         {
             Flip();
         }
@@ -115,43 +116,40 @@ public class PlayerController : MonoBehaviour
 
     private void ApplyMovement()
     {
-        if (isGrounded && !isJumping) //if not on slope
+        if (isGrounded && !isJumping) //if on ground
         {
             //Debug.Log("This one");
-            float newSpeed = rb.velocity.x;
-            if (newSpeed >= (movementSpeed * xInput) || newSpeed <= -(movementSpeed * xInput))
-            {
-                newVelocity.Set(movementSpeed * xInput, 0.0f);
-                rb.velocity = newVelocity;
-            }
-            else
-            {
-                newVelocity.Set(newSpeed + ((movementSpeed * xInput) / 10), rb.velocity.y);
-                rb.velocity = newVelocity;
-            }
+            //float newSpeed = rb.velocity.x;
+            //if (newSpeed >= (movementSpeed * xInput) || newSpeed <= -(movementSpeed * xInput))
+            //{
+            //    newVelocity.Set(movementSpeed * xInput, 0.0f);
+            //    rb.velocity = newVelocity;
+            //}
+            //else
+            //{
+            //    newVelocity.Set(newSpeed + ((movementSpeed * xInput) / 10), rb.velocity.y);
+            //    rb.velocity = newVelocity;
+            //}
+            newVelocity.Set(movementSpeed * xInput, rb.velocity.y);
+            rb.velocity = newVelocity;
 
         }
-        //else if (isGrounded && !isJumping) //If on slope
-        //{
-        //    oldVelocity.Set(rb.velocity.x, rb.velocity.y);
-
-        //    newVelocity.Set(movementSpeed * slopeNormalPerp.x * -xInput, movementSpeed * slopeNormalPerp.y * -xInput);
-        //    rb.velocity = newVelocity;
-        //}
         else if (!isGrounded) //If in air
         {
 
-            float newSpeed = rb.velocity.x;
-            if (newSpeed >= movementSpeed * xInput || newSpeed <= -(movementSpeed * xInput))
-            {
-                newVelocity.Set(movementSpeed * xInput, rb.velocity.y);
-                rb.velocity = newVelocity;
-            }
-            else
-            {
-                newVelocity.Set(newSpeed + ((movementSpeed * xInput) / 20), rb.velocity.y);
-                rb.velocity = newVelocity;
-            }
+            //float newSpeed = rb.velocity.x;
+            //if (newSpeed >= movementSpeed * xInput || newSpeed <= -(movementSpeed * xInput))
+            //{
+            //    newVelocity.Set(movementSpeed * xInput, rb.velocity.y);
+            //    rb.velocity = newVelocity;
+            //}
+            //else
+            //{
+            //    newVelocity.Set(newSpeed + ((movementSpeed * xInput) / 20), rb.velocity.y);
+            //    rb.velocity = newVelocity;
+            //}
+            newVelocity.Set(movementSpeed * xInput, rb.velocity.y);
+            rb.velocity = newVelocity;
         }
 
     }
