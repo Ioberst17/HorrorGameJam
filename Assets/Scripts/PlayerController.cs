@@ -36,6 +36,9 @@ public class PlayerController : MonoBehaviour
     private bool canJump;
     //private bool isAgainstWall;
 
+    public int HP = 100;
+    public int MP = 100;
+
     private Rigidbody2D rb;
     private BoxCollider2D cc;
 
@@ -43,6 +46,8 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         cc = GetComponent<BoxCollider2D>();
+        HP = 100;
+        MP = 100;
     }
     private void Update()
     {
