@@ -6,12 +6,13 @@ using UnityEngine.UI;
 public class UIController : MonoBehaviour
 {
     [SerializeField]
-    private PlayerController PlayerController;
+    private GameController GameController;
     [SerializeField]
     private Text HPtext;
     [SerializeField]
     private Text MPtext;
-
+    public GameObject pauseMenu;
+    public GameObject debugMenu;
 
     // Start is called before the first frame update
     void Start()
@@ -22,7 +23,15 @@ public class UIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        HPtext.text = PlayerController.HP.ToString();
-        MPtext.text = PlayerController.MP.ToString();
+        HPtext.text = GameController.GetHP().ToString();
+        MPtext.text = GameController.GetMP().ToString();
+        if (GameController.isPaused)
+        {
+            pauseMenu.SetActive(true);
+        }
+        else
+        {
+            pauseMenu.SetActive(false);
+        }
     }
 }

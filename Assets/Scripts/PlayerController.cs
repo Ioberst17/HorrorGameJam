@@ -5,6 +5,8 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
+    private GameController GameController;
+    [SerializeField]
     private float movementSpeed;
     [SerializeField]
     private float numberOfJumps;
@@ -23,8 +25,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private LayerMask whatIsGround;
 
-    private float xInput;
-    private int facingDirection = 1;
+    //private float xInput;
+    public int facingDirection = 1;
     private Vector2 oldVelocity;
     private Vector2 newVelocity;
     private Vector2 newForce;
@@ -53,37 +55,37 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
-        CheckInput();
+        
     }
 
     private void FixedUpdate()
     {
         //SlopeCheck();
-        CheckGround();
+        //CheckGround();
 
-        ApplyMovement();
+        //ApplyMovement();
     }
-    private void CheckInput()
-    {
-        xInput = Input.GetAxisRaw("Horizontal");
-        Debug.Log(xInput);
+    //public void CheckInput()
+    //{
+    //    xInput = Input.GetAxisRaw("Horizontal");
+    //    Debug.Log(xInput);
 
-        if (xInput == 1 && facingDirection == -1)
-        {
-            Flip();
-        }
-        else if (xInput == -1 && facingDirection == 1)
-        {
-            Flip();
-        }
+    //    if (xInput == 1 && facingDirection == -1)
+    //    {
+    //        Flip();
+    //    }
+    //    else if (xInput == -1 && facingDirection == 1)
+    //    {
+    //        Flip();
+    //    }
 
-        if (Input.GetButtonDown("Jump") || Input.GetKeyDown("up") || Input.GetKeyDown(KeyCode.W))
-        {
-            Jump();
-        }
+    //    if (Input.GetButtonDown("Jump") || Input.GetKeyDown("up") || Input.GetKeyDown(KeyCode.W))
+    //    {
+    //        Jump();
+    //    }
 
-    }
-    private void CheckGround()
+    //}
+    public void CheckGround()
     {
         if (rb.velocity.y == 0.0f)
         {
@@ -108,7 +110,7 @@ public class PlayerController : MonoBehaviour
 
     }
     
-    private void Jump()
+    public void Jump()
     {
         if (canJump)
         {
@@ -121,7 +123,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void ApplyMovement()
+    public void ApplyMovement()
     {
         if (isGrounded && !isJumping) //if on ground
         {
@@ -137,7 +139,7 @@ public class PlayerController : MonoBehaviour
             //    newVelocity.Set(newSpeed + ((movementSpeed * xInput) / 10), rb.velocity.y);
             //    rb.velocity = newVelocity;
             //}
-            newVelocity.Set(movementSpeed * xInput, rb.velocity.y);
+            newVelocity.Set(movementSpeed * GameController.xInput, rb.velocity.y);
             rb.velocity = newVelocity;
 
         }
@@ -155,17 +157,23 @@ public class PlayerController : MonoBehaviour
             //    newVelocity.Set(newSpeed + ((movementSpeed * xInput) / 20), rb.velocity.y);
             //    rb.velocity = newVelocity;
             //}
-            newVelocity.Set(movementSpeed * xInput, rb.velocity.y);
+            newVelocity.Set(movementSpeed * GameController.xInput, rb.velocity.y);
             rb.velocity = newVelocity;
         }
 
     }
 
-    private void Flip()
+    public void Attack()
+    {
+
+    }
+
+    public void Flip()
     {
         facingDirection *= -1;
         transform.Rotate(0.0f, 180.0f, 0.0f);
     }
+
     //processes if the player should take damage, and if so, how much, then calculates for death. damageType Numbers: 0 is one hit damage, 1 is damage over time.
     public void takeDamage(int damageNumber, int damageType)
     {
