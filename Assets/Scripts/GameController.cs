@@ -10,7 +10,6 @@ public class GameController : MonoBehaviour
     private MusicController MusicController;
     [SerializeField]
     private UIController UIController;
-    [SerializeField]
     private EnemyController EnemyController;
     [SerializeField]
     private CameraBehavior CameraBehavior;
@@ -20,6 +19,8 @@ public class GameController : MonoBehaviour
     public float xInput;
     public bool isGrounded;
     private bool pauseHelper;
+
+    
 
     // Start is called before the first frame update
     void Start()
@@ -73,6 +74,21 @@ public class GameController : MonoBehaviour
             {
                 PlayerController.Jump();
             }
+            if (Input.GetKeyDown(KeyCode.U))
+            {
+                //Debug.Log("attack called");
+                if(Input.GetKey(KeyCode.W) || Input.GetKey("up"))
+                {
+                    PlayerController.Attack(0);
+                }
+                else if(Input.GetKey(KeyCode.S) || Input.GetKey("down")){
+                    PlayerController.Attack(1);
+                }
+                else
+                {
+                    PlayerController.Attack(2);
+                }
+            }
         }
     }
 
@@ -114,5 +130,11 @@ public class GameController : MonoBehaviour
             //MusicController.FXSource.UnPause();
         }
 
+    }
+    public void passHit(string name , int attackDamage)
+    {
+        EnemyController = GameObject.Find(name).GetComponent<EnemyController>();
+        EnemyController.calculateHit(attackDamage);
+        //Debug.Log(name);
     }
 }

@@ -24,6 +24,10 @@ public class PlayerController : MonoBehaviour
     private Transform cameraFocus;
     [SerializeField]
     private LayerMask whatIsGround;
+    [SerializeField]
+    private LayerMask whatIsEnemy;
+
+
 
     //private float xInput;
     public int facingDirection = 1;
@@ -42,6 +46,24 @@ public class PlayerController : MonoBehaviour
 
     public int HP;
     public int MP;
+    public int AttackDamage;
+
+    private Collider2D[] hitlist;
+
+    [SerializeField]
+    private GameObject attackHori;
+    [SerializeField]
+    private Transform AHPoint1;
+    [SerializeField]
+    private Transform AHPoint2;
+    [SerializeField]
+    private GameObject attackUp;
+    [SerializeField]
+    private GameObject attackDown;
+    [SerializeField]
+    private float activeFrames;
+    public int attackLagValue;
+    private int attackLagTimer;
 
     private Rigidbody2D rb;
     private BoxCollider2D cc;
@@ -52,7 +74,9 @@ public class PlayerController : MonoBehaviour
         cc = GetComponent<BoxCollider2D>();
         HP = StartingHP;
         MP = StartingMP;
-    }
+        attackLagTimer = attackLagValue;
+        AttackDamage = 5;
+}
     private void Update()
     {
         
@@ -60,31 +84,32 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //SlopeCheck();
-        //CheckGround();
+        if(attackLagTimer > 0)
+        {
+            attackLagTimer -= 1;
+        }
+        if (attackHori.activeSelf)
+        {
+            //Debug.Log("Swinging");
 
-        //ApplyMovement();
+            if (Physics2D.OverlapArea(AHPoint1.position, AHPoint2.position, whatIsEnemy))
+            {
+                hitlist = Physics2D.OverlapAreaAll(AHPoint1.position, AHPoint2.position, whatIsEnemy);
+                int i = 0;
+                while(i < hitlist.Length)
+                {
+                    //Debug.Log(hitlist[i]);
+                    if (hitlist[i].GetType() == typeof(UnityEngine.BoxCollider2D))
+                    {
+                        GameController.passHit(hitlist[i].name, AttackDamage);
+                    }
+                    i++;
+                }
+                
+            }
+        }
     }
-    //public void CheckInput()
-    //{
-    //    xInput = Input.GetAxisRaw("Horizontal");
-    //    Debug.Log(xInput);
 
-    //    if (xInput == 1 && facingDirection == -1)
-    //    {
-    //        Flip();
-    //    }
-    //    else if (xInput == -1 && facingDirection == 1)
-    //    {
-    //        Flip();
-    //    }
-
-    //    if (Input.GetButtonDown("Jump") || Input.GetKeyDown("up") || Input.GetKeyDown(KeyCode.W))
-    //    {
-    //        Jump();
-    //    }
-
-    //}
     public void CheckGround()
     {
         if (rb.velocity.y == 0.0f)
@@ -127,18 +152,7 @@ public class PlayerController : MonoBehaviour
     {
         if (isGrounded && !isJumping) //if on ground
         {
-            //Debug.Log("This one");
-            //float newSpeed = rb.velocity.x;
-            //if (newSpeed >= (movementSpeed * xInput) || newSpeed <= -(movementSpeed * xInput))
-            //{
-            //    newVelocity.Set(movementSpeed * xInput, 0.0f);
-            //    rb.velocity = newVelocity;
-            //}
-            //else
-            //{
-            //    newVelocity.Set(newSpeed + ((movementSpeed * xInput) / 10), rb.velocity.y);
-            //    rb.velocity = newVelocity;
-            //}
+            
             newVelocity.Set(movementSpeed * GameController.xInput, rb.velocity.y);
             rb.velocity = newVelocity;
 
@@ -146,26 +160,44 @@ public class PlayerController : MonoBehaviour
         else if (!isGrounded) //If in air
         {
 
-            //float newSpeed = rb.velocity.x;
-            //if (newSpeed >= movementSpeed * xInput || newSpeed <= -(movementSpeed * xInput))
-            //{
-            //    newVelocity.Set(movementSpeed * xInput, rb.velocity.y);
-            //    rb.velocity = newVelocity;
-            //}
-            //else
-            //{
-            //    newVelocity.Set(newSpeed + ((movementSpeed * xInput) / 20), rb.velocity.y);
-            //    rb.velocity = newVelocity;
-            //}
+           
             newVelocity.Set(movementSpeed * GameController.xInput, rb.velocity.y);
             rb.velocity = newVelocity;
         }
 
     }
 
-    public void Attack()
+    //0 is up, 1 is down, 2 is neutral
+    public void Attack(int attackDirection)
     {
+        //Debug.Log("attack called 2");
+        if (attackLagTimer == 0)
+        {
+            StartCoroutine(AttackActiveFrames(attackDirection));
+        }
+    }
 
+    IEnumerator AttackActiveFrames(int attackDirection) // is called by the trigger event for powerups to countdown how long the power lasts
+    {
+        switch (attackDirection)
+        {
+            case 0:
+                attackUp.SetActive(true);
+                yield return new WaitForSeconds(activeFrames); // waits a certain number of seconds
+                attackUp.SetActive(false);
+                break;
+            case 1:
+                attackDown.SetActive(true);
+                yield return new WaitForSeconds(activeFrames); // waits a certain number of seconds
+                attackDown.SetActive(false);
+                break;
+            case 2:
+                Debug.Log("Neutral Swing");
+                attackHori.SetActive(true);
+                yield return new WaitForSeconds(activeFrames); // waits a certain number of seconds
+                attackHori.SetActive(false);
+                break;
+        }
     }
 
     public void Flip()
