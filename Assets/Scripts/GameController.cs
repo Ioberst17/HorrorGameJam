@@ -81,7 +81,7 @@ public class GameController : MonoBehaviour
                 {
                     PlayerController.Attack(0);
                 }
-                else if(Input.GetKey(KeyCode.S) || Input.GetKey("down")){
+                else if((Input.GetKey(KeyCode.S) || Input.GetKey("down")) && !isGrounded){
                     PlayerController.Attack(1);
                 }
                 else

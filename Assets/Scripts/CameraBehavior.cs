@@ -8,6 +8,8 @@ public class CameraBehavior : MonoBehaviour
     private Transform player;
     [SerializeField]
     private Transform cameraFocus;
+    [SerializeField]
+    private GameController GameController;
     private float Holdcounter;
     public float Hleeway;
     public float Vleeway;
@@ -29,7 +31,7 @@ public class CameraBehavior : MonoBehaviour
 
     private void AdjustCameraDown()
     {
-        if (Input.GetKey("down") || Input.GetKey(KeyCode.S))
+        if ((Input.GetKey("down") || Input.GetKey(KeyCode.S)) && GameController.isGrounded)
         {
             Holdcounter += 0.01f;
             if (Holdcounter > 1)

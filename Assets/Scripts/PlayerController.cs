@@ -59,9 +59,18 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private GameObject attackUp;
     [SerializeField]
+    private Transform AUPoint1;
+    [SerializeField]
+    private Transform AUPoint2;
+    [SerializeField]
     private GameObject attackDown;
     [SerializeField]
+    private Transform ADPoint1;
+    [SerializeField]
+    private Transform ADPoint2;
+    [SerializeField]
     private float activeFrames;
+    private bool attackChecker;
     public int attackLagValue;
     private int attackLagTimer;
 
@@ -88,26 +97,7 @@ public class PlayerController : MonoBehaviour
         {
             attackLagTimer -= 1;
         }
-        if (attackHori.activeSelf)
-        {
-            //Debug.Log("Swinging");
-
-            if (Physics2D.OverlapArea(AHPoint1.position, AHPoint2.position, whatIsEnemy))
-            {
-                hitlist = Physics2D.OverlapAreaAll(AHPoint1.position, AHPoint2.position, whatIsEnemy);
-                int i = 0;
-                while(i < hitlist.Length)
-                {
-                    //Debug.Log(hitlist[i]);
-                    if (hitlist[i].GetType() == typeof(UnityEngine.BoxCollider2D))
-                    {
-                        GameController.passHit(hitlist[i].name, AttackDamage);
-                    }
-                    i++;
-                }
-                
-            }
-        }
+        AttackHelper();
     }
 
     public void CheckGround()
@@ -115,6 +105,7 @@ public class PlayerController : MonoBehaviour
         if (rb.velocity.y == 0.0f)
         {
             isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, whatIsGround);
+            
             //Debug.Log("isgrounded " + rb.velocity.y);
         }
         else
@@ -132,6 +123,7 @@ public class PlayerController : MonoBehaviour
         {
             canJump = true;
         }
+        GameController.isGrounded = isGrounded;
 
     }
     
@@ -185,18 +177,93 @@ public class PlayerController : MonoBehaviour
                 attackUp.SetActive(true);
                 yield return new WaitForSeconds(activeFrames); // waits a certain number of seconds
                 attackUp.SetActive(false);
+                attackChecker = false;
                 break;
             case 1:
                 attackDown.SetActive(true);
                 yield return new WaitForSeconds(activeFrames); // waits a certain number of seconds
                 attackDown.SetActive(false);
+                attackChecker = false;
                 break;
             case 2:
                 Debug.Log("Neutral Swing");
                 attackHori.SetActive(true);
                 yield return new WaitForSeconds(activeFrames); // waits a certain number of seconds
                 attackHori.SetActive(false);
+                attackChecker = false;
                 break;
+        }
+    }
+
+    public void AttackHelper()
+    {
+        if (attackHori.activeSelf)
+        {
+            //Debug.Log("Swinging");
+
+            if (Physics2D.OverlapArea(AHPoint1.position, AHPoint2.position, whatIsEnemy) && !attackChecker)
+            {
+                attackChecker = true;
+                hitlist = Physics2D.OverlapAreaAll(AHPoint1.position, AHPoint2.position, whatIsEnemy);
+                int i = 0;
+                while (i < hitlist.Length)
+                {
+                    //Debug.Log(hitlist[i]);
+                    if (hitlist[i].GetType() == typeof(UnityEngine.BoxCollider2D))
+                    {
+                        GameController.passHit(hitlist[i].name, AttackDamage);
+                    }
+                    i++;
+                }
+
+            }
+        }
+        if (attackUp.activeSelf)
+        {
+            //Debug.Log("Swinging");
+
+            if (Physics2D.OverlapArea(AUPoint1.position, AUPoint2.position, whatIsEnemy) && !attackChecker)
+            {
+                attackChecker = true;
+                hitlist = Physics2D.OverlapAreaAll(AUPoint1.position, AUPoint2.position, whatIsEnemy);
+                int i = 0;
+                while (i < hitlist.Length)
+                {
+                    //Debug.Log(hitlist[i]);
+                    if (hitlist[i].GetType() == typeof(UnityEngine.BoxCollider2D))
+                    {
+                        GameController.passHit(hitlist[i].name, AttackDamage);
+                    }
+                    i++;
+                }
+
+            }
+        }
+        if (attackDown.activeSelf)
+        {
+            //Debug.Log("Swinging");
+
+            if (Physics2D.OverlapArea(ADPoint1.position, ADPoint2.position, whatIsEnemy) && !attackChecker)
+            {
+                attackChecker = true;
+                newVelocity.Set(0.0f, 0.0f);
+                rb.velocity = newVelocity;
+                newForce.Set(0.0f, jumpForce * 0.66f);
+                rb.AddForce(newForce, ForceMode2D.Impulse);
+
+                hitlist = Physics2D.OverlapAreaAll(ADPoint1.position, ADPoint2.position, whatIsEnemy);
+                int i = 0;
+                while (i < hitlist.Length)
+                {
+                    //Debug.Log(hitlist[i]);
+                    if (hitlist[i].GetType() == typeof(UnityEngine.BoxCollider2D))
+                    {
+                        GameController.passHit(hitlist[i].name, AttackDamage);
+                    }
+                    i++;
+                }
+
+            }
         }
     }
 
@@ -205,6 +272,8 @@ public class PlayerController : MonoBehaviour
         facingDirection *= -1;
         transform.Rotate(0.0f, 180.0f, 0.0f);
     }
+
+    
 
     //processes if the player should take damage, and if so, how much, then calculates for death. damageType Numbers: 0 is one hit damage, 1 is damage over time.
     public void takeDamage(int damageNumber, int damageType)
