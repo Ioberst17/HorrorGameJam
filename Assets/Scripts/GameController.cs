@@ -36,7 +36,11 @@ public class GameController : MonoBehaviour
     private void FixedUpdate()
     {
         PlayerController.CheckGround();
-        PlayerController.ApplyMovement();
+        if (PlayerController.canDash)
+        {
+            PlayerController.ApplyMovement();
+        }
+        
     }
 
     public int GetHP()
@@ -61,11 +65,11 @@ public class GameController : MonoBehaviour
             xInput = Input.GetAxis("Horizontal");
             //Debug.Log(xInput);
 
-            if (xInput == 1 && PlayerController.facingDirection == -1)
+            if (xInput >= 0.5f && PlayerController.facingDirection == -1)
             {
                 PlayerController.Flip();
             }
-            else if (xInput == -1 && PlayerController.facingDirection == 1)
+            else if (xInput <= -0.5f && PlayerController.facingDirection == 1)
             {
                 PlayerController.Flip();
             }
@@ -88,6 +92,10 @@ public class GameController : MonoBehaviour
                 {
                     PlayerController.Attack(2);
                 }
+            }
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                PlayerController.Dash();
             }
         }
     }

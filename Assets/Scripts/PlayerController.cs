@@ -27,6 +27,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private LayerMask whatIsEnemy;
 
+    public bool canDash;
+    public float dashLength;
+    public float dashSpeed;
+
 
 
     //private float xInput;
@@ -85,6 +89,7 @@ public class PlayerController : MonoBehaviour
         MP = StartingMP;
         attackLagTimer = attackLagValue;
         AttackDamage = 5;
+        canDash = true;
 }
     private void Update()
     {
@@ -126,7 +131,15 @@ public class PlayerController : MonoBehaviour
         GameController.isGrounded = isGrounded;
 
     }
-    
+
+    public void Dash()
+    {
+        if (canDash)
+        {
+            canDash = false;
+            StartCoroutine(DashHandler());
+        }
+    }
     public void Jump()
     {
         if (canJump)
@@ -193,6 +206,26 @@ public class PlayerController : MonoBehaviour
                 attackChecker = false;
                 break;
         }
+    }
+    
+    IEnumerator DashHandler()
+    {
+        rb.gravityScale = 0;
+        if(GameController.xInput == 0)
+        {
+            newVelocity.Set(dashSpeed * facingDirection, 0);
+            rb.velocity = newVelocity;
+        }
+        else
+        {
+            newVelocity.Set(dashSpeed * GameController.xInput, 0);
+            rb.velocity = newVelocity;
+        }
+        yield return new WaitForSeconds(dashLength);
+        rb.gravityScale = 3;
+        newVelocity.Set(0, 0);
+        rb.velocity = newVelocity;
+        canDash = true;
     }
 
     public void AttackHelper()
