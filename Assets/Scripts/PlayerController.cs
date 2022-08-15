@@ -31,6 +31,8 @@ public class PlayerController : MonoBehaviour
     public float dashLength;
     public float dashSpeed;
 
+    public bool inHitstun;
+
 
 
     //private float xInput;
@@ -90,6 +92,7 @@ public class PlayerController : MonoBehaviour
         attackLagTimer = attackLagValue;
         AttackDamage = 5;
         canDash = true;
+        inHitstun = false;
 }
     private void Update()
     {
@@ -155,21 +158,23 @@ public class PlayerController : MonoBehaviour
 
     public void ApplyMovement()
     {
-        if (isGrounded && !isJumping) //if on ground
+        if (!inHitstun)
         {
-            
-            newVelocity.Set(movementSpeed * GameController.xInput, rb.velocity.y);
-            rb.velocity = newVelocity;
+            if (isGrounded && !isJumping) //if on ground
+            {
 
+                newVelocity.Set(movementSpeed * GameController.xInput, rb.velocity.y);
+                rb.velocity = newVelocity;
+
+            }
+            else if (!isGrounded) //If in air
+            {
+
+
+                newVelocity.Set(movementSpeed * GameController.xInput, rb.velocity.y);
+                rb.velocity = newVelocity;
+            }
         }
-        else if (!isGrounded) //If in air
-        {
-
-           
-            newVelocity.Set(movementSpeed * GameController.xInput, rb.velocity.y);
-            rb.velocity = newVelocity;
-        }
-
     }
 
     //0 is up, 1 is down, 2 is neutral
@@ -213,13 +218,21 @@ public class PlayerController : MonoBehaviour
         rb.gravityScale = 0;
         if(GameController.xInput == 0)
         {
-            newVelocity.Set(dashSpeed * facingDirection, 0);
+            newVelocity.Set(movementSpeed * 2 * facingDirection, 0);
             rb.velocity = newVelocity;
         }
         else
         {
-            newVelocity.Set(dashSpeed * GameController.xInput, 0);
-            rb.velocity = newVelocity;
+            if(GameController.xInput > 0)
+            {
+                newVelocity.Set(movementSpeed * 2, 0);
+                rb.velocity = newVelocity;
+            }
+            else
+            {
+                newVelocity.Set(movementSpeed * -2, 0);
+                rb.velocity = newVelocity;
+            }
         }
         yield return new WaitForSeconds(dashLength);
         rb.gravityScale = 3;
@@ -309,12 +322,34 @@ public class PlayerController : MonoBehaviour
     
 
     //processes if the player should take damage, and if so, how much, then calculates for death. damageType Numbers: 0 is one hit damage, 1 is damage over time.
-    public void takeDamage(int damageNumber, int damageType)
+    public void takeDamage(Vector3 enemyPos, int damageNumber, int damageType)
     {
+        StartCoroutine(hitStun());
         HP -= damageNumber;
-        if(HP <= 0)
+        if(enemyPos.x >= transform.position.x)
+        {
+            newVelocity.Set(-5.0f, 0.0f);
+            rb.velocity = newVelocity;
+            newForce.Set(0.0f, jumpForce);
+            rb.AddForce(newForce, ForceMode2D.Impulse);
+        }
+        else
+        {
+            newVelocity.Set(5.0f, 0.0f);
+            rb.velocity = newVelocity;
+            newForce.Set(0.0f, jumpForce);
+            rb.AddForce(newForce, ForceMode2D.Impulse);
+        }
+        if (HP <= 0)
         {
             Debug.Log("Death");
         }
+    }
+
+    IEnumerator hitStun()
+    {
+        inHitstun = true;
+        yield return new WaitForSeconds(1); // waits a certain number of seconds
+        inHitstun = false;
     }
 }
