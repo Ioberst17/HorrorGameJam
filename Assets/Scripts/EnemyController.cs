@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
+    private SpriteRenderer enemySpriteRenderer;
     private Rigidbody2D rb;
     private PlayerController playerController;
     private Transform playerLocation;
@@ -38,7 +39,8 @@ public class EnemyController : MonoBehaviour
         invincibilityCount = 0;
         patrolID = 0;
         HP = 50;
-}
+        enemySpriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+    }
     private void OnTriggerEnter2D(Collider2D collider)
     {
         if (!isDead)
@@ -49,6 +51,7 @@ public class EnemyController : MonoBehaviour
                 == LayerMask.NameToLayer("Player"))
                 {
                     playerController.takeDamage(transform.position, damageValue, 1);
+                    rb.AddForce(new Vector2(5.0f * facingDirection, 0.0f), ForceMode2D.Impulse);
                 }
             }
         }
@@ -88,7 +91,7 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (!isDead)
+        if (!isDead && invincibilityCount==0)
         {
             if (transform.position.x >= patrol1Point.x)
             {
@@ -114,17 +117,18 @@ public class EnemyController : MonoBehaviour
             {
                 Flip();
             }
-            if (invincibilityCount > 0)
-            {
-                invincibilityCount -= 1;
-            }
+            
         }
         else
         {
-            newVelocity.Set(0, 0);
-            rb.velocity = newVelocity;
+            //newVelocity.Set(0, 0);
+            //rb.velocity = newVelocity;
         }
-        
+        if (invincibilityCount > 0)
+        {
+            invincibilityCount -= 1;
+        }
+
     }
     private void patrol()
     {
@@ -165,6 +169,7 @@ public class EnemyController : MonoBehaviour
         {
             if (invincibilityCount == 0)
             {
+                //rb.AddForce(new Vector2(5.0f * facingDirection, 5.0f), ForceMode2D.Impulse);
                 Debug.Log(name + " has been hit for " + attackDamage + "!");
                 invincibilityCount = invincibilitySet;
                 HP -= attackDamage;
@@ -172,6 +177,8 @@ public class EnemyController : MonoBehaviour
                 {
                     Debug.Log(name + " is dead!");
                     isDead = true;
+                    //rb.enabled = false;
+                    enemySpriteRenderer.enabled = false;
                 }
                 else
                 {
