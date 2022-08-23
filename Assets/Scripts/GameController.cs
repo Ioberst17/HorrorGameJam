@@ -36,6 +36,7 @@ public class GameController : MonoBehaviour
     private void FixedUpdate()
     {
         PlayerController.CheckGround();
+        PlayerController.CheckWall();
         if (PlayerController.canDash)
         {
             PlayerController.ApplyMovement();
@@ -52,6 +53,10 @@ public class GameController : MonoBehaviour
     {
         return PlayerController.MP;
     }
+    public int GetSP()
+    {
+        return PlayerController.SP;
+    }
 
     public void CheckInput()
     {
@@ -62,14 +67,41 @@ public class GameController : MonoBehaviour
         }
         if (!isPaused)
         {
-            xInput = Input.GetAxis("Horizontal");
+            xInput = Input.GetAxisRaw("Horizontal");
+            if(xInput>0 && PlayerController.ControlMomentum < 100)
+            {
+                PlayerController.ControlMomentum += 1;
+            }
+            else if (xInput < 0 && PlayerController.ControlMomentum > -100)
+            {
+                PlayerController.ControlMomentum -= 1;
+            }
+            else if(xInput == 0)
+            {
+                if(PlayerController.ControlMomentum > 0)
+                {
+                    PlayerController.ControlMomentum -= 1;
+                }
+                else if (PlayerController.ControlMomentum < 0)
+                {
+                    PlayerController.ControlMomentum += 1;
+                }
+            }
+            if (PlayerController.ControlMomentum > 100)
+            {
+                PlayerController.ControlMomentum -= 1;
+            }
+            else if (PlayerController.ControlMomentum < -100)
+            {
+                PlayerController.ControlMomentum += 1;
+            }
             //Debug.Log(xInput);
 
-            if (xInput >= 0.5f && PlayerController.facingDirection == -1)
+            if (xInput >= 1 && PlayerController.facingDirection == -1)
             {
                 PlayerController.Flip();
             }
-            else if (xInput <= -0.5f && PlayerController.facingDirection == 1)
+            else if (xInput <= -1 && PlayerController.facingDirection == 1)
             {
                 PlayerController.Flip();
             }

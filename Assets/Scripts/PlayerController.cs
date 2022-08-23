@@ -24,6 +24,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private Transform groundCheck;
     [SerializeField]
+    private Transform wallCheck;
+    [SerializeField]
     private Transform cameraFocus;
     [SerializeField]
     private LayerMask whatIsGround;
@@ -48,12 +50,16 @@ public class PlayerController : MonoBehaviour
     private Vector2 newVelocity;
     private Vector2 newForce;
 
+    //used to calculate "control interta"
+    public float ControlMomentum;
+
     private bool isGrounded;
     //private bool isOnSlope;
     private bool isJumping;
     //private bool canWalkOnSlope;
     private bool canJump;
-    //private bool isAgainstWall;
+    public bool isAgainstWall;
+    public bool canWallJump;
     public int StartingHP;
     public int StartingMP;
 
@@ -101,6 +107,7 @@ public class PlayerController : MonoBehaviour
         HP = StartingHP;
         MP = StartingMP;
         SP = 0;
+        ControlMomentum = 0;
         animator = GetComponent<Animator>();
         attackLagTimer = attackLagValue;
         AttackDamage = 5;
@@ -151,10 +158,12 @@ public class PlayerController : MonoBehaviour
         if (isGrounded && !isJumping)
         {
             canJump = true;
+            canWallJump = true;
         }
         GameController.isGrounded = isGrounded;
-
     }
+
+    
     //dash handling function
     public void Dash()
     {
@@ -165,9 +174,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void CheckWall()
+    {
+        isAgainstWall = Physics2D.OverlapCircle(wallCheck.position, groundCheckRadius, whatIsGround);
+    }
+
     //Jump handling function. Negates previous momentum on jump
     public void Jump()
     {
+        
         if (canJump)
         {
             canJump = false;
@@ -175,6 +190,17 @@ public class PlayerController : MonoBehaviour
             newVelocity.Set(0.0f, 0.0f);
             rb.velocity = newVelocity;
             newForce.Set(0.0f, jumpForce);
+            rb.AddForce(newForce, ForceMode2D.Impulse);
+            animator.Play("PlayerJump");
+        }
+        else if (isAgainstWall && canWallJump)
+        {
+            ControlMomentum = 250 * -facingDirection;
+            canWallJump = false;
+            isJumping = true;
+            newVelocity.Set(0.0f, 0.0f);
+            rb.velocity = newVelocity;
+            newForce.Set(jumpForce/2*-facingDirection, jumpForce);
             rb.AddForce(newForce, ForceMode2D.Impulse);
             animator.Play("PlayerJump");
         }
@@ -188,7 +214,7 @@ public class PlayerController : MonoBehaviour
             if (isGrounded && !isJumping) //if on ground
             {
 
-                newVelocity.Set(movementSpeed * GameController.xInput, rb.velocity.y);
+                newVelocity.Set(movementSpeed * ControlMomentum/100, rb.velocity.y);
                 rb.velocity = newVelocity;
                 if(attackLagTimer == 0)
                 {
@@ -209,7 +235,7 @@ public class PlayerController : MonoBehaviour
             {
 
 
-                newVelocity.Set(movementSpeed * GameController.xInput, rb.velocity.y);
+                newVelocity.Set(movementSpeed * ControlMomentum/100, rb.velocity.y);
                 rb.velocity = newVelocity;
             }
         }

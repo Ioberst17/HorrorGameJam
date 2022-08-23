@@ -22,7 +22,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField]
     private int invincibilitySet;
     private bool isDead;
-    private bool playerInZone;
+    public bool playerInZone;
 
     [SerializeField]
     private int SoulPointsDropped;
@@ -60,31 +60,7 @@ public class EnemyController : MonoBehaviour
         }
 
     }
-    private void OnTriggerStay2D(Collider2D collider)
-    {
-        if (collider.gameObject.layer
-                == LayerMask.NameToLayer("Player"))
-        {
-            if (!playerInZone)
-            {
-                playerInZone = true;
-                Debug.Log(playerInZone);
-            }
-        }
-        
-    }
-    private void OnTriggerExit2D(Collider2D collider)
-    {
-        if (collider.gameObject.layer
-                == LayerMask.NameToLayer("Player"))
-        {
-            
-            playerInZone = false;
-            Debug.Log(playerInZone);
-        }
-            
-    }
-    
+
    // Start is called before the first frame update
     void Start()
     {
