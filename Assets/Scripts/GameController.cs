@@ -100,6 +100,8 @@ public class GameController : MonoBehaviour
         }
     }
 
+    
+
     public void pauseHandler()
     {
         if (!isPaused)
