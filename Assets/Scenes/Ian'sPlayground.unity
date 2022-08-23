@@ -2046,6 +2046,7 @@ GameObject:
   - component: {fileID: 1294143197}
   - component: {fileID: 1294143199}
   - component: {fileID: 1294143200}
+  - component: {fileID: 1294143201}
   m_Layer: 6
   m_Name: PlayerModel
   m_TagString: Untagged
@@ -2198,6 +2199,7 @@ MonoBehaviour:
   whatIsEnemy:
     serializedVersion: 2
     m_Bits: 256
+  animator: {fileID: 0}
   canDash: 0
   dashLength: 0.5
   dashSpeed: 15
@@ -2219,6 +2221,26 @@ MonoBehaviour:
   ADPoint2: {fileID: 1617840082}
   activeFrames: 0.2
   attackLagValue: 90
+--- !u!95 &1294143201
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1294143195}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1320482523
 GameObject:
   m_ObjectHideFlags: 0

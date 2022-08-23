@@ -24,6 +24,9 @@ public class EnemyController : MonoBehaviour
     private bool isDead;
     private bool playerInZone;
 
+    [SerializeField]
+    private int SoulPointsDropped;
+
     public int facingDirection = 1;
 
     void Awake()
@@ -179,6 +182,7 @@ public class EnemyController : MonoBehaviour
                     isDead = true;
                     //rb.enabled = false;
                     enemySpriteRenderer.enabled = false;
+                    playerController.gainSP(SoulPointsDropped);
                 }
                 else
                 {

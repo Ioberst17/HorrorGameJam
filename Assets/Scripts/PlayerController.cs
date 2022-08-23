@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    //varous different objects and values to be set
+    private Rigidbody2D rb;
+    private BoxCollider2D cc;
     [SerializeField]
     private GameController GameController;
     [SerializeField]
@@ -27,10 +30,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private LayerMask whatIsEnemy;
 
+    private Animator animator;
+
+    //all related to dash functionality and tracking. 
     public bool canDash;
     public float dashLength;
     public float dashSpeed;
 
+    //To make the player temporarily unable to control themselves
     public bool inHitstun;
 
 
@@ -50,12 +57,16 @@ public class PlayerController : MonoBehaviour
     public int StartingHP;
     public int StartingMP;
 
+    //Health points, magic points, soul points (currency)
     public int HP;
     public int MP;
+    public int SP;
+
+    //these are all related to attack information
     public int AttackDamage;
-
+    //List of objects hit by an attack, used to let the player hit multiple things with one swing
     private Collider2D[] hitlist;
-
+    //These are all the objects used for the physical hit detection
     [SerializeField]
     private GameObject attackHori;
     [SerializeField]
@@ -80,15 +91,17 @@ public class PlayerController : MonoBehaviour
     public int attackLagValue;
     private int attackLagTimer;
 
-    private Rigidbody2D rb;
-    private BoxCollider2D cc;
 
+
+    //Set all the initial values
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         cc = GetComponent<BoxCollider2D>();
         HP = StartingHP;
         MP = StartingMP;
+        SP = 0;
+        animator = GetComponent<Animator>();
         attackLagTimer = attackLagValue;
         AttackDamage = 5;
         canDash = true;
@@ -108,6 +121,7 @@ public class PlayerController : MonoBehaviour
         AttackHelper();
     }
 
+    //Does anything in the environment layer overlap with the circle while not on the way up
     public void CheckGround()
     {
         if (rb.velocity.y == 0.0f)
@@ -119,12 +133,19 @@ public class PlayerController : MonoBehaviour
         else
         {
             isGrounded = false;
+
+            animator.Play("PlayerFall");
             //Debug.Log("isinair " + rb.velocity.y);
         }
 
         if (rb.velocity.y <= 0.0f)
         {
             isJumping = false;
+        }
+        else
+        {
+            isJumping = true;
+            animator.Play("PlayerJump");
         }
 
         if (isGrounded && !isJumping)
@@ -134,7 +155,7 @@ public class PlayerController : MonoBehaviour
         GameController.isGrounded = isGrounded;
 
     }
-
+    //dash handling function
     public void Dash()
     {
         if (canDash)
@@ -143,6 +164,8 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(DashHandler());
         }
     }
+
+    //Jump handling function. Negates previous momentum on jump
     public void Jump()
     {
         if (canJump)
@@ -153,9 +176,11 @@ public class PlayerController : MonoBehaviour
             rb.velocity = newVelocity;
             newForce.Set(0.0f, jumpForce);
             rb.AddForce(newForce, ForceMode2D.Impulse);
+            animator.Play("PlayerJump");
         }
     }
 
+    //called by the GameController
     public void ApplyMovement()
     {
         if (!inHitstun)
@@ -165,6 +190,19 @@ public class PlayerController : MonoBehaviour
 
                 newVelocity.Set(movementSpeed * GameController.xInput, rb.velocity.y);
                 rb.velocity = newVelocity;
+                if(attackLagTimer == 0)
+                {
+                    if (rb.velocity.x == 0)
+                    {
+                        animator.Play("PlayerIdle");
+                    }
+                    else
+                    {
+                        animator.Play("PlayerRun");
+                    }
+                }
+                
+                    
 
             }
             else if (!isGrounded) //If in air
@@ -187,6 +225,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    //controlls the attack frame data
     IEnumerator AttackActiveFrames(int attackDirection) // is called by the trigger event for powerups to countdown how long the power lasts
     {
         switch (attackDirection)
@@ -204,7 +243,6 @@ public class PlayerController : MonoBehaviour
                 attackChecker = false;
                 break;
             case 2:
-                Debug.Log("Neutral Swing");
                 attackHori.SetActive(true);
                 yield return new WaitForSeconds(activeFrames); // waits a certain number of seconds
                 attackHori.SetActive(false);
@@ -212,7 +250,8 @@ public class PlayerController : MonoBehaviour
                 break;
         }
     }
-    
+
+    //This is the function that actually performs the dash
     IEnumerator DashHandler()
     {
         rb.gravityScale = 0;
@@ -234,6 +273,7 @@ public class PlayerController : MonoBehaviour
                 rb.velocity = newVelocity;
             }
         }
+        animator.Play("PlayerDash");
         yield return new WaitForSeconds(dashLength);
         rb.gravityScale = 3;
         newVelocity.Set(0, 0);
@@ -241,11 +281,14 @@ public class PlayerController : MonoBehaviour
         canDash = true;
     }
 
+    //This opperates the attack hit detection
     public void AttackHelper()
     {
+        //normal attack
         if (attackHori.activeSelf)
         {
             //Debug.Log("Swinging");
+            animator.Play("PlayerAttackNeutral");
 
             if (Physics2D.OverlapArea(AHPoint1.position, AHPoint2.position, whatIsEnemy) && !attackChecker)
             {
@@ -264,9 +307,11 @@ public class PlayerController : MonoBehaviour
 
             }
         }
+        //up attack
         if (attackUp.activeSelf)
         {
             //Debug.Log("Swinging");
+            animator.Play("PlayerAttackUp");
 
             if (Physics2D.OverlapArea(AUPoint1.position, AUPoint2.position, whatIsEnemy) && !attackChecker)
             {
@@ -285,9 +330,11 @@ public class PlayerController : MonoBehaviour
 
             }
         }
+        //down attack
         if (attackDown.activeSelf)
         {
             //Debug.Log("Swinging");
+            animator.Play("PlayerAttackDown");
 
             if (Physics2D.OverlapArea(ADPoint1.position, ADPoint2.position, whatIsEnemy) && !attackChecker)
             {
@@ -313,6 +360,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    //flips the model
     public void Flip()
     {
         facingDirection *= -1;
@@ -321,7 +369,8 @@ public class PlayerController : MonoBehaviour
 
     
 
-    //processes if the player should take damage, and if so, how much, then calculates for death. damageType Numbers: 0 is one hit damage, 1 is damage over time.
+    //processes if the player should take damage, and if so, how much, then calculates for death. damageType Numbers: 0 is one hit damage, 1 is damage over time. 
+    //Calculated direction of hit for knockback direction.
     public void takeDamage(Vector3 enemyPos, int damageNumber, int damageType)
     {
         StartCoroutine(hitStun());
@@ -343,13 +392,20 @@ public class PlayerController : MonoBehaviour
         if (HP <= 0)
         {
             Debug.Log("Death");
+            animator.Play("PlayerDeath");
         }
     }
 
     IEnumerator hitStun()
     {
         inHitstun = true;
+        animator.Play("PlayerHit");
         yield return new WaitForSeconds(1); // waits a certain number of seconds
         inHitstun = false;
+    }
+
+    public void gainSP(int SPAmount)
+    {
+        SP += SPAmount;
     }
 }
