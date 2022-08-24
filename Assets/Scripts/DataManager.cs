@@ -58,6 +58,7 @@ public class DataManager : MonoBehaviour
     private void Start()
     {
         gameData = LoadData();
+        ClearData();
     }
 
     public void ClearData()

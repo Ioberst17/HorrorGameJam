@@ -18,7 +18,7 @@ public class WeaponDatabase : MonoBehaviour
 
     public Database weaponDatabase = new Database();
 
-    void Start() // load CSV from Resources folder then add it to the Weapon Database game object
+    private void Awake() // load CSV from Resources folder then add it to the Weapon Database game object
     {
         textAssetData = Resources.Load<TextAsset>("TextFiles/WeaponDatabase"); // loads Weapon Database CSV into this variable
         ReadCSV();
