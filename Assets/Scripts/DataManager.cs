@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System.Linq;
 
 
 public class DataManager : MonoBehaviour
@@ -15,6 +16,28 @@ public class DataManager : MonoBehaviour
 
     public SessionData seshData = new SessionData(); // creates a new instance of class SessionData
     public GameData gameData = new GameData(); // creates a new instance of class GameData
+
+    /* CLASS STRUCTURES */
+
+
+
+    [System.Serializable]
+    public class SessionData
+    {
+        // class attributes of TBD session data
+        // e.g. public int hitPoints;
+    }
+
+    [System.Serializable] // called to make class serializable i.e. turn from an object to bytes for storage; eventually, deserialized when used again (from bytes back to object)
+    public class GameData // data to be saved between sessions in Json format - n.b Unity Json utility does not support arrays
+    {
+        public int timesPlayed = 1;
+        // Player Data
+        public float playerEXP = 0.0f;
+        public int playerLevel = 1;
+        // Inventory Data
+        public List<PlayerWeapons> inventory = new List<PlayerWeapons>();
+    }
 
     /* FUNCTIONS */
 
@@ -34,116 +57,17 @@ public class DataManager : MonoBehaviour
 
     private void Start()
     {
-        gameData = GameDataLoader();
+        gameData = LoadData();
     }
 
-    [System.Serializable]
-    public class SessionData
-    {
-        // class attributes
-        public int hitPoints;
-        
-    }
-
-    [System.Serializable] // called to make class serializable i.e. turn from an object to bytes for storage; eventually, deserialized when used again (from bytes back to object)
-    public class GameData // data to be saved between sessions in Json format - n.b Unity Json utility does not support arrays
-    {
-        public int timesPlayed = 1;
-        // Player Data
-        public float playerEXP = 0.0f;
-        public int playerLevel = 1;
-        // Inventory Data (placeholder)
-    }
-
-
-    public void clearData()
+    public void ClearData()
     {
         GameData gameData = new GameData();
-        GameDataSaver(gameData);
-        Instance.gameData = GameDataLoader();
+        SaveData(gameData);
+        Instance.gameData = LoadData();
     }
 
-#if UNITY_WEBGL
-    [DllImport("__Internal")] 
-    private static extern void SyncFiles();
-
-    [DllImport("__Internal")] 
-    private static extern void WindowAlert(string message);
-
-    public static void GameDataSaver (GameData gameData)
-    {
-        string dataPath = string.Format("{0}/GameDetails.dat", Application.persistentDataPath);
-        BinaryFormatter binaryFormatter = new BinaryFormatter();
-        FileStream fileStream;
-
-        try
-        {
-            if (File.Exists(dataPath))
-            {
-                File.WriteAllText(dataPath, string.Empty);
-                fileStream = File.Open(dataPath, FileMode.Open);
-            }
-            else
-            {
-                fileStream = File.Create(dataPath);
-            }
-
-            binaryFormatter.Serialize(fileStream, gameData);
-            fileStream.Close();
-
-            if (Application.platform == RuntimePlatform.WebGLPlayer)
-            {
-                SyncFiles();
-            }
-        }
-        catch (Exception e)
-        {
-            PlatformSafeMessage("Failed to Save: " + e.Message);
-        }
-    }
-
-    public static GameData GameDataLoader()
-    {
-        GameData gameData = new GameData();
-        string dataPath = string.Format("{0}/GameDetails.dat", Application.persistentDataPath);
-
-        try
-        {
-            if (File.Exists(dataPath))
-            {
-                BinaryFormatter binaryFormatter = new BinaryFormatter();
-                FileStream fileStream = File.Open(dataPath, FileMode.Open);
-
-                gameData = (GameData)binaryFormatter.Deserialize(fileStream);
-                fileStream.Close();
-            }
-            else
-            {
-                gameData.playerLevel = 1;
-                return gameData;
-            }
-        }
-        catch (Exception e)
-        {
-            PlatformSafeMessage("Failed to Load: " + e.Message);
-        }
-
-        return gameData;
-    }
-
-    private static void PlatformSafeMessage(string message) // used in WebGL build
-    {
-        if (Application.platform == RuntimePlatform.WebGLPlayer)
-        {
-            WindowAlert(message);
-        }
-        else
-        {
-            Debug.Log(message);
-        }
-    }
-#else
-    private void GameDataSaver(GameData gameData) // used to save data to a file
+    private void SaveData(GameData gameData) // used to save data to a file
     {
         string json = JsonUtility.ToJson(gameData); // turns data into a json string
 
@@ -151,7 +75,7 @@ public class DataManager : MonoBehaviour
         Debug.Log(json);
     }
 
-    private GameData GameDataLoader()
+    private GameData LoadData()
     {
         string path = Application.persistentDataPath + "/savefile.json"; // writes a string with the path file to check
         if (File.Exists(path)) // check if file exists
@@ -168,10 +92,9 @@ public class DataManager : MonoBehaviour
             return gameData;
         }
     }
-#endif
 
     private void OnApplicationQuit()
     {
-        GameDataSaver(gameData);
+        SaveData(gameData);
     }
 }
