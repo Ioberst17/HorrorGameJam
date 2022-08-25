@@ -44,7 +44,7 @@ public class EnemyController : MonoBehaviour
         HP = 50;
         enemySpriteRenderer = gameObject.GetComponent<SpriteRenderer>();
     }
-    private void OnTriggerEnter2D(Collider2D collider)
+    public void OnTriggerEnter2DHelper(Collider2D collider)
     {
         if (!isDead)
         {
@@ -144,6 +144,7 @@ public class EnemyController : MonoBehaviour
     }
     public bool calculateHit(int attackDamage)
     {
+        Debug.Log(name + " called");
         if (!isDead)
         {
             if (invincibilityCount == 0)

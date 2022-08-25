@@ -6,8 +6,7 @@ using UnityEngine;
 
 public class EnemyDetectionBehavior : MonoBehaviour
 {
-
-    //[SerializeField]
+    
     private EnemyController enemyController;
 
     // Start is called before the first frame update

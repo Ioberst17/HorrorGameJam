@@ -173,10 +173,12 @@ public class GameController : MonoBehaviour
         }
 
     }
-    public void passHit(string name , int attackDamage)
+    public void passHit(string enemyname, int attackDamage)
     {
-        EnemyController = GameObject.Find(name).GetComponent<EnemyController>();
+        Debug.Log("flag2");
+        EnemyController = GameObject.Find(enemyname).GetComponent<EnemyController>();
         EnemyController.calculateHit(attackDamage);
-        //Debug.Log(name);
+        Debug.Log("passing hit to " + enemyname);
+
     }
 }

@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private LayerMask whatIsEnemy;
 
-    private Animator animator;
+    //private Animator animator;
 
     //all related to dash functionality and tracking. 
     public bool canDash;
@@ -108,7 +108,7 @@ public class PlayerController : MonoBehaviour
         MP = StartingMP;
         SP = 0;
         ControlMomentum = 0;
-        animator = GetComponent<Animator>();
+        //animator = GetComponent<Animator>();
         attackLagTimer = attackLagValue;
         AttackDamage = 5;
         canDash = true;
@@ -141,7 +141,7 @@ public class PlayerController : MonoBehaviour
         {
             isGrounded = false;
 
-            animator.Play("PlayerFall");
+            //animator.Play("PlayerFall");
             //Debug.Log("isinair " + rb.velocity.y);
         }
 
@@ -152,7 +152,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             isJumping = true;
-            animator.Play("PlayerJump");
+            //animator.Play("PlayerJump");
         }
 
         if (isGrounded && !isJumping)
@@ -191,7 +191,7 @@ public class PlayerController : MonoBehaviour
             rb.velocity = newVelocity;
             newForce.Set(0.0f, jumpForce);
             rb.AddForce(newForce, ForceMode2D.Impulse);
-            animator.Play("PlayerJump");
+            //animator.Play("PlayerJump");
         }
         else if (isAgainstWall && canWallJump)
         {
@@ -202,7 +202,7 @@ public class PlayerController : MonoBehaviour
             rb.velocity = newVelocity;
             newForce.Set(jumpForce/2*-facingDirection, jumpForce);
             rb.AddForce(newForce, ForceMode2D.Impulse);
-            animator.Play("PlayerJump");
+            //animator.Play("PlayerJump");
         }
     }
 
@@ -220,11 +220,11 @@ public class PlayerController : MonoBehaviour
                 {
                     if (rb.velocity.x == 0)
                     {
-                        animator.Play("PlayerIdle");
+                        //animator.Play("PlayerIdle");
                     }
                     else
                     {
-                        animator.Play("PlayerRun");
+                        //animator.Play("PlayerRun");
                     }
                 }
                 
@@ -299,7 +299,7 @@ public class PlayerController : MonoBehaviour
                 rb.velocity = newVelocity;
             }
         }
-        animator.Play("PlayerDash");
+        //animator.Play("PlayerDash");
         yield return new WaitForSeconds(dashLength);
         rb.gravityScale = 3;
         newVelocity.Set(0, 0);
@@ -314,7 +314,7 @@ public class PlayerController : MonoBehaviour
         if (attackHori.activeSelf)
         {
             //Debug.Log("Swinging");
-            animator.Play("PlayerAttackNeutral");
+            //animator.Play("PlayerAttackNeutral");
 
             if (Physics2D.OverlapArea(AHPoint1.position, AHPoint2.position, whatIsEnemy) && !attackChecker)
             {
@@ -324,7 +324,7 @@ public class PlayerController : MonoBehaviour
                 while (i < hitlist.Length)
                 {
                     //Debug.Log(hitlist[i]);
-                    if (hitlist[i].GetType() == typeof(UnityEngine.BoxCollider2D))
+                    if (hitlist[i].GetType() == typeof(UnityEngine.CapsuleCollider2D))
                     {
                         GameController.passHit(hitlist[i].name, AttackDamage);
                     }
@@ -337,7 +337,7 @@ public class PlayerController : MonoBehaviour
         if (attackUp.activeSelf)
         {
             //Debug.Log("Swinging");
-            animator.Play("PlayerAttackUp");
+            //animator.Play("PlayerAttackUp");
 
             if (Physics2D.OverlapArea(AUPoint1.position, AUPoint2.position, whatIsEnemy) && !attackChecker)
             {
@@ -347,7 +347,7 @@ public class PlayerController : MonoBehaviour
                 while (i < hitlist.Length)
                 {
                     //Debug.Log(hitlist[i]);
-                    if (hitlist[i].GetType() == typeof(UnityEngine.BoxCollider2D))
+                    if (hitlist[i].GetType() == typeof(UnityEngine.CapsuleCollider2D))
                     {
                         GameController.passHit(hitlist[i].name, AttackDamage);
                     }
@@ -360,7 +360,7 @@ public class PlayerController : MonoBehaviour
         if (attackDown.activeSelf)
         {
             //Debug.Log("Swinging");
-            animator.Play("PlayerAttackDown");
+            //animator.Play("PlayerAttackDown");
 
             if (Physics2D.OverlapArea(ADPoint1.position, ADPoint2.position, whatIsEnemy) && !attackChecker)
             {
@@ -375,7 +375,7 @@ public class PlayerController : MonoBehaviour
                 while (i < hitlist.Length)
                 {
                     //Debug.Log(hitlist[i]);
-                    if (hitlist[i].GetType() == typeof(UnityEngine.BoxCollider2D))
+                    if (hitlist[i].GetType() == typeof(UnityEngine.CapsuleCollider2D))
                     {
                         GameController.passHit(hitlist[i].name, AttackDamage);
                     }
@@ -418,14 +418,14 @@ public class PlayerController : MonoBehaviour
         if (HP <= 0)
         {
             Debug.Log("Death");
-            animator.Play("PlayerDeath");
+            //animator.Play("PlayerDeath");
         }
     }
 
     IEnumerator hitStun()
     {
         inHitstun = true;
-        animator.Play("PlayerHit");
+        //animator.Play("PlayerHit");
         yield return new WaitForSeconds(1); // waits a certain number of seconds
         inHitstun = false;
     }
