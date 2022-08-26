@@ -11,6 +11,8 @@ public class UIController : MonoBehaviour
     private Text HPtext;
     [SerializeField]
     private Text MPtext;
+    [SerializeField]
+    private Text SPtext;
     public GameObject pauseMenu;
     public GameObject debugMenu;
 
@@ -25,6 +27,7 @@ public class UIController : MonoBehaviour
     {
         HPtext.text = GameController.GetHP().ToString();
         MPtext.text = GameController.GetMP().ToString();
+        SPtext.text = GameController.GetSP().ToString();
         if (GameController.isPaused)
         {
             pauseMenu.SetActive(true);
