@@ -37,7 +37,7 @@ public class GameController : MonoBehaviour
     {
         PlayerController.CheckGround();
         PlayerController.CheckWall();
-        if (PlayerController.canDash)
+        if (!PlayerController.isDashing)
         {
             PlayerController.ApplyMovement();
         }
