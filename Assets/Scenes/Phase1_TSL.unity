@@ -1923,7 +1923,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919584572}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.05, y: 19.06, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1970,7 +1970,7 @@ MonoBehaviour:
   GameController: {fileID: 641676304}
   movementSpeed: 8
   numberOfJumps: 2
-  groundCheckRadius: 0.45
+  groundCheckRadius: 0.375
   jumpForce: 15
   slopeCheckDistance: 0
   maxSlopeAngle: 0
@@ -1979,7 +1979,7 @@ MonoBehaviour:
   cameraFocus: {fileID: 1442235709}
   whatIsGround:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 136
   whatIsEnemy:
     serializedVersion: 2
     m_Bits: 256
@@ -2023,7 +2023,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -0.0001269579}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -2034,7 +2034,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.7500699, y: 1.1961778}
+  m_Size: {x: 0.7500699, y: 1.1996415}
   m_EdgeRadius: 0
 --- !u!50 &919584577
 Rigidbody2D:
@@ -2762,7 +2762,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1303225421}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.94, y: 64.48, z: 0}
+  m_LocalPosition: {x: -6.94, y: 84.16, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4191,6 +4191,10 @@ PrefabInstance:
     - target: {fileID: 2712541106306595561, guid: d63751759d7376b498e07f1633a7a05c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5607468163778749787, guid: d63751759d7376b498e07f1633a7a05c, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7218568926961376572, guid: d63751759d7376b498e07f1633a7a05c, type: 3}
       propertyPath: m_LocalPosition.x
