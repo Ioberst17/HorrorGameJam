@@ -97,7 +97,8 @@ public class PlayerController : MonoBehaviour
     private bool attackChecker;
     public int attackLagValue;
     private int attackLagTimer;
-
+    [SerializeField]
+    private Transform StartingLocation;
 
 
     //Set all the initial values
@@ -433,6 +434,8 @@ public class PlayerController : MonoBehaviour
             {
                 Debug.Log("Death");
                 //animator.Play("PlayerDeath");
+                this.transform.position = StartingLocation.position;
+                HP = StartingHP;
             }
         }
     }

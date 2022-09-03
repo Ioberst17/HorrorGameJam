@@ -6,6 +6,7 @@ public class EnemyController : MonoBehaviour
 {
     private SpriteRenderer enemySpriteRenderer;
     private Rigidbody2D rb;
+    private CapsuleCollider2D CC2D;
     private PlayerController playerController;
     private Transform playerLocation;
     private Vector2 newVelocity;
@@ -34,6 +35,7 @@ public class EnemyController : MonoBehaviour
         playerInZone = false;
         isDead = false;
         rb = GetComponent<Rigidbody2D>();
+        CC2D = GetComponent<CapsuleCollider2D>();
         playerController = GameObject.Find("PlayerModel").GetComponent<PlayerController>();
         playerLocation = GameObject.Find("PlayerModel").transform;
         startingLocation = transform.position;
@@ -157,7 +159,7 @@ public class EnemyController : MonoBehaviour
                 {
                     Debug.Log(name + " is dead!");
                     isDead = true;
-                    //rb.enabled = false;
+                    CC2D.enabled = false;
                     enemySpriteRenderer.enabled = false;
                     playerController.gainSP(SoulPointsDropped);
                 }
