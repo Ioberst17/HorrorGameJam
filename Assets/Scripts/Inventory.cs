@@ -8,8 +8,11 @@ public class Inventory : MonoBehaviour
 {
     // DECLARATIONS
     public DataManager dataManager;
-    public List<PlayerWeapons> inventory = new List<PlayerWeapons>(); // to use as inventory
+    [SerializeField]
+    private List<PlayerWeapons> inventory = new List<PlayerWeapons>(); // to use as inventory
     public WeaponDatabase weaponDatabase;
+    [SerializeField]
+    private int currentWeapon;
 
     void Start()
     {
@@ -17,9 +20,12 @@ public class Inventory : MonoBehaviour
         weaponDatabase = GameObject.Find("WeaponDatabase").GetComponent<WeaponDatabase>();
         LoadFromDataManager();
 
-        //subscribe to important event system updates
-        EventSystem.current.onWeaponAmmoTrigger += UpdateAmmo;
-        EventSystem.current.onWeaponLevelTrigger += UpdateLevel;
+        //subscribe to important weapon updates
+        EventSystem.current.onWeaponAddAmmoTrigger += AddAmmo;
+        EventSystem.current.onWeaponChangeTrigger += WeaponChanged;
+        EventSystem.current.onAmmoCheckTrigger += DoesCurrentWeaponHaveAmmo;
+        EventSystem.current.onWeaponFireTrigger += WeaponFired;
+        EventSystem.current.onWeaponLevelTrigger += WeaponLevel;
 
         //for debugging event system
         /*inventory.Add(new PlayerWeapons(0, 1, 0));
@@ -38,15 +44,40 @@ public class Inventory : MonoBehaviour
         // check for event of pickup / purchase of to increment inventory ammo, if so call Update Ammo
 
         // check for event on leveling, if so call update level
+        /*if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            EventSystem.current.WeaponAmmoTrigger(1, 1);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            EventSystem.current.WeaponAmmoTrigger(1, -1);
+        }*/
+
+
+        if (Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            EventSystem.current.WeaponAddAmmoTrigger(1, 1);
+        }
+
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
-            EventSystem.current.WeaponLevelTrigger(1, 1);
+            EventSystem.current.WeaponAddAmmoTrigger(2, 1);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            EventSystem.current.WeaponChangeTrigger(1);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha7))
+        {
+            EventSystem.current.WeaponChangeTrigger(2);
         }
 
         if (Input.GetKeyDown(KeyCode.M))
         {
             SaveToDataManager();
-            Debug.Log("Trigged");
         }
     }
 
@@ -58,7 +89,7 @@ public class Inventory : MonoBehaviour
         for (int i = 0; i < inventory.Count; i++) // loop through player inventory
         {
             idMatch = false;
-            for (int j = 0; j < dataManager.gameData.inventory.Count; j++) //loop through data manager
+            for (int j = 0; j < dataManager.gameData.inventory.Count; j++) //loop through data manager and update entires
             {
                 if (inventory[i].weaponID == dataManager.gameData.inventory[j].weaponID) // if the ID's match while looping through
                 {
@@ -73,6 +104,8 @@ public class Inventory : MonoBehaviour
                 dataManager.gameData.inventory.Add(inventory[i]); // then, add the entry as a new entry
             }
         }
+        dataManager.gameData.activeWeapon = currentWeapon; // save the current active weapon's ID
+
     }
 
     private void AddNewWeapon(Weapons weapon) // pass in a weapon from the database
@@ -88,22 +121,47 @@ public class Inventory : MonoBehaviour
             inventory.Add(new PlayerWeapons(weapon.id, weapon.level, 0)); // then add it at level 1, with 0 ammo
         }
     }
-    private void UpdateAmmo(int WeaponID, int ammoChange)
+
+    private void AddAmmo(int weaponID, int ammoChange)
     {
         for (int i = 0; i < inventory.Count; i++)
-        { if (inventory[i].weaponID == WeaponID) { inventory[i].weaponAmmo += ammoChange; } }
+        { if (inventory[i].weaponID == weaponID) { inventory[i].weaponAmmo += ammoChange; } }
     }
-    private void UpdateLevel(int WeaponID, int levelChange)
+
+    private void WeaponFired(int weaponID, int ammoChange, int direction)
     {
         for (int i = 0; i < inventory.Count; i++)
-        { if (inventory[i].weaponID == WeaponID) { inventory[i].weaponLevel += levelChange; } }
+        { if (inventory[i].weaponID == weaponID) { inventory[i].weaponAmmo += ammoChange; } }
+    }
+    private void WeaponLevel(int weaponID, int levelChange)
+    {
+        for (int i = 0; i < inventory.Count; i++)
+        { if (inventory[i].weaponID == weaponID) { inventory[i].weaponLevel += levelChange; } }
+    }
+    
+    private void WeaponChanged(int weaponID)
+    {
+        currentWeapon = weaponID;
+    }
+    
+    private void DoesCurrentWeaponHaveAmmo()
+    {
+        for (int i = 0; i < inventory.Count; i++) // loop through inventory
+        { if (inventory[i].weaponID == currentWeapon) // if the loop finds the current weapon 
+            { if(inventory[i].weaponAmmo > 0) // and if the current weapon has ammo
+                EventSystem.current.WeaponFireTrigger(currentWeapon, -1, 0); ; // send the weapon fire event
+            } 
+        } 
     }
 
     private void OnDestroy()
     {
         // unsubscribe from events
-        EventSystem.current.onWeaponAmmoTrigger -= UpdateAmmo;
-        EventSystem.current.onWeaponLevelTrigger -= UpdateLevel;
+        EventSystem.current.onWeaponAddAmmoTrigger -= AddAmmo;
+        EventSystem.current.onWeaponChangeTrigger -= WeaponChanged;
+        EventSystem.current.onAmmoCheckTrigger += DoesCurrentWeaponHaveAmmo;
+        EventSystem.current.onWeaponFireTrigger -= WeaponFired;
+        EventSystem.current.onWeaponLevelTrigger -= WeaponLevel;
     }
 
 }

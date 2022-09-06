@@ -12,16 +12,38 @@ public class EventSystem : MonoBehaviour
         current = this;
     }
 
-    public event Action <int, int> onWeaponAmmoTrigger;
-    public void WeaponAmmoTrigger(int weaponID, int ammo)
+
+    // WEAPON-RELATED EVENTS
+
+    public event Action<int, int> onWeaponAddAmmoTrigger; // used to add ammo
+    public void WeaponAddAmmoTrigger(int weaponID, int ammo)
     {
-        if (onWeaponAmmoTrigger != null)
+        if (onWeaponAddAmmoTrigger != null)
         {
-            onWeaponAmmoTrigger(weaponID, ammo);
+            onWeaponAddAmmoTrigger(weaponID, ammo);
         }
     }
 
-    public event Action <int, int> onWeaponLevelTrigger;
+    public event Action onAmmoCheckTrigger; // used to check for ammo BEFORE  weapon AmmoTrigger is called to fire
+
+    public void AmmoCheckTrigger()
+    {
+        if (onAmmoCheckTrigger != null)
+        {
+            onAmmoCheckTrigger();
+        }
+    }
+
+    public event Action <int, int, int> onWeaponFireTrigger; // used for weapon firing
+    public void WeaponFireTrigger(int weaponID, int ammo, int direction)
+    {
+        if (onWeaponFireTrigger != null)
+        {
+            onWeaponFireTrigger(weaponID, ammo, direction);
+        }
+    }
+
+    public event Action <int, int> onWeaponLevelTrigger; // used when a weapon is leveled up
     public void WeaponLevelTrigger(int weaponID, int level)
     {
         if (onWeaponLevelTrigger != null)
@@ -29,5 +51,26 @@ public class EventSystem : MonoBehaviour
             onWeaponLevelTrigger(weaponID, level);
         }
     }
+
+    public event Action<int> onWeaponChangeTrigger; // used when the player's current weapon is changed
+    public void WeaponChangeTrigger(int weaponID)
+    {
+        if (onWeaponChangeTrigger != null)
+        {
+            onWeaponChangeTrigger(weaponID);
+        }
+    }
+
+    public event Action onWeaponDirectionChange;
+
+    public void WeaponDirectionChangeTrigger()
+    {
+        if (onWeaponDirectionChange != null)
+        {
+            onWeaponDirectionChange();
+        }
+    }
+
+
 
 }

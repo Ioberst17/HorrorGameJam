@@ -113,16 +113,23 @@ public class GameController : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.U))
             {
                 //Debug.Log("attack called");
-                if(Input.GetKey(KeyCode.W) || Input.GetKey("up"))
+                if (Input.GetKey(KeyCode.W) || Input.GetKey("up"))
                 {
                     PlayerController.Attack(0);
+                    EventSystem.current.WeaponDirectionChangeTrigger();
+                    EventSystem.current.AmmoCheckTrigger();
+                    //EventSystem.current.WeaponAmmoTrigger(1, -1, 0);
                 }
                 else if((Input.GetKey(KeyCode.S) || Input.GetKey("down")) && !isGrounded){
                     PlayerController.Attack(1);
+                    EventSystem.current.AmmoCheckTrigger();
+                    //EventSystem.current.WeaponAmmoTrigger(1, -1, 1);
                 }
                 else
                 {
                     PlayerController.Attack(2);
+                    EventSystem.current.AmmoCheckTrigger();
+                    //EventSystem.current.WeaponAmmoTrigger(1, -1, 2);
                 }
             }
             if (Input.GetKeyDown(KeyCode.I))

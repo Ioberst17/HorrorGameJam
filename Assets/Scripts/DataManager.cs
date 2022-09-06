@@ -37,6 +37,7 @@ public class DataManager : MonoBehaviour
         public int playerLevel = 1;
         // Inventory Data
         public List<PlayerWeapons> inventory = new List<PlayerWeapons>();
+        public int activeWeapon = 0; 
     }
 
     /* FUNCTIONS */
