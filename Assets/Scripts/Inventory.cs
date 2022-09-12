@@ -18,7 +18,7 @@ public class Inventory : MonoBehaviour
     {
         dataManager = DataManager.Instance;
         weaponDatabase = GameObject.Find("WeaponDatabase").GetComponent<WeaponDatabase>();
-        LoadFromDataManager();
+        
 
         //subscribe to important weapon updates
         EventSystem.current.onWeaponAddAmmoTrigger += AddAmmo;
@@ -27,10 +27,9 @@ public class Inventory : MonoBehaviour
         EventSystem.current.onWeaponFireTrigger += WeaponFired;
         EventSystem.current.onWeaponLevelTrigger += WeaponLevel;
 
+        LoadFromDataManager();
+
         //for debugging event system
-        /*inventory.Add(new PlayerWeapons(0, 1, 0));
-        inventory.Add(new PlayerWeapons(1, 1, 0));*/
-        Debug.Log(weaponDatabase.weaponDatabase.entries[1].id);
         AddNewWeapon(weaponDatabase.weaponDatabase.entries[0]); //add the weapon at the 1st index
         AddNewWeapon(weaponDatabase.weaponDatabase.entries[1]); //add the weapon at the 1st index
         AddNewWeapon(weaponDatabase.weaponDatabase.entries[2]); //add the weapon at the 1st index
@@ -81,7 +80,12 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    void LoadFromDataManager() { inventory = dataManager.gameData.inventory; }
+    void LoadFromDataManager() 
+    {
+        Debug.Log(dataManager.gameData.inventory);
+        currentWeapon = dataManager.gameData.activeWeapon;
+        inventory = dataManager.gameData.inventory; 
+    }
 
     void SaveToDataManager()
     {
