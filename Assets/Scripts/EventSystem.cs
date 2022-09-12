@@ -34,12 +34,12 @@ public class EventSystem : MonoBehaviour
         }
     }
 
-    public event Action <int, int, int> onWeaponFireTrigger; // used for weapon firing
-    public void WeaponFireTrigger(int weaponID, int ammo, int direction)
+    public event Action <int, int, int, int> onWeaponFireTrigger; // used for weapon firing
+    public void WeaponFireTrigger(int weaponID, int weaponLevel, int ammo, int direction)
     {
         if (onWeaponFireTrigger != null)
         {
-            onWeaponFireTrigger(weaponID, ammo, direction);
+            onWeaponFireTrigger(weaponID, weaponLevel, ammo, direction);
         }
     }
 
@@ -60,17 +60,5 @@ public class EventSystem : MonoBehaviour
             onWeaponChangeTrigger(weaponID);
         }
     }
-
-    public event Action onWeaponDirectionChange;
-
-    public void WeaponDirectionChangeTrigger()
-    {
-        if (onWeaponDirectionChange != null)
-        {
-            onWeaponDirectionChange();
-        }
-    }
-
-
 
 }

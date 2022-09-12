@@ -3573,9 +3573,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e87e7174fd96fd4daa26a1d6a852ac4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectilePrefab: {fileID: 1251296574152070956, guid: d63f0ce174c69b346bc943c9b49aea8d, type: 3}
+  ammoPrefabs: []
   projectileSpawnPoint: {fileID: 293346278}
   ammoSpeed: 500
+  upAngle: 90
+  downAngle: -90
+  standardAngle: 0
 --- !u!1 &1869226031
 GameObject:
   m_ObjectHideFlags: 0

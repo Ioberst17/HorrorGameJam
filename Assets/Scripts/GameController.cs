@@ -116,7 +116,6 @@ public class GameController : MonoBehaviour
                 if (Input.GetKey(KeyCode.W) || Input.GetKey("up"))
                 {
                     PlayerController.Attack(0);
-                    EventSystem.current.WeaponDirectionChangeTrigger();
                     EventSystem.current.AmmoCheckTrigger();
                     //EventSystem.current.WeaponAmmoTrigger(1, -1, 0);
                 }

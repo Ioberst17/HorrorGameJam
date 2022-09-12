@@ -5,9 +5,6 @@ using UnityEngine;
 public class Ammo : MonoBehaviour
 {
 
-    [SerializeField]
-    //private float speed = 4.5F;
-
     void Update()
     {
     }

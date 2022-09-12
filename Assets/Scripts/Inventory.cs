@@ -128,7 +128,7 @@ public class Inventory : MonoBehaviour
         { if (inventory[i].weaponID == weaponID) { inventory[i].weaponAmmo += ammoChange; } }
     }
 
-    private void WeaponFired(int weaponID, int ammoChange, int direction)
+    private void WeaponFired(int weaponID, int weaponLevel, int ammoChange, int direction)
     {
         for (int i = 0; i < inventory.Count; i++)
         { if (inventory[i].weaponID == weaponID) { inventory[i].weaponAmmo += ammoChange; } }
@@ -149,7 +149,7 @@ public class Inventory : MonoBehaviour
         for (int i = 0; i < inventory.Count; i++) // loop through inventory
         { if (inventory[i].weaponID == currentWeapon) // if the loop finds the current weapon 
             { if(inventory[i].weaponAmmo > 0) // and if the current weapon has ammo
-                EventSystem.current.WeaponFireTrigger(currentWeapon, -1, 0); ; // send the weapon fire event
+                EventSystem.current.WeaponFireTrigger(currentWeapon,inventory[i].weaponLevel, -1, 0); ; // send the weapon fire event
             } 
         } 
     }

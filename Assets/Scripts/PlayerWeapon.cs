@@ -1,22 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerWeapon : MonoBehaviour
 {
-    public GameObject projectilePrefab;
+    //ammo-related
+    public List<GameObject> ammoPrefabs;
     public Transform projectileSpawnPoint;
     public int ammoSpeed = 500;
+    // weapon rotation
     public int upAngle = 90;
     public int downAngle = -90;
     public int standardAngle = 0;
-    // Start is called before the first frame update
+
+    // Start is used to subscribe to weapon events
     void Start()
     {
         EventSystem.current.onWeaponFireTrigger += WeaponFired;
+
+        ammoPrefabs = Resources.LoadAll<GameObject>("AmmoPrefabs").ToList();
     }
 
-    // Update is called once per frame
+    // Update is called once per frame, used mainly for weapon direction
     void Update()
     {
         if (Input.GetKey(KeyCode.W) || Input.GetKey("up"))
@@ -33,9 +39,11 @@ public class PlayerWeapon : MonoBehaviour
         }
     }
 
-    private void WeaponFired(int weaponID, int ammoChange, int direction)
+    private void WeaponFired(int weaponID, int weaponLevel, int ammoChange, int direction)
     {
-        GameObject shot = Instantiate(projectilePrefab, projectileSpawnPoint.position, projectilePrefab.transform.rotation);
+        int ammoIndex = weaponID + ((2 * (weaponID - 1)-1)) + (weaponLevel-1); //formula for index assumes three levels for every weapon + prefabs in resources folder
+        
+        GameObject shot = Instantiate(ammoPrefabs[ammoIndex], projectileSpawnPoint.position, ammoPrefabs[ammoIndex].transform.rotation);
 
         shot.GetComponent<Rigidbody2D>().AddForce(transform.right * ammoSpeed);
     }
