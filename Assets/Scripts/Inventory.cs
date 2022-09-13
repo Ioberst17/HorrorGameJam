@@ -82,7 +82,6 @@ public class Inventory : MonoBehaviour
 
     void LoadFromDataManager() 
     {
-        Debug.Log(dataManager.gameData.inventory);
         currentWeapon = dataManager.gameData.activeWeapon;
         inventory = dataManager.gameData.inventory; 
     }

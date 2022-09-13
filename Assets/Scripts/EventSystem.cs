@@ -12,6 +12,17 @@ public class EventSystem : MonoBehaviour
         current = this;
     }
 
+    // COMBAT-CALCULATIONS
+    public event Action<int> onAttackCollision;
+    public void AttackHitTrigger(int weaponID)
+    {
+        {
+            if (onAttackCollision != null)
+            {
+                onAttackCollision(weaponID);
+            }
+        }
+    }
 
     // WEAPON-RELATED EVENTS
 

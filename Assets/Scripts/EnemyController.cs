@@ -24,6 +24,7 @@ public class EnemyController : MonoBehaviour
     private int invincibilitySet;
     private bool isDead;
     public bool playerInZone;
+    public WeaponDatabase weaponDatabase; // used for ammo damage calcs
 
     [SerializeField]
     private int SoulPointsDropped;
@@ -38,6 +39,7 @@ public class EnemyController : MonoBehaviour
         CC2D = GetComponent<CapsuleCollider2D>();
         playerController = GameObject.Find("PlayerModel").GetComponent<PlayerController>();
         playerLocation = GameObject.Find("PlayerModel").transform;
+        weaponDatabase = GameObject.Find("WeaponDatabase").GetComponent<WeaponDatabase>();
         startingLocation = transform.position;
         patrol1Point = patrol1.position;
         patrol2Point = patrol2.position;
@@ -66,7 +68,8 @@ public class EnemyController : MonoBehaviour
    // Start is called before the first frame update
     void Start()
     {
-        
+        //subscribe to important messages
+        EventSystem.current.onAttackCollision += AmmoDamage;
     }
 
     // Update is called once per frame
@@ -183,4 +186,32 @@ public class EnemyController : MonoBehaviour
         facingDirection *= -1;
         transform.Rotate(0.0f, 180.0f, 0.0f);
     }
+
+    public void AmmoDamage(int ammoID)
+    {
+        var weaponID = ammoID / 3; // since every weapon has 3 levels - this INT - will auto round down to the weaponID's database position in the array e.g. 2 > [0]th weapon in database list,; 7> [1]st weapon in database list
+        var ammoLevel = ammoID % 3;
+
+        switch (ammoLevel)
+        {
+            case 0:
+                calculateHit(weaponDatabase.weaponDatabase.entries[weaponID].level1Damage);
+                break;
+            case 1:
+                calculateHit(weaponDatabase.weaponDatabase.entries[weaponID].level2Damage);
+                break;
+            case 2:
+                calculateHit(weaponDatabase.weaponDatabase.entries[weaponID].level3Damage);
+                break;
+        }
+        
+        
+    }
+
+    private void OnDestroy()
+    {
+        // unsubscribe from events
+        EventSystem.current.onAttackCollision -= AmmoDamage;
+    }
+
 }
