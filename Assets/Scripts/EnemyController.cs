@@ -191,6 +191,8 @@ public class EnemyController : MonoBehaviour
     {
         var weaponID = ammoID / 3; // since every weapon has 3 levels - this INT - will auto round down to the weaponID's database position in the array e.g. 2 > [0]th weapon in database list,; 7> [1]st weapon in database list
         var ammoLevel = ammoID % 3;
+        Debug.Log("Weapon ID is: " + weaponID);
+        Debug.Log("Ammo ID is: " + ammoLevel);
 
         switch (ammoLevel)
         {
