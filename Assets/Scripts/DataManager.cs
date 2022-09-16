@@ -37,6 +37,7 @@ public class DataManager : MonoBehaviour
         public int playerLevel = 1;
         // Inventory Data
         public List<PlayerWeapons> inventory = new List<PlayerWeapons>();
+        public int activeWeapon = 1; 
     }
 
     /* FUNCTIONS */
@@ -53,12 +54,13 @@ public class DataManager : MonoBehaviour
         {
             Destroy(gameObject); // Destroy the GameObject, this component is attached to
         }
+
+        gameData = LoadData();
     }
 
     private void Start()
     {
-        gameData = LoadData();
-        ClearData();
+        
     }
 
     public void ClearData()
@@ -83,13 +85,11 @@ public class DataManager : MonoBehaviour
         {
             string json = File.ReadAllText(path); // reads file content to json string
             GameData gameData = JsonUtility.FromJson<GameData>(json); // reads json string data to variable data
-            Debug.Log(gameData);
             return gameData;
         }
         else
         {
             GameData gameData = new GameData();
-            Debug.Log(gameData);
             return gameData;
         }
     }
