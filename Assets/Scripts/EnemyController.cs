@@ -213,7 +213,7 @@ public class EnemyController : MonoBehaviour
     private void OnDestroy()
     {
         // unsubscribe from events
-        EventSystem.current.onAttackCollision -= AmmoDamage;
+        //EventSystem.current.onAttackCollision -= AmmoDamage;
     }
 
 }
