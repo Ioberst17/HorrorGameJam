@@ -160,11 +160,11 @@ public class Inventory : MonoBehaviour
     private void OnDestroy()
     {
         // unsubscribe from events
-        EventSystem.current.onWeaponAddAmmoTrigger -= AddAmmo;
-        EventSystem.current.onWeaponChangeTrigger -= WeaponChanged;
-        EventSystem.current.onAmmoCheckTrigger += DoesCurrentWeaponHaveAmmo;
-        EventSystem.current.onWeaponFireTrigger -= WeaponFired;
-        EventSystem.current.onWeaponLevelTrigger -= WeaponLevel;
+        //EventSystem.current.onWeaponAddAmmoTrigger -= AddAmmo;
+        //EventSystem.current.onWeaponChangeTrigger -= WeaponChanged;
+        //EventSystem.current.onAmmoCheckTrigger += DoesCurrentWeaponHaveAmmo;
+        //EventSystem.current.onWeaponFireTrigger -= WeaponFired;
+        //EventSystem.current.onWeaponLevelTrigger -= WeaponLevel;
     }
 
 }

@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private LayerMask whatIsEnemy;
 
-    //private Animator animator;
+    private Animator animator;
 
     //all related to dash functionality and tracking. 
     public bool canDash;
@@ -42,6 +42,7 @@ public class PlayerController : MonoBehaviour
     //To make the player temporarily unable to control themselves
     public bool inHitstun;
 
+    public bool isAttacking;
     public bool isInvincible;
 
     //private float xInput;
@@ -94,9 +95,13 @@ public class PlayerController : MonoBehaviour
     private Transform ADPoint2;
     [SerializeField]
     private float activeFrames;
-    private bool attackChecker;
+    [SerializeField]
+    private float recoveryFrames;
+    [SerializeField]
+    private float startupFrames;
+
     public int attackLagValue;
-    private int attackLagTimer;
+    public int attackLagTimer;
     [SerializeField]
     private Transform StartingLocation;
 
@@ -110,14 +115,15 @@ public class PlayerController : MonoBehaviour
         MP = StartingMP;
         SP = 0;
         ControlMomentum = 0;
-        //animator = GetComponent<Animator>();
-        attackLagTimer = attackLagValue;
+        animator = GetComponent<Animator>();
+        attackLagTimer = 0;
         AttackDamage = 5;
         canDash = true;
         inHitstun = false;
         isInvincible = false;
         isDashing = false;
-}
+        isAttacking = false;
+    }
     private void Update()
     {
         
@@ -141,11 +147,13 @@ public class PlayerController : MonoBehaviour
             
             //Debug.Log("isgrounded " + rb.velocity.y);
         }
-        else
+        else 
         {
             isGrounded = false;
-
-            //animator.Play("PlayerFall");
+            if (!isJumping)
+            {
+                animator.Play("PlayerFall");
+            }
             //Debug.Log("isinair " + rb.velocity.y);
         }
 
@@ -156,7 +164,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             isJumping = true;
-            //animator.Play("PlayerJump");
+            animator.Play("PlayerJump");
         }
 
         if (isGrounded && !isJumping)
@@ -201,7 +209,7 @@ public class PlayerController : MonoBehaviour
                 rb.velocity = newVelocity;
                 newForce.Set(0.0f, jumpForce);
                 rb.AddForce(newForce, ForceMode2D.Impulse);
-                //animator.Play("PlayerJump");
+                animator.Play("PlayerJump");
             }
             else if (isAgainstWall && canWallJump)
             {
@@ -212,7 +220,7 @@ public class PlayerController : MonoBehaviour
                 rb.velocity = newVelocity;
                 newForce.Set(jumpForce / 2 * -facingDirection, jumpForce);
                 rb.AddForce(newForce, ForceMode2D.Impulse);
-                //animator.Play("PlayerJump");
+                animator.Play("PlayerJump");
             }
         }
         
@@ -228,25 +236,21 @@ public class PlayerController : MonoBehaviour
 
                 newVelocity.Set(movementSpeed * ControlMomentum/100, rb.velocity.y);
                 rb.velocity = newVelocity;
-                if(attackLagTimer == 0)
+                if(!isAttacking && !isJumping)
                 {
                     if (rb.velocity.x == 0)
                     {
-                        //animator.Play("PlayerIdle");
+                        animator.Play("PlayerIdle");
                     }
                     else
                     {
-                        //animator.Play("PlayerRun");
+                        animator.Play("PlayerRun");
                     }
                 }
-                
-                    
 
             }
             else if (!isGrounded) //If in air
             {
-
-
                 newVelocity.Set(movementSpeed * ControlMomentum/100, rb.velocity.y);
                 rb.velocity = newVelocity;
             }
@@ -257,9 +261,12 @@ public class PlayerController : MonoBehaviour
     public void Attack(int attackDirection)
     {
         //Debug.Log("attack called 2");
-        if (attackLagTimer == 0)
+        if (!isAttacking)
         {
+            isAttacking = true;
+            animator.Play("PlayerBasicAttack");
             StartCoroutine(AttackActiveFrames(attackDirection));
+            
         }
     }
 
@@ -269,22 +276,28 @@ public class PlayerController : MonoBehaviour
         switch (attackDirection)
         {
             case 0:
+                yield return new WaitForSeconds(startupFrames);
                 attackUp.SetActive(true);
                 yield return new WaitForSeconds(activeFrames); // waits a certain number of seconds
                 attackUp.SetActive(false);
-                attackChecker = false;
+                yield return new WaitForSeconds(recoveryFrames);
+                isAttacking = false;
                 break;
             case 1:
+                yield return new WaitForSeconds(startupFrames);
                 attackDown.SetActive(true);
                 yield return new WaitForSeconds(activeFrames); // waits a certain number of seconds
                 attackDown.SetActive(false);
-                attackChecker = false;
+                yield return new WaitForSeconds(recoveryFrames);
+                isAttacking = false;
                 break;
             case 2:
+                yield return new WaitForSeconds(startupFrames);
                 attackHori.SetActive(true);
                 yield return new WaitForSeconds(activeFrames); // waits a certain number of seconds
                 attackHori.SetActive(false);
-                attackChecker = false;
+                yield return new WaitForSeconds(recoveryFrames);
+                isAttacking = false;
                 break;
         }
     }
@@ -327,11 +340,11 @@ public class PlayerController : MonoBehaviour
         if (attackHori.activeSelf)
         {
             //Debug.Log("Swinging");
-            //animator.Play("PlayerAttackNeutral");
+            
 
-            if (Physics2D.OverlapArea(AHPoint1.position, AHPoint2.position, whatIsEnemy) && !attackChecker)
+            if (Physics2D.OverlapArea(AHPoint1.position, AHPoint2.position, whatIsEnemy) && !isAttacking)
             {
-                attackChecker = true;
+                isAttacking = true;
                 hitlist = Physics2D.OverlapAreaAll(AHPoint1.position, AHPoint2.position, whatIsEnemy);
                 int i = 0;
                 while (i < hitlist.Length)
@@ -350,11 +363,11 @@ public class PlayerController : MonoBehaviour
         if (attackUp.activeSelf)
         {
             //Debug.Log("Swinging");
-            //animator.Play("PlayerAttackUp");
+            //animator.Play("PlayUp");
 
-            if (Physics2D.OverlapArea(AUPoint1.position, AUPoint2.position, whatIsEnemy) && !attackChecker)
+            if (Physics2D.OverlapArea(AUPoint1.position, AUPoint2.position, whatIsEnemy) && !isAttacking)
             {
-                attackChecker = true;
+                isAttacking = true;
                 hitlist = Physics2D.OverlapAreaAll(AUPoint1.position, AUPoint2.position, whatIsEnemy);
                 int i = 0;
                 while (i < hitlist.Length)
@@ -375,9 +388,9 @@ public class PlayerController : MonoBehaviour
             //Debug.Log("Swinging");
             //animator.Play("PlayerAttackDown");
 
-            if (Physics2D.OverlapArea(ADPoint1.position, ADPoint2.position, whatIsEnemy) && !attackChecker)
+            if (Physics2D.OverlapArea(ADPoint1.position, ADPoint2.position, whatIsEnemy) && !isAttacking)
             {
-                attackChecker = true;
+                isAttacking = true;
                 newVelocity.Set(0.0f, 0.0f);
                 rb.velocity = newVelocity;
                 newForce.Set(0.0f, jumpForce * 0.66f);
@@ -433,7 +446,7 @@ public class PlayerController : MonoBehaviour
             if (HP <= 0)
             {
                 Debug.Log("Death");
-                //animator.Play("PlayerDeath");
+                animator.Play("PlayerDeath");
                 this.transform.position = StartingLocation.position;
                 HP = StartingHP;
             }
@@ -444,7 +457,7 @@ public class PlayerController : MonoBehaviour
     {
         inHitstun = true;
         StartCoroutine(Invincibility());
-        //animator.Play("PlayerHit");
+        animator.Play("PlayerHurt");
         yield return new WaitForSeconds(1); // waits a certain number of seconds
         inHitstun = false;
     }
