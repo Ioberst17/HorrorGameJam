@@ -7,6 +7,8 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private PlayerController PlayerController;
     [SerializeField]
+    private PlayerWeapon PlayerWeapon;
+    [SerializeField]
     private MusicController MusicController;
     [SerializeField]
     private UIController UIController;
@@ -100,10 +102,12 @@ public class GameController : MonoBehaviour
             if (xInput >= 1 && PlayerController.facingDirection == -1)
             {
                 PlayerController.Flip();
+                PlayerWeapon.Flip();
             }
             else if (xInput <= -1 && PlayerController.facingDirection == 1)
             {
                 PlayerController.Flip();
+                PlayerWeapon.Flip();
             }
 
             if (Input.GetButtonDown("Jump") || Input.GetKeyDown("up") || Input.GetKeyDown(KeyCode.W))
