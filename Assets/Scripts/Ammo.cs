@@ -14,7 +14,8 @@ public class Ammo : MonoBehaviour
     {
         if (col.gameObject.tag == "Enemy")
         {
-            EventSystem.current.AttackHitTrigger(ammoID);
+            var enemyController = col.gameObject.GetComponent<EnemyController>();
+            enemyController.AmmoDamage(ammoID);
             Destroy(gameObject);
         }
     }
