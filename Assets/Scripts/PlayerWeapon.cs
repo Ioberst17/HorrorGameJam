@@ -7,12 +7,13 @@ public class PlayerWeapon : MonoBehaviour
 {
     //ammo-related
     public List<GameObject> ammoPrefabs;
-    public Transform projectileSpawnPoint;
+    public Transform projectileSpawnPoint; // assigned in inspector
     public int ammoSpeed = 500;
     // weapon rotation
     public int upAngle = 90;
     public int downAngle = -90;
     public int standardAngle = 0;
+    private Transform firePoint;
 
     // Start is used to subscribe to weapon events
     void Start()
@@ -43,9 +44,14 @@ public class PlayerWeapon : MonoBehaviour
     {
         int ammoIndex = weaponID + ((2 * (weaponID - 1)-1)) + (weaponLevel-1); //formula for index assumes three levels for every weapon + prefabs in resources folder
         
-        GameObject shot = Instantiate(ammoPrefabs[ammoIndex], projectileSpawnPoint.position, ammoPrefabs[ammoIndex].transform.rotation);
+        GameObject shot = Instantiate(ammoPrefabs[ammoIndex], projectileSpawnPoint.position, projectileSpawnPoint.transform.rotation);
 
-        shot.GetComponent<Rigidbody2D>().AddForce(transform.right * ammoSpeed);
+        shot.GetComponent<Rigidbody2D>().AddForce(projectileSpawnPoint.transform.right * ammoSpeed);
+    }
+
+    public void Flip()
+    {
+        projectileSpawnPoint.Rotate(0.0f, 180.0f, 0.0f);
     }
 
     private void OnDestroy()
