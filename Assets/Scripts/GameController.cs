@@ -70,11 +70,11 @@ public class GameController : MonoBehaviour
         if (!isPaused)
         {
             xInput = Input.GetAxisRaw("Horizontal");
-            if(xInput>0 && PlayerController.ControlMomentum < 100)
+            if(xInput>0 && PlayerController.ControlMomentum < 50)
             {
                 PlayerController.ControlMomentum += 1;
             }
-            else if (xInput < 0 && PlayerController.ControlMomentum > -100)
+            else if (xInput < 0 && PlayerController.ControlMomentum > -50)
             {
                 PlayerController.ControlMomentum -= 1;
             }
@@ -89,11 +89,11 @@ public class GameController : MonoBehaviour
                     PlayerController.ControlMomentum += 1;
                 }
             }
-            if (PlayerController.ControlMomentum > 100)
+            if (PlayerController.ControlMomentum > 50)
             {
                 PlayerController.ControlMomentum -= 1;
             }
-            else if (PlayerController.ControlMomentum < -100)
+            else if (PlayerController.ControlMomentum < -50)
             {
                 PlayerController.ControlMomentum += 1;
             }
@@ -110,7 +110,7 @@ public class GameController : MonoBehaviour
                 PlayerWeapon.Flip();
             }
 
-            if (Input.GetButtonDown("Jump") || Input.GetKeyDown("up") || Input.GetKeyDown(KeyCode.W))
+            if (Input.GetButtonDown("Jump") || Input.GetKeyDown("up") ) //|| Input.GetKeyDown(KeyCode.W))
             {
                 PlayerController.Jump();
             }
@@ -120,18 +120,18 @@ public class GameController : MonoBehaviour
                 if (Input.GetKey(KeyCode.W) || Input.GetKey("up"))
                 {
                     PlayerController.Attack(0);
-                    EventSystem.current.AmmoCheckTrigger();
+                    //EventSystem.current.AmmoCheckTrigger();
                     //EventSystem.current.WeaponAmmoTrigger(1, -1, 0);
                 }
                 else if((Input.GetKey(KeyCode.S) || Input.GetKey("down")) && !isGrounded){
                     PlayerController.Attack(1);
-                    EventSystem.current.AmmoCheckTrigger();
+                    //EventSystem.current.AmmoCheckTrigger();
                     //EventSystem.current.WeaponAmmoTrigger(1, -1, 1);
                 }
                 else
                 {
                     PlayerController.Attack(2);
-                    EventSystem.current.AmmoCheckTrigger();
+                    //EventSystem.current.AmmoCheckTrigger();
                     //EventSystem.current.WeaponAmmoTrigger(1, -1, 2);
                 }
             }
@@ -183,11 +183,11 @@ public class GameController : MonoBehaviour
         }
 
     }
-    public void passHit(string enemyname, int attackDamage)
+    public void passHit(string enemyname, int attackDamage, Vector3 playerPosition)
     {
-        Debug.Log("flag2");
+        //Debug.Log("flag2");
         EnemyController = GameObject.Find(enemyname).GetComponent<EnemyController>();
-        EnemyController.calculateHit(attackDamage);
+        EnemyController.calculateHit(attackDamage, playerPosition);
         Debug.Log("passing hit to " + enemyname);
 
     }
