@@ -117,7 +117,7 @@ public class PlayerController : MonoBehaviour
         ControlMomentum = 0;
         animator = GetComponent<Animator>();
         attackLagTimer = 0;
-        AttackDamage = 5;
+        AttackDamage = 10;
         canDash = true;
         inHitstun = false;
         isInvincible = false;
@@ -213,7 +213,7 @@ public class PlayerController : MonoBehaviour
             }
             else if (isAgainstWall && canWallJump)
             {
-                ControlMomentum = 250 * -facingDirection;
+                ControlMomentum = 125 * -facingDirection;
                 canWallJump = false;
                 isJumping = true;
                 newVelocity.Set(0.0f, 0.0f);
@@ -234,7 +234,7 @@ public class PlayerController : MonoBehaviour
             if (isGrounded && !isJumping) //if on ground
             {
 
-                newVelocity.Set(movementSpeed * ControlMomentum/100, rb.velocity.y);
+                newVelocity.Set(movementSpeed * ControlMomentum/50, rb.velocity.y);
                 rb.velocity = newVelocity;
                 if(!isAttacking && !isJumping)
                 {
@@ -251,7 +251,7 @@ public class PlayerController : MonoBehaviour
             }
             else if (!isGrounded) //If in air
             {
-                newVelocity.Set(movementSpeed * ControlMomentum/100, rb.velocity.y);
+                newVelocity.Set(movementSpeed * ControlMomentum/50, rb.velocity.y);
                 rb.velocity = newVelocity;
             }
         }
@@ -342,9 +342,8 @@ public class PlayerController : MonoBehaviour
             //Debug.Log("Swinging");
             
 
-            if (Physics2D.OverlapArea(AHPoint1.position, AHPoint2.position, whatIsEnemy) && !isAttacking)
+            if (Physics2D.OverlapArea(AHPoint1.position, AHPoint2.position, whatIsEnemy))
             {
-                isAttacking = true;
                 hitlist = Physics2D.OverlapAreaAll(AHPoint1.position, AHPoint2.position, whatIsEnemy);
                 int i = 0;
                 while (i < hitlist.Length)
@@ -352,7 +351,7 @@ public class PlayerController : MonoBehaviour
                     //Debug.Log(hitlist[i]);
                     if (hitlist[i].GetType() == typeof(UnityEngine.CapsuleCollider2D))
                     {
-                        GameController.passHit(hitlist[i].name, AttackDamage);
+                        GameController.passHit(hitlist[i].name, AttackDamage, transform.position);
                     }
                     i++;
                 }
@@ -365,9 +364,8 @@ public class PlayerController : MonoBehaviour
             //Debug.Log("Swinging");
             //animator.Play("PlayUp");
 
-            if (Physics2D.OverlapArea(AUPoint1.position, AUPoint2.position, whatIsEnemy) && !isAttacking)
+            if (Physics2D.OverlapArea(AUPoint1.position, AUPoint2.position, whatIsEnemy))
             {
-                isAttacking = true;
                 hitlist = Physics2D.OverlapAreaAll(AUPoint1.position, AUPoint2.position, whatIsEnemy);
                 int i = 0;
                 while (i < hitlist.Length)
@@ -375,7 +373,7 @@ public class PlayerController : MonoBehaviour
                     //Debug.Log(hitlist[i]);
                     if (hitlist[i].GetType() == typeof(UnityEngine.CapsuleCollider2D))
                     {
-                        GameController.passHit(hitlist[i].name, AttackDamage);
+                        GameController.passHit(hitlist[i].name, AttackDamage, transform.position);
                     }
                     i++;
                 }
@@ -388,9 +386,8 @@ public class PlayerController : MonoBehaviour
             //Debug.Log("Swinging");
             //animator.Play("PlayerAttackDown");
 
-            if (Physics2D.OverlapArea(ADPoint1.position, ADPoint2.position, whatIsEnemy) && !isAttacking)
+            if (Physics2D.OverlapArea(ADPoint1.position, ADPoint2.position, whatIsEnemy))
             {
-                isAttacking = true;
                 newVelocity.Set(0.0f, 0.0f);
                 rb.velocity = newVelocity;
                 newForce.Set(0.0f, jumpForce * 0.66f);
@@ -403,7 +400,7 @@ public class PlayerController : MonoBehaviour
                     //Debug.Log(hitlist[i]);
                     if (hitlist[i].GetType() == typeof(UnityEngine.CapsuleCollider2D))
                     {
-                        GameController.passHit(hitlist[i].name, AttackDamage);
+                        GameController.passHit(hitlist[i].name, AttackDamage, transform.position);
                     }
                     i++;
                 }

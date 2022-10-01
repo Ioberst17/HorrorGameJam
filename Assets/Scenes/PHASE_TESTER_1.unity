@@ -2835,7 +2835,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1458881045040599524, guid: eb2664123c277934fb626507fe6ad021, type: 3}
   m_PrefabInstance: {fileID: 1458881044282191579}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1547142136}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2ff2415fce9754649ad4cbdc741fc922, type: 3}
@@ -3038,6 +3038,10 @@ PrefabInstance:
     - target: {fileID: 2187315309248144471, guid: ff6633fba9c9a104897186ae02e7cd12, type: 3}
       propertyPath: m_Name
       value: TestEnemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 2187315309248144471, guid: ff6633fba9c9a104897186ae02e7cd12, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2187315309248144488, guid: ff6633fba9c9a104897186ae02e7cd12, type: 3}
       propertyPath: m_RootOrder
@@ -3649,11 +3653,11 @@ GameObject:
   - component: {fileID: 1271635464}
   m_Layer: 8
   m_Name: EnemySpider
-  m_TagString: Untagged
+  m_TagString: Spider
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!95 &1271635464
 Animator:
   serializedVersion: 4
@@ -3723,15 +3727,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58fdb91a52e72ef47818dfecf12d5abe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageValue: 10
+  animator: {fileID: 0}
+  rb: {fileID: 0}
+  playerLocation: {fileID: 0}
   patrol1: {fileID: 1756996979}
+  patrol1Point: {x: 0, y: 0, z: 0}
   patrol2: {fileID: 115385429}
+  patrol2Point: {x: 0, y: 0, z: 0}
   patrolSpeed: 3
+  patrolID: 0
+  damageValue: 10
   invincibilitySet: 60
+  isAttacking: 0
   playerInZone: 0
   weaponDatabase: {fileID: 0}
-  SoulPointsDropped: 45
   facingDirection: 1
+  hellhoundBehavior: {fileID: 0}
 --- !u!212 &1271635468
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3974,15 +3985,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58fdb91a52e72ef47818dfecf12d5abe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageValue: 10
+  animator: {fileID: 0}
+  rb: {fileID: 0}
+  playerLocation: {fileID: 0}
   patrol1: {fileID: 717499001}
+  patrol1Point: {x: 0, y: 0, z: 0}
   patrol2: {fileID: 150849303}
+  patrol2Point: {x: 0, y: 0, z: 0}
   patrolSpeed: 3
+  patrolID: 0
+  damageValue: 10
   invincibilitySet: 60
+  isAttacking: 0
   playerInZone: 0
   weaponDatabase: {fileID: 0}
-  SoulPointsDropped: 45
   facingDirection: 1
+  hellhoundBehavior: {fileID: 0}
 --- !u!212 &1296993583
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4318,6 +4336,27 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &1547142136 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1458881045040599527, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+  m_PrefabInstance: {fileID: 1458881044282191579}
+  m_PrefabAsset: {fileID: 0}
+--- !u!70 &1547142141
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1547142136}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.039348602, y: 0.054267883}
+  m_Size: {x: 0.44092178, y: 1.044342}
+  m_Direction: 0
 --- !u!1 &1553056663
 GameObject:
   m_ObjectHideFlags: 0
@@ -5583,6 +5622,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyParalysisDemon (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8819910788059392017, guid: ecbc369542e22594aabe2f57c7007efb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8819910788059392028, guid: ecbc369542e22594aabe2f57c7007efb, type: 3}
       propertyPath: m_RootOrder
       value: 26
@@ -5771,6 +5814,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyBat
       objectReference: {fileID: 0}
+    - target: {fileID: 590080602688877147, guid: 22089acc010147d4693fe1e572c5f7c7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 590080603455036389, guid: 22089acc010147d4693fe1e572c5f7c7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 6.54
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 22089acc010147d4693fe1e572c5f7c7, type: 3}
 --- !u!1001 &780987606459701060
@@ -5836,6 +5887,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyBloodGolem
       objectReference: {fileID: 0}
+    - target: {fileID: 780987607704259821, guid: 466eee22e6f58d248b17f12f83d01033, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 466eee22e6f58d248b17f12f83d01033, type: 3}
 --- !u!1001 &1210534858162967198
@@ -5845,6 +5900,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1210534858238427214, guid: 753c88793f4c0c64bac60ae5dddc5200, type: 3}
+      propertyPath: m_Size.x
+      value: 0.21554172
+      objectReference: {fileID: 0}
+    - target: {fileID: 1210534858238427214, guid: 753c88793f4c0c64bac60ae5dddc5200, type: 3}
+      propertyPath: m_Size.y
+      value: 0.20763016
+      objectReference: {fileID: 0}
+    - target: {fileID: 1210534858238427214, guid: 753c88793f4c0c64bac60ae5dddc5200, type: 3}
+      propertyPath: m_Offset.x
+      value: 0.113104165
+      objectReference: {fileID: 0}
+    - target: {fileID: 1210534858238427214, guid: 753c88793f4c0c64bac60ae5dddc5200, type: 3}
+      propertyPath: m_Offset.y
+      value: 0.026815414
+      objectReference: {fileID: 0}
+    - target: {fileID: 1210534858571092005, guid: 753c88793f4c0c64bac60ae5dddc5200, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -3.257
+      objectReference: {fileID: 0}
     - target: {fileID: 1210534858597401455, guid: 753c88793f4c0c64bac60ae5dddc5200, type: 3}
       propertyPath: m_RootOrder
       value: 25
@@ -5893,6 +5968,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyHellHound
       objectReference: {fileID: 0}
+    - target: {fileID: 6288744783548123467, guid: 753c88793f4c0c64bac60ae5dddc5200, type: 3}
+      propertyPath: m_Size.x
+      value: 1.5446423
+      objectReference: {fileID: 0}
+    - target: {fileID: 6288744783548123467, guid: 753c88793f4c0c64bac60ae5dddc5200, type: 3}
+      propertyPath: m_Offset.x
+      value: 0.27232128
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 753c88793f4c0c64bac60ae5dddc5200, type: 3}
 --- !u!1001 &1458881044282191579
@@ -5902,6 +5985,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1458881044685643087, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1458881045040599451, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1458881045040599524, guid: eb2664123c277934fb626507fe6ad021, type: 3}
       propertyPath: GameController
       value: 
@@ -6006,6 +6097,10 @@ PrefabInstance:
     - target: {fileID: 7986256297375915390, guid: 8aa1f7c5d93ff7b47b71e3d173f22710, type: 3}
       propertyPath: m_Name
       value: Weapon
+      objectReference: {fileID: 0}
+    - target: {fileID: 7986256297375915390, guid: 8aa1f7c5d93ff7b47b71e3d173f22710, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8063847465259609148, guid: 8aa1f7c5d93ff7b47b71e3d173f22710, type: 3}
       propertyPath: m_RootOrder
