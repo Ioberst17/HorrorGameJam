@@ -12,7 +12,7 @@ public class Inventory : MonoBehaviour
     private List<PlayerWeapons> inventory = new List<PlayerWeapons>(); // to use as inventory
     public WeaponDatabase weaponDatabase;
     [SerializeField]
-    private int currentWeapon;
+    private int currentWeapon; // the weapon ID of the current weapon the player is using
 
     void Start()
     {
@@ -39,39 +39,20 @@ public class Inventory : MonoBehaviour
 
     void Update()
     {
-        // check for event of firing weapon to decrement inventory ammo, if so call Update Ammo
-        // check for event of pickup / purchase of to increment inventory ammo, if so call Update Ammo
-
-        // check for event on leveling, if so call update level
-        /*if (Input.GetKeyDown(KeyCode.Alpha0))
-        {
-            EventSystem.current.WeaponAmmoTrigger(1, 1);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha9))
-        {
-            EventSystem.current.WeaponAmmoTrigger(1, -1);
-        }*/
-
-
-        if (Input.GetKeyDown(KeyCode.Alpha9))
-        {
-            EventSystem.current.WeaponAddAmmoTrigger(1, 1);
-        }
-
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
-            EventSystem.current.WeaponAddAmmoTrigger(2, 1);
+            EventSystem.current.WeaponAddAmmoTrigger(10);
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha6))
+        if (Input.GetKeyDown(KeyCode.Alpha8)) // decrement to the lower weapon in player inventory
+        {
+            
+            EventSystem.current.WeaponChangeTrigger(-1);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha9))
         {
             EventSystem.current.WeaponChangeTrigger(1);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha7))
-        {
-            EventSystem.current.WeaponChangeTrigger(2);
         }
 
         if (Input.GetKeyDown(KeyCode.M))
@@ -125,11 +106,17 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    
+    private void AddAmmo(int ammoChange)
+    {
+        AddAmmo(currentWeapon, ammoChange);
+    } // used for adding to current weapon
+    
     private void AddAmmo(int weaponID, int ammoChange)
     {
         for (int i = 0; i < inventory.Count; i++)
         { if (inventory[i].weaponID == weaponID) { inventory[i].weaponAmmo += ammoChange; } }
-    }
+    } // used when needing to add to a weapon with a specific ID e.g. non-current weapon
 
     private void WeaponFired(int weaponID, int weaponLevel, int ammoChange, int direction)
     {
@@ -142,12 +129,40 @@ public class Inventory : MonoBehaviour
         { if (inventory[i].weaponID == weaponID) { inventory[i].weaponLevel += levelChange; } }
     }
     
-    private void WeaponChanged(int weaponID)
+    private void WeaponChanged(int weaponChange)
     {
-        currentWeapon = weaponID;
+        int weaponLocation = GetTheCurrentWeaponsIndexInInventory();
+
+        if(weaponLocation == -1) { Debug.Log("Current Weapon is not in inventory"); }
+        else
+        {
+            if(weaponChange == 1) { IncrementInventoryWeapon(weaponChange, weaponLocation); }
+            else if(weaponChange == -1) { DecrementInventoryWeapon(weaponChange, weaponLocation); }
+            else { Debug.Log("Inventory Increment is not 1 or -1"); }
+        }
+    }
+
+    private void IncrementInventoryWeapon(int weaponChange, int weaponLocation)
+    {
+        if (weaponLocation + weaponChange > inventory.Count - 1) { currentWeapon = inventory[0].weaponID; } // if incrementing inventory would overshoot inventory, then set current weapon to 1st inventory element
+        else {currentWeapon = inventory[weaponLocation + weaponChange].weaponID; }
+    }
+
+    private void DecrementInventoryWeapon(int weaponChange, int weaponLocation)
+    {
+        if (weaponLocation + weaponChange < 0) { currentWeapon = inventory[0].weaponID; } // if decrementing inventory would overshoot inventory, then set current weapon to 1st inventory element
+        else { currentWeapon = inventory[weaponLocation + weaponChange].weaponID; }
     }
     
-    private void DoesCurrentWeaponHaveAmmo()
+    private int GetTheCurrentWeaponsIndexInInventory()
+    {
+        for (int i = 0; i < inventory.Count; i++)
+        { if (inventory[i].weaponID == currentWeapon) { return i; } }
+
+        return -1;
+    }
+
+    private void DoesCurrentWeaponHaveAmmo() // used as a check before firing a weapon and decrementing inventory
     {
         for (int i = 0; i < inventory.Count; i++) // loop through inventory
         { if (inventory[i].weaponID == currentWeapon) // if the loop finds the current weapon 
