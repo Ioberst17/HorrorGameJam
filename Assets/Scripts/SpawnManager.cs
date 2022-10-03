@@ -35,5 +35,22 @@ public class SpawnManager : MonoBehaviour
         {
             Instantiate(enemyPrefabs[2], player.transform.position + new Vector3(spawnX, spawnY, spawnZ), Quaternion.identity);
         }
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            Instantiate(enemyPrefabs[3], player.transform.position + new Vector3(spawnX, spawnY, spawnZ), Quaternion.identity);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            Instantiate(enemyPrefabs[4], player.transform.position + new Vector3(spawnX, spawnY, spawnZ), Quaternion.identity);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            Instantiate(enemyPrefabs[5], player.transform.position + new Vector3(spawnX, spawnY, spawnZ), Quaternion.identity);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha7))
+        {
+            Instantiate(enemyPrefabs[6], player.transform.position + new Vector3(spawnX, spawnY, spawnZ), Quaternion.identity);
+        }
+
     }
 }
