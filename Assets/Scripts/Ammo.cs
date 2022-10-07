@@ -12,7 +12,7 @@ public class Ammo : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.tag == "Enemy")
+        if (col.gameObject.GetComponent<EnemyController>() != null)
         {
             var enemyController = col.gameObject.GetComponent<EnemyController>();
             enemyController.AmmoDamage(ammoID);

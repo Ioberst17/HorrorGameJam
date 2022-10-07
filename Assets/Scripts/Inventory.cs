@@ -34,7 +34,11 @@ public class Inventory : MonoBehaviour
         AddNewWeapon(weaponDatabase.weaponDatabase.entries[1]); //add the weapon at the 1st index
         AddNewWeapon(weaponDatabase.weaponDatabase.entries[2]); //add the weapon at the 1st index
         AddNewWeapon(weaponDatabase.weaponDatabase.entries[3]); //add the weapon at the 1st index
-        
+        AddNewWeapon(weaponDatabase.weaponDatabase.entries[4]);
+        AddNewWeapon(weaponDatabase.weaponDatabase.entries[5]);
+
+
+
     }
 
     void Update()
@@ -150,7 +154,7 @@ public class Inventory : MonoBehaviour
 
     private void DecrementInventoryWeapon(int weaponChange, int weaponLocation)
     {
-        if (weaponLocation + weaponChange < 0) { currentWeapon = inventory[0].weaponID; } // if decrementing inventory would overshoot inventory, then set current weapon to 1st inventory element
+        if (weaponLocation + weaponChange < 0) { currentWeapon = inventory[inventory.Count - 1].weaponID; } // if decrementing inventory would overshoot inventory, then set current weapon to last inventory element
         else { currentWeapon = inventory[weaponLocation + weaponChange].weaponID; }
     }
     
@@ -162,12 +166,12 @@ public class Inventory : MonoBehaviour
         return -1;
     }
 
-    private void DoesCurrentWeaponHaveAmmo() // used as a check before firing a weapon and decrementing inventory
+    private void DoesCurrentWeaponHaveAmmo(int fireDirection) // used as a check before firing a weapon and decrementing inventory
     {
         for (int i = 0; i < inventory.Count; i++) // loop through inventory
         { if (inventory[i].weaponID == currentWeapon) // if the loop finds the current weapon 
             { if(inventory[i].weaponAmmo > 0) // and if the current weapon has ammo
-                EventSystem.current.WeaponFireTrigger(currentWeapon,inventory[i].weaponLevel, -1, 0); ; // send the weapon fire event
+                EventSystem.current.WeaponFireTrigger(currentWeapon,inventory[i].weaponLevel, -1, fireDirection); ; // send the weapon fire event
             } 
         } 
     }
