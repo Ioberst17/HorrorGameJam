@@ -31,7 +31,6 @@ public class EnemyDatabase : MonoBehaviour
 
         for (int i = 0; i < testData.Count; i++) 
         {
-            Debug.Log(testData.Count);
             enemyDatabase.entries[i] = new EnemyData(); // creates new row entry in memory
 
             FieldInfo[] fields = enemyDatabase.entries[i].GetType().GetFields(); // stores an array of a data row of the database
