@@ -6,7 +6,7 @@ using System;
 public class WeaponDatabase : MonoBehaviour
 {
     // must be attached to a game object in the scene hierarchy
-    // creates a weapons database (the store of weapons and information about them), and reads it from the itemDatbase.csv in /Resources
+    // creates a weapons database (the store of weapons and information about them), and reads it from the weaponDatbase.csv in /Resources
 
     private TextAsset textAssetData; // the CSV to read from, must be assigned in Inspector
 
@@ -32,7 +32,6 @@ public class WeaponDatabase : MonoBehaviour
 
         int tableSize = data.Length / numOfColumns - 1; // gets data length (total # of cells), then divides by # of columns to get # of entries, then -1 for ignoring the header row
         weaponDatabase.entries = new Weapons[tableSize];
-        Debug.Log(tableSize);
 
         for (int i = 0; i < tableSize; i++)
         {
