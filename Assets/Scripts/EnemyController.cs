@@ -39,7 +39,11 @@ public class EnemyController : MonoBehaviour
     private int EnemytypeID;
     public int facingDirection = 1;
 
+    public bool damageInterupt = false;
+
     [SerializeField] private HellhoundBehavior hellhoundBehavior;
+    [SerializeField] private ParalysisDemonBehavior paralysisdemonBehavior;
+    [SerializeField] private BatBehavior batBehavior;
 
 
     void Awake()
@@ -64,6 +68,7 @@ public class EnemyController : MonoBehaviour
         setupHelper();
     }
 
+    //this is what actually deals the damage
     public void OnTriggerEnter2DHelper(Collider2D collider)
     {
         if (!isDead)
@@ -89,6 +94,7 @@ public class EnemyController : MonoBehaviour
     }
 
     // Update is called once per frame
+    //1 is bat, 2 is paralysis demon, 3 is hellhound, 4 is, 5 is.
     void FixedUpdate()
     {
         if (!isDead && invincibilityCount==0)
@@ -96,8 +102,10 @@ public class EnemyController : MonoBehaviour
             switch (EnemytypeID)
             {
                 case 1:
+                    batBehavior.BatPassover();
                     break;
                 case 2:
+                    paralysisdemonBehavior.PDPassover();
                     break;
                 case 3:
                     hellhoundBehavior.HellhoundPassover();
@@ -118,42 +126,14 @@ public class EnemyController : MonoBehaviour
         if (invincibilityCount > 0)
         {
             invincibilityCount -= 1;
+            if(!playerInZone && invincibilityCount == 0)
+            {
+                CC2D.enabled = true;
+
+            }
         }
 
     }
-    //private void patrol()
-    //{
-    //    switch (patrolID)
-    //    {
-    //        case 0:
-    //            newVelocity.Set(patrolSpeed, 0);
-    //            rb.velocity = newVelocity;
-    //            break;
-    //        case 1:
-    //            newVelocity.Set(-patrolSpeed, 0);
-    //            rb.velocity = newVelocity;
-    //            break;
-    //        case 2:
-    //            newVelocity.Set(patrolSpeed, 0);
-    //            rb.velocity = newVelocity;
-    //            break;
-    //        default:
-    //            break;
-    //    }
-    //}
-    //private void chase()
-    //{
-    //    if(playerLocation.position.x >= transform.position.x)
-    //    {
-    //        newVelocity.Set(patrolSpeed*1.5f, 0);
-    //        rb.velocity = newVelocity;
-    //    }
-    //    else
-    //    {
-    //        newVelocity.Set(-patrolSpeed*1.5f, 0);
-    //        rb.velocity = newVelocity;
-    //    }
-    //}
     public bool calculateHit(int attackDamage, Vector3 playerPosition)
     {
         Debug.Log(name + " called");
@@ -163,9 +143,9 @@ public class EnemyController : MonoBehaviour
             {
                 //rb.AddForce(new Vector2(5.0f * facingDirection, 5.0f), ForceMode2D.Impulse);
                 Debug.Log(name + " has been hit for " + attackDamage + "!");
-
+                damageInterupt = true;
                 //might have to make change this later
-                isAttacking = false;
+                //isAttacking = false;
 
                 invincibilityCount = invincibilitySet;
                 HP -= attackDamage;
@@ -251,12 +231,14 @@ public class EnemyController : MonoBehaviour
                 damageValue = 10;
                 SoulPointsDropped = 45;
                 knockbackForce = 3;
+                batBehavior = GetComponent<BatBehavior>();
                 break;
             case 2:
                 HP = 50;
                 damageValue = 10;
                 SoulPointsDropped = 45;
                 knockbackForce = 3;
+                paralysisdemonBehavior = GetComponent<ParalysisDemonBehavior>();
                 break;
             case 3:
                 HP = 50;

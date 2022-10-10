@@ -310,9 +310,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58fdb91a52e72ef47818dfecf12d5abe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  rb: {fileID: 0}
+  playerLocation: {fileID: 0}
   patrol1: {fileID: 1210534858194058744}
+  patrol1Point: {x: 0, y: 0, z: 0}
   patrol2: {fileID: 1210534858571092005}
+  patrol2Point: {x: 0, y: 0, z: 0}
   patrolSpeed: 3
+  patrolID: 0
   damageValue: 10
   invincibilitySet: 60
   isAttacking: 0
@@ -332,7 +338,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7651b3c400ec2ff4095159a6788f3fcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isAttacking: 0
+  HellhoundStartupFrames: 1
+  HellhoundActiveFrames: 1
+  HellhoundRecoveryFrames: 1
 --- !u!50 &1210534858597401456
 Rigidbody2D:
   serializedVersion: 4
