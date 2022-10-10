@@ -12,9 +12,10 @@ public class Ammo : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.tag == "Enemy")
+        if (col.gameObject.GetComponent<EnemyController>() != null)
         {
-            EventSystem.current.AttackHitTrigger(ammoID);
+            var enemyController = col.gameObject.GetComponent<EnemyController>();
+            enemyController.AmmoDamage(ammoID);
             Destroy(gameObject);
         }
     }
