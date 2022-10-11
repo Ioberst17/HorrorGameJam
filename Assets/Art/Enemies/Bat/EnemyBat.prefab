@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 590080602688877143}
   - component: {fileID: 590080602688877142}
   - component: {fileID: 590080602688877145}
+  - component: {fileID: 6597102794486915145}
   - component: {fileID: 590080602688877144}
   m_Layer: 8
   m_Name: EnemyBat
@@ -104,15 +105,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58fdb91a52e72ef47818dfecf12d5abe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageValue: 10
+  animator: {fileID: 0}
+  rb: {fileID: 0}
+  playerLocation: {fileID: 0}
   patrol1: {fileID: 590080603455036389}
+  patrol1Point: {x: 0, y: 0, z: 0}
   patrol2: {fileID: 590080603623449652}
+  patrol2Point: {x: 0, y: 0, z: 0}
   patrolSpeed: 3
+  patrolID: 0
+  damageValue: 10
   invincibilitySet: 60
+  isAttacking: 0
   playerInZone: 0
   weaponDatabase: {fileID: 0}
-  SoulPointsDropped: 45
   facingDirection: 1
+  damageInterupt: 0
+  hellhoundBehavior: {fileID: 0}
+  paralysisdemonBehavior: {fileID: 0}
 --- !u!50 &590080602688877142
 Rigidbody2D:
   serializedVersion: 4
@@ -150,6 +160,18 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 1, y: 1}
   m_Direction: 0
+--- !u!114 &6597102794486915145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 590080602688877147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4547fd67c5200724895441172477a64a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!95 &590080602688877144
 Animator:
   serializedVersion: 4

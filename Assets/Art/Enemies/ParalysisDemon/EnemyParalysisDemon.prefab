@@ -217,6 +217,7 @@ GameObject:
   - component: {fileID: 8819910788059392030}
   - component: {fileID: 8819910788059392031}
   - component: {fileID: 8819910788059392016}
+  - component: {fileID: 5966870965407499027}
   - component: {fileID: 8819910788059392027}
   m_Layer: 8
   m_Name: EnemyParalysisDemon
@@ -308,15 +309,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58fdb91a52e72ef47818dfecf12d5abe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageValue: 10
+  animator: {fileID: 0}
+  rb: {fileID: 0}
+  playerLocation: {fileID: 0}
   patrol1: {fileID: 8819910788042896287}
+  patrol1Point: {x: 0, y: 0, z: 0}
   patrol2: {fileID: 8819910787451771405}
+  patrol2Point: {x: 0, y: 0, z: 0}
   patrolSpeed: 3
+  patrolID: 0
+  damageValue: 10
   invincibilitySet: 60
+  isAttacking: 0
   playerInZone: 0
   weaponDatabase: {fileID: 0}
-  SoulPointsDropped: 45
   facingDirection: 1
+  damageInterupt: 0
+  hellhoundBehavior: {fileID: 0}
 --- !u!50 &8819910788059392031
 Rigidbody2D:
   serializedVersion: 4
@@ -354,6 +363,18 @@ CapsuleCollider2D:
   m_Offset: {x: -0.0032801628, y: 0.0032806396}
   m_Size: {x: 0.40300417, y: 0.6157532}
   m_Direction: 0
+--- !u!114 &5966870965407499027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8819910788059392017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3459f565a140484587a892f6c1889e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!95 &8819910788059392027
 Animator:
   serializedVersion: 4

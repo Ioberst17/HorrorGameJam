@@ -4,9 +4,14 @@ using UnityEngine;
 
 public class HellhoundBehavior : MonoBehaviour
 {
-    public bool isAttacking = false;
+    bool HellhoundisAttacking = false;
+    bool justAttacked = false;
+    
     private Vector2 newVelocity;
     EnemyController enemyController;
+    [SerializeField] private float HellhoundStartupFrames;
+    [SerializeField] private float HellhoundActiveFrames;
+    [SerializeField] private float HellhoundRecoveryFrames;
 
     // Start is called before the first frame update
     void Start()
@@ -19,29 +24,32 @@ public class HellhoundBehavior : MonoBehaviour
     {
         
     }
+    //this is effectively the fixedupdate block
     public void HellhoundPassover()
     {
-        if (enemyController.transform.position.x >= enemyController.patrol1Point.x)
+        if (!justAttacked)
         {
-            enemyController.patrolID = 1;
-        }
-        else if (enemyController.transform.position.x <= enemyController.patrol2Point.x)
-        {
-            enemyController.patrolID = 2;
-        }
+            if (enemyController.transform.position.x >= enemyController.patrol1Point.x)
+            {
+                enemyController.patrolID = 1;
+            }
+            else if (enemyController.transform.position.x <= enemyController.patrol2Point.x)
+            {
+                enemyController.patrolID = 2;
+            }
 
-        if (!enemyController.playerInZone)
-        {
-            enemyController.animator.Play("HellhoundRun");
-            HoundPatrol();
-           
-        }
-        else
-        {
-            enemyController.animator.Play("HellhoundRun");
-            HoundChase();
-        }
+            if (!enemyController.playerInZone)
+            {
+                enemyController.animator.Play("HellhoundRun");
+                HoundPatrol();
 
+            }
+            else
+            {
+                enemyController.animator.Play("HellhoundRun");
+                HoundChase();
+            }
+        }
         if (enemyController.rb.velocity.x >= 0.5f && enemyController.facingDirection == -1)
         {
             enemyController.Flip();
@@ -89,6 +97,33 @@ public class HellhoundBehavior : MonoBehaviour
 
     public void PounceTrigger()
     {
+        if (!justAttacked && enemyController.rb.velocity.y < 0.25f)
+        {
+            justAttacked = true;
+            newVelocity.Set(0, enemyController.rb.velocity.y);
+            enemyController.animator.Play("HellhoundCrouch");
+            StartCoroutine(PounceStartup());
+        }
+        
+    }
 
+    IEnumerator PounceStartup()
+    {
+        yield return new WaitForSeconds(HellhoundStartupFrames);
+        if (enemyController.damageInterupt)
+        {
+            enemyController.damageInterupt = false;
+        }
+        else
+        {
+            enemyController.rb.AddForce(new Vector2(2.0f * enemyController.facingDirection, 5.0f), ForceMode2D.Impulse);
+            enemyController.isAttacking = true;
+            enemyController.animator.Play("HellhoundAirborne");
+            yield return new WaitForSeconds(HellhoundActiveFrames);
+            enemyController.isAttacking = false;
+            yield return new WaitForSeconds(HellhoundRecoveryFrames);
+            enemyController.animator.Play("HellHoundStand");
+        }
+        justAttacked = false;
     }
 }
