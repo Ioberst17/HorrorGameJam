@@ -46,7 +46,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.644256, y: 0.25788784}
+  m_Offset: {x: 1.1658268, y: 0.1521635}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -57,7 +57,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.0268977, y: 0.9724674}
+  m_Size: {x: 3.0700393, y: 2.480795}
   m_EdgeRadius: 0
 --- !u!114 &780987606080065851
 MonoBehaviour:
@@ -237,15 +237,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58fdb91a52e72ef47818dfecf12d5abe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageValue: 10
+  animator: {fileID: 0}
+  rb: {fileID: 0}
+  playerLocation: {fileID: 0}
   patrol1: {fileID: 780987606748774658}
+  patrol1Point: {x: 0, y: 0, z: 0}
   patrol2: {fileID: 780987607052610464}
+  patrol2Point: {x: 0, y: 0, z: 0}
   patrolSpeed: 3
+  patrolID: 0
+  damageValue: 10
   invincibilitySet: 60
+  isAttacking: 0
   playerInZone: 0
   weaponDatabase: {fileID: 0}
-  SoulPointsDropped: 45
   facingDirection: 1
+  damageInterupt: 0
+  hellhoundBehavior: {fileID: 0}
+  paralysisdemonBehavior: {fileID: 0}
+  batBehavior: {fileID: 0}
 --- !u!50 &780987607704259823
 Rigidbody2D:
   serializedVersion: 4

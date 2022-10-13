@@ -44,7 +44,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private HellhoundBehavior hellhoundBehavior;
     [SerializeField] private ParalysisDemonBehavior paralysisdemonBehavior;
     [SerializeField] private BatBehavior batBehavior;
-
+    [SerializeField] private BloodGolemBehavior GolemBehavior;
 
     void Awake()
     {
@@ -111,6 +111,7 @@ public class EnemyController : MonoBehaviour
                     hellhoundBehavior.HellhoundPassover();
                     break;
                 case 4:
+                    GolemBehavior.GolemPassover();
                     break;
                 case 5:
                     break;
@@ -252,6 +253,7 @@ public class EnemyController : MonoBehaviour
                 damageValue = 10;
                 SoulPointsDropped = 45;
                 knockbackForce = 3;
+                GolemBehavior = GetComponent<BloodGolemBehavior>();
                 break;
             case 5:
                 HP = 50;
