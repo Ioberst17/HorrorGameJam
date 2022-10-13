@@ -3745,6 +3745,7 @@ MonoBehaviour:
   damageInterupt: 0
   hellhoundBehavior: {fileID: 0}
   paralysisdemonBehavior: {fileID: 0}
+  batBehavior: {fileID: 0}
 --- !u!212 &1271635468
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4005,6 +4006,7 @@ MonoBehaviour:
   damageInterupt: 0
   hellhoundBehavior: {fileID: 0}
   paralysisdemonBehavior: {fileID: 0}
+  batBehavior: {fileID: 0}
 --- !u!212 &1296993583
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5628,7 +5630,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8819910788059392017, guid: ecbc369542e22594aabe2f57c7007efb, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8819910788059392028, guid: ecbc369542e22594aabe2f57c7007efb, type: 3}
       propertyPath: m_RootOrder
@@ -5893,7 +5895,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 780987607704259821, guid: 466eee22e6f58d248b17f12f83d01033, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 466eee22e6f58d248b17f12f83d01033, type: 3}
