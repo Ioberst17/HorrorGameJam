@@ -41,10 +41,10 @@ public class EnemyController : MonoBehaviour
 
     public bool damageInterupt = false;
 
-    [SerializeField] private HellhoundBehavior hellhoundBehavior;
-    [SerializeField] private ParalysisDemonBehavior paralysisdemonBehavior;
-    [SerializeField] private BatBehavior batBehavior;
-    [SerializeField] private BloodGolemBehavior GolemBehavior;
+    private HellhoundBehavior hellhoundBehavior;
+    private ParalysisDemonBehavior paralysisdemonBehavior;
+    private BatBehavior batBehavior;
+    private BloodGolemBehavior GolemBehavior;
 
     void Awake()
     {
