@@ -444,7 +444,7 @@ public class PlayerController : MonoBehaviour
             {
                 Debug.Log("Death");
                 animator.Play("PlayerDeath");
-                this.transform.position = StartingLocation.position;
+                transform.position = StartingLocation.position;
                 HP = StartingHP;
             }
         }
