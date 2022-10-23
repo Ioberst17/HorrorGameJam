@@ -45,6 +45,7 @@ public class EnemyController : MonoBehaviour
     private ParalysisDemonBehavior paralysisdemonBehavior;
     private BatBehavior batBehavior;
     private BloodGolemBehavior GolemBehavior;
+    private SpiderBehavior SpiderBehavior;
 
     void Awake()
     {
@@ -114,6 +115,7 @@ public class EnemyController : MonoBehaviour
                     GolemBehavior.GolemPassover();
                     break;
                 case 5:
+                    SpiderBehavior.spiderPassover();
                     break;
                 default:
                     break;
@@ -260,6 +262,7 @@ public class EnemyController : MonoBehaviour
                 damageValue = 10;
                 SoulPointsDropped = 45;
                 knockbackForce = 3;
+                SpiderBehavior = GetComponent<SpiderBehavior>();
                 break;
             default:
                 HP = 50;

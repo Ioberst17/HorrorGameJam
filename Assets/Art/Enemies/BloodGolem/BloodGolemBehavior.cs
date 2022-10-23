@@ -73,10 +73,6 @@ public class BloodGolemBehavior : MonoBehaviour
     }
     public void BloodBallReset()
     {
-        //Vector2 tempVector = new Vector2(0f, 0f);
         bloodballActive = false;
-        //BloodBallrb.velocity = tempVector;
-        //Bloodball.transform.position = Bloodballstart.position;
-        //Bloodball.SetActive(false);
     }
 }
