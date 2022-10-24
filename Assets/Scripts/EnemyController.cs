@@ -45,6 +45,7 @@ public class EnemyController : MonoBehaviour
     private ParalysisDemonBehavior paralysisdemonBehavior;
     private BatBehavior batBehavior;
     private BloodGolemBehavior GolemBehavior;
+    private SpiderBehavior SpiderBehavior;
 
     void Awake()
     {
@@ -79,7 +80,7 @@ public class EnemyController : MonoBehaviour
                 == LayerMask.NameToLayer("Player") && isAttacking)
                 {
                     playerController.takeDamage(transform.position, damageValue, 1);
-                    rb.AddForce(new Vector2(5.0f * facingDirection, 0.0f), ForceMode2D.Impulse);
+                    rb.AddForce(new Vector2(knockbackForce * -facingDirection, 0.0f), ForceMode2D.Impulse);
                 }
             }
         }
@@ -114,6 +115,7 @@ public class EnemyController : MonoBehaviour
                     GolemBehavior.GolemPassover();
                     break;
                 case 5:
+                    SpiderBehavior.spiderPassover();
                     break;
                 default:
                     break;
@@ -163,16 +165,16 @@ public class EnemyController : MonoBehaviour
                     Debug.Log("Health remaining is " + HP);
                     if (transform.position.x <= playerPosition.x)
                     {
-                        newVelocity.Set(-5.0f, 0.0f);
-                        rb.velocity = newVelocity;
-                        newForce.Set(0.0f, knockbackForce);
+                        //newVelocity.Set(-5.0f, 0.0f);
+                        //rb.velocity = newVelocity;
+                        newForce.Set(-knockbackForce, knockbackForce);
                         rb.AddForce(newForce, ForceMode2D.Impulse);
                     }
                     else
                     {
-                        newVelocity.Set(5.0f, 0.0f);
-                        rb.velocity = newVelocity;
-                        newForce.Set(0.0f, knockbackForce);
+                        //newVelocity.Set(5.0f, 0.0f);
+                        //rb.velocity = newVelocity;
+                        newForce.Set(knockbackForce, knockbackForce);
                         rb.AddForce(newForce, ForceMode2D.Impulse);
                     }
                 }
@@ -252,7 +254,7 @@ public class EnemyController : MonoBehaviour
                 HP = 50;
                 damageValue = 10;
                 SoulPointsDropped = 45;
-                knockbackForce = 3;
+                knockbackForce = 0;
                 GolemBehavior = GetComponent<BloodGolemBehavior>();
                 break;
             case 5:
@@ -260,6 +262,7 @@ public class EnemyController : MonoBehaviour
                 damageValue = 10;
                 SoulPointsDropped = 45;
                 knockbackForce = 3;
+                SpiderBehavior = GetComponent<SpiderBehavior>();
                 break;
             default:
                 HP = 50;
