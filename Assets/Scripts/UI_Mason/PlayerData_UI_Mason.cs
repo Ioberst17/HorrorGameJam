@@ -12,9 +12,9 @@ public class PlayerData_UI_Mason : MonoBehaviour
     [SerializeField] private Image mpBar;
     [SerializeField] private Image spBar;
 
-    private float health;
-    private float mp;
-    private float sp;
+    public float health;
+    public float mp;
+    public float sp;
 
     [SerializeField] private GameController gameController;
 
@@ -36,6 +36,6 @@ public class PlayerData_UI_Mason : MonoBehaviour
         mpBar.fillAmount = mp / 100f;
 
         sp = gameController.GetSP();
-        spBar.fillAmount = sp;
+        spBar.fillAmount = sp / 100f;
     }
 }
