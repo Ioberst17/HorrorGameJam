@@ -21,36 +21,39 @@ public class SpawnManager : MonoBehaviour
     void Update()
     {
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+    }
+
+    public void SpawnEnemy(int idNum)
+    {
+        if (idNum == 0)
         {
             Instantiate(enemyPrefabs[0], player.transform.position + new Vector3(spawnX, spawnY, spawnZ), Quaternion.identity);
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        if (idNum == 1)
         {
             Instantiate(enemyPrefabs[1], player.transform.position + new Vector3(spawnX, spawnY, spawnZ), Quaternion.identity);
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha3))
+        if (idNum == 2)
         {
             Instantiate(enemyPrefabs[2], player.transform.position + new Vector3(spawnX, spawnY, spawnZ), Quaternion.identity);
         }
-        if (Input.GetKeyDown(KeyCode.Alpha4))
+        if (idNum == 3)
         {
             Instantiate(enemyPrefabs[3], player.transform.position + new Vector3(spawnX, spawnY, spawnZ), Quaternion.identity);
         }
-        if (Input.GetKeyDown(KeyCode.Alpha5))
+        if (idNum == 4)
         {
             Instantiate(enemyPrefabs[4], player.transform.position + new Vector3(spawnX, spawnY, spawnZ), Quaternion.identity);
         }
-        if (Input.GetKeyDown(KeyCode.Alpha6))
+        if (idNum == 5)
         {
             Instantiate(enemyPrefabs[5], player.transform.position + new Vector3(spawnX, spawnY, spawnZ), Quaternion.identity);
         }
-        if (Input.GetKeyDown(KeyCode.Alpha7))
+        if (idNum == 6)
         {
             Instantiate(enemyPrefabs[6], player.transform.position + new Vector3(spawnX, spawnY, spawnZ), Quaternion.identity);
         }
-
     }
 }
