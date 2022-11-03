@@ -25,35 +25,11 @@ public class SpawnManager : MonoBehaviour
 
     public void SpawnEnemy(int idNum)
     {
-        if (idNum == 0)
+        if (idNum >= 0 && idNum <=6)
         {
-            Instantiate(enemyPrefabs[0], player.transform.position + new Vector3(spawnX, spawnY, spawnZ), Quaternion.identity);
-        }
-
-        if (idNum == 1)
-        {
-            Instantiate(enemyPrefabs[1], player.transform.position + new Vector3(spawnX, spawnY, spawnZ), Quaternion.identity);
-        }
-
-        if (idNum == 2)
-        {
-            Instantiate(enemyPrefabs[2], player.transform.position + new Vector3(spawnX, spawnY, spawnZ), Quaternion.identity);
-        }
-        if (idNum == 3)
-        {
-            Instantiate(enemyPrefabs[3], player.transform.position + new Vector3(spawnX, spawnY, spawnZ), Quaternion.identity);
-        }
-        if (idNum == 4)
-        {
-            Instantiate(enemyPrefabs[4], player.transform.position + new Vector3(spawnX, spawnY, spawnZ), Quaternion.identity);
-        }
-        if (idNum == 5)
-        {
-            Instantiate(enemyPrefabs[5], player.transform.position + new Vector3(spawnX, spawnY, spawnZ), Quaternion.identity);
-        }
-        if (idNum == 6)
-        {
-            Instantiate(enemyPrefabs[6], player.transform.position + new Vector3(spawnX, spawnY, spawnZ), Quaternion.identity);
+            var spawnLocation = player.transform.position + new Vector3(spawnX, spawnY, spawnZ);
+            Instantiate(enemyPrefabs[idNum], spawnLocation, Quaternion.identity);
+            Debug.Log("Spawned " + enemyPrefabs[idNum].name + " at location " + spawnLocation);
         }
     }
 }
