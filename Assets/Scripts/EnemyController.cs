@@ -66,8 +66,6 @@ public class EnemyController : MonoBehaviour
         patrolID = 0;
        
         enemySpriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-        
-        setupHelper();
     }
 
     //this is what actually deals the damage
@@ -91,6 +89,7 @@ public class EnemyController : MonoBehaviour
    // Start is called before the first frame update
     void Start()
     {
+        setupHelper();
         //subscribe to important messages
         EventSystem.current.onAttackCollision += AmmoDamage;
     }
@@ -103,6 +102,9 @@ public class EnemyController : MonoBehaviour
         {
             switch (EnemytypeID)
             {
+                case 0:
+                    hellhoundBehavior.HellhoundPassover();
+                    break;
                 case 1:
                     batBehavior.BatPassover();
                     break;
@@ -110,12 +112,9 @@ public class EnemyController : MonoBehaviour
                     paralysisDemonBehavior.PDPassover();
                     break;
                 case 3:
-                    hellhoundBehavior.HellhoundPassover();
                     break;
                 case 4:
                     GolemBehavior.GolemPassover();
-                    break;
-                case 5:
                     break;
                 default:
                     break;
@@ -215,27 +214,25 @@ public class EnemyController : MonoBehaviour
         
         
     }
-    void setupHelper() // to load in relevant enemy stats
+    void setupHelper() // to load in relevant enemy stats and behavior script
     {
-        if (CompareTag("Bat")) { EnemytypeID = 1; batBehavior = GetComponent<BatBehavior>(); }
+        if (CompareTag("Hellhound")) { EnemytypeID = 0; hellhoundBehavior = GetComponent<HellhoundBehavior>(); } // add enemyID as in enemy database + behavior component
+        else if (CompareTag("Bat")) { EnemytypeID = 1; batBehavior = GetComponent<BatBehavior>(); }
         else if (CompareTag("ParalysisDemon")) { EnemytypeID = 2; paralysisDemonBehavior = GetComponent<ParalysisDemonBehavior>(); }
-        else if (CompareTag("Hellhound")) { EnemytypeID = 3; hellhoundBehavior = GetComponent<HellhoundBehavior>(); }
+        else if (CompareTag("Spider")) { EnemytypeID = 3; }
         else if (CompareTag("Bloodgolem")) { EnemytypeID = 4; GolemBehavior = GetComponent<BloodGolemBehavior>(); }
-        else if (CompareTag("Spider")) { EnemytypeID = 5; }
+        else EnemytypeID = -1;
 
         //this is for setting up the values of hp, damage, etc
-
-        for (int i = 0; i < enemyDatabase.enemyDatabase.entries.Length; i++) // loop through enemydatabase
+        if(EnemytypeID  >= 0)
         {
-            if (CompareTag(enemyDatabase.enemyDatabase.entries[i].nameNoSpace)) // if the object's tag matches the enemy tag name in the database, load in values
-            {
-                var loadedValue = enemyDatabase.enemyDatabase.entries[i];
-                HP = loadedValue.health; //50;
-                damageValue = loadedValue.attack1Damage; //10;
-                SoulPointsDropped = loadedValue.soulPointsDropped; //45;
-                knockbackForce = loadedValue.knockback; //3
-            } 
+            var loadedValue = enemyDatabase.enemyDatabase.entries[EnemytypeID];
+            HP = loadedValue.health; //50;
+            damageValue = loadedValue.attack1Damage; //10;
+            SoulPointsDropped = loadedValue.soulPointsDropped; //45;
+            knockbackForce = loadedValue.knockback; //3
         }
+
     }
     private void OnDestroy()
     {
