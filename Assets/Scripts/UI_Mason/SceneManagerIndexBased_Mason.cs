@@ -56,6 +56,11 @@ public class SceneManagerIndexBased_Mason : MonoBehaviour
 
     }
 
+    public void ReloadScene()
+    {
+        SceneManager.LoadScene(activeScene.buildIndex);
+    }
+
     // Update is called once per frame
     void Update()
     {

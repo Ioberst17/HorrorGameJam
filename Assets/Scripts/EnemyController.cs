@@ -23,6 +23,7 @@ public class EnemyController : MonoBehaviour
     public int patrolID;
 
     //the attack power of the enemy and other internal values
+    public EnemyDatabase enemyDatabase; // used to load in values for enemies e.g. health data, attack info
     public int damageValue;
     private int HP;
     private int invincibilityCount;
@@ -42,10 +43,9 @@ public class EnemyController : MonoBehaviour
     public bool damageInterupt = false;
 
     private HellhoundBehavior hellhoundBehavior;
-    private ParalysisDemonBehavior paralysisdemonBehavior;
+    private ParalysisDemonBehavior paralysisDemonBehavior;
     private BatBehavior batBehavior;
     private BloodGolemBehavior GolemBehavior;
-    private SpiderBehavior SpiderBehavior;
 
     void Awake()
     {
@@ -57,6 +57,7 @@ public class EnemyController : MonoBehaviour
         playerController = GameObject.Find("PlayerModel").GetComponent<PlayerController>();
         playerLocation = GameObject.Find("PlayerModel").transform;
         weaponDatabase = GameObject.Find("WeaponDatabase").GetComponent<WeaponDatabase>();
+        enemyDatabase = GameObject.Find("EnemyDatabase").GetComponent<EnemyDatabase>();
         animator = GetComponent<Animator>();
         startingLocation = transform.position;
         patrol1Point = patrol1.position;
@@ -65,8 +66,6 @@ public class EnemyController : MonoBehaviour
         patrolID = 0;
        
         enemySpriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-        
-        setupHelper();
     }
 
     //this is what actually deals the damage
@@ -80,7 +79,7 @@ public class EnemyController : MonoBehaviour
                 == LayerMask.NameToLayer("Player") && isAttacking)
                 {
                     playerController.takeDamage(transform.position, damageValue, 1);
-                    rb.AddForce(new Vector2(knockbackForce * -facingDirection, 0.0f), ForceMode2D.Impulse);
+                    rb.AddForce(new Vector2(5.0f * facingDirection, 0.0f), ForceMode2D.Impulse);
                 }
             }
         }
@@ -90,6 +89,7 @@ public class EnemyController : MonoBehaviour
    // Start is called before the first frame update
     void Start()
     {
+        setupHelper();
         //subscribe to important messages
         EventSystem.current.onAttackCollision += AmmoDamage;
     }
@@ -102,20 +102,19 @@ public class EnemyController : MonoBehaviour
         {
             switch (EnemytypeID)
             {
+                case 0:
+                    hellhoundBehavior.HellhoundPassover();
+                    break;
                 case 1:
                     batBehavior.BatPassover();
                     break;
                 case 2:
-                    paralysisdemonBehavior.PDPassover();
+                    paralysisDemonBehavior.PDPassover();
                     break;
                 case 3:
-                    hellhoundBehavior.HellhoundPassover();
                     break;
                 case 4:
                     GolemBehavior.GolemPassover();
-                    break;
-                case 5:
-                    SpiderBehavior.spiderPassover();
                     break;
                 default:
                     break;
@@ -165,16 +164,16 @@ public class EnemyController : MonoBehaviour
                     Debug.Log("Health remaining is " + HP);
                     if (transform.position.x <= playerPosition.x)
                     {
-                        //newVelocity.Set(-5.0f, 0.0f);
-                        //rb.velocity = newVelocity;
-                        newForce.Set(-knockbackForce, knockbackForce);
+                        newVelocity.Set(-5.0f, 0.0f);
+                        rb.velocity = newVelocity;
+                        newForce.Set(0.0f, knockbackForce);
                         rb.AddForce(newForce, ForceMode2D.Impulse);
                     }
                     else
                     {
-                        //newVelocity.Set(5.0f, 0.0f);
-                        //rb.velocity = newVelocity;
-                        newForce.Set(knockbackForce, knockbackForce);
+                        newVelocity.Set(5.0f, 0.0f);
+                        rb.velocity = newVelocity;
+                        newForce.Set(0.0f, knockbackForce);
                         rb.AddForce(newForce, ForceMode2D.Impulse);
                     }
                 }
@@ -199,8 +198,6 @@ public class EnemyController : MonoBehaviour
     {
         var weaponID = ammoID / 3; // since every weapon has 3 levels - this INT - will auto round down to the weaponID's database position in the array e.g. 2 > [0]th weapon in database list,; 7> [1]st weapon in database list
         var ammoLevel = ammoID % 3;
-        Debug.Log("Weapon ID is: " + weaponID);
-        Debug.Log("Ammo ID is: " + ammoLevel);
 
         switch (ammoLevel)
         {
@@ -217,62 +214,26 @@ public class EnemyController : MonoBehaviour
         
         
     }
-    void setupHelper()
+    void setupHelper() // to load in relevant enemy stats and behavior script
     {
-        if (CompareTag("Bat")) { EnemytypeID = 1; }
-        else if (CompareTag("ParalysisDemon")) { EnemytypeID = 2; }
-        else if (CompareTag("Hellhound")) { EnemytypeID = 3; }
-        else if (CompareTag("Bloodgolem")) { EnemytypeID = 4; }
-        else if (CompareTag("Spider")) { EnemytypeID = 5; }
+        if (CompareTag("Hellhound")) { EnemytypeID = 0; hellhoundBehavior = GetComponent<HellhoundBehavior>(); } // add enemyID as in enemy database + behavior component
+        else if (CompareTag("Bat")) { EnemytypeID = 1; batBehavior = GetComponent<BatBehavior>(); }
+        else if (CompareTag("ParalysisDemon")) { EnemytypeID = 2; paralysisDemonBehavior = GetComponent<ParalysisDemonBehavior>(); }
+        else if (CompareTag("Spider")) { EnemytypeID = 3; }
+        else if (CompareTag("Bloodgolem")) { EnemytypeID = 4; GolemBehavior = GetComponent<BloodGolemBehavior>(); }
+        else EnemytypeID = -1;
 
         //this is for setting up the values of hp, damage, etc
-        //should probably be coming from a database in the long run. 
-        switch (EnemytypeID)
+        if(EnemytypeID  >= 0)
         {
-            case 1:
-                HP = 50;
-                damageValue = 10;
-                SoulPointsDropped = 45;
-                knockbackForce = 3;
-                batBehavior = GetComponent<BatBehavior>();
-                break;
-            case 2:
-                HP = 50;
-                damageValue = 10;
-                SoulPointsDropped = 45;
-                knockbackForce = 3;
-                paralysisdemonBehavior = GetComponent<ParalysisDemonBehavior>();
-                break;
-            case 3:
-                HP = 50;
-                damageValue = 10;
-                SoulPointsDropped = 45;
-                knockbackForce = 3;
-                hellhoundBehavior = GetComponent<HellhoundBehavior>();
-                break;
-            case 4:
-                HP = 50;
-                damageValue = 10;
-                SoulPointsDropped = 45;
-                knockbackForce = 0;
-                GolemBehavior = GetComponent<BloodGolemBehavior>();
-                break;
-            case 5:
-                HP = 50;
-                damageValue = 10;
-                SoulPointsDropped = 45;
-                knockbackForce = 3;
-                SpiderBehavior = GetComponent<SpiderBehavior>();
-                break;
-            default:
-                HP = 50;
-                damageValue = 10;
-                SoulPointsDropped = 45;
-                knockbackForce = 3;
-                break;
+            var loadedValue = enemyDatabase.enemyDatabase.entries[EnemytypeID];
+            HP = loadedValue.health; //50;
+            damageValue = loadedValue.attack1Damage; //10;
+            SoulPointsDropped = loadedValue.soulPointsDropped; //45;
+            knockbackForce = loadedValue.knockback; //3
         }
-    }
 
+    }
     private void OnDestroy()
     {
         // unsubscribe from events

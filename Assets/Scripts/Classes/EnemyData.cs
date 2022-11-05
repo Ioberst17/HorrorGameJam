@@ -8,10 +8,13 @@ public class EnemyData
     // CORE ATTRIBUTES
     public int id;
     public string name;
+    public string nameNoSpace;
     public int tier;
     public bool isFlying;
     public bool isGround;
     public int health;
+    public int soulPointsDropped;
+    public int knockback;
 
     //ATTACK INFO
     public string attack1;

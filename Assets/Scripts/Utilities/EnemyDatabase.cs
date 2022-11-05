@@ -33,7 +33,7 @@ public class EnemyDatabase : MonoBehaviour
         {
             enemyDatabase.entries[i] = new EnemyData(); // creates new row entry in memory
 
-            FieldInfo[] fields = enemyDatabase.entries[i].GetType().GetFields(); // stores an array of a data row of the database
+            FieldInfo[] fields = enemyDatabase.entries[i].GetType().GetFields(); // used to validate the data type of fields that need to be read in (below)
 
             for (int j = 0; j < fields.Length; j++)
             {
@@ -41,12 +41,12 @@ public class EnemyDatabase : MonoBehaviour
                     try { fields[j].SetValue(enemyDatabase.entries[i], int.Parse(testData[i].Values.ElementAt(j))); }
                     catch { fields[j].SetValue(enemyDatabase.entries[i], 0); } // if can't parse the value set this default value*/
                 }
-                else if (typeof(bool) == fields[j].FieldType)
+                else if (typeof(bool) == fields[j].FieldType) // else, if it's meant to be a bool, use the below to parse in data
                 {
                     try { fields[j].SetValue(enemyDatabase.entries[i], bool.Parse(testData[i].Values.ElementAt(j))); }
                     catch { fields[j].SetValue(enemyDatabase.entries[i], false); } // if can't parse the value set this default value*/
                 }
-                else if(typeof(string) == fields[j].FieldType){
+                else if(typeof(string) == fields[j].FieldType){ // selse if it's a string...
                     try { fields[j].SetValue(enemyDatabase.entries[i], testData[i].Values.ElementAt(j)); }
                     catch { fields[j].SetValue(enemyDatabase.entries[i], "No Value"); } // if can't parse the value set this default value*/
                 }
