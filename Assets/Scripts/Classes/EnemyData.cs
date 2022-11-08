@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class EnemyData
+public class EnemyData // are added in the same order as the column schema
 {
     // CORE ATTRIBUTES
     public int id;
@@ -13,8 +13,8 @@ public class EnemyData
     public bool isFlying;
     public bool isGround;
     public int health;
-    public int soulPointsDropped;
     public int knockback;
+    public int soulPointsDropped;
 
     //ATTACK INFO
     public string attack1;

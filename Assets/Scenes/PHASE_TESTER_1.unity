@@ -2210,6 +2210,7 @@ MonoBehaviour:
   MusicController: {fileID: 1064831622}
   UIController: {fileID: 0}
   CameraBehavior: {fileID: 341844925}
+  SpawnManager: {fileID: 49111190}
   gameState: 
   isPaused: 0
   xInput: 0
@@ -6386,7 +6387,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7986256297375915390, guid: 8aa1f7c5d93ff7b47b71e3d173f22710, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8063847465259609148, guid: 8aa1f7c5d93ff7b47b71e3d173f22710, type: 3}
       propertyPath: m_RootOrder
@@ -6394,15 +6395,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8063847465259609148, guid: 8aa1f7c5d93ff7b47b71e3d173f22710, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.2624888
+      value: 0.5427439
+      objectReference: {fileID: 0}
+    - target: {fileID: 8063847465259609148, guid: 8aa1f7c5d93ff7b47b71e3d173f22710, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.14763963
       objectReference: {fileID: 0}
     - target: {fileID: 8063847465259609148, guid: 8aa1f7c5d93ff7b47b71e3d173f22710, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.5413
+      value: 0.1815
       objectReference: {fileID: 0}
     - target: {fileID: 8063847465259609148, guid: 8aa1f7c5d93ff7b47b71e3d173f22710, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.09
+      value: 0.083
       objectReference: {fileID: 0}
     - target: {fileID: 8063847465259609148, guid: 8aa1f7c5d93ff7b47b71e3d173f22710, type: 3}
       propertyPath: m_LocalPosition.z
