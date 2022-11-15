@@ -299,6 +299,9 @@ public class PlayerController : MonoBehaviour
                 yield return new WaitForSeconds(recoveryFrames);
                 isAttacking = false;
                 break;
+            default:
+                isAttacking = false;
+                break;
         }
     }
 

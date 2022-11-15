@@ -124,7 +124,7 @@ public class GameController : MonoBehaviour
                     //EventSystem.current.WeaponAmmoTrigger(1, -1, 0);
                 }
                 else if((Input.GetKey(KeyCode.S) || Input.GetKey("down")) && !isGrounded){
-                    PlayerController.Attack(-1);
+                    PlayerController.Attack(1);
                     EventSystem.current.AmmoCheckTrigger(0);
                     //EventSystem.current.WeaponAmmoTrigger(1, -1, 1);
                 }
