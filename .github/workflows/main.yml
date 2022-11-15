@@ -37,24 +37,8 @@ jobs:
               with:
                   name: Build-${{ matrix.targetPlatform }}
                   path: build/${{ matrix.targetPlatform }}
-    deployToGitHubPages:
-        name: Deploy to the Web via GitHub Pages
-        runs-on: ubuntu-latest
-        needs: buildForAllSupportedPlatforms
-        if: ${{ !cancelled() }}
-        steps:
-            - name: Checkout Repository
-              uses: actions/checkout@v3
-            - name: Download WebGL Artifact
-              uses: actions/download-artifact@v3
-            - name: Copy the WebGL build artifacts to the GitHub Pages directory
-              env:
-                  WEBGL_BUILD_PATH: ${{ format('build/WebGL', github.workspace) }}
-                  WEBGL_PAGES_PATH: ${{ format('docs/WebGL', github.workspace) }}
-              run: find $WEBGL_BUILD_PATH -type f -name "**WebGL.*" -exec cp {} $WEBGL_PAGES_PATH \;
-            - name: Deploy to GitHub Pages
-              uses: stefanzweifel/git-auto-commit-action@v4
+            - uses: JamesIves/github-pages-deploy-action@4.1.1
+              if: matrix.targetPlatform == 'WebGL'
               with:
-                  branch: main
-                  file_pattern: docs/**
-                  commit_message: Deploy to GitHub Pages
+                branch: main # The branch the action should deploy to.
+                folder: build/WebGL/${{ env.PROJECT_NAME }} # The folder the action should deploy.
