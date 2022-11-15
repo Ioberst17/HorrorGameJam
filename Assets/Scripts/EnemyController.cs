@@ -25,7 +25,9 @@ public class EnemyController : MonoBehaviour
     //the attack power of the enemy and other internal values
     public EnemyDatabase enemyDatabase; // used to load in values for enemies e.g. health data, attack info
     public int damageValue;
+
     public int HP;
+
     private int invincibilityCount;
     [SerializeField]
     private int invincibilitySet;
@@ -34,7 +36,9 @@ public class EnemyController : MonoBehaviour
     public bool playerInZone;
     public WeaponDatabase weaponDatabase; // used for ammo damage calcs
     private Vector2 newForce;
+
     public int knockbackForce;
+
     private int SoulPointsDropped;
 
     private int EnemytypeID;

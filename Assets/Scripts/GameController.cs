@@ -15,6 +15,8 @@ public class GameController : MonoBehaviour
     private EnemyController EnemyController;
     [SerializeField]
     private CameraBehavior CameraBehavior;
+    [SerializeField]
+    private SpawnManager SpawnManager;
 
     public string gameState;
     public bool isPaused;
@@ -114,31 +116,37 @@ public class GameController : MonoBehaviour
             {
                 PlayerController.Jump();
             }
-            if (Input.GetKeyDown(KeyCode.U))
+            if (Input.GetKeyDown(KeyCode.Y) || Input.GetKeyDown(KeyCode.U)) // if either attack or shoot is triggered
             {
                 //Debug.Log("attack called");
                 if (Input.GetKey(KeyCode.W) || Input.GetKey("up"))
                 {
-                    PlayerController.Attack(0);
-                    EventSystem.current.AmmoCheckTrigger(1);
-                    //EventSystem.current.WeaponAmmoTrigger(1, -1, 0);
+                    if (Input.GetKeyDown(KeyCode.U)) { PlayerController.Attack(0); } // melee attack if U
+                    if (Input.GetKeyDown(KeyCode.Y)) { EventSystem.current.AmmoCheckTrigger(1); } // shoot if Y, same logic used in below branches
                 }
                 else if((Input.GetKey(KeyCode.S) || Input.GetKey("down")) && !isGrounded){
-                    PlayerController.Attack(1);
-                    EventSystem.current.AmmoCheckTrigger(0);
-                    //EventSystem.current.WeaponAmmoTrigger(1, -1, 1);
+                    if (Input.GetKeyDown(KeyCode.U)) { PlayerController.Attack(1); }
+                    if (Input.GetKeyDown(KeyCode.Y)) { EventSystem.current.AmmoCheckTrigger(0); }
                 }
                 else
                 {
-                    PlayerController.Attack(2);
-                    EventSystem.current.AmmoCheckTrigger(0);
-                    //EventSystem.current.WeaponAmmoTrigger(1, -1, 2);
+                    if (Input.GetKeyDown(KeyCode.U)) { PlayerController.Attack(2); }
+                    if (Input.GetKeyDown(KeyCode.Y)) { EventSystem.current.AmmoCheckTrigger(0); }
                 }
             }
             if (Input.GetKeyDown(KeyCode.I))
             {
                 PlayerController.Dash();
             }
+            // For Spawns
+            if (Input.GetKeyDown(KeyCode.Alpha1)) { SpawnManager.SpawnEnemy(0); };
+            if (Input.GetKeyDown(KeyCode.Alpha2)) { SpawnManager.SpawnEnemy(1); };
+            if (Input.GetKeyDown(KeyCode.Alpha3)) { SpawnManager.SpawnEnemy(2); };
+            if (Input.GetKeyDown(KeyCode.Alpha4)) { SpawnManager.SpawnEnemy(3); };
+            if (Input.GetKeyDown(KeyCode.Alpha5)) { SpawnManager.SpawnEnemy(4); };
+            if (Input.GetKeyDown(KeyCode.Alpha6)) { SpawnManager.SpawnEnemy(5); };
+            if (Input.GetKeyDown(KeyCode.Alpha7)) { SpawnManager.SpawnEnemy(6); };
+
         }
     }
 

@@ -23,7 +23,7 @@ public class EnemyDatabase : MonoBehaviour
         ReadCSV();
     }
 
-    void ReadCSV() // adds database to the weaponDatabase game object that should be in scene, from a csv file
+    void ReadCSV() // adds database to the enemyDatabase game object that should be in scene, from a csv file
     {
         List<Dictionary<string, string>> testData = CSVReader.Read("TextFiles/EnemyDatabase");
 
