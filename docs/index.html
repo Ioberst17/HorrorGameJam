@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity WebGL Player | Card Game Simulator</title>
+    <style>
+      p {text-align: center;}
+    </style>
+  </head>
+  <body style="background-color:white;">
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title"><a href="./">HorrorGameJam</a></h1>
+          <h2 id="project_tagline">Create, Share, and Play</h2>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+	<p>This is the most recent test build</a>.</p>
+	<br/>
+	<canvas id="unity-canvas" width=960 height=600 style="width: 960px; height: 600px; background: url('WebGL/WebGL.jpg') center / cover"></canvas>
+	<script src="WebGL/WebGL.loader.js"></script>
+	<script>
+	  createUnityInstance(document.querySelector("#unity-canvas"), {
+		dataUrl: "WebGL/WebGL.data",
+		frameworkUrl: "WebGL/WebGL.framework.js",
+		codeUrl: "WebGL/WebGL.wasm",
+		companyName: "Team Game Jam",
+		productName: "Horror Game Jam Project",
+		productVersion: "1.x",
+		// matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
+		// devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
+	  });
+	</script>
+    
+  </body>
+</html>
