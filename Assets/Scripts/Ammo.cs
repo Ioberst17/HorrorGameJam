@@ -18,6 +18,11 @@ public class Ammo : MonoBehaviour
             enemyController.AmmoDamage(ammoID);
             Destroy(gameObject);
         }
+
+        if(col.gameObject.tag == "Boundary")
+        {
+            Destroy(gameObject);
+        }
     }
 
 }
