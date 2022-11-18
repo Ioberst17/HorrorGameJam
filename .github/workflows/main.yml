@@ -44,7 +44,9 @@ jobs:
               if: matrix.targetPlatform == 'WebGL'
               with:
                   branch: gh-pages # The branch the action should deploy to.
-                  folder: build/WebGL/${{ env.PROJECT_NAME }} # The folder the action should deploy.
+                  folder: build/WebGL/WebGL # The folder the action should deploy.
+                  commit-message: Deploy
+                  single-commit: true
 
             - name: Upload Artifacts
               uses: actions/upload-artifact@v2
