@@ -1,0 +1,1 @@
+This is start of my Ink Story!
