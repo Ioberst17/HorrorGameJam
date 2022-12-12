@@ -3429,9 +3429,11 @@ GameObject:
   - component: {fileID: 1243262960}
   - component: {fileID: 1243262959}
   - component: {fileID: 1243262961}
+  - component: {fileID: 1243262963}
+  - component: {fileID: 1243262962}
   m_Layer: 8
   m_Name: Gargoyle
-  m_TagString: Enemy
+  m_TagString: Gargoyle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3539,7 +3541,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!95 &1243262961
 Animator:
   serializedVersion: 4
@@ -3560,6 +3562,58 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1243262962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1243262956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58fdb91a52e72ef47818dfecf12d5abe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 0}
+  rb: {fileID: 0}
+  playerLocation: {fileID: 0}
+  patrol1: {fileID: 1890820476}
+  patrol1Point: {x: 0, y: 0, z: 0}
+  patrol2: {fileID: 1619450242}
+  patrol2Point: {x: 0, y: 0, z: 0}
+  patrolSpeed: 0
+  patrolID: 0
+  enemyDatabase: {fileID: 0}
+  damageValue: 0
+  HP: 0
+  invincibilityCount: 0
+  invincibilitySet: 0
+  isAttacking: 0
+  playerInZone: 0
+  weaponDatabase: {fileID: 0}
+  knockbackForce: 0
+  facingDirection: 1
+  damageInterupt: 0
+--- !u!114 &1243262963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1243262956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a66ae0a0a1e1da64ab187b880f8ab98b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topLeftPoint: {fileID: 1890820476}
+  bottomRightPoint: {fileID: 1619450242}
+  animator: {fileID: 1243262961}
+  bossState: 
+  stateTimer: 0
+  HP: 0
+  SoulPointsDropped: 0
+  ragemode: 0
 --- !u!1 &1249356265
 GameObject:
   m_ObjectHideFlags: 0
@@ -3795,6 +3849,7 @@ MonoBehaviour:
   enemyDatabase: {fileID: 0}
   damageValue: 10
   HP: 0
+  invincibilityCount: 0
   invincibilitySet: 60
   isAttacking: 0
   playerInZone: 0
@@ -3950,6 +4005,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a7aa6eb91d915a45bf4894dc5c0aea3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyController: {fileID: 1243262962}
+  manualController: 1
 --- !u!1 &1387705169
 GameObject:
   m_ObjectHideFlags: 0
@@ -4710,7 +4767,7 @@ GameObject:
   - component: {fileID: 1855635629}
   m_Layer: 0
   m_Name: GargoyleBase
-  m_TagString: Untagged
+  m_TagString: Gargoyle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5762,6 +5819,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a7aa6eb91d915a45bf4894dc5c0aea3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyController: {fileID: 0}
+  manualController: 0
 --- !u!61 &2126509571
 BoxCollider2D:
   m_ObjectHideFlags: 0
