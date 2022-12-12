@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using mixpanel;
 
 public class SpawnManager : MonoBehaviour
 {
@@ -29,6 +30,14 @@ public class SpawnManager : MonoBehaviour
         {
             var spawnLocation = player.transform.position + new Vector3(spawnX, spawnY, spawnZ);
             Instantiate(enemyPrefabs[idNum], spawnLocation, Quaternion.identity);
+
+            // for data tracking to mixpanel
+            var props = new Value();
+            props["Enemy Name"] = enemyPrefabs[idNum].name;
+            Mixpanel.Track("Enemies Generated", props);
+
+            Mixpanel.Flush();
+
             Debug.Log("Spawned " + enemyPrefabs[idNum].name + " at location " + spawnLocation);
         }
     }

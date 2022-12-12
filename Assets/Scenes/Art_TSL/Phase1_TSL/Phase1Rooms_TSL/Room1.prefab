@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2712541106059618520}
   m_Layer: 3
   m_Name: Room1_Wall_L
-  m_TagString: Untagged
+  m_TagString: Boundary
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -47,7 +47,7 @@ GameObject:
   - component: {fileID: 2712541106306595561}
   m_Layer: 3
   m_Name: Room1
-  m_TagString: Untagged
+  m_TagString: Boundary
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -82,7 +82,7 @@ GameObject:
   - component: {fileID: 2712541106522934103}
   m_Layer: 3
   m_Name: Room1_Ceiling
-  m_TagString: Untagged
+  m_TagString: Boundary
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -126,7 +126,7 @@ GameObject:
   - component: {fileID: 2712541106896343637}
   m_Layer: 3
   m_Name: Room1_Floor
-  m_TagString: Untagged
+  m_TagString: Boundary
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -170,7 +170,7 @@ GameObject:
   - component: {fileID: 2712541107115467375}
   m_Layer: 3
   m_Name: Room1_Wall_R
-  m_TagString: Untagged
+  m_TagString: Boundary
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -250,6 +250,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room1_Flat (21)
       objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
 --- !u!4 &7218568927798442579 stripped
@@ -311,6 +315,10 @@ PrefabInstance:
     - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
       propertyPath: m_Name
       value: Room1_Flat (9)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
@@ -374,6 +382,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room1_Flat (8)
       objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
 --- !u!4 &7218568927675188070 stripped
@@ -435,6 +447,10 @@ PrefabInstance:
     - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
       propertyPath: m_Name
       value: Room1_Flat (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
@@ -498,6 +514,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room1_Flat (23)
       objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
 --- !u!4 &7218568927632638994 stripped
@@ -559,6 +579,10 @@ PrefabInstance:
     - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
       propertyPath: m_Name
       value: Room1_Flat (11)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
@@ -622,6 +646,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room1_Flat (25)
       objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
 --- !u!4 &7218568927510933235 stripped
@@ -683,6 +711,10 @@ PrefabInstance:
     - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
       propertyPath: m_Name
       value: Room1_Flat (19)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
@@ -746,6 +778,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room1_Flat (24)
       objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
 --- !u!4 &7218568927349189402 stripped
@@ -807,6 +843,10 @@ PrefabInstance:
     - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
       propertyPath: m_Name
       value: Room1_Flat (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
@@ -870,6 +910,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room1_Flat (16)
       objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
 --- !u!4 &7218568927268278076 stripped
@@ -931,6 +975,10 @@ PrefabInstance:
     - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
       propertyPath: m_Name
       value: Room1_Flat (16)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
@@ -994,6 +1042,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room1_Flat (14)
       objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
 --- !u!4 &7218568927113398402 stripped
@@ -1055,6 +1107,10 @@ PrefabInstance:
     - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
       propertyPath: m_Name
       value: Room1_Flat (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
@@ -1118,6 +1174,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room1_Flat (15)
       objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
 --- !u!4 &7218568927060350289 stripped
@@ -1179,6 +1239,10 @@ PrefabInstance:
     - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
       propertyPath: m_Name
       value: Room1_Flat (17)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
@@ -1242,6 +1306,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room1_Flat (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
 --- !u!4 &7218568928923646902 stripped
@@ -1303,6 +1371,10 @@ PrefabInstance:
     - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
       propertyPath: m_Name
       value: Room1_Flat (22)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
@@ -1366,6 +1438,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room1_Flat (12)
       objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
 --- !u!4 &7218568928886640960 stripped
@@ -1427,6 +1503,10 @@ PrefabInstance:
     - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
       propertyPath: m_Name
       value: Room1_Flat (13)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
@@ -1490,6 +1570,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room1_Flat (14)
       objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
 --- !u!4 &7218568928861409591 stripped
@@ -1551,6 +1635,10 @@ PrefabInstance:
     - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
       propertyPath: m_Name
       value: Room1_Flat (15)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
@@ -1614,6 +1702,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room1_Flat
       objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
 --- !u!4 &7218568928783297922 stripped
@@ -1675,6 +1767,10 @@ PrefabInstance:
     - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
       propertyPath: m_Name
       value: Room1_Flat (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
@@ -1738,6 +1834,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room1_Flat (13)
       objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
 --- !u!4 &7218568928612864051 stripped
@@ -1799,6 +1899,10 @@ PrefabInstance:
     - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
       propertyPath: m_Name
       value: Room1_Flat (18)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
@@ -1862,6 +1966,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room1_Flat (13)
       objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
 --- !u!4 &7218568928503103992 stripped
@@ -1923,6 +2031,10 @@ PrefabInstance:
     - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
       propertyPath: m_Name
       value: Room1_Flat (20)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
@@ -1986,6 +2098,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room1_Flat (17)
       objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
 --- !u!4 &7218568928348633445 stripped
@@ -2047,6 +2163,10 @@ PrefabInstance:
     - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
       propertyPath: m_Name
       value: Room1_Flat (16)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
@@ -2110,6 +2230,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room1_Flat (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
 --- !u!4 &7218568928328809383 stripped
@@ -2171,6 +2295,10 @@ PrefabInstance:
     - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
       propertyPath: m_Name
       value: Room1_Flat (10)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
@@ -2234,6 +2362,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room1_Flat (15)
       objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
 --- !u!4 &7218568928252002798 stripped
@@ -2295,6 +2427,10 @@ PrefabInstance:
     - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
       propertyPath: m_Name
       value: Room1_Flat (14)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
@@ -2358,6 +2494,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room1_Flat (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
 --- !u!4 &7218568927986344657 stripped
@@ -2419,6 +2559,10 @@ PrefabInstance:
     - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
       propertyPath: m_Name
       value: Room1_Flat (17)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6932759787406327302, guid: 222052ba5d0a03644827818e531f44fb, type: 3}
+      propertyPath: m_TagString
+      value: Boundary
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 222052ba5d0a03644827818e531f44fb, type: 3}

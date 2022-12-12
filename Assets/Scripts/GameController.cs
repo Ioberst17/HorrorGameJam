@@ -35,6 +35,11 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        /*if (DialogueManager.GetInstance().dialogueIsPlaying)
+        {
+            return;
+        }*/
+
         CheckInput();
     }
     private void FixedUpdate()
