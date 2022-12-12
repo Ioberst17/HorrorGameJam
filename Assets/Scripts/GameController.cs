@@ -130,7 +130,7 @@ public class GameController : MonoBehaviour
                     if (Input.GetKeyDown(KeyCode.Y)) { EventSystem.current.AmmoCheckTrigger(1); } // shoot if Y, same logic used in below branches
                 }
                 else if((Input.GetKey(KeyCode.S) || Input.GetKey("down")) && !isGrounded){
-                    if (Input.GetKeyDown(KeyCode.U)) { PlayerController.Attack(-1); }
+                    if (Input.GetKeyDown(KeyCode.U)) { PlayerController.Attack(1); }
                     if (Input.GetKeyDown(KeyCode.Y)) { EventSystem.current.AmmoCheckTrigger(0); }
                 }
                 else

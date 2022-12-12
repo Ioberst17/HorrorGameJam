@@ -28,7 +28,7 @@ public class EnemyController : MonoBehaviour
 
     public int HP;
 
-    private int invincibilityCount;
+    public int invincibilityCount;
     [SerializeField]
     private int invincibilitySet;
     private bool isDead;
@@ -51,6 +51,7 @@ public class EnemyController : MonoBehaviour
     private BatBehavior batBehavior;
     private BloodGolemBehavior GolemBehavior;
     private SpiderBehavior SpiderBehavior;
+    private GargoyleBehavior GargoyleBehavior;
 
     void Awake()
     {
@@ -100,10 +101,14 @@ public class EnemyController : MonoBehaviour
     }
 
     // Update is called once per frame
-    //1 is bat, 2 is paralysis demon, 3 is hellhound, 4 is, 5 is.
+    //1 is bat, 2 is paralysis demon, 3 is hellhound, 4 is blood golem, 5 is Gargoyle.
     void FixedUpdate()
     {
-        if (!isDead && invincibilityCount==0)
+        if (EnemytypeID == 5)
+        {
+            GargoyleBehavior.GargoylePassover();
+        }
+        else if (!isDead && invincibilityCount == 0)
         {
             switch (EnemytypeID)
             {
@@ -120,9 +125,6 @@ public class EnemyController : MonoBehaviour
                     SpiderBehavior.spiderPassover();
                     break;
                 case 4:
-                    GolemBehavior.GolemPassover();
-                    break;
-                case 5:
                     GolemBehavior.GolemPassover();
                     break;
                 default:
@@ -230,6 +232,7 @@ public class EnemyController : MonoBehaviour
         else if (CompareTag("ParalysisDemon")) { EnemytypeID = 2; paralysisDemonBehavior = GetComponent<ParalysisDemonBehavior>(); }
         else if (CompareTag("Spider")) { EnemytypeID = 3; SpiderBehavior = GetComponent<SpiderBehavior>(); }
         else if (CompareTag("Bloodgolem")) { EnemytypeID = 4; GolemBehavior = GetComponent<BloodGolemBehavior>(); }
+        else if (CompareTag("Gargoyle")) { EnemytypeID = 5; GargoyleBehavior = GetComponent<GargoyleBehavior>(); }
         else EnemytypeID = -1;
 
         //this is for setting up the values of hp, damage, etc
