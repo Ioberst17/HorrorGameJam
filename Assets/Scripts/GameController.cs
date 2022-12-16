@@ -126,16 +126,28 @@ public class GameController : MonoBehaviour
                 //Debug.Log("attack called");
                 if (Input.GetKey(KeyCode.W) || Input.GetKey("up"))
                 {
-                    if (Input.GetKeyDown(KeyCode.U)) { PlayerController.Attack(0); } // melee attack if U
+                    if (Input.GetKeyDown(KeyCode.U)) // melee attack if U
+                    { 
+                        PlayerController.Attack(0);
+                        FindObjectOfType<AudioManager>().PlaySFX("PlayerMelee");
+                    } 
                     if (Input.GetKeyDown(KeyCode.Y)) { EventSystem.current.AmmoCheckTrigger(1); } // shoot if Y, same logic used in below branches
                 }
                 else if((Input.GetKey(KeyCode.S) || Input.GetKey("down")) && !isGrounded){
-                    if (Input.GetKeyDown(KeyCode.U)) { PlayerController.Attack(1); }
+                    if (Input.GetKeyDown(KeyCode.U)) 
+                    { 
+                        PlayerController.Attack(1);
+                        FindObjectOfType<AudioManager>().PlaySFX("PlayerMelee");
+                    }
                     if (Input.GetKeyDown(KeyCode.Y)) { EventSystem.current.AmmoCheckTrigger(0); }
                 }
                 else
                 {
-                    if (Input.GetKeyDown(KeyCode.U)) { PlayerController.Attack(2); }
+                    if (Input.GetKeyDown(KeyCode.U)) 
+                    { 
+                        PlayerController.Attack(2);
+                        FindObjectOfType<AudioManager>().PlaySFX("PlayerMelee");
+                    }
                     if (Input.GetKeyDown(KeyCode.Y)) { EventSystem.current.AmmoCheckTrigger(0); }
                 }
             }

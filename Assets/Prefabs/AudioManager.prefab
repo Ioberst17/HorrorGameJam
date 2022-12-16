@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1132886950067085922
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1132886950067085921}
+  - component: {fileID: 1132886950067085920}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1132886950067085921
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1132886950067085922}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1132886950067085920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1132886950067085922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b3ef4664f4e5604783077301d323aa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: WeaponFire
+    clip: {fileID: 8300000, guid: 327bfc3f30f098440a3e8d079fd74ca6, type: 3}
+    volume: 0.03
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: WeaponToss
+    clip: {fileID: 8300000, guid: 43b2658af68bb1f43a0c56af6d3cc3af, type: 3}
+    volume: 0.092
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: PlayerMelee
+    clip: {fileID: 8300000, guid: 45c95135403ad054caf716b52a9f814f, type: 3}
+    volume: 0.331
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  themes:
+  - name: Title Theme
+    clip: {fileID: 8300000, guid: 1e6c6272beceea84f903228aef4d13f8, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: Scene 1 Theme
+    clip: {fileID: 8300000, guid: 2693c996eb6102144a01738843a98564, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: Scene 2 Theme
+    clip: {fileID: 8300000, guid: 218da55595031e34ab06d0e00439aa1d, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
