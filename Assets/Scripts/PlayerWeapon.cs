@@ -65,6 +65,7 @@ public class PlayerWeapon : MonoBehaviour
         if (weaponDatabase.weaponDatabase.entries[weaponID].isShot == true) // if ammo is mean to be shot, apply this logic
         {
             GameObject shot = Instantiate(ammoPrefabs[ammoIndex], projectileSpawnPoint.position, projectileSpawnPoint.transform.rotation); 
+            FindObjectOfType<AudioManager>().PlaySFX("WeaponFire");
 
             shot.GetComponent<Rigidbody2D>().gravityScale = ammoGravity;
 
@@ -73,6 +74,7 @@ public class PlayerWeapon : MonoBehaviour
         else // if ammo is meant to be thrown / tossed, apply this logic
         {
             GameObject toss = Instantiate(ammoPrefabs[ammoIndex], projectileSpawnPoint.position, projectileSpawnPoint.transform.rotation);
+            FindObjectOfType<AudioManager>().PlaySFX("WeaponToss");
 
             toss.GetComponent<Rigidbody2D>().gravityScale = throwGravity;
             if (direction == 0) // throwing on ground
