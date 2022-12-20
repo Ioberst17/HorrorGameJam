@@ -129,7 +129,6 @@ public class GameController : MonoBehaviour
                     if (Input.GetKeyDown(KeyCode.U)) // melee attack if U
                     { 
                         PlayerController.Attack(0);
-                        FindObjectOfType<AudioManager>().PlaySFX("PlayerMelee");
                     } 
                     if (Input.GetKeyDown(KeyCode.Y)) { EventSystem.current.AmmoCheckTrigger(1); } // shoot if Y, same logic used in below branches
                 }
@@ -137,7 +136,6 @@ public class GameController : MonoBehaviour
                     if (Input.GetKeyDown(KeyCode.U)) 
                     { 
                         PlayerController.Attack(1);
-                        FindObjectOfType<AudioManager>().PlaySFX("PlayerMelee");
                     }
                     if (Input.GetKeyDown(KeyCode.Y)) { EventSystem.current.AmmoCheckTrigger(0); }
                 }
@@ -146,7 +144,6 @@ public class GameController : MonoBehaviour
                     if (Input.GetKeyDown(KeyCode.U)) 
                     { 
                         PlayerController.Attack(2);
-                        FindObjectOfType<AudioManager>().PlaySFX("PlayerMelee");
                     }
                     if (Input.GetKeyDown(KeyCode.Y)) { EventSystem.current.AmmoCheckTrigger(0); }
                 }
