@@ -278,8 +278,8 @@ public class PlayerController : MonoBehaviour
         {
             isAttacking = true;
             animator.Play("PlayerBasicAttack");
+            FindObjectOfType<AudioManager>().PlaySFX("PlayerMelee");
             StartCoroutine(AttackActiveFrames(attackDirection));
-            
         }
     }
 
@@ -341,6 +341,7 @@ public class PlayerController : MonoBehaviour
                 rb.velocity = newVelocity;
             }
         }
+        FindObjectOfType<AudioManager>().PlaySFX("Dash1");
         //animator.Play("PlayerDash");
         yield return new WaitForSeconds(dashLength);
         isDashing = false;
@@ -471,6 +472,7 @@ public class PlayerController : MonoBehaviour
         inHitstun = true;
         StartCoroutine(Invincibility());
         animator.Play("PlayerHurt");
+        FindObjectOfType<AudioManager>().PlaySFX("PlayerHit");
         yield return new WaitForSeconds(1); // waits a certain number of seconds
         inHitstun = false;
     }

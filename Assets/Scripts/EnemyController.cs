@@ -164,11 +164,7 @@ public class EnemyController : MonoBehaviour
                 HP -= attackDamage;
                 if (HP <= 0)
                 {
-                    Debug.Log(name + " is dead!");
-                    isDead = true;
-                    CC2D.enabled = false;
-                    enemySpriteRenderer.enabled = false;
-                    playerController.gainSP(SoulPointsDropped);
+                    Death();
                 }
                 else
                 {
@@ -203,6 +199,18 @@ public class EnemyController : MonoBehaviour
     {
         facingDirection *= -1;
         transform.Rotate(0.0f, 180.0f, 0.0f);
+    }
+
+    public void Death()
+    {
+        Debug.Log(name + " is dead!");
+        isDead = true;
+        CC2D.enabled = false;
+        enemySpriteRenderer.enabled = false;
+        playerController.gainSP(SoulPointsDropped);
+        string enemyDeathSound = gameObject.tag.ToString() + "Death";
+        FindObjectOfType<AudioManager>().PlaySFX(enemyDeathSound);
+
     }
 
     public void AmmoDamage(int ammoID)
