@@ -341,6 +341,7 @@ public class PlayerController : MonoBehaviour
                 rb.velocity = newVelocity;
             }
         }
+        FindObjectOfType<AudioManager>().PlaySFX("Dash1");
         //animator.Play("PlayerDash");
         yield return new WaitForSeconds(dashLength);
         isDashing = false;
