@@ -210,6 +210,12 @@ public class PlayerController : MonoBehaviour
                 newForce.Set(0.0f, jumpForce);
                 rb.AddForce(newForce, ForceMode2D.Impulse);
                 animator.Play("PlayerJump");
+                { // play random jump sound
+                    int jumpAssetChoice = Random.Range(1, 9);
+                    string jumpAssetToUse = "Jump" + jumpAssetChoice.ToString();
+                    FindObjectOfType<AudioManager>().PlaySFX(jumpAssetToUse);
+                }
+
             }
             else if (isAgainstWall && canWallJump)
             {
@@ -221,6 +227,11 @@ public class PlayerController : MonoBehaviour
                 newForce.Set(jumpForce / 2 * -facingDirection, jumpForce);
                 rb.AddForce(newForce, ForceMode2D.Impulse);
                 animator.Play("PlayerJump");
+                { // play random jump sound
+                    int jumpAssetChoice = Random.Range(1, 9);
+                    string jumpAssetToUse = "Jump" + jumpAssetChoice.ToString();
+                    FindObjectOfType<AudioManager>().PlaySFX(jumpAssetToUse);
+                }
             }
         }
         
