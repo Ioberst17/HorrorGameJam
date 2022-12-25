@@ -38,6 +38,8 @@ public class PlayerController : MonoBehaviour
     public bool canDash;
     public float dashLength;
     public float dashSpeed;
+    public float distanceBetweenAfterImages;
+    private float lastAfterImageXPosition;
 
     //To make the player temporarily unable to control themselves
     public bool inHitstun;
@@ -343,11 +345,29 @@ public class PlayerController : MonoBehaviour
         }
         FindObjectOfType<AudioManager>().PlaySFX("Dash1");
         //animator.Play("PlayerDash");
-        yield return new WaitForSeconds(dashLength);
+        yield return DashAfterImageHandler();
         isDashing = false;
         rb.gravityScale = 3;
         newVelocity.Set(0, 0);
         rb.velocity = newVelocity;
+    }
+    // Handles generation of after images and dash length
+    IEnumerator DashAfterImageHandler()
+    {
+        var startTime = Time.time;
+        {
+            while(dashLength > Time.time - startTime)
+            {
+                if (Mathf.Abs(transform.position.x - lastAfterImageXPosition) > distanceBetweenAfterImages) // places dash after images
+                {
+                    Debug.Log("Is trigged at position " + transform.position.x.ToString());
+                    PlayerAfterImageObjectPool.Instance.GetFromPool();
+                    lastAfterImageXPosition = transform.position.x;
+                }
+                yield return null;
+            }
+        }
+        yield return null;
     }
 
     //This opperates the attack hit detection

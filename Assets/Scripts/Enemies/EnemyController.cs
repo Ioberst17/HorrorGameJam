@@ -208,7 +208,7 @@ public class EnemyController : MonoBehaviour
         CC2D.enabled = false;
         enemySpriteRenderer.enabled = false;
         playerController.gainSP(SoulPointsDropped);
-        string enemyDeathSound = gameObject.tag.ToString() + "Death";
+        string enemyDeathSound = gameObject.tag.ToString() + "Death"; // creates string that AudioManager recognizes; tag should match asset in AudioManager
         FindObjectOfType<AudioManager>().PlaySFX(enemyDeathSound);
 
     }
