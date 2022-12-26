@@ -7,9 +7,12 @@ public class PlayerAfterImageObjectPool : MonoBehaviour
     [SerializeField]
     private GameObject afterImagePrefab;
 
-    private Queue<GameObject> availableObjects = new Queue<GameObject>();
+    private Queue<GameObject> availableAfterImages = new Queue<GameObject>();
 
     public static PlayerAfterImageObjectPool Instance { get; private set; }
+
+    public float distanceBetweenAfterImages;
+    private float lastAfterImageXPosition;
 
     private void Awake()
     {
@@ -30,18 +33,27 @@ public class PlayerAfterImageObjectPool : MonoBehaviour
     public void AddToPool(GameObject instance)
     {
         instance.SetActive(false);
-        availableObjects.Enqueue(instance);
+        availableAfterImages.Enqueue(instance);
     }
 
     public GameObject GetFromPool()
     {
-        if(availableObjects.Count == 0)
+        if(availableAfterImages.Count == 0)
         {
             GrowPool();
         }
 
-        var instance = availableObjects.Dequeue();
+        var instance = availableAfterImages.Dequeue();
         instance.SetActive(true);
         return instance;
+    }
+
+    public void PlaceAfterImage(Transform player)
+    {
+        if (Mathf.Abs(player.position.x - lastAfterImageXPosition) > distanceBetweenAfterImages) // places dash after images
+        {
+            PlayerAfterImageObjectPool.Instance.GetFromPool();
+            lastAfterImageXPosition = player.position.x;
+        }
     }
 }

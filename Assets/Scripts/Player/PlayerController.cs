@@ -33,13 +33,12 @@ public class PlayerController : MonoBehaviour
     private LayerMask whatIsEnemy;
 
     private Animator animator;
+    private PlayerParticleSystems visualEffects;
 
     //all related to dash functionality and tracking. 
     public bool canDash;
     public float dashLength;
     public float dashSpeed;
-    public float distanceBetweenAfterImages;
-    private float lastAfterImageXPosition;
 
     //To make the player temporarily unable to control themselves
     public bool inHitstun;
@@ -118,6 +117,7 @@ public class PlayerController : MonoBehaviour
         SP = 0;
         ControlMomentum = 0;
         animator = GetComponent<Animator>();
+        visualEffects = transform.Find("VisualEffects").gameObject.GetComponent<PlayerParticleSystems>();
         attackLagTimer = 0;
         AttackDamage = 10;
         canDash = true;
@@ -234,6 +234,7 @@ public class PlayerController : MonoBehaviour
                     string jumpAssetToUse = "Jump" + jumpAssetChoice.ToString();
                     FindObjectOfType<AudioManager>().PlaySFX(jumpAssetToUse);
                 }
+                visualEffects.PlayEffect("MovementDust");
             }
         }
         
@@ -260,6 +261,7 @@ public class PlayerController : MonoBehaviour
                     else
                     {
                         animator.Play("PlayerRun");
+                        visualEffects.PlayEffect("MovementDust");
                     }
                 }
 
@@ -358,12 +360,7 @@ public class PlayerController : MonoBehaviour
         {
             while(dashLength > Time.time - startTime)
             {
-                if (Mathf.Abs(transform.position.x - lastAfterImageXPosition) > distanceBetweenAfterImages) // places dash after images
-                {
-                    Debug.Log("Is trigged at position " + transform.position.x.ToString());
-                    PlayerAfterImageObjectPool.Instance.GetFromPool();
-                    lastAfterImageXPosition = transform.position.x;
-                }
+                PlayerAfterImageObjectPool.Instance.PlaceAfterImage(gameObject.transform);
                 yield return null;
             }
         }
