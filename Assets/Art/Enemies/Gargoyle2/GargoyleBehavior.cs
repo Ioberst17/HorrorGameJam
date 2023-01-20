@@ -103,7 +103,7 @@ public class GargoyleBehavior : MonoBehaviour
             }
             else if (AntiAirTimer > -75)
             {
-                AntiAirTimer--;
+                --AntiAirTimer;
             }
 
             if(AntiAirTimer < 0)
@@ -113,7 +113,7 @@ public class GargoyleBehavior : MonoBehaviour
 
             if (stateTimer > 0)
             {
-                stateTimer--;
+                --stateTimer;
             }
         }
         if(bossAction == "Dormant" && enemyController.playerInZone)
@@ -292,7 +292,7 @@ public class GargoyleBehavior : MonoBehaviour
     IEnumerator takeoffHelper()
     {
         yield return new WaitForSeconds(0.6f);
-        GargRB.AddForce(new Vector2(0, 25.0f));
+        GargRB.AddForce(new Vector2(0, 250.0f));
     }
 
    //controlls the attack frame data
