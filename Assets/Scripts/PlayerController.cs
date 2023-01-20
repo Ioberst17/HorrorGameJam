@@ -305,36 +305,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    //This is the function that actually performs the dash
-    IEnumerator DashHandler()
-    {
-        isDashing = true;
-        rb.gravityScale = 0;
-        if(GameController.xInput == 0)
-        {
-            newVelocity.Set(movementSpeed * 2 * facingDirection, 0);
-            rb.velocity = newVelocity;
-        }
-        else
-        {
-            if(GameController.xInput > 0)
-            {
-                newVelocity.Set(movementSpeed * 2, 0);
-                rb.velocity = newVelocity;
-            }
-            else
-            {
-                newVelocity.Set(movementSpeed * -2, 0);
-                rb.velocity = newVelocity;
-            }
-        }
-        //animator.Play("PlayerDash");
-        yield return new WaitForSeconds(dashLength);
-        isDashing = false;
-        rb.gravityScale = 3;
-        newVelocity.Set(0, 0);
-        rb.velocity = newVelocity;
-    }
+    
 
     //This opperates the attack hit detection
     public void AttackHelper()
@@ -356,7 +327,7 @@ public class PlayerController : MonoBehaviour
                     {
                         GameController.passHit(hitlist[i].name, AttackDamage, transform.position);
                     }
-                    i++;
+                    ++i;
                 }
 
             }
@@ -378,7 +349,7 @@ public class PlayerController : MonoBehaviour
                     {
                         GameController.passHit(hitlist[i].name, AttackDamage, transform.position);
                     }
-                    i++;
+                    ++i;
                 }
 
             }
@@ -405,11 +376,42 @@ public class PlayerController : MonoBehaviour
                     {
                         GameController.passHit(hitlist[i].name, AttackDamage, transform.position);
                     }
-                    i++;
+                    ++i;
                 }
 
             }
         }
+    }
+
+    //This is the function that actually performs the dash
+    IEnumerator DashHandler()
+    {
+        isDashing = true;
+        rb.gravityScale = 0;
+        if (GameController.xInput == 0)
+        {
+            newVelocity.Set(movementSpeed * 2 * facingDirection, 0);
+            rb.velocity = newVelocity;
+        }
+        else
+        {
+            if (GameController.xInput > 0)
+            {
+                newVelocity.Set(movementSpeed * 2, 0);
+                rb.velocity = newVelocity;
+            }
+            else
+            {
+                newVelocity.Set(movementSpeed * -2, 0);
+                rb.velocity = newVelocity;
+            }
+        }
+        //animator.Play("PlayerDash");
+        yield return new WaitForSeconds(dashLength);
+        isDashing = false;
+        rb.gravityScale = 3;
+        newVelocity.Set(0, 0);
+        rb.velocity = newVelocity;
     }
 
     //flips the model
