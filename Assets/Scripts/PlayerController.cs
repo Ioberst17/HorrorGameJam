@@ -238,8 +238,10 @@ public class PlayerController : MonoBehaviour
                 rb.velocity = newVelocity;
                 if(!isAttacking && !isJumping)
                 {
-                    if (rb.velocity.x == 0)
+                    if (rb.velocity.x == 0 || DialogueManager.GetInstance().dialogueIsPlaying)
                     {
+                        newVelocity.Set(0, 0);
+                        rb.velocity = newVelocity;
                         animator.Play("PlayerIdle");
                     }
                     else
