@@ -37,6 +37,8 @@ public class Inventory : MonoBehaviour
         AddNewWeapon(weaponDatabase.weaponDatabase.entries[3]); 
         AddNewWeapon(weaponDatabase.weaponDatabase.entries[4]);
         AddNewWeapon(weaponDatabase.weaponDatabase.entries[5]);
+
+        WeaponUIUpdate();
     }
 
     void Update()
@@ -73,7 +75,6 @@ public class Inventory : MonoBehaviour
         inventory = dataManager.gameData.inventory;
         currentWeapon = dataManager.gameData.activeWeapon;
         currentWeaponLocation = GetTheCurrentWeaponsIndexInInventory();
-        WeaponUIUpdate();
     }
 
     void SaveToDataManager()
