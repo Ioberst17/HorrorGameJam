@@ -72,4 +72,14 @@ public class EventSystem : MonoBehaviour
         }
     }
 
+    public event Action<string, int> onUpdateAmmoUITrigger;
+
+    public void UpdateAmmoUITrigger(string currentWeapon, int updatedAmmo)
+    {
+        if (onUpdateAmmoUITrigger != null)
+        {
+            onUpdateAmmoUITrigger(currentWeapon, updatedAmmo);
+        }
+    }
+
 }
