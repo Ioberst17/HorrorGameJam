@@ -12,7 +12,8 @@ public class Inventory : MonoBehaviour
     private List<PlayerWeapons> inventory = new List<PlayerWeapons>(); // to use as inventory
     public WeaponDatabase weaponDatabase;
     [SerializeField]
-    private int currentWeapon; // the weapon ID of the current weapon the player is using
+    private int currentWeapon; // the weapon ID of the current weapon the player is using - in weapon database
+    private int currentWeaponLocation; // the current weapon location in inventory
 
     void Start()
     {
@@ -30,15 +31,12 @@ public class Inventory : MonoBehaviour
         LoadFromDataManager();
 
         //for debugging event system
-        AddNewWeapon(weaponDatabase.weaponDatabase.entries[0]); //add the weapon at the 1st index
-        AddNewWeapon(weaponDatabase.weaponDatabase.entries[1]); //add the weapon at the 1st index
-        AddNewWeapon(weaponDatabase.weaponDatabase.entries[2]); //add the weapon at the 1st index
-        AddNewWeapon(weaponDatabase.weaponDatabase.entries[3]); //add the weapon at the 1st index
+        AddNewWeapon(weaponDatabase.weaponDatabase.entries[0]); 
+        AddNewWeapon(weaponDatabase.weaponDatabase.entries[1]); 
+        AddNewWeapon(weaponDatabase.weaponDatabase.entries[2]); 
+        AddNewWeapon(weaponDatabase.weaponDatabase.entries[3]); 
         AddNewWeapon(weaponDatabase.weaponDatabase.entries[4]);
         AddNewWeapon(weaponDatabase.weaponDatabase.entries[5]);
-
-
-
     }
 
     void Update()
@@ -63,12 +61,19 @@ public class Inventory : MonoBehaviour
         {
             SaveToDataManager();
         }
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            inventory.Clear();
+        }
     }
 
     void LoadFromDataManager() 
     {
+        inventory = dataManager.gameData.inventory;
         currentWeapon = dataManager.gameData.activeWeapon;
-        inventory = dataManager.gameData.inventory; 
+        currentWeaponLocation = GetTheCurrentWeaponsIndexInInventory();
+        WeaponUIUpdate();
     }
 
     void SaveToDataManager()
@@ -106,7 +111,11 @@ public class Inventory : MonoBehaviour
 
         if (isTheWeaponThere == false) // if it doesn't have it after the check
         {
-            inventory.Add(new PlayerWeapons(weapon.id, weapon.level, 0)); // then add it at level 1, with 0 ammo
+            inventory.Add(new PlayerWeapons(weapon.title, weapon.id, weapon.level, 0)); // then add it at level 1, with 0 ammo, at the back of inventory
+            // and set it as the current weapon
+            WeaponLocationUpdate(0, inventory.Count - 1);
+            // update UI
+            WeaponUIUpdate();
         }
     }
 
@@ -114,6 +123,7 @@ public class Inventory : MonoBehaviour
     private void AddAmmo(int ammoChange)
     {
         AddAmmo(currentWeapon, ammoChange);
+        WeaponUIUpdate();
     } // used for adding to current weapon
     
     private void AddAmmo(int weaponID, int ammoChange)
@@ -124,8 +134,8 @@ public class Inventory : MonoBehaviour
 
     private void WeaponFired(int weaponID, int weaponLevel, int ammoChange, int direction)
     {
-        for (int i = 0; i < inventory.Count; i++)
-        { if (inventory[i].weaponID == weaponID) { inventory[i].weaponAmmo += ammoChange; } }
+        inventory[currentWeaponLocation].weaponAmmo += ammoChange;
+        WeaponUIUpdate();
     }
     private void WeaponLevel(int weaponID, int levelChange)
     {
@@ -140,22 +150,43 @@ public class Inventory : MonoBehaviour
         if(weaponLocation == -1) { Debug.Log("Current Weapon is not in inventory"); }
         else
         {
-            if(weaponChange == 1) { IncrementInventoryWeapon(weaponChange, weaponLocation); }
-            else if(weaponChange == -1) { DecrementInventoryWeapon(weaponChange, weaponLocation); }
+            if(weaponChange == 1 || weaponChange == -1) { IncrementInventoryWeapon(weaponChange, weaponLocation); }
             else { Debug.Log("Inventory Increment is not 1 or -1"); }
         }
     }
 
-    private void IncrementInventoryWeapon(int weaponChange, int weaponLocation)
+    private void WeaponLocationUpdate(int weaponChange, int weaponLocation)
     {
-        if (weaponLocation + weaponChange > inventory.Count - 1) { currentWeapon = inventory[0].weaponID; } // if incrementing inventory would overshoot inventory, then set current weapon to 1st inventory element
-        else {currentWeapon = inventory[weaponLocation + weaponChange].weaponID; }
+        currentWeapon = inventory[weaponLocation + weaponChange].weaponID;
+        currentWeaponLocation = weaponLocation + weaponChange;
     }
 
-    private void DecrementInventoryWeapon(int weaponChange, int weaponLocation)
+    private void WeaponUIUpdate()
     {
-        if (weaponLocation + weaponChange < 0) { currentWeapon = inventory[inventory.Count - 1].weaponID; } // if decrementing inventory would overshoot inventory, then set current weapon to last inventory element
-        else { currentWeapon = inventory[weaponLocation + weaponChange].weaponID; }
+        string weaponName = inventory[currentWeaponLocation].weaponName;
+        int weaponAmmo = inventory[currentWeaponLocation].weaponAmmo;
+
+        EventSystem.current.UpdateAmmoUITrigger(weaponName, weaponAmmo);
+    }
+
+    private void IncrementInventoryWeapon(int weaponChange, int weaponLocation)
+    {
+        // if incrementing inventory would overshoot inventory, then set current weapon to 1st inventory element
+        if (weaponLocation + weaponChange > inventory.Count - 1) 
+        { 
+            WeaponLocationUpdate(0,0);
+        }
+        // or if decrementing inventory would overshoot inventory, then set current weapon to last inventory element
+        else if (weaponLocation + weaponChange < 0)
+        {
+            WeaponLocationUpdate(0, inventory.Count - 1);
+        }
+        else 
+        {
+            WeaponLocationUpdate(weaponChange, weaponLocation);
+        }
+
+        WeaponUIUpdate();
     }
     
     private int GetTheCurrentWeaponsIndexInInventory()
@@ -171,7 +202,7 @@ public class Inventory : MonoBehaviour
         for (int i = 0; i < inventory.Count; i++) // loop through inventory
         { if (inventory[i].weaponID == currentWeapon) // if the loop finds the current weapon 
             { if(inventory[i].weaponAmmo > 0) // and if the current weapon has ammo
-                EventSystem.current.WeaponFireTrigger(currentWeapon,inventory[i].weaponLevel, -1, fireDirection); ; // send the weapon fire event
+                EventSystem.current.WeaponFireTrigger(currentWeapon,inventory[i].weaponLevel, -1, fireDirection); // send the weapon fire event
             } 
         } 
     }
