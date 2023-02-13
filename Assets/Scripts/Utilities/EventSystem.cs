@@ -13,13 +13,13 @@ public class EventSystem : MonoBehaviour
     }
 
     // COMBAT-CALCULATIONS
-    public event Action<int> onAttackCollision;
-    public void AttackHitTrigger(int weaponID)
+    public event Action<int, int> onAttackCollision;
+    public void AttackHitTrigger(int weaponID, int weaponLevel)
     {
         {
             if (onAttackCollision != null)
             {
-                onAttackCollision(weaponID);
+                onAttackCollision(weaponID, weaponLevel);
             }
         }
     }
@@ -54,6 +54,25 @@ public class EventSystem : MonoBehaviour
         }
     }
 
+    public event Action<float> onStartTossingTrigger; // used for displaying force of player's throw, when throwing 
+    public void StartTossingWeaponTrigger(float throwForce)
+    {
+        if (onStartTossingTrigger != null)
+        {
+            onStartTossingTrigger(throwForce);
+        }
+    }
+
+    public event Action onFinishTossingTrigger; // used when 
+
+    public void FinishTossingWeaponTrigger()
+    {
+        if (onFinishTossingTrigger != null)
+        {
+            onFinishTossingTrigger();
+        }
+    }
+
     public event Action <int, int> onWeaponLevelTrigger; // used when a weapon is leveled up
     public void WeaponLevelTrigger(int weaponID, int level)
     {
@@ -72,13 +91,23 @@ public class EventSystem : MonoBehaviour
         }
     }
 
-    public event Action<string, int> onUpdateAmmoUITrigger;
+    public event Action<string, int> onUpdateWeaponUITrigger;
 
-    public void UpdateAmmoUITrigger(string currentWeapon, int updatedAmmo)
+    public void UpdateWeaponUITrigger(string currentWeapon, int updatedAmmo)
     {
-        if (onUpdateAmmoUITrigger != null)
+        if (onUpdateWeaponUITrigger != null)
         {
-            onUpdateAmmoUITrigger(currentWeapon, updatedAmmo);
+            onUpdateWeaponUITrigger(currentWeapon, updatedAmmo);
+        }
+    }
+
+    public event Action<int, int> onUpdatePlayerWeaponTrigger;
+
+    public void UpdatePlayerWeaponTrigger(int weaponID, int weaponLevel)
+    {
+        if(onUpdatePlayerWeaponTrigger != null)
+        {
+            onUpdatePlayerWeaponTrigger(weaponID, weaponLevel);
         }
     }
 
