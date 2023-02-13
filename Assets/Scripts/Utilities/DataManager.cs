@@ -1,8 +1,9 @@
-using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
-using System.Linq;
-
+using Newtonsoft.Json;
+using Newtonsoft.Json.Schema;
+using Newtonsoft.Json.Schema.Generation;
+using System.Collections.Generic;
 
 public class DataManager : MonoBehaviour
 {
@@ -19,7 +20,13 @@ public class DataManager : MonoBehaviour
 
     /* CLASS STRUCTURES */
 
-
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            ClearData();
+        }
+    }
 
     [System.Serializable]
     public class SessionData
@@ -31,13 +38,19 @@ public class DataManager : MonoBehaviour
     [System.Serializable] // called to make class serializable i.e. turn from an object to bytes for storage; eventually, deserialized when used again (from bytes back to object)
     public class GameData // data to be saved between sessions in Json format - n.b Unity Json utility does not support arrays
     {
-        public int timesPlayed = 1;
+        public int timesPlayed = 0;
         // Player Data
         public float playerEXP = 0.0f;
         public int playerLevel = 1;
         // Inventory Data
-        public List<PlayerWeapons> inventory = new List<PlayerWeapons>();
-        public int activeWeapon = 1; 
+        [SerializeField]
+        public List<Consumables> consumables = new List<Consumables>();
+        [SerializeField]
+        public List<PlayerWeapons> primaryWeapons = new List<PlayerWeapons>();
+        [SerializeField]
+        public List<PlayerWeapons> secondaryWeapons = new List<PlayerWeapons>();
+        public int activePrimaryWeapon = 1;
+        public int activeSecondaryWeapon = 1; 
     }
 
     /* FUNCTIONS */
@@ -56,11 +69,7 @@ public class DataManager : MonoBehaviour
         }
 
         gameData = LoadData();
-    }
-
-    private void Start()
-    {
-        
+        gameData.timesPlayed++;
     }
 
     public void ClearData()
@@ -72,9 +81,21 @@ public class DataManager : MonoBehaviour
 
     private void SaveData(GameData gameData) // used to save data to a file
     {
-        string json = JsonUtility.ToJson(gameData); // turns data into a json string
+        //string json = JsonUtility.ToJson(gameData); // turns data into a json string
+        JSchema schemaToUse = GameDataSchema();
+        string json = JsonConvert.SerializeObject(gameData);
 
+        //string json = EditorJsonUtility.ToJson(gameData);
+
+        //var options = new JsonSerializerOptions { WriteIndented = true };
+
+        /*JsonSerializer serializer = new JsonSerializer();
+        serializer.Converters.Add(new JavaScriptDateTimeConverter());
+        serializer.NullValueHandling = NullValueHandling.Ignore;*/
+
+        //string json = JsonSerializer.Serialize(gameData, options);
         File.WriteAllText(Application.persistentDataPath + "/savefile.json", json); // uses System.IO namespace to write to a consistent folder, with name savefile.json
+
         Debug.Log(json);
     }
 
@@ -84,7 +105,11 @@ public class DataManager : MonoBehaviour
         if (File.Exists(path)) // check if file exists
         {
             string json = File.ReadAllText(path); // reads file content to json string
-            GameData gameData = JsonUtility.FromJson<GameData>(json); // reads json string data to variable data
+            //GameData gameData = JsonUtility.FromJson<GameData>(json); // reads json string data to variable data
+
+            gameData = JsonConvert.DeserializeObject<GameData>(json);
+            //gameData = JsonSerializer.Deserialize<GameData>(json);
+
             return gameData;
         }
         else
@@ -92,6 +117,15 @@ public class DataManager : MonoBehaviour
             GameData gameData = new GameData();
             return gameData;
         }
+    }
+
+    private JSchema GameDataSchema()
+    {
+        JSchemaGenerator generator = new JSchemaGenerator();
+
+        JSchema schema = generator.Generate(typeof(GameData));
+
+        return schema;
     }
 
     private void OnApplicationQuit()

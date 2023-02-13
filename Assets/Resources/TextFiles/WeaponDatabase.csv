@@ -1,12 +1,13 @@
-id,title,tier,price,isShot,isThrown,isKinetic,isElemental,isHeavy,weight,Level1Damage,Level2Damage,Level3Damage,level,isLightSource,description,amount
-1,Flashlight,3,0,TRUE,FALSE,FALSE,TRUE,FALSE,Light,1,2,3,1,TRUE,TBD,1
-2,Manhole cover,3,0,TRUE,FALSE,FALSE,FALSE,TRUE,Heavy,0,0,0,1,FALSE,TBD,1
-3,Revolver,2,200,TRUE,FALSE,TRUE,FALSE,FALSE,Light,5,10,15,1,FALSE,TBD,1
-4,Hunter's Rifle,1,500,TRUE,FALSE,FALSE,FALSE,TRUE,Heavy,20,20,20,1,FALSE,TBD,1
-5,Blood Bubbles,1,0,FALSE,TRUE,FALSE,TRUE,FALSE,Light,10,15,20,1,FALSE,TBD,1
-6,Sword (machete),3,10,TRUE,FALSE,TRUE,FALSE,FALSE,Medium,20,25,30,1,FALSE,TBD,1
-7,Flagpole Spear,2,50,TRUE,FALSE,TRUE,FALSE,TRUE,Heavy,5,5,5,1,FALSE,TBD,1
-8,Homemade Flamethrower,2,450,TRUE,FALSE,FALSE,TRUE,FALSE,Heavy,8,8,8,1,TRUE,TBD,1
-9,Fireworks,2,25,FALSE,TRUE,FALSE,TRUE,FALSE,Light,6,6,6,1,TRUE,TBD,1
-10,Hellfire Molotov,1,0,FALSE,TRUE,FALSE,TRUE,FALSE,Light,6,6,6,1,TRUE,TBD,1
-11,Fire Axe,1,0,TRUE,FALSE,TRUE,TRUE,TRUE,Heavy,21,21,21,1,TRUE,TBD,1
+id,title,tier,price,isSecondary,isShot,isThrown,isFixedDistance,isKinetic,isElemental,isHeavy,weight,Level1Damage,Level2Damage,Level3Damage,level,isLightSource,fireRate,description,amount
+int,string,int,int,bool,bool,bool,bool,bool,bool,bool,string,int,int,int,int,bool,float,string,int
+0,Flashlight,3,0,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,Light,1,2,3,1,TRUE,1,TBD,1
+1,Manhole cover,3,0,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,Heavy,0,0,0,1,FALSE,1,TBD,1
+2,Revolver,2,200,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,Light,5,10,15,1,FALSE,0.5,TBD,1
+3,Hunter's Rifle,1,500,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,Heavy,20,20,20,1,FALSE,1.2,TBD,1
+4,Blood Bubbles,1,0,TRUE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,Light,10,15,20,1,FALSE,1,TBD,1
+5,Sword (machete),3,10,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,Medium,20,25,30,1,FALSE,1,TBD,1
+6,Flagpole Spear,2,50,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,Heavy,5,5,5,1,FALSE,1,TBD,1
+7,Homemade Flamethrower,2,450,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,Heavy,8,8,8,1,TRUE,0,TBD,1
+8,Fireworks,2,25,TRUE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,Light,6,6,6,1,TRUE,1,TBD,1
+9,Hellfire Molotov,1,0,TRUE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,Light,6,6,6,1,TRUE,1,TBD,1
+10,Fire Axe,1,0,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,Heavy,21,21,21,1,TRUE,1,TBD,1

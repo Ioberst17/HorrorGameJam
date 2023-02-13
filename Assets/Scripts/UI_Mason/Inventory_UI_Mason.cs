@@ -53,10 +53,10 @@ public class Inventory_UI_Mason : MonoBehaviour
 
 
 
-        for (int i = 0; i < dataManager.gameData.inventory.Count; i++)
+        for (int i = 0; i < dataManager.gameData.secondaryWeapons.Count; i++)
         {
             inventorySlots[i].color = Color.red;
-            Debug.Log("weapon=" + dataManager.gameData.inventory[i].weaponID + " /n");
+            Debug.Log("weapon=" + dataManager.gameData.secondaryWeapons[i].ID + " /n");
         }
     }
 

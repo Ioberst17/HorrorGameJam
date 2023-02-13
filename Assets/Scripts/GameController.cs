@@ -121,7 +121,7 @@ public class GameController : MonoBehaviour
             {
                 PlayerController.Jump();
             }
-            if (Input.GetKeyDown(KeyCode.Y) || Input.GetKeyDown(KeyCode.U)) // if either attack or shoot is triggered
+            if (Input.GetKey(KeyCode.Y) || Input.GetKeyDown(KeyCode.U)) // if either attack or shoot is triggered
             {
                 //Debug.Log("attack called");
                 if (Input.GetKey(KeyCode.W) || Input.GetKey("up"))
@@ -130,14 +130,14 @@ public class GameController : MonoBehaviour
                     { 
                         PlayerController.Attack(0);
                     } 
-                    if (Input.GetKeyDown(KeyCode.Y)) { EventSystem.current.AmmoCheckTrigger(1); } // shoot if Y, same logic used in below branches
+                    if (Input.GetKey(KeyCode.Y)) { EventSystem.current.AmmoCheckTrigger(1); } // shoot if Y, same logic used in below branches
                 }
                 else if((Input.GetKey(KeyCode.S) || Input.GetKey("down")) && !isGrounded){
                     if (Input.GetKeyDown(KeyCode.U)) 
                     { 
                         PlayerController.Attack(1);
                     }
-                    if (Input.GetKeyDown(KeyCode.Y)) { EventSystem.current.AmmoCheckTrigger(0); }
+                    if (Input.GetKey(KeyCode.Y)) { EventSystem.current.AmmoCheckTrigger(0); }
                 }
                 else
                 {
@@ -145,7 +145,7 @@ public class GameController : MonoBehaviour
                     { 
                         PlayerController.Attack(2);
                     }
-                    if (Input.GetKeyDown(KeyCode.Y)) { EventSystem.current.AmmoCheckTrigger(0); }
+                    if (Input.GetKey(KeyCode.Y)) { EventSystem.current.AmmoCheckTrigger(0); }
                 }
             }
             if (Input.GetKeyDown(KeyCode.I))

@@ -5,17 +5,21 @@ using UnityEngine;
 [System.Serializable]
 public class PlayerWeapons
 {
-    public string weaponName;
-    public int weaponID;
-    public int weaponLevel;
-    public int weaponAmmo;
+    public string name;
+    public int ID;
+    public int level;
+    public int ammo;
+    public bool isSecondary;
+    public float fireRate;
 
-    public PlayerWeapons(string name, int id, int level, int ammo)
+    public PlayerWeapons(string name, int id, int level, int ammo, bool isSecondary, float fireRate)
     {
-        weaponName = name;
-        weaponID = id;
-        weaponLevel = level;
-        weaponAmmo = ammo;
+        this.name = name;
+        ID = id;
+        this.level = level;
+        this.ammo = ammo;
+        this.isSecondary = isSecondary;
+        this.fireRate = fireRate;
     }
 
 }

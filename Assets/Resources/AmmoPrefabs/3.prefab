@@ -77,7 +77,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: db750325989564987a34393247d883b4, type: 3}
-  m_Color: {r: 0.20188677, g: 0.6481162, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -146,4 +146,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a1d471ef1d3bd147bb9c63d0008eb44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ammoID: 4
+  weaponName: Hunter's Rifle
+  weaponID: 3
+  weaponLevel: 1
+  ammoID: 41
+  isFixedDistance: 0
