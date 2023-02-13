@@ -5732,9 +5732,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dataManager: {fileID: 0}
-  inventory: []
   weaponDatabase: {fileID: 0}
-  currentWeapon: 0
+  weaponData:
+    entries: []
+  playerWeapon: {fileID: 0}
+  primaryWeapons: []
+  secondaryWeapons: []
+  currentSecondaryWeaponID: 0
+  currentSecondaryWeaponIndex: 0
 --- !u!1 &1458881045285035849
 GameObject:
   m_ObjectHideFlags: 0
