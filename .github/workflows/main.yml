@@ -20,13 +20,13 @@ jobs:
                     - WebGL
         steps:
             - name: Checkout repo
-              uses: actions/checkout@v2
+              uses: actions/checkout@v3
               with:
                   fetch-depth: 0
                   lfs: true
                   
             - name: Cache files
-              uses: actions/cache@v2
+              uses: actions/cache@v3
               with:
                   path: Library
                   key: Library-${{ matrix.targetPlatform }}
