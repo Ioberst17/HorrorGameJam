@@ -246,6 +246,7 @@ public class PlayerController : MonoBehaviour
                     }
                     else
                     {
+                        //Debug.Log("running");
                         animator.Play("PlayerRun");
                     }
                 }
