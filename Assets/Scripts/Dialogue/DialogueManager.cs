@@ -123,7 +123,7 @@ public class DialogueManager : MonoBehaviour
         //checks to make sure our UI can support the number of choices coming in.
         if (currentChoices.Count > choices.Length)
         {
-            Debug.LogError("More choices were given than the UI can Support. Number of choices given: " + currentChoices.Count);
+            Debug.Log("More choices were given than the UI can Support. Number of choices given: " + currentChoices.Count);
         }
 
         int index = 0;
