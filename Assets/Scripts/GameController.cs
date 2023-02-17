@@ -170,11 +170,26 @@ public class GameController : MonoBehaviour
         }
         if (xInput > 0 && PlayerController.ControlMomentum < 15)
         {
-            PlayerController.ControlMomentum += 1;
+            if(PlayerController.ControlMomentum == 0)
+            {
+                PlayerController.ControlMomentum = 5;
+            }
+            else
+            {
+                PlayerController.ControlMomentum += 1;
+            }
+            
         }
         else if (xInput < 0 && PlayerController.ControlMomentum > -15)
         {
-            PlayerController.ControlMomentum -= 1;
+            if (PlayerController.ControlMomentum == 0)
+            {
+                PlayerController.ControlMomentum = -5;
+            }
+            else
+            {
+                PlayerController.ControlMomentum -= 1;
+            }
         }
         else if (xInput == 0)
         {

@@ -22,8 +22,6 @@ public class GargoyleBehavior : MonoBehaviour
     private float DistanceToPlayerY;
     private float HeightOfPlayer;
     public bool playerIsOnLeftSide;
-    private int FlightTimer;
-    public int AntiAirTimer;
     public bool AntiAirTrigger;
     public bool isAttacking;
     public bool ongoingPattern = false;
@@ -77,8 +75,6 @@ public class GargoyleBehavior : MonoBehaviour
         //animator = GetComponentInParent<Animator>();
         bossAction = "Dormant";
         bossState = "Grounded";
-        AntiAirTimer = 0;
-        FlightTimer = 0;
         stateTimer = 60;
         AntiAirTrigger = false;
         GargRB = GetComponent<Rigidbody2D>();

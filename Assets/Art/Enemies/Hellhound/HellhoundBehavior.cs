@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class HellhoundBehavior : MonoBehaviour
 {
-    bool HellhoundisAttacking = false;
     bool justAttacked = false;
     
     private Vector2 newVelocity;
