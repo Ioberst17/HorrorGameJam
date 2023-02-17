@@ -56,7 +56,6 @@ public class BloodGolemBehavior : MonoBehaviour
     }
     private void Fire()
     {
-        float tempX, tempY;
         Vector3 tempVector = new Vector3(enemyController.playerLocation.position.x, enemyController.playerLocation.position.y + 1, enemyController.playerLocation.position.z);
         tempVector = (tempVector - transform.position).normalized;
         //Debug.Log(tempVector);
