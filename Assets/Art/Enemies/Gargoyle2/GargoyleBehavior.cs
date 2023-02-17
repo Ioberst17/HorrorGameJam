@@ -157,7 +157,7 @@ public class GargoyleBehavior : MonoBehaviour
         Debug.Log("Pattern1");
         int count = 0;
         int prevCount = -1;
-        while (count < 3)
+        while (count < 3 && !enemyController.isDead)
         {
             TurnCheck();
             yield return new WaitForSeconds(0.01f);
@@ -167,7 +167,7 @@ public class GargoyleBehavior : MonoBehaviour
                 prevCount = count;
             }
             
-            while (Mathf.Abs(DistanceToPlayerX) > 2 && !isAttacking)
+            while (Mathf.Abs(DistanceToPlayerX) > 2 && !isAttacking && !enemyController.isDead)
             {
                 yield return new WaitForSeconds(0.01f);
                 Walk();
@@ -184,11 +184,11 @@ public class GargoyleBehavior : MonoBehaviour
             
         }
         TurnCheck();
-        while (isAttacking)
+        while (isAttacking && !enemyController.isDead)
         {
             yield return new WaitForSeconds(0.01f);
         }
-        while (Mathf.Abs(DistanceToPlayerX) > 3)
+        while (Mathf.Abs(DistanceToPlayerX) > 3 && !enemyController.isDead)
         {
             TurnCheck();
             Walk();
@@ -210,7 +210,7 @@ public class GargoyleBehavior : MonoBehaviour
         yield return new WaitForSeconds(1.6f);
         Hover();
         yield return new WaitForSeconds(1.06f);
-        while (!ragemode)
+        while (!ragemode && !enemyController.isDead)
         {
             TurnCheck();
             Hover();
@@ -240,11 +240,11 @@ public class GargoyleBehavior : MonoBehaviour
         FireBreath();
         yield return new WaitForSeconds(2f);
         int count = 0;
-        while (count < 3)
+        while (count < 3 && !enemyController.isDead)
         {
             yield return new WaitForSeconds(0.01f);
             Debug.Log("Count is: " + count);
-            while (Mathf.Abs(DistanceToPlayerX) > 2)
+            while (Mathf.Abs(DistanceToPlayerX) > 2 && !enemyController.isDead)
             {
                 yield return new WaitForSeconds(0.01f);
                 Walk();
@@ -262,7 +262,7 @@ public class GargoyleBehavior : MonoBehaviour
         }
         yield return new WaitForSeconds(0.01f);
         TurnCheck();
-        while (Mathf.Abs(DistanceToPlayerX) > 3)
+        while (Mathf.Abs(DistanceToPlayerX) > 3 && !enemyController.isDead)
         {
             TurnCheck();
             yield return new WaitForSeconds(0.01f);

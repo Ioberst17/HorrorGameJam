@@ -221,7 +221,7 @@ public class PlayerController : MonoBehaviour
             }
             else if (isAgainstWall && canWallJump)
             {
-                ControlMomentum = 125 * -facingDirection;
+                ControlMomentum = 30 * -facingDirection;
                 canWallJump = false;
                 isJumping = true;
                 newVelocity.Set(0.0f, 0.0f);
@@ -248,7 +248,7 @@ public class PlayerController : MonoBehaviour
             if (isGrounded && !isJumping) //if on ground
             {
 
-                newVelocity.Set(movementSpeed * ControlMomentum/50, rb.velocity.y);
+                newVelocity.Set(movementSpeed * ControlMomentum/15, rb.velocity.y);
                 rb.velocity = newVelocity;
                 if(!isAttacking && !isJumping)
                 {
@@ -269,7 +269,7 @@ public class PlayerController : MonoBehaviour
             }
             else if (!isGrounded) //If in air
             {
-                newVelocity.Set(movementSpeed * ControlMomentum/50, rb.velocity.y);
+                newVelocity.Set(movementSpeed * ControlMomentum/15, rb.velocity.y);
                 rb.velocity = newVelocity;
             }
         }
