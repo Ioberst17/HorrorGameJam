@@ -9,7 +9,7 @@ public class Weapons
     public string title;
     public int tier;
     public int price;
-    public bool isShot, isThrown;
+    public bool isSecondary, isShot, isThrown, isFixedDistance;
     public bool isKinetic, isElemental, isHeavy; // note: isHeavy is not for a weight attribute, but a weapon type attribute (kinetic, elemental, heavy)
     public string weight;
     public int level1Damage;
@@ -17,6 +17,7 @@ public class Weapons
     public int level3Damage;
     public int level;
     public bool isLightSource;
+    public float fireRate;
     public string description;
     public int amount;
 }
