@@ -28,13 +28,19 @@ public class GameController : MonoBehaviour
     public bool ShootButton;
     public bool JumpButton;
     public bool DashButton;
-    
+    public int AttackBuffer;
+    public int ShootBuffer;
+    public int JumpBuffer;
+    public int DashBuffer;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        AttackBuffer = 0;
+        ShootBuffer = 0;
+        JumpBuffer = 0;
+        DashBuffer = 0;
     }
 
     // Update is called once per frame
@@ -94,6 +100,7 @@ public class GameController : MonoBehaviour
             if (Input.GetButtonUp("Jump") || Input.GetKeyUp("up")) //|| Input.GetKeyDown(KeyCode.W))
             {
                 JumpButton = false;
+                JumpBuffer = 0;
             }
             if(Input.GetKeyDown(KeyCode.U)) // if attack is triggered
             {
@@ -102,6 +109,7 @@ public class GameController : MonoBehaviour
             if (Input.GetKeyUp(KeyCode.U)) // if attack is released
             {
                 AttackButton = false;
+                AttackBuffer = 0;
             }
             if(Input.GetKeyDown(KeyCode.Y)) // if shoot is triggered
             {
@@ -110,14 +118,16 @@ public class GameController : MonoBehaviour
             if (Input.GetKeyUp(KeyCode.Y)) // if shoot is released
             {
                 ShootButton = false;
+                ShootBuffer = 0;
             }
             if (Input.GetKeyDown(KeyCode.I)) // if dash is triggered
             {
                 DashButton = true;
             }
-            if (Input.GetKeyDown(KeyCode.I)) // if dash is released
+            if (Input.GetKeyUp(KeyCode.I)) // if dash is released
             {
                 DashButton = false;
+                DashBuffer = 0;
             }
             // For Spawns
             if (Input.GetKeyDown(KeyCode.Alpha1)) { SpawnManager.SpawnEnemy(0); };
@@ -132,15 +142,17 @@ public class GameController : MonoBehaviour
     }
     public void CalculateInputs()
     {
-        if (JumpButton)
+        if (JumpButton && !(JumpBuffer > 5))
         {
             PlayerController.Jump();
+            ++JumpBuffer;
         }
-        if (DashButton)
+        if (DashButton && !(DashBuffer > 5))
         {
             PlayerController.Dash();
+            ++DashBuffer;
         }
-        if (AttackButton)
+        if (AttackButton && !(AttackBuffer > 5))
         {
             //Debug.Log("attack called");
             if (yInput > 0.2f)
@@ -155,8 +167,9 @@ public class GameController : MonoBehaviour
             {
                 PlayerController.Attack(2); 
             }
+            ++AttackBuffer;
         }
-        if (ShootButton)
+        if (ShootButton && !(ShootBuffer > 5))
         {
             //Debug.Log("attack called");
             if (yInput > 0.2f)
@@ -167,12 +180,13 @@ public class GameController : MonoBehaviour
             {
                 EventSystem.current.AmmoCheckTrigger(0); 
             }
+            ++ShootBuffer;
         }
         if (xInput > 0 && PlayerController.ControlMomentum < 15)
         {
             if(PlayerController.ControlMomentum == 0)
             {
-                PlayerController.ControlMomentum = 5;
+                PlayerController.ControlMomentum = 7;
             }
             else
             {
@@ -184,7 +198,7 @@ public class GameController : MonoBehaviour
         {
             if (PlayerController.ControlMomentum == 0)
             {
-                PlayerController.ControlMomentum = -5;
+                PlayerController.ControlMomentum = -7;
             }
             else
             {
