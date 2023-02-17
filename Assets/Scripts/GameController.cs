@@ -21,10 +21,15 @@ public class GameController : MonoBehaviour
     public string gameState;
     public bool isPaused;
     public float xInput;
+    public float yInput;
     public bool isGrounded;
     private bool pauseHelper;
-
+    public bool AttackButton;
+    public bool ShootButton;
+    public bool JumpButton;
+    public bool DashButton;
     
+
 
     // Start is called before the first frame update
     void Start()
@@ -46,8 +51,10 @@ public class GameController : MonoBehaviour
     {
         PlayerController.CheckGround();
         PlayerController.CheckWall();
+        CalculateInputs();
         if (!PlayerController.isDashing)
         {
+            
             PlayerController.ApplyMovement();
         }
         
@@ -77,71 +84,40 @@ public class GameController : MonoBehaviour
         if (!isPaused)
         {
             xInput = Input.GetAxisRaw("Horizontal");
-            if(xInput>0 && PlayerController.ControlMomentum < 50)
-            {
-                PlayerController.ControlMomentum += 1;
-            }
-            else if (xInput < 0 && PlayerController.ControlMomentum > -50)
-            {
-                PlayerController.ControlMomentum -= 1;
-            }
-            else if(xInput == 0)
-            {
-                if(PlayerController.ControlMomentum > 0)
-                {
-                    PlayerController.ControlMomentum -= 1;
-                }
-                else if (PlayerController.ControlMomentum < 0)
-                {
-                    PlayerController.ControlMomentum += 1;
-                }
-            }
-            if (PlayerController.ControlMomentum > 50)
-            {
-                PlayerController.ControlMomentum -= 1;
-            }
-            else if (PlayerController.ControlMomentum < -50)
-            {
-                PlayerController.ControlMomentum += 1;
-            }
+            yInput = Input.GetAxisRaw("Vertical");
             //Debug.Log(xInput);
-
-            if (xInput >= 1 && PlayerController.facingDirection == -1)
+            
+            if(Input.GetButtonDown("Jump") || Input.GetKeyDown("up")) //|| Input.GetKeyDown(KeyCode.W))
             {
-                PlayerController.Flip();
-                PlayerWeapon.Flip();
+                JumpButton = true;
             }
-            else if (xInput <= -1 && PlayerController.facingDirection == 1)
+            if (Input.GetButtonUp("Jump") || Input.GetKeyUp("up")) //|| Input.GetKeyDown(KeyCode.W))
             {
-                PlayerController.Flip();
-                PlayerWeapon.Flip();
+                JumpButton = false;
             }
-
-            if (Input.GetButtonDown("Jump") || Input.GetKeyDown("up") ) //|| Input.GetKeyDown(KeyCode.W))
+            if(Input.GetKeyDown(KeyCode.U)) // if attack is triggered
             {
-                PlayerController.Jump();
+                AttackButton = true;
             }
-            if (Input.GetKeyDown(KeyCode.Y) || Input.GetKeyDown(KeyCode.U)) // if either attack or shoot is triggered
+            if (Input.GetKeyUp(KeyCode.U)) // if attack is released
             {
-                //Debug.Log("attack called");
-                if (Input.GetKey(KeyCode.W) || Input.GetKey("up"))
-                {
-                    if (Input.GetKeyDown(KeyCode.U)) { PlayerController.Attack(0); } // melee attack if U
-                    if (Input.GetKeyDown(KeyCode.Y)) { EventSystem.current.AmmoCheckTrigger(1); } // shoot if Y, same logic used in below branches
-                }
-                else if((Input.GetKey(KeyCode.S) || Input.GetKey("down")) && !isGrounded){
-                    if (Input.GetKeyDown(KeyCode.U)) { PlayerController.Attack(1); }
-                    if (Input.GetKeyDown(KeyCode.Y)) { EventSystem.current.AmmoCheckTrigger(0); }
-                }
-                else
-                {
-                    if (Input.GetKeyDown(KeyCode.U)) { PlayerController.Attack(2); }
-                    if (Input.GetKeyDown(KeyCode.Y)) { EventSystem.current.AmmoCheckTrigger(0); }
-                }
+                AttackButton = false;
             }
-            if (Input.GetKeyDown(KeyCode.I))
+            if(Input.GetKeyDown(KeyCode.Y)) // if shoot is triggered
             {
-                PlayerController.Dash();
+                ShootButton = true;
+            }
+            if (Input.GetKeyUp(KeyCode.Y)) // if shoot is released
+            {
+                ShootButton = false;
+            }
+            if (Input.GetKeyDown(KeyCode.I)) // if dash is triggered
+            {
+                DashButton = true;
+            }
+            if (Input.GetKeyDown(KeyCode.I)) // if dash is released
+            {
+                DashButton = false;
             }
             // For Spawns
             if (Input.GetKeyDown(KeyCode.Alpha1)) { SpawnManager.SpawnEnemy(0); };
@@ -154,7 +130,82 @@ public class GameController : MonoBehaviour
 
         }
     }
-
+    public void CalculateInputs()
+    {
+        if (JumpButton)
+        {
+            PlayerController.Jump();
+        }
+        if (DashButton)
+        {
+            PlayerController.Dash();
+        }
+        if (AttackButton)
+        {
+            //Debug.Log("attack called");
+            if (yInput > 0.2f)
+            {
+                PlayerController.Attack(0);
+            }
+            else if (yInput < -0.2f && !isGrounded)
+            {
+                PlayerController.Attack(1); 
+            }
+            else
+            {
+                PlayerController.Attack(2); 
+            }
+        }
+        if (ShootButton)
+        {
+            //Debug.Log("attack called");
+            if (yInput > 0.2f)
+            {
+                EventSystem.current.AmmoCheckTrigger(1);  // shoot if Y, same logic used in below branches
+            }
+            else
+            {
+                EventSystem.current.AmmoCheckTrigger(0); 
+            }
+        }
+        if (xInput > 0 && PlayerController.ControlMomentum < 15)
+        {
+            PlayerController.ControlMomentum += 1;
+        }
+        else if (xInput < 0 && PlayerController.ControlMomentum > -15)
+        {
+            PlayerController.ControlMomentum -= 1;
+        }
+        else if (xInput == 0)
+        {
+            if (PlayerController.ControlMomentum > 0)
+            {
+                PlayerController.ControlMomentum -= 1;
+            }
+            else if (PlayerController.ControlMomentum < 0)
+            {
+                PlayerController.ControlMomentum += 1;
+            }
+        }
+        if (PlayerController.ControlMomentum > 15)
+        {
+            PlayerController.ControlMomentum -= 1;
+        }
+        else if (xInput < 0 && PlayerController.ControlMomentum < -15)
+        {
+            PlayerController.ControlMomentum += 1;
+        }
+        if (xInput >= 1 && PlayerController.facingDirection == -1)
+        {
+            PlayerController.Flip();
+            PlayerWeapon.Flip();
+        }
+        else if (xInput <= -1 && PlayerController.facingDirection == 1)
+        {
+            PlayerController.Flip();
+            PlayerWeapon.Flip();
+        }
+    }
     
 
     public void pauseHandler()
