@@ -59,7 +59,7 @@ public class ConsumablesDatabase : MonoBehaviour
                 {
                     if (dataEntry.Name == columnNames[j])
                     {
-                        Debug.Log("Current column being filled is " + dataEntry.Name + " and its type is " + columnDataTypes[j]);
+                        //Debug.Log("Current column being filled is " + dataEntry.Name + " and its type is " + columnDataTypes[j]);
                         ParseDataToTable(i, j, data, dataEntry);
                     }
                 }
@@ -75,25 +75,25 @@ public class ConsumablesDatabase : MonoBehaviour
         {
             int.TryParse(data[numOfColumns * (currentRow + rowsToSkip) + currentColumnEntry], out int intVal);
             consumablesDatabase.entries[currentRow].GetType().GetField(dataEntry.Name).SetValue(consumablesDatabase.entries[currentRow], intVal);
-            Debug.Log("Current item being added to database is " + consumablesDatabase.entries[currentRow].itemName + ". It's value is " + intVal);
+            //Debug.Log("Current item being added to database is " + consumablesDatabase.entries[currentRow].itemName + ". It's value is " + intVal);
         }
         else if (columnDataTypes[currentColumnEntry] == "string")
         {
             string strVal = data[numOfColumns * (currentRow + rowsToSkip) + currentColumnEntry];
             consumablesDatabase.entries[currentRow].GetType().GetField(dataEntry.Name).SetValue(consumablesDatabase.entries[currentRow], strVal);
-            Debug.Log("Current item being added to database is " + consumablesDatabase.entries[currentRow].itemName + ". It's value is " + strVal);
+            //Debug.Log("Current item being added to database is " + consumablesDatabase.entries[currentRow].itemName + ". It's value is " + strVal);
         }
         else if (columnDataTypes[currentColumnEntry] == "bool")
         {
             bool boolVal = bool.Parse(data[numOfColumns * (currentRow + rowsToSkip) + currentColumnEntry]);
             consumablesDatabase.entries[currentRow].GetType().GetField(dataEntry.Name).SetValue(consumablesDatabase.entries[currentRow], boolVal);
-            Debug.Log("Current item being added to database is " + consumablesDatabase.entries[currentRow].itemName + ". It's value is " + boolVal);
+            //Debug.Log("Current item being added to database is " + consumablesDatabase.entries[currentRow].itemName + ". It's value is " + boolVal);
         }
         else if (columnDataTypes[currentColumnEntry] == "float")
         {
             float floatVal = float.Parse(data[numOfColumns * (currentRow + rowsToSkip) + currentColumnEntry]);
             consumablesDatabase.entries[currentRow].GetType().GetField(dataEntry.Name).SetValue(consumablesDatabase.entries[currentRow], floatVal);
-            Debug.Log("Current item being added to database is " + consumablesDatabase.entries[currentRow].itemName + ". It's value is " + floatVal);
+            //Debug.Log("Current item being added to database is " + consumablesDatabase.entries[currentRow].itemName + ". It's value is " + floatVal);
         }
         else { Debug.Log("No data type match"); }
 
