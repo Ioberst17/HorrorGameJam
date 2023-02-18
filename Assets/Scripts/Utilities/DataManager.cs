@@ -44,7 +44,7 @@ public class DataManager : MonoBehaviour
         public int playerLevel = 1;
         // Inventory Data
         [SerializeField]
-        public List<Consumables> consumables = new List<Consumables>();
+        public List<PlayerConsumables> consumables = new List<PlayerConsumables>();
         [SerializeField]
         public List<PlayerWeapons> primaryWeapons = new List<PlayerWeapons>();
         [SerializeField]

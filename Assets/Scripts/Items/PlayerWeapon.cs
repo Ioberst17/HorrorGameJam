@@ -42,11 +42,13 @@ public class PlayerWeapon : MonoBehaviour
 
 
     // weapon rotation
+    private Camera cameraToUse;
     private PlayerController playerController;
     private int upAngle = 90;
     private int downAngle = -90;
     private int standardAngle = 0;
     private Transform firePoint;
+    private Vector3 mousePos;
 
     void Start()
     {
@@ -54,9 +56,10 @@ public class PlayerWeapon : MonoBehaviour
         EventSystem.current.onWeaponFireTrigger += WeaponFired;
 
         weaponDatabase = GameObject.Find("WeaponDatabase").GetComponent<WeaponDatabase>();
-        firePoint = gameObject.transform.GetChild(0).gameObject.transform;
-        fixedDistanceAmmo = firePoint.transform.GetChild(0).gameObject;
+        firePoint = gameObject.transform.GetChild(0).gameObject.transform.Find("FirePointSprite");
+        fixedDistanceAmmo = gameObject.transform.GetChild(0).gameObject.transform.Find("FixedDistanceAmmo").gameObject;
         playerController = transform.parent.GetComponent<PlayerController>();
+        cameraToUse = GameObject.Find("Main Camera").GetComponent<Camera>();
 
         // load ammo prefabs to a list
         ammoPrefabs = Resources.LoadAll<GameObject>("AmmoPrefabs").ToList();
@@ -77,6 +80,23 @@ public class PlayerWeapon : MonoBehaviour
 
     private void HandleWeaponDirection()
     {
+        mousePos = cameraToUse.ScreenToWorldPoint(Input.mousePosition);
+
+        Vector3 rotation = mousePos - transform.position;
+
+        float rotZ = Mathf.Atan2(rotation.y, rotation.x) * Mathf.Rad2Deg;
+
+        transform.rotation = Quaternion.Euler(0, 0, rotZ);
+
+        /* Below is used for horizontal / vertical only firing
+         * 
+         * if (playerController.facingDirection == -1)
+        {
+            gameObject.transform.rotation = Quaternion.Euler(-Vector3.forward * upAngle);
+        }
+
+        else { gameObject.transform.rotation = Quaternion.Euler(Vector3.forward * upAngle); }
+
         if (Input.GetKey(KeyCode.W) || Input.GetKey("up"))
         {
             if (playerController.facingDirection == -1) // if player is turned around
@@ -93,7 +113,7 @@ public class PlayerWeapon : MonoBehaviour
         else
         {
             gameObject.transform.rotation = Quaternion.Euler(Vector3.forward * standardAngle);
-        }
+        }*/
     }
 
 
@@ -123,16 +143,16 @@ public class PlayerWeapon : MonoBehaviour
 
     private void HandleThrowing()
     {
-        if (Input.GetKeyDown(KeyCode.Y))
+        if (Input.GetMouseButtonDown(1))
         {
             throwKeyHeldDownStart = Time.time;
         }
-        if (Input.GetKeyUp(KeyCode.Y))
+        if (Input.GetMouseButtonUp(1))
         {
             throwKeyReleased = Time.time;
             if (inActiveThrow) { ThrowWeapon(currentThrowDirection, currentThrowForce); }
         }
-        if (Input.GetKey(KeyCode.Y))
+        if (Input.GetMouseButton(1))
         {
             if (inActiveThrow)
             {
@@ -145,9 +165,9 @@ public class PlayerWeapon : MonoBehaviour
     private float CalcThrowForce(float holdTime)
     {
         holdTimeNormalized = Mathf.Clamp01(holdTime / maxForceHoldDownTime);
-        EventSystem.current.StartTossingWeaponTrigger(holdTimeNormalized);
         float force = holdTimeNormalized * maxThrowSpeed;
         force += minThrowSpeed;
+        EventSystem.current.StartTossingWeaponTrigger(holdTimeNormalized, projectileSpawnPoint.transform, force);
         return force;
     }
 
@@ -157,7 +177,17 @@ public class PlayerWeapon : MonoBehaviour
         FindObjectOfType<AudioManager>().PlaySFX("WeaponToss");
 
         toss.GetComponent<Rigidbody2D>().gravityScale = throwGravity;
-        if (direction == 0) // throwing on ground
+
+        
+
+        if( 10 > transform.rotation.eulerAngles.z && transform.rotation.eulerAngles.z > -10) 
+        {
+            toss.GetComponent<Rigidbody2D>().AddForce(projectileSpawnPoint.transform.right.normalized * throwSpeed, ForceMode2D.Impulse);
+            //toss.GetComponent<Rigidbody2D>().AddForce((projectileSpawnPoint.transform.right + projectileSpawnPoint.transform.up).normalized * throwSpeed, ForceMode2D.Impulse);
+        }
+        else {toss.GetComponent<Rigidbody2D>().AddForce((projectileSpawnPoint.transform.right).normalized * throwSpeed, ForceMode2D.Impulse); }
+
+        /*if (direction == 0) // throwing on ground
         {
             toss.GetComponent<Rigidbody2D>().AddForce((projectileSpawnPoint.transform.right + projectileSpawnPoint.transform.up).normalized * throwSpeed, ForceMode2D.Impulse);
         }
@@ -173,7 +203,7 @@ public class PlayerWeapon : MonoBehaviour
         else
         {
             Debug.Log("Check PlayerWeapon.CS for throwing direction misfiring!");
-        }
+        }*/
 
         inActiveThrow = false;
         EventSystem.current.FinishTossingWeaponTrigger();
@@ -181,17 +211,17 @@ public class PlayerWeapon : MonoBehaviour
 
     private void FixedDistanceFire()
     {
-        if (Input.GetKey(KeyCode.Y)) { fixedDistanceAmmo.SetActive(true);}
+        if (Input.GetMouseButton(1)) { fixedDistanceAmmo.SetActive(true);}
     }
 
     private void HandleFixedDistanceFire()
     {
-        if (!Input.GetKey(KeyCode.Y)) { fixedDistanceAmmo.SetActive(false); }
+        if (!Input.GetMouseButton(1)) { fixedDistanceAmmo.SetActive(false); }
     }
 
-    public void Flip() // used in game controller to flip projectile spawnpoint when player changes direction
+    public void Flip() // used in game controller to flip projectile spawnpoint when player changes direction; should only be called if using horizontal / vertical direction only firing
     {
-        projectileSpawnPoint.Rotate(0.0f, 180.0f, 0.0f);
+        gameObject.transform.Rotate(0.0f, 180.0f, 0.0f);
     }
 
     private void WeaponChanged(int weaponID, int weaponLevel)

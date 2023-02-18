@@ -121,34 +121,34 @@ public class GameController : MonoBehaviour
             {
                 PlayerController.Jump();
             }
-            if (Input.GetKey(KeyCode.Y) || Input.GetKeyDown(KeyCode.U)) // if either attack or shoot is triggered
+            if (Input.GetMouseButton(1) || Input.GetMouseButtonDown(0)) // if either attack or shoot is triggered
             {
                 //Debug.Log("attack called");
                 if (Input.GetKey(KeyCode.W) || Input.GetKey("up"))
                 {
-                    if (Input.GetKeyDown(KeyCode.U)) // melee attack if U
+                    if (Input.GetMouseButtonDown(0)) // melee attack if U
                     { 
                         PlayerController.Attack(0);
                     } 
-                    if (Input.GetKey(KeyCode.Y)) { EventSystem.current.AmmoCheckTrigger(1); } // shoot if Y, same logic used in below branches
+                    if (Input.GetMouseButton(1)) { EventSystem.current.AmmoCheckTrigger(1); } // shoot if Y, same logic used in below branches
                 }
                 else if((Input.GetKey(KeyCode.S) || Input.GetKey("down")) && !isGrounded){
-                    if (Input.GetKeyDown(KeyCode.U)) 
+                    if (Input.GetMouseButtonDown(0)) 
                     { 
                         PlayerController.Attack(1);
                     }
-                    if (Input.GetKey(KeyCode.Y)) { EventSystem.current.AmmoCheckTrigger(0); }
+                    if (Input.GetMouseButton(1)) { EventSystem.current.AmmoCheckTrigger(-1); }
                 }
                 else
                 {
-                    if (Input.GetKeyDown(KeyCode.U)) 
+                    if (Input.GetMouseButtonDown(0)) 
                     { 
                         PlayerController.Attack(2);
                     }
-                    if (Input.GetKey(KeyCode.Y)) { EventSystem.current.AmmoCheckTrigger(0); }
+                    if (Input.GetMouseButton(1)) { EventSystem.current.AmmoCheckTrigger(0); }
                 }
             }
-            if (Input.GetKeyDown(KeyCode.I))
+            if (Input.GetKeyDown(KeyCode.LeftShift))
             {
                 PlayerController.Dash();
             }

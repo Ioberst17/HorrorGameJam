@@ -10,7 +10,6 @@ public class Ammo : MonoBehaviour
     public int ammoID;
     public bool isFixedDistance;
 
-
     public int GetAmmoID()
     {
         return ammoID;
@@ -50,13 +49,6 @@ public class Ammo : MonoBehaviour
         }
     }
 
-    /*private void OnTriggerStay2D(Collider2D col)
-    {
-        if (isFixedDistance && col.gameObject.GetComponent<EnemyController>() != null)
-        {
-            var enemyController = col.gameObject.GetComponent<EnemyController>();
-            enemyController.AmmoDamage(weaponID, weaponLevel);
-        }
-    }*/
+
 
 }

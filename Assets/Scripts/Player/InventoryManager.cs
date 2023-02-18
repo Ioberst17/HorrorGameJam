@@ -10,10 +10,11 @@ public class InventoryManager : MonoBehaviour
     public DataManager dataManager;
     public WeaponDatabase weaponDatabase;
     public WeaponDatabase.Database weaponData;
+    public ConsumablesDatabase consumablesDatabase;
     public PlayerWeapon playerWeapon;
 
     [SerializeField]
-    private List<Consumables> consumables = new List<Consumables>();
+    private List<PlayerConsumables> consumables = new List<PlayerConsumables>();
     [SerializeField]
     private List<PlayerWeapons> primaryWeapons = new List<PlayerWeapons>();
     [SerializeField]
@@ -31,15 +32,20 @@ public class InventoryManager : MonoBehaviour
     {
         dataManager = DataManager.Instance;
         weaponDatabase = GameObject.Find("WeaponDatabase").GetComponent<WeaponDatabase>();
-        weaponData = GameObject.Find("WeaponDatabase").GetComponent<WeaponDatabase>().weaponDatabase;
+        weaponData = weaponDatabase.weaponDatabase;
+        consumablesDatabase = GameObject.Find("ConsumablesDatabase").GetComponent<ConsumablesDatabase>();
         playerWeapon = GameObject.Find("Weapon").GetComponent<PlayerWeapon>();
 
-        //subscribe to important weapon updates
+        //subscribe to important events
+        //weapons
         EventSystem.current.onWeaponAddAmmoTrigger += AddAmmo;
         EventSystem.current.onWeaponChangeTrigger += WeaponChanged;
         EventSystem.current.onAmmoCheckTrigger += CanWeaponBeFired;
         EventSystem.current.onWeaponFireTrigger += WeaponFired;
         EventSystem.current.onWeaponLevelTrigger += WeaponLevelChange;
+
+        //items
+        EventSystem.current.onItemPickupTrigger += AddItem;
 
         LoadFromDataManager();
 
@@ -56,7 +62,7 @@ public class InventoryManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha0)) {EventSystem.current.WeaponAddAmmoTrigger(50);}
+        if (Input.GetKeyDown(KeyCode.Alpha0)) {EventSystem.current.WeaponAddAmmoTrigger(100);}
 
         if (Input.GetKeyDown(KeyCode.Alpha8)) {EventSystem.current.WeaponChangeTrigger(-1);}
 
@@ -70,6 +76,8 @@ public class InventoryManager : MonoBehaviour
             primaryWeapons.Clear();
             secondaryWeapons.Clear();
         }
+
+        if (Input.GetKeyDown(KeyCode.I)) { AddItem(0, 100); }
     }
 
     void LoadFromDataManager() 
@@ -81,7 +89,7 @@ public class InventoryManager : MonoBehaviour
 
     void LoadInventoryLists()
     {
-        if(dataManager.gameData.consumables == null) {consumables = new List<Consumables>();}
+        if(dataManager.gameData.consumables == null) {consumables = new List<PlayerConsumables>();}
         else { consumables = dataManager.gameData.consumables; }
 
         if (dataManager.gameData.primaryWeapons == null) { primaryWeapons = new List<PlayerWeapons>(); }
@@ -97,17 +105,6 @@ public class InventoryManager : MonoBehaviour
         // check to make sure the current weapon ID is possible
         currentPrimaryWeaponID = dataManager.gameData.activePrimaryWeapon;
         currentSecondaryWeaponID = dataManager.gameData.activeSecondaryWeapon;
-
-        /*if (validPrimaryWeaponIDs.Contains(currentPrimaryWeapon))
-        {
-            currentPrimaryWeaponLocation = GetTheCurrentWeaponsIndexInInventory();
-            WeaponUIUpdate();
-        }
-        else
-        {
-            currentPrimaryWeapon = validPrimaryWeaponIDs[0];
-            WeaponUIUpdate();
-        }*/
 
         if (weaponDatabase.validSecondaryWeaponIDs.Contains(currentSecondaryWeaponID))
         {
@@ -133,7 +130,7 @@ public class InventoryManager : MonoBehaviour
             idMatch = false;
             for (int j = 0; j < dataManager.gameData.primaryWeapons.Count; j++) //loop through data manager
             {
-                if (primaryWeapons[i].ID == dataManager.gameData.primaryWeapons[j].ID) // if the ID's match while looping through
+                if (primaryWeapons[i].id == dataManager.gameData.primaryWeapons[j].id) // if the ID's match while looping through
                 {
                     Debug.Log("Weapon ID " + j + " is in save data");
                     // then update the data manager entry
@@ -157,7 +154,7 @@ public class InventoryManager : MonoBehaviour
             idMatch = false;
             for (int j = 0; j < dataManager.gameData.secondaryWeapons.Count; j++) 
             {
-                if (secondaryWeapons[i].ID == dataManager.gameData.secondaryWeapons[j].ID) 
+                if (secondaryWeapons[i].id == dataManager.gameData.secondaryWeapons[j].id) 
                 {
                     // then update the data manager entry
                     dataManager.gameData.secondaryWeapons[j].level = secondaryWeapons[i].level;
@@ -182,7 +179,7 @@ public class InventoryManager : MonoBehaviour
         {
             if (primaryWeapons.Count() > 0)
             {
-                indexInPrimary = primaryWeapons.FindIndex(gameObject => Equals(weapon.id, gameObject.ID)); // returns -1 if object isn't indexed
+                indexInPrimary = primaryWeapons.FindIndex(gameObject => Equals(weapon.id, gameObject.id)); // returns -1 if object isn't indexed
             }
         }
 
@@ -190,7 +187,7 @@ public class InventoryManager : MonoBehaviour
         else 
             {if(secondaryWeapons.Count() > 0)
                 {
-                    indexInSecondary = secondaryWeapons.FindIndex(gameObject => Equals(weapon.id, gameObject.ID));
+                    indexInSecondary = secondaryWeapons.FindIndex(gameObject => Equals(weapon.id, gameObject.id));
                 }
             }
         
@@ -215,8 +212,14 @@ public class InventoryManager : MonoBehaviour
     private void AddAmmo(int weaponID, int ammoChange)
     {
         for (int i = 0; i < secondaryWeapons.Count; i++)
-        { if (secondaryWeapons[i].ID == weaponID) { secondaryWeapons[i].ammo += ammoChange; } }
+        { if (secondaryWeapons[i].id == weaponID) { secondaryWeapons[i].ammo += ammoChange; } }
     } // used when needing to add to a weapon with a specific ID e.g. non-current weapon
+
+    private void AddAmmo(string weaponName, int ammoChange)
+    {
+        for (int i = 0; i < secondaryWeapons.Count; i++)
+        { if (secondaryWeapons[i].name == weaponName) { secondaryWeapons[i].ammo += ammoChange; } }
+    }
 
     private void WeaponFired(int weaponID, int weaponLevel, int ammoChange, int direction)
     {
@@ -226,7 +229,7 @@ public class InventoryManager : MonoBehaviour
     private void WeaponLevelChange(int weaponID, int levelChange)
     {
         for (int i = 0; i < secondaryWeapons.Count; i++)
-        { if (secondaryWeapons[i].ID == weaponID) { secondaryWeapons[i].level += levelChange; } }
+        { if (secondaryWeapons[i].id == weaponID) { secondaryWeapons[i].level += levelChange; } }
     }
     
     private void WeaponChanged(int weaponChange)
@@ -247,7 +250,7 @@ public class InventoryManager : MonoBehaviour
 
     private void WeaponLocationUpdate(int weaponChange, int weaponLocation)
     {
-        currentSecondaryWeaponID = secondaryWeapons[weaponLocation + weaponChange].ID;
+        currentSecondaryWeaponID = secondaryWeapons[weaponLocation + weaponChange].id;
         currentSecondaryWeaponIndex = weaponLocation + weaponChange;
     }
 
@@ -258,7 +261,7 @@ public class InventoryManager : MonoBehaviour
             string weaponName = secondaryWeapons[currentSecondaryWeaponIndex].name;
             int weaponAmmo = secondaryWeapons[currentSecondaryWeaponIndex].ammo;
 
-            int weaponID = secondaryWeapons[currentSecondaryWeaponIndex].ID;
+            int weaponID = secondaryWeapons[currentSecondaryWeaponIndex].id;
             int weaponLevel = secondaryWeapons[currentSecondaryWeaponIndex].level;
 
             EventSystem.current.UpdateWeaponUITrigger(weaponName, weaponAmmo);
@@ -289,7 +292,7 @@ public class InventoryManager : MonoBehaviour
     private int GetTheCurrentWeaponsIndexInInventory()
     {
         for (int i = 0; i < secondaryWeapons.Count; i++)
-        { if (secondaryWeapons[i].ID == currentSecondaryWeaponID) { return i; } }
+        { if (secondaryWeapons[i].id == currentSecondaryWeaponID) { return i; } }
 
         return -1;
     }
@@ -312,6 +315,107 @@ public class InventoryManager : MonoBehaviour
         }         
     }
 
+    void AddItem(int itemID, int amount)
+    {
+        bool isAmmo = CheckIfItemIsAmmo(itemID, amount);
+        if(isAmmo == false)
+        {
+            bool itemInInv = CheckIfItemIsInInv(itemID, amount);
+            if (itemInInv == false)
+            {
+                AddNewItemToInv(itemID, amount);
+            }
+        }
+    }
+
+    bool CheckIfItemIsAmmo(int itemID, int amount)
+    {
+        Consumables[] database = consumablesDatabase.consumablesDatabase.entries;
+
+        bool isAmmo = false;
+        for(int i = 0; i < database.Length; i++)
+        {
+            if(itemID == database[i].id)
+            {
+                if (database[i].itemType == "Ammo")
+                {
+                    if(secondaryWeapons[currentPrimaryWeaponLocation].name == database[i].itemName) { AddAmmo(amount); }
+                    else
+                    {
+                        AddAmmo(database[i].itemName, amount);
+                        // TO-DO: Placeholder for event firing background inventory UI update (i.e. if ammo is for non-current weapon)
+                    }
+                    isAmmo = true;
+                    FindObjectOfType<AudioManager>().PlaySFX(database[i].audioOnPickup);
+                }
+            }
+        }
+        return isAmmo;
+    }
+
+    int CheckIfItemIsInInv(int itemID)
+    {
+        int itemInInv = -1;
+        if (consumables != null) { itemInInv = consumables.FindIndex(x => x.id == itemID); }
+        return itemInInv;
+    }
+
+    int CheckIfItemIsInInv(string itemName)
+    {
+        int itemInInv = -1;
+        if (consumables != null) { itemInInv = consumables.FindIndex(x => x.itemName == itemName); }
+        return itemInInv;
+    }
+
+    bool CheckIfItemIsInInv(int itemID, int amount)
+    {
+        bool itemInInv = false;
+        if (consumables != null)
+        {
+            for (int i = 0; i < consumables.Count; i++)
+            {
+                if (consumables[i].id == itemID) 
+                {
+                    consumables[i].amount += amount; 
+                    
+                    FindObjectOfType<AudioManager>().PlaySFX(consumables[i].audioOnPickup);
+                }
+                itemInInv = true;
+            }
+        }
+        return itemInInv;
+    }
+
+    void AddNewItemToInv(int itemID, int amount)
+    {
+        for(int i = 0; i < consumablesDatabase.consumablesDatabase.entries.Length; i++)
+        {
+            if (consumablesDatabase.consumablesDatabase.entries[i].id == itemID)
+            {
+                var itemToAdd = consumablesDatabase.consumablesDatabase.entries[i];
+
+                consumables.Add(new PlayerConsumables(
+                    itemToAdd.id, 
+                    itemToAdd.itemType, 
+                    itemToAdd.itemName, 
+                    amount, 
+                    itemToAdd.audioOnPickup, 
+                    itemToAdd.audioOnUse, 
+                    itemToAdd.description)); 
+                
+                FindObjectOfType<AudioManager>().PlaySFX(itemToAdd.audioOnPickup);
+            }
+        }
+    }
+
+    void UseHealthKit()
+    {
+        if(-1 != CheckIfItemIsInInv("Health Kit"))
+        {
+            
+        }
+    }
+
     private void OnDestroy()
     {
         // unsubscribe from events
@@ -320,6 +424,7 @@ public class InventoryManager : MonoBehaviour
         EventSystem.current.onAmmoCheckTrigger -= CanWeaponBeFired;
         EventSystem.current.onWeaponFireTrigger -= WeaponFired;
         EventSystem.current.onWeaponLevelTrigger -= WeaponLevelChange;
+        EventSystem.current.onItemPickupTrigger -= AddItem;
     }
 
 }

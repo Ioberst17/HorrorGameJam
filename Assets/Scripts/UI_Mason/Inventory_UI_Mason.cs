@@ -56,7 +56,7 @@ public class Inventory_UI_Mason : MonoBehaviour
         for (int i = 0; i < dataManager.gameData.secondaryWeapons.Count; i++)
         {
             inventorySlots[i].color = Color.red;
-            Debug.Log("weapon=" + dataManager.gameData.secondaryWeapons[i].ID + " /n");
+            Debug.Log("weapon=" + dataManager.gameData.secondaryWeapons[i].id + " /n");
         }
     }
 
