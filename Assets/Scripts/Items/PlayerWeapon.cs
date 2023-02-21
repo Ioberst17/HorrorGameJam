@@ -53,6 +53,7 @@ public class PlayerWeapon : MonoBehaviour
     private int standardAngle = 0;
     private Transform firePoint;
     private Vector3 mousePos;
+    private Vector3 playerPos;
     private float rotationZ; //used for weapon direction
 
     void Start()
@@ -87,9 +88,10 @@ public class PlayerWeapon : MonoBehaviour
     public bool WeaponIsPointedToTheRight()
     {
         bool weaponIsPointedRight = false;
-        mousePos = cameraToUse.ScreenToWorldPoint(Input.mousePosition);
+        mousePos = Input.mousePosition;
+        playerPos = cameraToUse.WorldToScreenPoint(transform.position);
 
-        if (mousePos.x > player.transform.position.x) { weaponIsPointedRight = true; }
+        if (mousePos.x > playerPos.x) { weaponIsPointedRight = true; }
         
         return weaponIsPointedRight;
     }
@@ -103,33 +105,6 @@ public class PlayerWeapon : MonoBehaviour
         rotationZ = Mathf.Atan2(rotation.y, rotation.x) * Mathf.Rad2Deg;
 
         transform.rotation = Quaternion.Euler(0, 0, rotationZ);
-
-        /* Below is used for horizontal / vertical only firing
-         * 
-         * if (playerController.facingDirection == -1)
-        {
-            gameObject.transform.rotation = Quaternion.Euler(-Vector3.forward * upAngle);
-        }
-
-        else { gameObject.transform.rotation = Quaternion.Euler(Vector3.forward * upAngle); }
-
-        if (Input.GetKey(KeyCode.W) || Input.GetKey("up"))
-        {
-            if (playerController.facingDirection == -1) // if player is turned around
-            { gameObject.transform.rotation = Quaternion.Euler(-Vector3.forward * upAngle); }
-            else { gameObject.transform.rotation = Quaternion.Euler(Vector3.forward * upAngle); }
-
-        }
-        else if ((Input.GetKey(KeyCode.S) || Input.GetKey("down")))
-        {
-            if (playerController.facingDirection == -1) // if player is turned around
-            { gameObject.transform.rotation = Quaternion.Euler(-Vector3.forward * downAngle); }
-            else { gameObject.transform.rotation = Quaternion.Euler(Vector3.forward * downAngle); }
-        }
-        else
-        {
-            gameObject.transform.rotation = Quaternion.Euler(Vector3.forward * standardAngle);
-        }*/
     }
 
 
@@ -202,24 +177,6 @@ public class PlayerWeapon : MonoBehaviour
             //toss.GetComponent<Rigidbody2D>().AddForce((projectileSpawnPoint.transform.right + projectileSpawnPoint.transform.up).normalized * throwSpeed, ForceMode2D.Impulse);
         }
         else {toss.GetComponent<Rigidbody2D>().AddForce((projectileSpawnPoint.transform.right).normalized * throwSpeed, ForceMode2D.Impulse); }
-
-        /*if (direction == 0) // throwing on ground
-        {
-            toss.GetComponent<Rigidbody2D>().AddForce((projectileSpawnPoint.transform.right + projectileSpawnPoint.transform.up).normalized * throwSpeed, ForceMode2D.Impulse);
-        }
-        else if (direction == 1) // throwing upwards
-        {
-            if (firePoint.rotation == Quaternion.Euler(0, -180, 0)) { Debug.Log("Edit this"); }
-            toss.GetComponent<Rigidbody2D>().AddForce((projectileSpawnPoint.transform.right).normalized * throwSpeed, ForceMode2D.Impulse);
-        }
-        else if (direction == -1) // throwing downwards
-        {
-            toss.GetComponent<Rigidbody2D>().AddForce((projectileSpawnPoint.transform.right).normalized * throwSpeed, ForceMode2D.Impulse);
-        }
-        else
-        {
-            Debug.Log("Check PlayerWeapon.CS for throwing direction misfiring!");
-        }*/
 
         inActiveThrow = false;
         EventSystem.current.FinishTossingWeaponTrigger();

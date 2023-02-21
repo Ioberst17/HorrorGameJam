@@ -9,21 +9,17 @@ public class Ammo : MonoBehaviour
     public int weaponLevel;
     public int ammoID;
     public bool isFixedDistance;
+    public bool isThrown;
+    public bool isExplosive;
+    public Animator animator;
 
-    public int GetAmmoID()
-    {
-        return ammoID;
-    }
+    public int GetAmmoID() { return ammoID;}
 
-    private void OnCollisionEnter2D(Collision2D col)
-    {
-        if (!isFixedDistance) { HandleStandardAmmo(col); }
-    }
+    private void Start() { animator = GetComponent<Animator>(); }
 
-    private void OnTriggerStay2D(Collider2D other)
-    {
-        if (isFixedDistance) { HandleFixedDistanceAmmo(other); }
-    }
+    private void OnCollisionEnter2D(Collision2D col) { if (!isFixedDistance) { HandleStandardAmmo(col); }}
+
+    private void OnTriggerStay2D(Collider2D other) { if (isFixedDistance) { HandleFixedDistanceAmmo(other); } }
 
     private void HandleStandardAmmo(Collision2D col)
     {
@@ -31,12 +27,27 @@ public class Ammo : MonoBehaviour
         {
             var enemyController = col.gameObject.GetComponent<EnemyController>();
             enemyController.AmmoDamage(weaponID, weaponLevel);
-            Destroy(gameObject);
+            if (isThrown)
+            {
+                StartCoroutine(ExplodeCoroutine());
+            }
+            else if (!isThrown)
+            {
+                Destroy(gameObject);
+            }        
         }
 
         if (col.gameObject.tag == "Boundary")
         {
-            Destroy(gameObject);
+            if (isThrown)
+            {
+                StartCoroutine(ExplodeCoroutine());
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+            
         }
     }
 
@@ -48,6 +59,15 @@ public class Ammo : MonoBehaviour
             enemyController.AmmoDamage(weaponID, weaponLevel);
         }
     }
+
+    IEnumerator ExplodeCoroutine()
+    {
+        animator.SetTrigger("Explode");
+        FindObjectOfType<AudioManager>().PlaySFX("WeaponExplosion");
+        Destroy(gameObject, 1.5f);
+        yield return 0;
+    }
+
 
 
 

@@ -19,6 +19,7 @@ public class PlayerData_UI_Mason : MonoBehaviour
 
     [SerializeField] private Canvas ThrowForceUI;
     [SerializeField] private Image ThrowForceFill;
+    Transform StartingTransform;
     public GameObject throwPredictionPoint;
     private GameObject[] throwPredictionPoints;
     private int numberOfThrowPoints = 30;
@@ -77,6 +78,8 @@ public class PlayerData_UI_Mason : MonoBehaviour
     {
         ThrowForceUI.GetComponent<CanvasGroup>().alpha = 1;
         ThrowForceFill.GetComponent<Image>().fillAmount = tossForce;
+        ThrowForceUI.transform.rotation = Quaternion.Euler(0, 0, 0);
+        ThrowForceFill.transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 
     private void ShowTossTrajectory(Transform tossSpawnPoint, float tossForce)

@@ -106,16 +106,24 @@ public class GameController : MonoBehaviour
             }
             //Debug.Log(xInput);
 
-            if ((xInput >= 1 || PlayerWeapon.WeaponIsPointedToTheRight()) && PlayerController.facingDirection == -1)
+
+            if (xInput >= 1 && PlayerController.facingDirection == -1)
             {
-                PlayerController.Flip();
-                PlayerWeapon.Flip();
+                HandleFlipping();
             }
-            else if ((xInput <= -1 || !PlayerWeapon.WeaponIsPointedToTheRight()) && PlayerController.facingDirection == 1)
+            else if (xInput <= -1 && PlayerController.facingDirection == 1)
             {
-                PlayerController.Flip();
-                PlayerWeapon.Flip();
+                HandleFlipping();
             }
+            else if(PlayerWeapon.WeaponIsPointedToTheRight() && PlayerController.facingDirection == -1)
+            {
+                HandleFlipping();
+            }
+            else if(!PlayerWeapon.WeaponIsPointedToTheRight() && PlayerController.facingDirection == 1)
+            {
+                HandleFlipping();
+            }
+
 
             if (Input.GetButtonDown("Jump") || Input.GetKeyDown("up") ) //|| Input.GetKeyDown(KeyCode.W))
             {
@@ -212,5 +220,11 @@ public class GameController : MonoBehaviour
         EnemyController.calculateHit(attackDamage, playerPosition);
         Debug.Log("passing hit to " + enemyname);
 
+    }
+
+    public void HandleFlipping()
+    {
+        PlayerController.Flip();
+        PlayerWeapon.Flip();
     }
 }
