@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,6 +8,8 @@ using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 public class PlayerWeapon : MonoBehaviour
 {
+    private SpriteRenderer weaponSprite;
+
     //ammo-related
     public List<GameObject> ammoPrefabs;
     public Transform projectileSpawnPoint; // assigned in inspector
@@ -42,20 +45,23 @@ public class PlayerWeapon : MonoBehaviour
 
 
     // weapon rotation
-    private Camera cameraToUse;
+    public Camera cameraToUse; //assign in inspector
+    private GameObject player;
     private PlayerController playerController;
     private int upAngle = 90;
     private int downAngle = -90;
     private int standardAngle = 0;
     private Transform firePoint;
     private Vector3 mousePos;
+    private float rotationZ; //used for weapon direction
 
     void Start()
     {
         EventSystem.current.onUpdatePlayerWeaponTrigger += WeaponChanged;
         EventSystem.current.onWeaponFireTrigger += WeaponFired;
-
+        player = GameObject.Find("Player");
         weaponDatabase = GameObject.Find("WeaponDatabase").GetComponent<WeaponDatabase>();
+        weaponSprite = GameObject.Find("WeaponSprite").GetComponent<SpriteRenderer>();
         firePoint = gameObject.transform.GetChild(0).gameObject.transform.Find("FirePointSprite");
         fixedDistanceAmmo = gameObject.transform.GetChild(0).gameObject.transform.Find("FixedDistanceAmmo").gameObject;
         playerController = transform.parent.GetComponent<PlayerController>();
@@ -78,15 +84,25 @@ public class PlayerWeapon : MonoBehaviour
         HandleFixedDistanceFire();
     }
 
+    public bool WeaponIsPointedToTheRight()
+    {
+        bool weaponIsPointedRight = false;
+        mousePos = cameraToUse.ScreenToWorldPoint(Input.mousePosition);
+
+        if (mousePos.x > player.transform.position.x) { weaponIsPointedRight = true; }
+        
+        return weaponIsPointedRight;
+    }
+
     private void HandleWeaponDirection()
     {
         mousePos = cameraToUse.ScreenToWorldPoint(Input.mousePosition);
 
         Vector3 rotation = mousePos - transform.position;
 
-        float rotZ = Mathf.Atan2(rotation.y, rotation.x) * Mathf.Rad2Deg;
+        rotationZ = Mathf.Atan2(rotation.y, rotation.x) * Mathf.Rad2Deg;
 
-        transform.rotation = Quaternion.Euler(0, 0, rotZ);
+        transform.rotation = Quaternion.Euler(0, 0, rotationZ);
 
         /* Below is used for horizontal / vertical only firing
          * 

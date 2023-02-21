@@ -106,12 +106,12 @@ public class GameController : MonoBehaviour
             }
             //Debug.Log(xInput);
 
-            if (xInput >= 1 && PlayerController.facingDirection == -1)
+            if ((xInput >= 1 || PlayerWeapon.WeaponIsPointedToTheRight()) && PlayerController.facingDirection == -1)
             {
                 PlayerController.Flip();
                 PlayerWeapon.Flip();
             }
-            else if (xInput <= -1 && PlayerController.facingDirection == 1)
+            else if ((xInput <= -1 || !PlayerWeapon.WeaponIsPointedToTheRight()) && PlayerController.facingDirection == 1)
             {
                 PlayerController.Flip();
                 PlayerWeapon.Flip();
