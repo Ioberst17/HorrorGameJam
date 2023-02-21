@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class PlayerController : MonoBehaviour
 {
@@ -39,6 +40,7 @@ public class PlayerController : MonoBehaviour
     public bool canDash;
     public float dashLength;
     public float dashSpeed;
+    public Camera mainCam;
 
     //To make the player temporarily unable to control themselves
     public bool inHitstun;
@@ -117,6 +119,7 @@ public class PlayerController : MonoBehaviour
         SP = 0;
         ControlMomentum = 0;
         animator = GetComponent<Animator>();
+        mainCam = GameObject.Find("Main Camera").GetComponent<Camera>();
         visualEffects = transform.Find("VisualEffects").gameObject.GetComponent<PlayerParticleSystems>();
         attackLagTimer = 0;
         AttackDamage = 10;
@@ -322,28 +325,43 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private Vector3 GetNormalizedMouseDirectionFromPlayer()
+    {
+        Vector3 mousePos = Input.mousePosition;
+        Vector3 playerPos = mainCam.GetComponent<Camera>().WorldToScreenPoint(transform.position);
+        Vector3 direction = mousePos - playerPos;
+        direction = direction.normalized;
+        return direction;
+    }
+
+
     //This is the function that actually performs the dash
     IEnumerator DashHandler()
     {
         isDashing = true;
         rb.gravityScale = 0;
-        if(GameController.xInput == 0)
+        if (GameController.xInput == 0 & GameController.yInput == 0)
         {
-            newVelocity.Set(movementSpeed * 2 * facingDirection, 0);
+            Vector3 direction = GetNormalizedMouseDirectionFromPlayer();
+            newVelocity.Set(direction.x * movementSpeed * 2, direction.y * movementSpeed * 2);
+            //newVelocity.Set(movementSpeed * 2 * facingDirection, 0);
             rb.velocity = newVelocity;
         }
         else
         {
-            if(GameController.xInput > 0)
-            {
-                newVelocity.Set(movementSpeed * 2, 0);
-                rb.velocity = newVelocity;
-            }
-            else
-            {
-                newVelocity.Set(movementSpeed * -2, 0);
-                rb.velocity = newVelocity;
-            }
+            float inputPositive = movementSpeed * 2;
+            float inputNegative = movementSpeed * -2;
+
+            if (GameController.xInput > 0 && GameController.yInput > 0) { newVelocity.Set(inputPositive, inputPositive);}
+            else if (GameController.xInput > 0 && GameController.yInput < 0) { newVelocity.Set(inputPositive, inputNegative); }
+            else if (GameController.xInput < 0 && GameController.yInput > 0) { newVelocity.Set(inputNegative, inputPositive); }
+            else if (GameController.xInput < 0 && GameController.yInput < 0) { newVelocity.Set(inputNegative, inputNegative); }
+            else if (GameController.xInput > 0) { newVelocity.Set(inputPositive, 0); }
+            else if (GameController.xInput < 0) { newVelocity.Set(inputNegative, 0); }
+            else if (GameController.yInput > 0) { newVelocity.Set(0, inputPositive); }
+            else if (GameController.yInput < 0) { newVelocity.Set(0, inputNegative); }
+
+            rb.velocity = newVelocity;
         }
         FindObjectOfType<AudioManager>().PlaySFX("Dash1");
         //animator.Play("PlayerDash");

@@ -21,6 +21,7 @@ public class GameController : MonoBehaviour
     public string gameState;
     public bool isPaused;
     public float xInput;
+    public float yInput;
     public bool isGrounded;
     private bool pauseHelper;
 
@@ -77,6 +78,7 @@ public class GameController : MonoBehaviour
         if (!isPaused)
         {
             xInput = Input.GetAxisRaw("Horizontal");
+            yInput = Input.GetAxisRaw("Vertical");
             if(xInput>0 && PlayerController.ControlMomentum < 50)
             {
                 PlayerController.ControlMomentum += 1;
@@ -117,11 +119,11 @@ public class GameController : MonoBehaviour
             }
             else if(PlayerWeapon.WeaponIsPointedToTheRight() && PlayerController.facingDirection == -1)
             {
-                HandleFlipping();
+                if(xInput >= 0) { HandleFlipping(); }
             }
             else if(!PlayerWeapon.WeaponIsPointedToTheRight() && PlayerController.facingDirection == 1)
             {
-                HandleFlipping();
+                if (xInput <= 0) HandleFlipping();
             }
 
 
