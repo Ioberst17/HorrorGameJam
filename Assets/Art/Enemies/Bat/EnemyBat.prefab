@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 590080602688877145}
   - component: {fileID: 6597102794486915145}
   - component: {fileID: 590080602688877144}
+  - component: {fileID: -1490483697825451246}
   m_Layer: 8
   m_Name: EnemyBat
   m_TagString: Bat
@@ -114,15 +115,17 @@ MonoBehaviour:
   patrol2Point: {x: 0, y: 0, z: 0}
   patrolSpeed: 3
   patrolID: 0
+  enemyDatabase: {fileID: 0}
   damageValue: 10
+  HP: 0
+  invincibilityCount: 0
   invincibilitySet: 60
   isAttacking: 0
   playerInZone: 0
   weaponDatabase: {fileID: 0}
+  knockbackForce: 0
   facingDirection: 1
   damageInterupt: 0
-  hellhoundBehavior: {fileID: 0}
-  paralysisdemonBehavior: {fileID: 0}
 --- !u!50 &590080602688877142
 Rigidbody2D:
   serializedVersion: 4
@@ -192,6 +195,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &-1490483697825451246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 590080602688877147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15904d9a5ff830d43b010261ef7b087c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  droppedItemPrefab: {fileID: 0}
 --- !u!1 &590080603424068698
 GameObject:
   m_ObjectHideFlags: 0
@@ -365,6 +381,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a7aa6eb91d915a45bf4894dc5c0aea3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyController: {fileID: 0}
+  manualController: 0
 --- !u!1 &590080603623449655
 GameObject:
   m_ObjectHideFlags: 0

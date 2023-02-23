@@ -95,7 +95,7 @@ public class ConsumablesDatabase : MonoBehaviour
             consumablesDatabase.entries[currentRow].GetType().GetField(dataEntry.Name).SetValue(consumablesDatabase.entries[currentRow], floatVal);
             //Debug.Log("Current item being added to database is " + consumablesDatabase.entries[currentRow].itemName + ". It's value is " + floatVal);
         }
-        else { Debug.Log("No data type match"); }
+        else { /*Debug.Log("No data type match");*/ }
 
         
     }
@@ -117,6 +117,32 @@ public class ConsumablesDatabase : MonoBehaviour
             if (typeOfList == "columnNames") { toReturn.Add(nameOfField); }
             else if (typeOfList == "variableDataTypes") { toReturn.Add(dataType); }
             else { Debug.Log("Check for typo on string 'typeOfList' input"); }
+        }
+        return toReturn;
+    }
+
+    public string ReturnNameFromID(int id) 
+    {
+        string toReturn = "No Match"; Debug.Log("ReturnNameFromID in ConsumablesDatabase.cs returned no match");
+        for(int i = 0; i < consumablesDatabase.entries.Length; i++)
+        {
+            if (id == consumablesDatabase.entries[i].id)
+            {
+                toReturn = consumablesDatabase.entries[i].itemName;
+            }
+        }
+        return toReturn;
+    }
+
+    public int ReturnIDfromName(string name)
+    {
+        int toReturn = -1; Debug.Log("ReturnNameFromID in ConsumablesDatabase.cs returned no match");
+        for (int i = 0; i < consumablesDatabase.entries.Length; i++)
+        {
+            if (name == consumablesDatabase.entries[i].itemName)
+            {
+                toReturn = consumablesDatabase.entries[i].id;
+            }
         }
         return toReturn;
     }

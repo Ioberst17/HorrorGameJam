@@ -77,6 +77,7 @@ GameObject:
   - component: {fileID: 2979654826377499904}
   - component: {fileID: 2979654826377499907}
   - component: {fileID: 2979654826377499905}
+  - component: {fileID: -3185850608875257346}
   m_Layer: 8
   m_Name: BloodGolem
   m_TagString: Bloodgolem
@@ -233,11 +234,15 @@ MonoBehaviour:
   patrol2Point: {x: 0, y: 0, z: 0}
   patrolSpeed: 0
   patrolID: 0
+  enemyDatabase: {fileID: 0}
   damageValue: 10
+  HP: 0
+  invincibilityCount: 0
   invincibilitySet: 60
   isAttacking: 0
   playerInZone: 0
   weaponDatabase: {fileID: 0}
+  knockbackForce: 0
   facingDirection: 1
   damageInterupt: 0
 --- !u!114 &2979654826377499905
@@ -256,6 +261,19 @@ MonoBehaviour:
   bloodballActive: 0
   Bloodball: {fileID: 6683411310108108137, guid: 6503729d592564f4aa85d9d9a466942d, type: 3}
   Bloodballstart: {fileID: 2979654826340375489}
+--- !u!114 &-3185850608875257346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2979654826377499914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15904d9a5ff830d43b010261ef7b087c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  droppedItemPrefab: {fileID: 0}
 --- !u!1 &2979654827206392809
 GameObject:
   m_ObjectHideFlags: 0
@@ -332,6 +350,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a7aa6eb91d915a45bf4894dc5c0aea3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyController: {fileID: 0}
+  manualController: 0
 --- !u!61 &2979654827485686217
 BoxCollider2D:
   m_ObjectHideFlags: 0

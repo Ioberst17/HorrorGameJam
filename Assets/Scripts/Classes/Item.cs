@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-[RequireComponent(typeof(Collider2D))]
 [RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(Rigidbody2D))]
 public class Item : MonoBehaviour
 {
     [SerializeField] public Consumables self;
-    public Collider2D boundary;
+    public int staticID;
     public SpriteRenderer spriteRenderer;
     public  void Start()
     {
@@ -18,20 +18,15 @@ public class Item : MonoBehaviour
     public void Initialize()
     {
         self = new Consumables();
-        boundary = gameObject.GetComponent<Collider2D>();
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
     }
 
-    public void OnTriggerEnter2D(Collider2D Other)
-    {
-        Pickup(Other);
-    }
-
-    public void Pickup(Collider2D Other)
+    public void OnCollisionEnter2D(Collision2D Other)
     {
         if (Other.gameObject.GetComponent<PlayerController>() != null)
         {
-            EventSystem.current.ItemPickupTrigger(self.id, self.amount);
+            Debug.Log(name + " is triggered");
+            EventSystem.current.ItemPickupTrigger(staticID, self.amount);
             gameObject.SetActive(false);
         }
     }
