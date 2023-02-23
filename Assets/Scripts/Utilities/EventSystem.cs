@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+//using static UnityEditor.Progress;
 
 public class EventSystem : MonoBehaviour
 {
@@ -54,12 +55,12 @@ public class EventSystem : MonoBehaviour
         }
     }
 
-    public event Action<float> onStartTossingTrigger; // used for displaying force of player's throw, when throwing 
-    public void StartTossingWeaponTrigger(float throwForce)
+    public event Action<float, Transform, float> onStartTossingTrigger; // used for UI items displayed on throw
+    public void StartTossingWeaponTrigger(float throwForceDisplayed, Transform throwPoint, float throwForce)
     {
         if (onStartTossingTrigger != null)
         {
-            onStartTossingTrigger(throwForce);
+            onStartTossingTrigger(throwForceDisplayed, throwPoint, throwForce);
         }
     }
 
@@ -108,6 +109,28 @@ public class EventSystem : MonoBehaviour
         if(onUpdatePlayerWeaponTrigger != null)
         {
             onUpdatePlayerWeaponTrigger(weaponID, weaponLevel);
+        }
+    }
+
+    // OTHER
+
+    public event Action<int> onAddHealthTrigger;
+
+    public void AddHealthTrigger(int healthToAdd)
+    {
+        if (onAddHealthTrigger != null)
+        {
+            onAddHealthTrigger(healthToAdd);
+        }
+    }
+
+    public event Action<int, int> onItemPickupTrigger;
+
+    public void ItemPickupTrigger(int itemID, int amount)
+    {
+        if(onItemPickupTrigger != null)
+        {
+            onItemPickupTrigger(itemID, amount);
         }
     }
 

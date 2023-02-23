@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlayerWeapons
 {
     public string name;
-    public int ID;
+    public int id;
     public int level;
     public int ammo;
     public bool isSecondary;
@@ -15,7 +15,7 @@ public class PlayerWeapons
     public PlayerWeapons(string name, int id, int level, int ammo, bool isSecondary, float fireRate)
     {
         this.name = name;
-        ID = id;
+        this.id = id;
         this.level = level;
         this.ammo = ammo;
         this.isSecondary = isSecondary;

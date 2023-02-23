@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using TMPro;
+//using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,6 +19,10 @@ public class PlayerData_UI_Mason : MonoBehaviour
 
     [SerializeField] private Canvas ThrowForceUI;
     [SerializeField] private Image ThrowForceFill;
+    Transform StartingTransform;
+    public GameObject throwPredictionPoint;
+    private GameObject[] throwPredictionPoints;
+    private int numberOfThrowPoints = 30;
 
     public float health;
     public float mp;
@@ -38,6 +44,10 @@ public class PlayerData_UI_Mason : MonoBehaviour
     private void Start()
     {
         FinishTossForceDisplay();
+
+        /*throwPredictionPoints = new GameObject[numberOfThrowPoints];
+
+        for(int i = 0; i < numberOfThrowPoints; i++) { throwPredictionPoints[i] = Instantiate(throwPredictionPoint, transform.position, Quaternion.identity); }*/
     }
 
     void Update()
@@ -58,16 +68,65 @@ public class PlayerData_UI_Mason : MonoBehaviour
         weaponAmmo.text = updatedAmmo.ToString();
     } 
 
-    private void StartTossForceDisplay(float tossForce)
+    private void StartTossForceDisplay(float normalizedTossForce, Transform tossSpawnPoint, float tossForce)
+    {
+        ShowTossStrengthUI(normalizedTossForce);
+        PlayerThrowPredictionPointsObjectPool.Instance.ShowTossTrajectory(tossSpawnPoint, tossForce);
+    }
+
+    private void ShowTossStrengthUI(float tossForce)
     {
         ThrowForceUI.GetComponent<CanvasGroup>().alpha = 1;
         ThrowForceFill.GetComponent<Image>().fillAmount = tossForce;
+        ThrowForceUI.transform.rotation = Quaternion.Euler(0, 0, 0);
+        ThrowForceFill.transform.rotation = Quaternion.Euler(0, 0, 0);
     }
+
+    /*private void ShowTossTrajectory(Transform tossSpawnPoint, float tossForce)
+    {
+        for(int i = 0; i < throwPredictionPoints.Length; i++)
+        {
+            TossPredictionVisibility(true, throwPredictionPoints[i]);
+            throwPredictionPoints[i].transform.position = CalcPointPositions(i * 0.05f, tossSpawnPoint, tossForce);
+        }
+    }
+
+    Vector2 CalcPointPositions(float time, Transform tossSpawnPoint, float tossForce)
+    {
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 transformPos = tossSpawnPoint.position;
+        mousePos.z = transformPos.z;
+        Vector3 bulletDir = (mousePos - transformPos).normalized;
+
+        Vector2 currentPointPosition = (Vector2)tossSpawnPoint.transform.position + (Vector2)(time * tossForce * bulletDir) + (time * time) * 0.5f * Physics2D.gravity;
+        return currentPointPosition;
+    }
+
+    private void TossPredictionVisibility(bool OnOrOff, GameObject tossPoint)
+    {
+        if(OnOrOff == true)
+        {
+            Color temp = tossPoint.GetComponent<SpriteRenderer>().color;
+            temp.a = 1f;
+            tossPoint.GetComponent<SpriteRenderer>().color = temp;
+        }
+        else if (OnOrOff == false)
+        {
+            Color temp = tossPoint.GetComponent<SpriteRenderer>().color;
+            temp.a = 0f;
+            tossPoint.GetComponent<SpriteRenderer>().color = temp;
+        }
+        else { }
+    }*/
 
     private void FinishTossForceDisplay()
     {
         ThrowForceUI.GetComponent<CanvasGroup>().alpha = 0;
         ThrowForceFill.GetComponent<Image>().fillAmount = 0;
+        PlayerThrowPredictionPointsObjectPool.Instance.ClearToss();
+        /*
+        if(throwPredictionPoints != null)
+        { for (int i = 0; i < throwPredictionPoints.Length; i++) { TossPredictionVisibility(false, throwPredictionPoints[i]); } }*/
     }
 
     private void OnDestroy()

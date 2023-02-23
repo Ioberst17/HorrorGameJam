@@ -31,7 +31,7 @@ public class EnemyController : MonoBehaviour
     public int invincibilityCount;
     [SerializeField]
     private int invincibilitySet;
-    public bool isDead;
+    private bool isDead;
     public bool isAttacking;
     public bool playerInZone;
     public WeaponDatabase weaponDatabase; // used for ammo damage calcs
@@ -104,7 +104,7 @@ public class EnemyController : MonoBehaviour
     //1 is bat, 2 is paralysis demon, 3 is hellhound, 4 is blood golem, 5 is Gargoyle.
     void FixedUpdate()
     {
-        if (EnemytypeID == 5 && !isDead)
+        if (EnemytypeID == 5)
         {
             GargoyleBehavior.GargoylePassover();
         }
@@ -210,6 +210,7 @@ public class EnemyController : MonoBehaviour
         playerController.gainSP(SoulPointsDropped);
         string enemyDeathSound = gameObject.tag.ToString() + "Death"; // creates string that AudioManager recognizes; tag should match asset in AudioManager
         FindObjectOfType<AudioManager>().PlaySFX(enemyDeathSound);
+        if(GetComponent<EnemyLoot>() != null) { GetComponent<EnemyLoot>().InstantiateLoot(transform.position);}
 
     }
 

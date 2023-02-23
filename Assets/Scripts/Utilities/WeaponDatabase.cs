@@ -14,7 +14,7 @@ public class WeaponDatabase : MonoBehaviour
 
     private TextAsset textAssetData; // the CSV to read from, must be assigned in Inspector
 
-    [System.Serializable]
+    [Serializable]
     public class Database // create the a database of all game items
     {
         public Weapons[] entries;
@@ -93,31 +93,31 @@ public class WeaponDatabase : MonoBehaviour
         }
     }
 
-    void ParseDataToTable(int currentWeapon, int currentColumnEntry, string[] data, FieldInfo dataEntry)
+    void ParseDataToTable(int currentRow, int currentColumnEntry, string[] data, FieldInfo dataEntry)
     {
         int rowsToSkip = 2; //header row and datatype row are skipped when parsing
 
         if (columnDataTypes[currentColumnEntry] == "int")
         {
-            int.TryParse(data[numOfColumns * (currentWeapon + rowsToSkip) + currentColumnEntry], out int intVal);
-            weaponDatabase.entries[currentWeapon].GetType().GetField(dataEntry.Name).SetValue(weaponDatabase.entries[currentWeapon], intVal);
+            int intVal = int.Parse(data[numOfColumns * (currentRow + rowsToSkip) + currentColumnEntry]);
+            weaponDatabase.entries[currentRow].GetType().GetField(dataEntry.Name).SetValue(weaponDatabase.entries[currentRow], intVal);
         }
         else if (columnDataTypes[currentColumnEntry] == "string")
         {
-            string strVal = data[numOfColumns * (currentWeapon + rowsToSkip) + currentColumnEntry];
-            weaponDatabase.entries[currentWeapon].GetType().GetField(dataEntry.Name).SetValue(weaponDatabase.entries[currentWeapon], strVal);
+            string strVal = data[numOfColumns * (currentRow + rowsToSkip) + currentColumnEntry];
+            weaponDatabase.entries[currentRow].GetType().GetField(dataEntry.Name).SetValue(weaponDatabase.entries[currentRow], strVal);
         }
         else if (columnDataTypes[currentColumnEntry] == "bool")
         {
-            bool boolVal = bool.Parse(data[numOfColumns * (currentWeapon + rowsToSkip) + currentColumnEntry]);
-            weaponDatabase.entries[currentWeapon].GetType().GetField(dataEntry.Name).SetValue(weaponDatabase.entries[currentWeapon], boolVal);
+            bool boolVal = bool.Parse(data[numOfColumns * (currentRow + rowsToSkip) + currentColumnEntry]);
+            weaponDatabase.entries[currentRow].GetType().GetField(dataEntry.Name).SetValue(weaponDatabase.entries[currentRow], boolVal);
         }
         else if (columnDataTypes[currentColumnEntry] == "float")
         {
-            float floatVal = float.Parse(data[numOfColumns * (currentWeapon + rowsToSkip) + currentColumnEntry]);
-            weaponDatabase.entries[currentWeapon].GetType().GetField(dataEntry.Name).SetValue(weaponDatabase.entries[currentWeapon], floatVal);
+            float floatVal = float.Parse(data[numOfColumns * (currentRow + rowsToSkip) + currentColumnEntry]);
+            weaponDatabase.entries[currentRow].GetType().GetField(dataEntry.Name).SetValue(weaponDatabase.entries[currentRow], floatVal);
         }
-        else { Debug.Log("No data type match"); }
+        else { Debug.Log("No data type match. Current column is " + columnNames[currentColumnEntry] + " with data type " + columnDataTypes[currentColumnEntry]); }
     }
 
     // SUPPORT FUNCTIONS
