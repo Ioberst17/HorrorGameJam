@@ -12,6 +12,7 @@ public class InventoryManager : MonoBehaviour
     public WeaponDatabase.Database weaponData;
     public ConsumablesDatabase consumablesDatabase;
     public PlayerWeapon playerWeapon;
+    public PlayerController playerController;
 
     [SerializeField]
     private List<PlayerConsumables> consumables = new List<PlayerConsumables>();
@@ -21,7 +22,7 @@ public class InventoryManager : MonoBehaviour
     private List<PlayerWeapons> secondaryWeapons = new List<PlayerWeapons>();
 
     private int currentPrimaryWeaponID;
-    private int currentPrimaryWeaponLocation;
+    private int currentPrimaryWeaponIndex;
     [SerializeField]
     private int currentSecondaryWeaponID; // the weapon ID of the current weapon the player is using - in weapon database
     [SerializeField]
@@ -32,6 +33,7 @@ public class InventoryManager : MonoBehaviour
     {
         dataManager = DataManager.Instance;
         weaponDatabase = GameObject.Find("WeaponDatabase").GetComponent<WeaponDatabase>();
+        playerController = GameObject.Find("PlayerModel").GetComponent<PlayerController>();
         weaponData = weaponDatabase.weaponDatabase;
         consumablesDatabase = GameObject.Find("ConsumablesDatabase").GetComponent<ConsumablesDatabase>();
         playerWeapon = GameObject.Find("Weapon").GetComponent<PlayerWeapon>();
@@ -97,7 +99,6 @@ public class InventoryManager : MonoBehaviour
 
         if (dataManager.gameData.secondaryWeapons == null) { secondaryWeapons = new List<PlayerWeapons>(); }
         else { secondaryWeapons = dataManager.gameData.secondaryWeapons; }
-        
     }
 
     void LoadCurrentWeapons()
@@ -202,6 +203,10 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
+    public string GetCurrentSecondaryWeapon()
+    {
+        return secondaryWeapons[currentSecondaryWeaponIndex].name;
+    }
     
     private void AddAmmo(int ammoChange)
     {
@@ -272,19 +277,10 @@ public class InventoryManager : MonoBehaviour
     private void IncrementInventoryWeapon(int weaponChange, int weaponLocation)
     {
         // if incrementing inventory would overshoot inventory, then set current weapon to 1st inventory element
-        if (weaponLocation + weaponChange > secondaryWeapons.Count - 1) 
-        { 
-            WeaponLocationUpdate(0,0);
-        }
+        if (weaponLocation + weaponChange > secondaryWeapons.Count - 1) { WeaponLocationUpdate(0,0); }
         // or if decrementing inventory would overshoot inventory, then set current weapon to last inventory element
-        else if (weaponLocation + weaponChange < 0)
-        {
-            WeaponLocationUpdate(0, secondaryWeapons.Count - 1);
-        }
-        else 
-        {
-            WeaponLocationUpdate(weaponChange, weaponLocation);
-        }
+        else if (weaponLocation + weaponChange < 0) { WeaponLocationUpdate(0, secondaryWeapons.Count - 1); }
+        else { WeaponLocationUpdate(weaponChange, weaponLocation); }
 
         WeaponUIUpdate();
     }
@@ -317,8 +313,8 @@ public class InventoryManager : MonoBehaviour
 
     void AddItem(int itemID, int amount)
     {
-        bool isAmmo = CheckIfItemIsAmmo(itemID, amount);
-        if(isAmmo == false)
+        bool isNeither = CheckIfItemIsAmmoOrInstantUse(itemID, amount);
+        if (isNeither == true)
         {
             bool itemInInv = CheckIfItemIsInInv(itemID, amount);
             if (itemInInv == false)
@@ -328,29 +324,39 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    bool CheckIfItemIsAmmo(int itemID, int amount)
+    bool CheckIfItemIsAmmoOrInstantUse(int itemID, int amount)
     {
-        Consumables[] database = consumablesDatabase.consumablesDatabase.entries;
+        Consumables[] consumablesDB = consumablesDatabase.consumablesDatabase.entries;
 
-        bool isAmmo = false;
-        for(int i = 0; i < database.Length; i++)
+        bool isAmmo = false; 
+        bool isInstantUse = false;
+        for(int i = 0; i < consumablesDB.Length; i++)
         {
-            if(itemID == database[i].id)
+            if(itemID == consumablesDB[i].id)
             {
-                if (database[i].itemType == "Ammo")
+                if (consumablesDB[i].itemType == "Ammo")
                 {
-                    if(secondaryWeapons[currentPrimaryWeaponLocation].name == database[i].itemName) { AddAmmo(amount); }
+                    if(secondaryWeapons[currentSecondaryWeaponIndex].name == consumablesDB[i].itemName) { AddAmmo(amount); }
                     else
                     {
-                        AddAmmo(database[i].itemName, amount);
+                        AddAmmo(consumablesDB[i].itemName, amount);
                         // TO-DO: Placeholder for event firing background inventory UI update (i.e. if ammo is for non-current weapon)
                     }
-                    isAmmo = true;
-                    FindObjectOfType<AudioManager>().PlaySFX(database[i].audioOnPickup);
+                    isAmmo = true;  
                 }
+                if (consumablesDB[i].itemType == "Instant Use")
+                {
+                    if(consumablesDB[i].itemName == "Heart") { playerController.AddHealth(10 * amount); }
+
+                    isInstantUse = true;
+                }
+
+                FindObjectOfType<AudioManager>().PlaySFX(consumablesDB[i].audioOnPickup);
             }
         }
-        return isAmmo;
+        bool isNeither = false;
+        if(isAmmo == false && isInstantUse == false) { isNeither = true; }
+        return isNeither;
     }
 
     int CheckIfItemIsInInv(int itemID)
@@ -377,10 +383,9 @@ public class InventoryManager : MonoBehaviour
                 if (consumables[i].id == itemID) 
                 {
                     consumables[i].amount += amount; 
-                    
                     FindObjectOfType<AudioManager>().PlaySFX(consumables[i].audioOnPickup);
+                    itemInInv = true;
                 }
-                itemInInv = true;
             }
         }
         return itemInInv;

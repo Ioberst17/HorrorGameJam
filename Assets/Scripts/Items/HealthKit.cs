@@ -6,6 +6,9 @@ using UnityEngine;
 
 public class HealthKit : Item
 {
+    private int id = 1;
+    private int amount = 1;
+
     private new void Start()
     {
         base.Initialize();

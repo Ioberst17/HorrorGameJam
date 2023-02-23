@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using static UnityEditor.Progress;
 
 public class EventSystem : MonoBehaviour
 {
@@ -108,6 +109,18 @@ public class EventSystem : MonoBehaviour
         if(onUpdatePlayerWeaponTrigger != null)
         {
             onUpdatePlayerWeaponTrigger(weaponID, weaponLevel);
+        }
+    }
+
+    // OTHER
+
+    public event Action<int> onAddHealthTrigger;
+
+    public void AddHealthTrigger(int healthToAdd)
+    {
+        if (onAddHealthTrigger != null)
+        {
+            onAddHealthTrigger(healthToAdd);
         }
     }
 

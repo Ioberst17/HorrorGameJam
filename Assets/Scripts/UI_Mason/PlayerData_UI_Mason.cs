@@ -45,9 +45,9 @@ public class PlayerData_UI_Mason : MonoBehaviour
     {
         FinishTossForceDisplay();
 
-        throwPredictionPoints = new GameObject[numberOfThrowPoints];
+        /*throwPredictionPoints = new GameObject[numberOfThrowPoints];
 
-        for(int i = 0; i < numberOfThrowPoints; i++) { throwPredictionPoints[i] = Instantiate(throwPredictionPoint, transform.position, Quaternion.identity); }
+        for(int i = 0; i < numberOfThrowPoints; i++) { throwPredictionPoints[i] = Instantiate(throwPredictionPoint, transform.position, Quaternion.identity); }*/
     }
 
     void Update()
@@ -71,7 +71,7 @@ public class PlayerData_UI_Mason : MonoBehaviour
     private void StartTossForceDisplay(float normalizedTossForce, Transform tossSpawnPoint, float tossForce)
     {
         ShowTossStrengthUI(normalizedTossForce);
-        ShowTossTrajectory(tossSpawnPoint, tossForce);
+        PlayerThrowPredictionPointsObjectPool.Instance.ShowTossTrajectory(tossSpawnPoint, tossForce);
     }
 
     private void ShowTossStrengthUI(float tossForce)
@@ -82,7 +82,7 @@ public class PlayerData_UI_Mason : MonoBehaviour
         ThrowForceFill.transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 
-    private void ShowTossTrajectory(Transform tossSpawnPoint, float tossForce)
+    /*private void ShowTossTrajectory(Transform tossSpawnPoint, float tossForce)
     {
         for(int i = 0; i < throwPredictionPoints.Length; i++)
         {
@@ -117,14 +117,16 @@ public class PlayerData_UI_Mason : MonoBehaviour
             tossPoint.GetComponent<SpriteRenderer>().color = temp;
         }
         else { }
-    }
+    }*/
 
     private void FinishTossForceDisplay()
     {
         ThrowForceUI.GetComponent<CanvasGroup>().alpha = 0;
         ThrowForceFill.GetComponent<Image>().fillAmount = 0;
+        PlayerThrowPredictionPointsObjectPool.Instance.ClearToss();
+        /*
         if(throwPredictionPoints != null)
-        { for (int i = 0; i < throwPredictionPoints.Length; i++) { TossPredictionVisibility(false, throwPredictionPoints[i]); } }      
+        { for (int i = 0; i < throwPredictionPoints.Length; i++) { TossPredictionVisibility(false, throwPredictionPoints[i]); } }*/
     }
 
     private void OnDestroy()

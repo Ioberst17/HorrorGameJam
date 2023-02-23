@@ -12,10 +12,11 @@ public class Ammo : MonoBehaviour
     public bool isThrown;
     public bool isExplosive;
     public Animator animator;
+    private int BreakableEnviroLayer;
 
     public int GetAmmoID() { return ammoID;}
 
-    private void Start() { animator = GetComponent<Animator>(); }
+    private void Start() { animator = GetComponent<Animator>(); BreakableEnviroLayer = LayerMask.NameToLayer("BreakableEnviro"); }
 
     private void OnCollisionEnter2D(Collision2D col) { if (!isFixedDistance) { HandleStandardAmmo(col); }}
 
@@ -33,11 +34,13 @@ public class Ammo : MonoBehaviour
             }
             else if (!isThrown)
             {
+                Instantiate(Resources.Load("VFXPrefabs/BulletImpact"), transform.position, Quaternion.identity);
                 Destroy(gameObject);
             }        
         }
 
-        if (col.gameObject.tag == "Boundary")
+
+        if (col.gameObject.tag == "Boundary" || col.gameObject.layer == BreakableEnviroLayer)
         {
             if (isThrown)
             {
@@ -45,6 +48,7 @@ public class Ammo : MonoBehaviour
             }
             else
             {
+                Instantiate(Resources.Load("VFXPrefabs/BulletImpact"), transform.position, Quaternion.identity);
                 Destroy(gameObject);
             }
             
@@ -60,6 +64,8 @@ public class Ammo : MonoBehaviour
         }
     }
 
+
+
     IEnumerator ExplodeCoroutine()
     {
         animator.SetTrigger("Explode");
@@ -68,7 +74,27 @@ public class Ammo : MonoBehaviour
         yield return 0;
     }
 
+    /*private void Explode()
+    {
+        Instantiate(ExplosionEffect, transform.position, transform.rotation);
+        Collider[] touchedObjects = Physics.OverlapSphere(transform.position, GrenadeRadius).Where(x => x.tag == "Enemy").ToArray();
 
+        foreach (Collider touchedObject in touchedObjects)
+        {
+            Rigidbody rigidbody = touchedObject.GetComponent<Rigidbody>();
+            if (rigidbody != null)
+            {
+                rigidbody.AddExplosionForce(ExplosionForce, transform.position, GrenadeRadius);
+            }
+
+            var target = touchedObject.gameObject.GetComponent<EnemyMovment>();
+            target.TakeDamage(DamageRate);
+
+        }
+        Destroy(gameObject);
+    https://learntechnologies.fr/2020/03/02/grenade-bomb-in-unity-tutorial-part-4/
+
+    }*/
 
 
 }

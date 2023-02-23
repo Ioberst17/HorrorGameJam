@@ -69,6 +69,7 @@ public class PlayerController : MonoBehaviour
     public int StartingMP;
 
     //Health points, magic points, soul points (currency)
+    [Range(0, 100)]
     public int HP;
     public int MP;
     public int SP;
@@ -468,7 +469,10 @@ public class PlayerController : MonoBehaviour
         transform.Rotate(0.0f, 180.0f, 0.0f);
     }
 
-    
+    public void AddHealth(int healthToAdd)
+    {
+        HP += healthToAdd;
+    }
 
     //processes if the player should take damage, and if so, how much, then calculates for death. damageType Numbers: 0 is one hit damage, 1 is damage over time. 
     //Calculated direction of hit for knockback direction.
