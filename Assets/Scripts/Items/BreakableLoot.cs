@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
-using static UnityEditor.Progress;
+//using static UnityEditor.Progress;
 
 [RequireComponent(typeof(BreakablesData))]
 public class BreakableLoot : MonoBehaviour
