@@ -22,8 +22,12 @@ public class DialogueManager : MonoBehaviour
 
     public bool dialogueIsPlaying;
 
+    public bool choicesDisplayed = false;
+
 
     private static DialogueManager instance;
+
+    private List<Choice> currentChoices;
 
 
 
@@ -109,6 +113,11 @@ public class DialogueManager : MonoBehaviour
             //display choices, if any, for this line
             DisplayChoices();
         }
+        else if (!currentStory.canContinue && currentChoices.Count > 0)
+        {
+            Debug.Log("Do nothing here. Inside of else if.\n");
+            Debug.Log("number of choices: " + currentChoices.Count);
+        }
         else
         {
             ExitDialogueMode();
@@ -118,7 +127,7 @@ public class DialogueManager : MonoBehaviour
 
     private void DisplayChoices()
     {
-        List<Choice> currentChoices = currentStory.currentChoices;
+        currentChoices = currentStory.currentChoices;
 
         //checks to make sure our UI can support the number of choices coming in.
         if (currentChoices.Count > choices.Length)
@@ -155,6 +164,7 @@ public class DialogueManager : MonoBehaviour
 
     public void MakeChoice(int choiceIndex)
     {
+        //choicesDisplayed = true;
         currentStory.ChooseChoiceIndex(choiceIndex);
         ContinueStory();
     }
