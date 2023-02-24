@@ -68,6 +68,7 @@ public class PlayerController : MonoBehaviour
     public int StartingHP;
     public int StartingMP;
 
+
     //Health points, magic points, soul points (currency)
     [Range(0, 100)]
     public int HP;
@@ -190,7 +191,7 @@ public class PlayerController : MonoBehaviour
     //dash handling function
     public void Dash()
     {
-        if (canDash)
+        if (canDash && !DialogueManager.GetInstance().dialogueIsPlaying)
         {
             canDash = false;
             StartCoroutine(DashHandler());
@@ -205,7 +206,7 @@ public class PlayerController : MonoBehaviour
     //Jump handling function. Negates previous momentum on jump
     public void Jump()
     {
-        if (!isDashing)
+        if (!isDashing && !DialogueManager.GetInstance().dialogueIsPlaying)
         {
             if (canJump)
             {
@@ -225,7 +226,9 @@ public class PlayerController : MonoBehaviour
             }
             else if (isAgainstWall && canWallJump)
             {
-                ControlMomentum = 125 * -facingDirection;
+                ControlMomentum = 30 * -facingDirection;
+                Flip();
+
                 canWallJump = false;
                 isJumping = true;
                 newVelocity.Set(0.0f, 0.0f);
@@ -260,7 +263,11 @@ public class PlayerController : MonoBehaviour
                     {
                         newVelocity.Set(0, 0);
                         rb.velocity = newVelocity;
-                        animator.Play("PlayerIdle");
+                        if(GameController.xInput == 0)
+                        {
+                            animator.Play("PlayerIdle");
+                        }
+                        
                     }
                     else
                     {
@@ -282,7 +289,7 @@ public class PlayerController : MonoBehaviour
     public void Attack(int attackDirection)
     {
         //Debug.Log("attack called 2");
-        if (!isAttacking)
+        if (!isAttacking && !DialogueManager.GetInstance().dialogueIsPlaying)
         {
             isAttacking = true;
             animator.Play("PlayerBasicAttack");
