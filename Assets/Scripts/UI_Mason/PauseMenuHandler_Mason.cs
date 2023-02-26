@@ -12,6 +12,9 @@ public class PauseMenuHandler_Mason : MonoBehaviour
 
     public GameObject controlsMenu;
 
+    [SerializeField]
+    private GameObject quitButton;
+
     // Update is called once per frame
     void Update()
     {
@@ -39,6 +42,7 @@ public class PauseMenuHandler_Mason : MonoBehaviour
     void Pause()
     {
         pauseMenu.SetActive(true);
+        quitButton.SetActive(false);
         Time.timeScale = 0f;
         GameIsPaused = true;
     }

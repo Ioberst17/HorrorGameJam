@@ -62,7 +62,7 @@ public class PlayerData_UI_Mason : MonoBehaviour
         spBar.fillAmount = sp / 100f;
     }
 
-    private void UpdateAmmoUI(string updatedWeapon, int updatedAmmo)
+    public void UpdateAmmoUI(string updatedWeapon, int updatedAmmo)
     {
         weaponName.text = updatedWeapon;
         weaponAmmo.text = updatedAmmo.ToString();
