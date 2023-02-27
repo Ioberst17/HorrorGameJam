@@ -211,6 +211,7 @@ public class EnemyController : MonoBehaviour
         string enemyDeathSound = gameObject.tag.ToString() + "Death"; // creates string that AudioManager recognizes; tag should match asset in AudioManager
         FindObjectOfType<AudioManager>().PlaySFX(enemyDeathSound);
         if(GetComponent<EnemyLoot>() != null) { GetComponent<EnemyLoot>().InstantiateLoot(transform.position);}
+        Destroy(gameObject);
 
     }
 

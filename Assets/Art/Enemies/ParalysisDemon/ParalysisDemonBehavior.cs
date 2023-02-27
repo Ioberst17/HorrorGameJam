@@ -53,15 +53,15 @@ public class ParalysisDemonBehavior : MonoBehaviour
         switch (enemyController.patrolID)
         {
             case 0:
-                newVelocity.Set(enemyController.patrolSpeed, 0);
+                newVelocity.Set(enemyController.patrolSpeed, enemyController.rb.velocity.y);
                 enemyController.rb.velocity = newVelocity;
                 break;
             case 1:
-                newVelocity.Set(-enemyController.patrolSpeed, 0);
+                newVelocity.Set(-enemyController.patrolSpeed, enemyController.rb.velocity.y);
                 enemyController.rb.velocity = newVelocity;
                 break;
             case 2:
-                newVelocity.Set(enemyController.patrolSpeed, 0);
+                newVelocity.Set(enemyController.patrolSpeed, enemyController.rb.velocity.y);
                 enemyController.rb.velocity = newVelocity;
                 break;
             default:
@@ -70,14 +70,19 @@ public class ParalysisDemonBehavior : MonoBehaviour
     }
     private void PDemonChase()
     {
-        if (enemyController.playerLocation.position.x >= transform.position.x)
+        if (enemyController.playerLocation.position.x > transform.position.x)
         {
-            newVelocity.Set(enemyController.patrolSpeed * 1.5f, 0);
+            newVelocity.Set(enemyController.patrolSpeed * 1.5f, enemyController.rb.velocity.y);
+            enemyController.rb.velocity = newVelocity;
+        }
+        else if (enemyController.playerLocation.position.x < transform.position.x)
+        {
+            newVelocity.Set(-enemyController.patrolSpeed * 1.5f, enemyController.rb.velocity.y);
             enemyController.rb.velocity = newVelocity;
         }
         else
         {
-            newVelocity.Set(-enemyController.patrolSpeed * 1.5f, 0);
+            newVelocity.Set(0, enemyController.rb.velocity.y);
             enemyController.rb.velocity = newVelocity;
         }
     }
