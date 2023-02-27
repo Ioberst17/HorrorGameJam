@@ -101,7 +101,7 @@ public class InventoryManager : MonoBehaviour
         else { secondaryWeapons = dataManager.gameData.secondaryWeapons; }
     }
 
-    void LoadCurrentWeapons()
+    public void LoadCurrentWeapons()
     {
         // check to make sure the current weapon ID is possible
         currentPrimaryWeaponID = dataManager.gameData.activePrimaryWeapon;
