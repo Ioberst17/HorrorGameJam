@@ -84,7 +84,7 @@ public class EnemyController : MonoBehaviour
                 if (collider.gameObject.layer
                 == LayerMask.NameToLayer("Player") && isAttacking)
                 {
-                    playerController.takeDamage(transform.position, damageValue, 1);
+                    //playerController.takeDamage(transform.position, damageValue, 1);
                     rb.AddForce(new Vector2(knockbackForce * -facingDirection, 0.0f), ForceMode2D.Impulse);
                 }
             }
