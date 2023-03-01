@@ -10,12 +10,14 @@ using UnityEngine.UI;
 
 public class PlayerData_UI_Mason : MonoBehaviour
 {
+    
 
     [SerializeField] private Image healthBar;
     [SerializeField] private Image mpBar;
     [SerializeField] private Image spBar;
     [SerializeField] private TextMeshProUGUI weaponName;
     [SerializeField] private TextMeshProUGUI weaponAmmo;
+    [SerializeField] private TextMeshProUGUI consumableAmount;
 
     [SerializeField] private Canvas ThrowForceUI;
     [SerializeField] private Image ThrowForceFill;
@@ -27,6 +29,8 @@ public class PlayerData_UI_Mason : MonoBehaviour
     public float health;
     public float mp;
     public float sp;
+
+    [SerializeField] private DataManager dataManager;
 
     [SerializeField] private GameController gameController;
 
@@ -45,6 +49,8 @@ public class PlayerData_UI_Mason : MonoBehaviour
     {
         FinishTossForceDisplay();
 
+        dataManager.gameData.consumables[1].amount = dataManager.gameData.consumables[1].amount + 2;
+
         /*throwPredictionPoints = new GameObject[numberOfThrowPoints];
 
         for(int i = 0; i < numberOfThrowPoints; i++) { throwPredictionPoints[i] = Instantiate(throwPredictionPoint, transform.position, Quaternion.identity); }*/
@@ -60,6 +66,15 @@ public class PlayerData_UI_Mason : MonoBehaviour
 
         sp = gameController.GetSP();
         spBar.fillAmount = sp / 100f;
+
+        consumableAmount.text = dataManager.gameData.consumables[1].amount.ToString();
+
+        if (Input.GetKeyDown(KeyCode.H) && dataManager.gameData.consumables[1].amount > 0 && gameController.GetHP() < 100)
+        {
+            playerController.AddHealth(10);
+            dataManager.gameData.consumables[1].amount = dataManager.gameData.consumables[1].amount - 1;
+            Debug.Log("Used health kit.\n");
+        }
     }
 
     public void UpdateAmmoUI(string updatedWeapon, int updatedAmmo)
