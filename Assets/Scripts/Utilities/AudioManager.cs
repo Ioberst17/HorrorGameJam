@@ -54,7 +54,7 @@ public class AudioManager : MonoBehaviour
             Debug.LogWarning("Sound " + name + " doesn't exist - check for in AudioManager");
             return;
         }
-        if (!s.source.isPlaying)
+        else
         {
             s.source.Play();
         }

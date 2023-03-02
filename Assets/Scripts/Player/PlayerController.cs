@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -74,6 +75,7 @@ public class PlayerController : MonoBehaviour
     public int HP;
     public int MP;
     public int SP;
+    [SerializeField] private bool hasShield;
 
     //these are all related to attack information
     public int AttackDamage;
@@ -130,7 +132,10 @@ public class PlayerController : MonoBehaviour
         isInvincible = false;
         isDashing = false;
         isAttacking = false;
+        if(GetComponentInChildren<Shield>() != null) { hasShield = GetComponentInChildren<Shield>().shieldOn; } 
+        else { Debug.Log("Shield.cs is being requested in a child object, but isn't attached to any child object"); }
     }
+
     private void Update()
     {
         
@@ -478,29 +483,41 @@ public class PlayerController : MonoBehaviour
 
     public void AddHealth(int healthToAdd)
     {
-        HP += healthToAdd;
+        if ((HP += healthToAdd) < 100)
+        {
+            HP += healthToAdd;
+        }
+        else
+        {
+            HP = 100;
+        }
+        
     }
 
     //processes if the player should take damage, and if so, how much, then calculates for death. damageType Numbers: 0 is one hit damage, 1 is damage over time. 
     //Calculated direction of hit for knockback direction.
-    public void takeDamage(Vector3 enemyPos, int damageNumber, int damageType)
+    public void takeDamage(Vector3 enemyPos, int damageNumber, int damageType, float damageMod, float knockbackMod)
     {
+        hasShield = GetComponentInChildren<Shield>().shieldOn;
+
         if (!isInvincible)
         {
-            StartCoroutine(hitStun());
-            HP -= damageNumber;
+            if(!hasShield) { StartCoroutine(hitStun()); }
+            HP -= (int)(damageNumber * (1 - damageMod));
             if (enemyPos.x >= transform.position.x)
             {
-                newVelocity.Set(-5.0f, 0.0f);
+                float knockbackForce = jumpForce * (1 - knockbackMod);
+                newVelocity.Set(-knockbackForce / 3, 0.0f);
                 rb.velocity = newVelocity;
-                newForce.Set(0.0f, jumpForce);
+                newForce.Set(0.0f, knockbackForce / 3);
                 rb.AddForce(newForce, ForceMode2D.Impulse);
             }
             else
             {
-                newVelocity.Set(5.0f, 0.0f);
+                float knockbackForce = jumpForce * (1 - knockbackMod);
+                newVelocity.Set(knockbackForce / 3, 0.0f);
                 rb.velocity = newVelocity;
-                newForce.Set(0.0f, jumpForce);
+                newForce.Set(0.0f, knockbackForce / 3);
                 rb.AddForce(newForce, ForceMode2D.Impulse);
             }
             if (HP <= 0)
@@ -531,8 +548,5 @@ public class PlayerController : MonoBehaviour
         isInvincible = false;
     }
 
-    public void gainSP(int SPAmount)
-    {
-        SP += SPAmount;
-    }
+    public void gainSP(int SPAmount) { SP += SPAmount; }
 }

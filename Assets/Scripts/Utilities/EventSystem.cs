@@ -134,4 +134,14 @@ public class EventSystem : MonoBehaviour
         }
     }
 
+    public event Action<PlayerSkills.SkillType> onSkillUnlock;
+
+    public void SkillUnlockTrigger(PlayerSkills.SkillType skill)
+    {
+        if(onSkillUnlock != null)
+          {
+            onSkillUnlock(skill);
+          }
+    }
+
 }

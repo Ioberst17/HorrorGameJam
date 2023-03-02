@@ -8,7 +8,7 @@ using UnityEngine;
 public class ConsumablesDatabase : MonoBehaviour
 {
     // must be attached to a game object in the scene hierarchy
-    // creates a weapons database (the store of weapons and information about them), and reads it from the weaponDatbase.csv in /Resources
+    // creates a weapons database (the store of weapons and information about them), and reads it from the consumablesDatbase.csv in /Resources
 
     private TextAsset textAssetData; // the CSV to read from, must be assigned in Inspector
 

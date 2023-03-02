@@ -8,6 +8,8 @@ public class InventoryManager : MonoBehaviour
 {
     // DECLARATIONS
     public DataManager dataManager;
+    public GameObject utilities;
+    public GameObject player;
     public WeaponDatabase weaponDatabase;
     public WeaponDatabase.Database weaponData;
     public ConsumablesDatabase consumablesDatabase;
@@ -20,6 +22,8 @@ public class InventoryManager : MonoBehaviour
     private List<PlayerWeapons> primaryWeapons = new List<PlayerWeapons>();
     [SerializeField]
     private List<PlayerWeapons> secondaryWeapons = new List<PlayerWeapons>();
+    [SerializeField]
+    private List<NarrativeItems> narrativeItems = new List<NarrativeItems>();
 
     private int currentPrimaryWeaponID;
     private int currentPrimaryWeaponIndex;
@@ -32,11 +36,13 @@ public class InventoryManager : MonoBehaviour
     void Start()
     {
         dataManager = DataManager.Instance;
-        weaponDatabase = GameObject.Find("WeaponDatabase").GetComponent<WeaponDatabase>();
-        playerController = GameObject.Find("PlayerModel").GetComponent<PlayerController>();
+        utilities = GameObject.Find("Utilities");
+        weaponDatabase = utilities.GetComponentInChildren<WeaponDatabase>();
+        consumablesDatabase = utilities.GetComponentInChildren<ConsumablesDatabase>();
+        player = GameObject.Find("Player");
+        playerController = player.GetComponentInChildren<PlayerController>();
+        playerWeapon = player.GetComponentInChildren<PlayerWeapon>();
         weaponData = weaponDatabase.weaponDatabase;
-        consumablesDatabase = GameObject.Find("ConsumablesDatabase").GetComponent<ConsumablesDatabase>();
-        playerWeapon = GameObject.Find("Weapon").GetComponent<PlayerWeapon>();
 
         //subscribe to important events
         //weapons
@@ -78,8 +84,6 @@ public class InventoryManager : MonoBehaviour
             primaryWeapons.Clear();
             secondaryWeapons.Clear();
         }
-
-        if (Input.GetKeyDown(KeyCode.I)) { AddItem(0, 100); }
     }
 
     void LoadFromDataManager() 
@@ -101,7 +105,7 @@ public class InventoryManager : MonoBehaviour
         else { secondaryWeapons = dataManager.gameData.secondaryWeapons; }
     }
 
-    void LoadCurrentWeapons()
+    public void LoadCurrentWeapons()
     {
         // check to make sure the current weapon ID is possible
         currentPrimaryWeaponID = dataManager.gameData.activePrimaryWeapon;
