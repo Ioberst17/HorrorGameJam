@@ -1,11 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
+    private DataManager dataManager;
     [SerializeField]
     private PlayerController PlayerController;
+    private Shield playerShield;
+    [SerializeField]
+    private PlayerSkills playerSkills;
     [SerializeField]
     private PlayerWeapon PlayerWeapon;
     [SerializeField]
@@ -30,7 +36,14 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        dataManager = DataManager.Instance;
+        playerSkills = new PlayerSkills();
+        LoadPlayerSkills();
+
+        playerShield = PlayerController.gameObject.GetComponentInChildren<Shield>();
+        playerSkills.UnlockAllSkills();
+
+        //EventSystem.current.onSkillUnlock += UnlockSkill;
     }
 
     // Update is called once per frame
@@ -42,7 +55,28 @@ public class GameController : MonoBehaviour
         }*/
 
         CheckInput();
+        if (Input.GetKeyDown(KeyCode.M)) { SavePlayerSkills(); }
     }
+
+    private void UnlockSkill(PlayerSkills.SkillType skill) { playerSkills.UnlockSkill(skill); }
+
+    private void SavePlayerSkills() 
+    {
+        for (int i = 0; i < playerSkills.unlockedSkillsList.Count; i++)
+        {
+            if (!dataManager.gameData.playerSkills.unlockedSkillsList.Contains(playerSkills.unlockedSkillsList[i]))
+                { dataManager.gameData.playerSkills.unlockedSkillsList.Add(playerSkills.unlockedSkillsList[i]); }
+        }
+    }
+
+    private void LoadPlayerSkills() 
+    {
+        for (int i = 0; i < dataManager.gameData.playerSkills.unlockedSkillsList.Count; i++)
+        {
+            playerSkills.unlockedSkillsList.Add(dataManager.gameData.playerSkills.unlockedSkillsList[i]);
+        }
+    }
+
     private void FixedUpdate()
     {
         PlayerController.CheckGround();
@@ -51,22 +85,12 @@ public class GameController : MonoBehaviour
         {
             PlayerController.ApplyMovement();
         }
-        
     }
 
-    public int GetHP()
-    {
-        return PlayerController.HP;
-    }
+    public int GetHP() { return PlayerController.HP; }
 
-    public int GetMP()
-    {
-        return PlayerController.MP;
-    }
-    public int GetSP()
-    {
-        return PlayerController.SP;
-    }
+    public int GetMP() { return PlayerController.MP; }
+    public int GetSP() { return PlayerController.SP; }
 
     public void CheckInput()
     {
@@ -127,7 +151,7 @@ public class GameController : MonoBehaviour
             }
 
 
-            if (Input.GetButtonDown("Jump") || Input.GetKeyDown("up") ) //|| Input.GetKeyDown(KeyCode.W))
+            if ((Input.GetButtonDown("Jump") || Input.GetKeyDown("up")) && hasJump()) //|| Input.GetKeyDown(KeyCode.W))
             {
                 PlayerController.Jump();
             }
@@ -158,10 +182,9 @@ public class GameController : MonoBehaviour
                     if (Input.GetMouseButton(1)) { EventSystem.current.AmmoCheckTrigger(0); }
                 }
             }
-            if (Input.GetKeyDown(KeyCode.LeftShift))
-            {
-                PlayerController.Dash();
-            }
+            if (Input.GetKeyDown(KeyCode.LeftShift) && hasDash()) { PlayerController.Dash(); }
+
+            if(Input.GetKeyDown(KeyCode.F) && hasBlock()) { }
             // For Spawns
             if (Input.GetKeyDown(KeyCode.Alpha1)) { SpawnManager.SpawnEnemy(0); };
             if (Input.GetKeyDown(KeyCode.Alpha2)) { SpawnManager.SpawnEnemy(1); };
@@ -228,5 +251,16 @@ public class GameController : MonoBehaviour
     {
         PlayerController.Flip();
         PlayerWeapon.Flip();
+    }
+
+    public bool hasJump() { return playerSkills.IsSkillUnlocked(PlayerSkills.SkillType.Jump); }
+    public bool hasDash() { return playerSkills.IsSkillUnlocked(PlayerSkills.SkillType.Dash); }
+    public bool hasFire() { return playerSkills.IsSkillUnlocked(PlayerSkills.SkillType.Fire); }
+    public bool hasBlock() { return playerSkills.IsSkillUnlocked(PlayerSkills.SkillType.Block); }
+
+    private void OnDestroy()
+    {
+        SavePlayerSkills();
+        //EventSystem.current.onSkillUnlock -= UnlockSkill;
     }
 }

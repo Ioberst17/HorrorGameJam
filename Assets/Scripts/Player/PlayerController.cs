@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -134,6 +135,7 @@ public class PlayerController : MonoBehaviour
         if(GetComponentInChildren<Shield>() != null) { hasShield = GetComponentInChildren<Shield>().shieldOn; } 
         else { Debug.Log("Shield.cs is being requested in a child object, but isn't attached to any child object"); }
     }
+
     private void Update()
     {
         
@@ -546,8 +548,5 @@ public class PlayerController : MonoBehaviour
         isInvincible = false;
     }
 
-    public void gainSP(int SPAmount)
-    {
-        SP += SPAmount;
-    }
+    public void gainSP(int SPAmount) { SP += SPAmount; }
 }
