@@ -2075,6 +2075,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerController: {fileID: 919584575}
+  playerSkills:
+    unlockedSkillsList: 
   PlayerWeapon: {fileID: 2140690970}
   MusicController: {fileID: 0}
   UIController: {fileID: 0}
@@ -3669,6 +3671,8 @@ MonoBehaviour:
     timesPlayed: 1
     playerEXP: 0
     playerLevel: 1
+    playerSkills:
+      unlockedSkillsList: 
     consumables: []
     primaryWeapons: []
     secondaryWeapons: []
@@ -6213,6 +6217,10 @@ PrefabInstance:
       propertyPath: cameraToUse
       value: 
       objectReference: {fileID: 341844923}
+    - target: {fileID: 6450055456109401609, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: maxThrowBand
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 7115222097395284802, guid: eb2664123c277934fb626507fe6ad021, type: 3}
       propertyPath: m_Color.a
       value: 0

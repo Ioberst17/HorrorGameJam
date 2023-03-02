@@ -26,19 +26,17 @@ public class PlayerWeapon : MonoBehaviour
     private int currentAmmoIndex;
 
     //throwing specific
-    [SerializeField]
-    private float maxForceHoldDownTime = 2f;
-    [SerializeField]
-    private static int maxThrowSpeed = 10;
+    [SerializeField] private float maxForceHoldDownTime = 2f;
+    [SerializeField] private float maxThrowBand = 2f;
+    [SerializeField] private static int maxThrowSpeed = 10;
     private static int minThrowSpeed = 5;
     public int throwSpeed;
     private int throwGravity = 1;
     private float throwKeyHeldDownStart;
     private float throwKeyReleased;
-    [SerializeField]
-    private float throwKeyHeldDownTime;
-    [SerializeField]
-    private float holdTimeNormalized;
+    [SerializeField] private float throwKeyHeldDownTime;
+    [SerializeField] private float holdTimeNormalized;
+    [SerializeField] private float throwDistanceNormalized;
     public bool inActiveThrow = false;
     private float currentThrowForce = 0;
     private int currentThrowDirection = 0;
@@ -54,6 +52,9 @@ public class PlayerWeapon : MonoBehaviour
     private Transform firePoint;
     private Vector3 mousePos;
     private Vector3 playerPos;
+    private Vector3 throwMouseStartingPos;
+    private Vector3 throwMouseFinishingPos;
+    private float throwDistanceToPass;
     private float rotationZ; //used for weapon direction
 
     void Start()
@@ -136,7 +137,7 @@ public class PlayerWeapon : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(1))
         {
-            throwKeyHeldDownStart = Time.time;
+            throwMouseStartingPos = cameraToUse.WorldToScreenPoint(transform.position); //throwMouseStartingPos = Input.mousePosition; //throwKeyHeldDownStart = Time.time;
         }
         if (Input.GetMouseButtonUp(1))
         {
@@ -147,18 +148,23 @@ public class PlayerWeapon : MonoBehaviour
         {
             if (inActiveThrow)
             {
-                throwKeyHeldDownTime = Time.time - throwKeyHeldDownStart;
-                currentThrowForce = CalcThrowForce(throwKeyHeldDownTime);
+                throwMouseFinishingPos = Input.mousePosition;
+                throwDistanceToPass = Math.Abs(throwMouseFinishingPos.y - throwMouseStartingPos.y);
+                //throwKeyHeldDownTime = Time.time - throwKeyHeldDownStart;
+                //currentThrowForce = CalcThrowForce(throwKeyHeldDownTime);
+                currentThrowForce = CalcThrowForce(throwDistanceToPass);
             }
         }
     }
 
-    private float CalcThrowForce(float holdTime)
+    private float CalcThrowForce(float holdForce)
     {
-        holdTimeNormalized = Mathf.Clamp01(holdTime / maxForceHoldDownTime);
-        float force = holdTimeNormalized * maxThrowSpeed;
+        //holdTimeNormalized = Mathf.Clamp01(holdTime / maxForceHoldDownTime);
+        throwDistanceNormalized = Mathf.Clamp01(holdForce / maxThrowBand);
+        float force = throwDistanceNormalized * maxThrowSpeed;
         force += minThrowSpeed;
-        EventSystem.current.StartTossingWeaponTrigger(holdTimeNormalized, projectileSpawnPoint.transform, force);
+        EventSystem.current.StartTossingWeaponTrigger(throwDistanceNormalized, projectileSpawnPoint.transform, force);
+        //EventSystem.current.StartTossingWeaponTrigger(holdTimeNormalized, projectileSpawnPoint.transform, force);
         return force;
     }
 
