@@ -40,8 +40,8 @@ public class InventoryManager : MonoBehaviour
         weaponDatabase = utilities.GetComponentInChildren<WeaponDatabase>();
         consumablesDatabase = utilities.GetComponentInChildren<ConsumablesDatabase>();
         player = GameObject.Find("Player");
-        playerController = utilities.GetComponentInChildren<PlayerController>();
-        playerWeapon = utilities.GetComponentInChildren<PlayerWeapon>();
+        playerController = player.GetComponentInChildren<PlayerController>();
+        playerWeapon = player.GetComponentInChildren<PlayerWeapon>();
         weaponData = weaponDatabase.weaponDatabase;
 
         //subscribe to important events
