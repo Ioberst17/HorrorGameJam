@@ -195,8 +195,8 @@ public class PlayerWeapon : MonoBehaviour
         EventSystem.current.FinishTossingWeaponTrigger();
     }
 
-    private void FixedDistanceFire() { if (Input.GetMouseButton(1)) { fixedDistanceAmmo.SetActive(true); ToggleFlamethrowerEffects(true); Debug.Log("True is triggered"); }}
-    private void StopFixedFire() { fixedDistanceAmmo.SetActive(false); ToggleFlamethrowerEffects(false); Debug.Log("False is triggered"); }
+    private void FixedDistanceFire() { if (Input.GetMouseButton(1)) { fixedDistanceAmmo.SetActive(true); ToggleFlamethrowerEffects(true); }}
+    private void StopFixedFire() { fixedDistanceAmmo.SetActive(false); ToggleFlamethrowerEffects(false); }
 
     private void ToggleFlamethrowerEffects(bool flamethrowerState) { FindObjectOfType<AudioManager>().LoopSFX("Flamethrower", flamethrowerState); }
 
