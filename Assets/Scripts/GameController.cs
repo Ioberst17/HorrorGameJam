@@ -182,6 +182,7 @@ public class GameController : MonoBehaviour
                     if (Input.GetMouseButton(1)) { EventSystem.current.AmmoCheckTrigger(0); }
                 }
             }
+            if (Input.GetMouseButtonUp(1)) { EventSystem.current.WeaponStopTrigger(); }
             if (Input.GetKeyDown(KeyCode.LeftShift) && hasDash()) { PlayerController.Dash(); }
 
             if(Input.GetKeyDown(KeyCode.F) && hasBlock()) { }

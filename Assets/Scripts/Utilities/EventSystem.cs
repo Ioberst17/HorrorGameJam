@@ -47,12 +47,19 @@ public class EventSystem : MonoBehaviour
     }
 
     public event Action <int, int, int, int> onWeaponFireTrigger; // used for weapon firing
-    public void WeaponFireTrigger(int weaponID, int weaponLevel, int ammo, int direction)
+    public void WeaponFireTrigger(int weaponID, int weaponLevel, int ammoChange, int currentAmmoLevel)
     {
         if (onWeaponFireTrigger != null)
         {
-            onWeaponFireTrigger(weaponID, weaponLevel, ammo, direction);
+            onWeaponFireTrigger(weaponID, weaponLevel, ammoChange, currentAmmoLevel);
         }
+    }
+
+    public event Action onWeaponStopTrigger;
+
+    public void WeaponStopTrigger()
+    {
+        if(onWeaponStopTrigger != null) { onWeaponStopTrigger(); }
     }
 
     public event Action<float, Transform, float> onStartTossingTrigger; // used for UI items displayed on throw

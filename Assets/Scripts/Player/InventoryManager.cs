@@ -310,9 +310,10 @@ public class InventoryManager : MonoBehaviour
             EventSystem.current.WeaponFireTrigger(
                 currentSecondaryWeaponID,
                 secondaryWeapons[currentSecondaryWeaponIndex].level, 
-                -1, 
-                fireDirection); // send the weapon fire 
-        }         
+                -1,
+                secondaryWeapons[currentSecondaryWeaponIndex].ammo); // send the weapon fire 
+        }
+        else if (!hasAmmo) { EventSystem.current.WeaponStopTrigger(); }
     }
 
     void AddItem(int itemID, int amount)
