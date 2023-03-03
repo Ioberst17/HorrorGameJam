@@ -483,7 +483,15 @@ public class PlayerController : MonoBehaviour
 
     public void AddHealth(int healthToAdd)
     {
-        HP += healthToAdd;
+        if ((HP += healthToAdd) < 100)
+        {
+            HP += healthToAdd;
+        }
+        else
+        {
+            HP = 100;
+        }
+        
     }
 
     //processes if the player should take damage, and if so, how much, then calculates for death. damageType Numbers: 0 is one hit damage, 1 is damage over time. 
