@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerThrowPredictionPointsObjectPool : ObjectPool
@@ -9,6 +10,7 @@ public class PlayerThrowPredictionPointsObjectPool : ObjectPool
 
     private LayerMask layersToCheck;
     GameObject throwPoint;
+    Transform checkPosition;
     Collider2D[] collisions;
 
     public override void Awake()
@@ -33,10 +35,10 @@ public class PlayerThrowPredictionPointsObjectPool : ObjectPool
             collisions = Physics2D.OverlapCircleAll(throwPoint.transform.position, 0.1f, layersToCheck, -.1f, .1f);
 
             if(collisions != null) 
-            { 
+            {
                 foreach (Collider2D col in collisions) 
-                { 
-                    Debug.Log("Collided with object: " + col.name); 
+                {
+                    return;
                 }
             }
 

@@ -145,6 +145,7 @@ public class GameController : MonoBehaviour
             {
                 ShootButton = false;
                 ShootBuffer = 0;
+                EventSystem.current.WeaponStopTrigger();
             }
             if (Input.GetKeyDown(KeyCode.I) || Input.GetKeyDown(KeyCode.LeftShift)) // if dash is triggered
             {

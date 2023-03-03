@@ -24,6 +24,7 @@ public class DialogueManager : MonoBehaviour
 
     public bool choicesDisplayed = false;
 
+
     private static DialogueManager instance;
 
     private List<Choice> currentChoices;
@@ -93,7 +94,7 @@ public class DialogueManager : MonoBehaviour
 
 
 
-    public void ExitDialogueMode()
+    private void ExitDialogueMode()
     {
         dialogueIsPlaying = false;
         dialoguePanel.SetActive(false);
@@ -167,4 +168,6 @@ public class DialogueManager : MonoBehaviour
         currentStory.ChooseChoiceIndex(choiceIndex);
         ContinueStory();
     }
+
+   
 }

@@ -17,7 +17,8 @@ public class PlayerWeapon : MonoBehaviour
     private int ammoGravity = 0;
 
     public WeaponDatabase weaponDatabase;
-    private GameObject fixedDistanceAmmo;
+    [SerializeField] private GameObject fixedDistanceAmmo;
+    private bool fixedDistanceCheck;
     [SerializeField]
     private int currentWeaponID;
     [SerializeField]
@@ -26,19 +27,17 @@ public class PlayerWeapon : MonoBehaviour
     private int currentAmmoIndex;
 
     //throwing specific
-    [SerializeField]
-    private float maxForceHoldDownTime = 2f;
-    [SerializeField]
-    private static int maxThrowSpeed = 10;
+    [SerializeField] private float maxForceHoldDownTime = 2f;
+    [SerializeField] private float maxThrowBand = 2f;
+    [SerializeField] private static int maxThrowSpeed = 10;
     private static int minThrowSpeed = 5;
     public int throwSpeed;
     private int throwGravity = 1;
     private float throwKeyHeldDownStart;
     private float throwKeyReleased;
-    [SerializeField]
-    private float throwKeyHeldDownTime;
-    [SerializeField]
-    private float holdTimeNormalized;
+    [SerializeField] private float throwKeyHeldDownTime;
+    [SerializeField] private float holdTimeNormalized;
+    [SerializeField] private float throwDistanceNormalized;
     public bool inActiveThrow = false;
     private float currentThrowForce = 0;
     private int currentThrowDirection = 0;
@@ -54,12 +53,20 @@ public class PlayerWeapon : MonoBehaviour
     private Transform firePoint;
     private Vector3 mousePos;
     private Vector3 playerPos;
+    private Vector3 throwMouseStartingPos;
+    private Vector3 throwMouseFinishingPos;
+    private float throwDistanceToPass;
     private float rotationZ; //used for weapon direction
+
+    //particle systems
+    private ParticleSystem flamethrower;
+    private ParticleSystem gunfire;
 
     void Start()
     {
         EventSystem.current.onUpdatePlayerWeaponTrigger += WeaponChanged;
         EventSystem.current.onWeaponFireTrigger += WeaponFired;
+        EventSystem.current.onWeaponStopTrigger += WeaponStop;
         player = GameObject.Find("Player");
         weaponDatabase = GameObject.Find("WeaponDatabase").GetComponent<WeaponDatabase>();
         weaponSprite = GameObject.Find("WeaponSprite").GetComponent<SpriteRenderer>();
@@ -73,6 +80,9 @@ public class PlayerWeapon : MonoBehaviour
 
         // go through the list and sort them in order by ammo IDs
         ammoPrefabs.Sort((randomAmmo, ammoToCompareTo) => randomAmmo.GetComponent<Ammo>().GetAmmoID().CompareTo(ammoToCompareTo.GetComponent<Ammo>().GetAmmoID()));
+    
+        StopFixedFire();
+
     }
 
     // Update is called once per frame, used mainly for weapon direction
@@ -81,8 +91,6 @@ public class PlayerWeapon : MonoBehaviour
         HandleWeaponDirection();
 
         HandleThrowing();
-
-        HandleFixedDistanceFire();
     }
 
     public bool WeaponIsPointedToTheRight()
@@ -112,9 +120,11 @@ public class PlayerWeapon : MonoBehaviour
     {
         if (weaponDatabase.weaponDatabase.entries[weaponID].isShot == true) { Shoot();}
         else if (weaponDatabase.weaponDatabase.entries[weaponID].isThrown == true) { Throw(direction); }
-        else if (weaponDatabase.weaponDatabase.entries[weaponID].isFixedDistance == true) { FixedDistanceFire(); }
+        else if (weaponDatabase.weaponDatabase.entries[weaponID].isFixedDistance == true) { FixedDistanceFire(); fixedDistanceCheck = true; }
         else { Debug.Log("Check WeaponDatabase, weapon is missing a TRUE value for if ammo should be shot, thrown, be a fixed distance, etc."); }
     }
+
+    private void WeaponStop() { StopFixedFire(); }
 
     private void Shoot()
     {
@@ -136,7 +146,7 @@ public class PlayerWeapon : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(1))
         {
-            throwKeyHeldDownStart = Time.time;
+            throwMouseStartingPos = cameraToUse.WorldToScreenPoint(transform.position); //throwMouseStartingPos = Input.mousePosition; //throwKeyHeldDownStart = Time.time;
         }
         if (Input.GetMouseButtonUp(1))
         {
@@ -147,18 +157,23 @@ public class PlayerWeapon : MonoBehaviour
         {
             if (inActiveThrow)
             {
-                throwKeyHeldDownTime = Time.time - throwKeyHeldDownStart;
-                currentThrowForce = CalcThrowForce(throwKeyHeldDownTime);
+                throwMouseFinishingPos = Input.mousePosition;
+                throwDistanceToPass = Math.Abs(throwMouseFinishingPos.y - throwMouseStartingPos.y);
+                //throwKeyHeldDownTime = Time.time - throwKeyHeldDownStart;
+                //currentThrowForce = CalcThrowForce(throwKeyHeldDownTime);
+                currentThrowForce = CalcThrowForce(throwDistanceToPass);
             }
         }
     }
 
-    private float CalcThrowForce(float holdTime)
+    private float CalcThrowForce(float holdForce)
     {
-        holdTimeNormalized = Mathf.Clamp01(holdTime / maxForceHoldDownTime);
-        float force = holdTimeNormalized * maxThrowSpeed;
+        //holdTimeNormalized = Mathf.Clamp01(holdTime / maxForceHoldDownTime);
+        throwDistanceNormalized = Mathf.Clamp01(holdForce / maxThrowBand);
+        float force = throwDistanceNormalized * maxThrowSpeed;
         force += minThrowSpeed;
-        EventSystem.current.StartTossingWeaponTrigger(holdTimeNormalized, projectileSpawnPoint.transform, force);
+        EventSystem.current.StartTossingWeaponTrigger(throwDistanceNormalized, projectileSpawnPoint.transform, force);
+        //EventSystem.current.StartTossingWeaponTrigger(holdTimeNormalized, projectileSpawnPoint.transform, force);
         return force;
     }
 
@@ -168,8 +183,6 @@ public class PlayerWeapon : MonoBehaviour
         FindObjectOfType<AudioManager>().PlaySFX("WeaponToss");
 
         toss.GetComponent<Rigidbody2D>().gravityScale = throwGravity;
-
-        
 
         if( 10 > transform.rotation.eulerAngles.z && transform.rotation.eulerAngles.z > -10) 
         {
@@ -182,15 +195,10 @@ public class PlayerWeapon : MonoBehaviour
         EventSystem.current.FinishTossingWeaponTrigger();
     }
 
-    private void FixedDistanceFire()
-    {
-        if (Input.GetMouseButton(1)) { fixedDistanceAmmo.SetActive(true);}
-    }
+    private void FixedDistanceFire() { if (Input.GetMouseButton(1)) { fixedDistanceAmmo.SetActive(true); ToggleFlamethrowerEffects(true); }}
+    private void StopFixedFire() { fixedDistanceAmmo.SetActive(false); ToggleFlamethrowerEffects(false); }
 
-    private void HandleFixedDistanceFire()
-    {
-        if (!Input.GetMouseButton(1)) { fixedDistanceAmmo.SetActive(false); }
-    }
+    private void ToggleFlamethrowerEffects(bool flamethrowerState) { FindObjectOfType<AudioManager>().LoopSFX("Flamethrower", flamethrowerState); }
 
     public void Flip() // used in game controller to flip projectile spawnpoint when player changes direction; should only be called if using horizontal / vertical direction only firing
     {
@@ -223,5 +231,6 @@ public class PlayerWeapon : MonoBehaviour
         // unsubscribe from events
         EventSystem.current.onUpdatePlayerWeaponTrigger -= WeaponChanged;
         EventSystem.current.onWeaponFireTrigger -= WeaponFired;
+        EventSystem.current.onWeaponStopTrigger -= WeaponStop;
     }
 }
