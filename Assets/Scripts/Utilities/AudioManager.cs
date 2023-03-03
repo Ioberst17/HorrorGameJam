@@ -35,10 +35,7 @@ public class AudioManager : MonoBehaviour
 
     private void Start() // handles theme music
     {
-        if(SceneManager.GetActiveScene().buildIndex == 0)
-        {
-            PlayTheme("Title Theme");
-        }
+        if(SceneManager.GetActiveScene().buildIndex == 0) { PlayTheme("Title Theme"); }
         else
         {
             string themeToPlay = "Scene " + SceneManager.GetActiveScene().buildIndex.ToString() + " Theme";
@@ -49,25 +46,37 @@ public class AudioManager : MonoBehaviour
     public void PlaySFX (string name)
     {
         Sound s = Array.Find(sounds, sound => sound.name == name);
-        if(s == null)
+        CheckForError(s);
+    }
+
+    public void LoopSFX(string name, bool loopState)
+    {
+        Sound s = Array.Find(sounds, sound => sound.name == name);
+        if (s == null)
         {
             Debug.LogWarning("Sound " + name + " doesn't exist - check for in AudioManager");
             return;
         }
         else
         {
-            s.source.Play();
+            if (loopState == true) { if (!s.source.isPlaying) { s.loop = true; s.source.Play(); } }
+            else { s.source.Stop(); }
         }
     }
 
     public void PlayTheme(string name)
     {
         Sound t = Array.Find(themes, theme => theme.name == name);
-        if (t == null)
+        CheckForError(t);
+    }
+
+    private void CheckForError(Sound sound)
+    {
+        if (sound == null)
         {
-            Debug.LogWarning("Theme " + name + " doesn't exist - check for in AudioManager");
+            Debug.LogWarning(sound + " couldn't be found - check for in AudioManager");
             return;
         }
-        t.source.Play();
+        else { sound.source.Play(); }
     }
 }

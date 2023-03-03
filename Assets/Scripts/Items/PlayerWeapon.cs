@@ -17,7 +17,8 @@ public class PlayerWeapon : MonoBehaviour
     private int ammoGravity = 0;
 
     public WeaponDatabase weaponDatabase;
-    private GameObject fixedDistanceAmmo;
+    [SerializeField] private GameObject fixedDistanceAmmo;
+    private bool fixedDistanceCheck;
     [SerializeField]
     private int currentWeaponID;
     [SerializeField]
@@ -57,10 +58,15 @@ public class PlayerWeapon : MonoBehaviour
     private float throwDistanceToPass;
     private float rotationZ; //used for weapon direction
 
+    //particle systems
+    private ParticleSystem flamethrower;
+    private ParticleSystem gunfire;
+
     void Start()
     {
         EventSystem.current.onUpdatePlayerWeaponTrigger += WeaponChanged;
         EventSystem.current.onWeaponFireTrigger += WeaponFired;
+        EventSystem.current.onWeaponStopTrigger += WeaponStop;
         player = GameObject.Find("Player");
         weaponDatabase = GameObject.Find("WeaponDatabase").GetComponent<WeaponDatabase>();
         weaponSprite = GameObject.Find("WeaponSprite").GetComponent<SpriteRenderer>();
@@ -74,6 +80,9 @@ public class PlayerWeapon : MonoBehaviour
 
         // go through the list and sort them in order by ammo IDs
         ammoPrefabs.Sort((randomAmmo, ammoToCompareTo) => randomAmmo.GetComponent<Ammo>().GetAmmoID().CompareTo(ammoToCompareTo.GetComponent<Ammo>().GetAmmoID()));
+    
+        StopFixedFire();
+
     }
 
     // Update is called once per frame, used mainly for weapon direction
@@ -82,8 +91,6 @@ public class PlayerWeapon : MonoBehaviour
         HandleWeaponDirection();
 
         HandleThrowing();
-
-        HandleFixedDistanceFire();
     }
 
     public bool WeaponIsPointedToTheRight()
@@ -113,9 +120,11 @@ public class PlayerWeapon : MonoBehaviour
     {
         if (weaponDatabase.weaponDatabase.entries[weaponID].isShot == true) { Shoot();}
         else if (weaponDatabase.weaponDatabase.entries[weaponID].isThrown == true) { Throw(direction); }
-        else if (weaponDatabase.weaponDatabase.entries[weaponID].isFixedDistance == true) { FixedDistanceFire(); }
+        else if (weaponDatabase.weaponDatabase.entries[weaponID].isFixedDistance == true) { FixedDistanceFire(); fixedDistanceCheck = true; }
         else { Debug.Log("Check WeaponDatabase, weapon is missing a TRUE value for if ammo should be shot, thrown, be a fixed distance, etc."); }
     }
+
+    private void WeaponStop() { StopFixedFire(); }
 
     private void Shoot()
     {
@@ -175,8 +184,6 @@ public class PlayerWeapon : MonoBehaviour
 
         toss.GetComponent<Rigidbody2D>().gravityScale = throwGravity;
 
-        
-
         if( 10 > transform.rotation.eulerAngles.z && transform.rotation.eulerAngles.z > -10) 
         {
             toss.GetComponent<Rigidbody2D>().AddForce(projectileSpawnPoint.transform.right.normalized * throwSpeed, ForceMode2D.Impulse);
@@ -188,15 +195,10 @@ public class PlayerWeapon : MonoBehaviour
         EventSystem.current.FinishTossingWeaponTrigger();
     }
 
-    private void FixedDistanceFire()
-    {
-        if (Input.GetMouseButton(1)) { fixedDistanceAmmo.SetActive(true);}
-    }
+    private void FixedDistanceFire() { if (Input.GetMouseButton(1)) { fixedDistanceAmmo.SetActive(true); ToggleFlamethrowerEffects(true); Debug.Log("True is triggered"); }}
+    private void StopFixedFire() { fixedDistanceAmmo.SetActive(false); ToggleFlamethrowerEffects(false); Debug.Log("False is triggered"); }
 
-    private void HandleFixedDistanceFire()
-    {
-        if (!Input.GetMouseButton(1)) { fixedDistanceAmmo.SetActive(false); }
-    }
+    private void ToggleFlamethrowerEffects(bool flamethrowerState) { FindObjectOfType<AudioManager>().LoopSFX("Flamethrower", flamethrowerState); }
 
     public void Flip() // used in game controller to flip projectile spawnpoint when player changes direction; should only be called if using horizontal / vertical direction only firing
     {
@@ -229,5 +231,6 @@ public class PlayerWeapon : MonoBehaviour
         // unsubscribe from events
         EventSystem.current.onUpdatePlayerWeaponTrigger -= WeaponChanged;
         EventSystem.current.onWeaponFireTrigger -= WeaponFired;
+        EventSystem.current.onWeaponStopTrigger -= WeaponStop;
     }
 }
