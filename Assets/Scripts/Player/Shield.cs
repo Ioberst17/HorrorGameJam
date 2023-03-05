@@ -72,7 +72,7 @@ public class Shield : MonoBehaviour
                 }
                 else
                 {
-                    Instantiate(Resources.Load("VFXPrefabs/BulletImpact"), collision.transform.position, Quaternion.identity);
+                    Instantiate(Resources.Load("VFXPrefabs/DamageImpact"), collision.transform.position, Quaternion.identity);
                     PassThroughDamage(collision, 0, 0);
                 }
             } 

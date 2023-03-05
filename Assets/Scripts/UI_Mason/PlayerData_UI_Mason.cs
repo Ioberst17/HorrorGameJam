@@ -49,7 +49,7 @@ public class PlayerData_UI_Mason : MonoBehaviour
     {
         FinishTossForceDisplay();
 
-        dataManager.gameData.consumables[1].amount = dataManager.gameData.consumables[1].amount + 2;
+        //dataManager.gameData.consumables[1].amount = dataManager.gameData.consumables[1].amount + 2;
 
         /*throwPredictionPoints = new GameObject[numberOfThrowPoints];
 
@@ -67,7 +67,7 @@ public class PlayerData_UI_Mason : MonoBehaviour
         sp = gameController.GetSP();
         spBar.fillAmount = sp / 100f;
 
-        consumableAmount.text = dataManager.gameData.consumables[1].amount.ToString();
+        //consumableAmount.text = dataManager.gameData.consumables[1].amount.ToString();
 
         if (Input.GetKeyDown(KeyCode.H) && dataManager.gameData.consumables[1].amount > 0 && gameController.GetHP() < 100)
         {

@@ -34,7 +34,7 @@ public class Ammo : MonoBehaviour
             }
             else if (!isThrown)
             {
-                Instantiate(Resources.Load("VFXPrefabs/BulletImpact"), transform.position, Quaternion.identity);
+                Instantiate(Resources.Load("VFXPrefabs/DamageImpact"), transform.position, Quaternion.identity);
                 Destroy(gameObject);
             }        
         }
@@ -48,7 +48,7 @@ public class Ammo : MonoBehaviour
             }
             else
             {
-                Instantiate(Resources.Load("VFXPrefabs/BulletImpact"), transform.position, Quaternion.identity);
+                Instantiate(Resources.Load("VFXPrefabs/DamageImpact"), transform.position, Quaternion.identity);
                 Destroy(gameObject);
             }
             
