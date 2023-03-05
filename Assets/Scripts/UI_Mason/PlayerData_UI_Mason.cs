@@ -35,6 +35,7 @@ public class PlayerData_UI_Mason : MonoBehaviour
     [SerializeField] private GameController gameController;
 
     [SerializeField] private PlayerController playerController;
+    [SerializeField] private PlayerHealth playerHealth;
 
     // Start is called before the first frame update
     void Awake()
@@ -71,7 +72,7 @@ public class PlayerData_UI_Mason : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.H) && dataManager.gameData.consumables[1].amount > 0 && gameController.GetHP() < 100)
         {
-            playerController.AddHealth(10);
+            playerHealth.AddHealth(10);
             dataManager.gameData.consumables[1].amount = dataManager.gameData.consumables[1].amount - 1;
             Debug.Log("Used health kit.\n");
         }
@@ -96,43 +97,6 @@ public class PlayerData_UI_Mason : MonoBehaviour
         ThrowForceUI.transform.rotation = Quaternion.Euler(0, 0, 0);
         ThrowForceFill.transform.rotation = Quaternion.Euler(0, 0, 0);
     }
-
-    /*private void ShowTossTrajectory(Transform tossSpawnPoint, float tossForce)
-    {
-        for(int i = 0; i < throwPredictionPoints.Length; i++)
-        {
-            TossPredictionVisibility(true, throwPredictionPoints[i]);
-            throwPredictionPoints[i].transform.position = CalcPointPositions(i * 0.05f, tossSpawnPoint, tossForce);
-        }
-    }
-
-    Vector2 CalcPointPositions(float time, Transform tossSpawnPoint, float tossForce)
-    {
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector3 transformPos = tossSpawnPoint.position;
-        mousePos.z = transformPos.z;
-        Vector3 bulletDir = (mousePos - transformPos).normalized;
-
-        Vector2 currentPointPosition = (Vector2)tossSpawnPoint.transform.position + (Vector2)(time * tossForce * bulletDir) + (time * time) * 0.5f * Physics2D.gravity;
-        return currentPointPosition;
-    }
-
-    private void TossPredictionVisibility(bool OnOrOff, GameObject tossPoint)
-    {
-        if(OnOrOff == true)
-        {
-            Color temp = tossPoint.GetComponent<SpriteRenderer>().color;
-            temp.a = 1f;
-            tossPoint.GetComponent<SpriteRenderer>().color = temp;
-        }
-        else if (OnOrOff == false)
-        {
-            Color temp = tossPoint.GetComponent<SpriteRenderer>().color;
-            temp.a = 0f;
-            tossPoint.GetComponent<SpriteRenderer>().color = temp;
-        }
-        else { }
-    }*/
 
     private void FinishTossForceDisplay()
     {

@@ -173,12 +173,14 @@ public class Shield : MonoBehaviour
     {
         if (shieldedObject == "Player")
         {
-            playerController.takeDamage(collision.gameObject.transform.position,
+            EventSystem.current.PlayerHitTrigger(
+                              collision.gameObject.transform.position,
                               collision.gameObject.GetComponent<EnemyController>().damageValue,
                               1,
                               damageMod,
                               knockbackMod);
         }
+        if(shieldedObject == "Enemy") { /*TO BE FILLED IF ENEMY USES SHIELD*/ }
     }
 
 }

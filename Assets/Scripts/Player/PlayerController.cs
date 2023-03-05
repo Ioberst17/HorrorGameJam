@@ -44,10 +44,9 @@ public class PlayerController : MonoBehaviour
     public Camera mainCam;
 
     //To make the player temporarily unable to control themselves
-    public bool inHitstun;
 
     public bool isAttacking;
-    public bool isInvincible;
+
 
     //private float xInput;
     public int facingDirection = 1;
@@ -70,9 +69,8 @@ public class PlayerController : MonoBehaviour
     public int StartingMP;
 
 
+    [SerializeField] private PlayerHealth playerHealth;
     //Health points, magic points, soul points (currency)
-    [Range(0, 100)]
-    public int HP;
     public int MP;
     public int SP;
     [SerializeField] private bool hasShield;
@@ -116,9 +114,11 @@ public class PlayerController : MonoBehaviour
     //Set all the initial values
     private void Start()
     {
+        EventSystem.current.onPlayerDeathTrigger += PlayerDeath;
+
         rb = GetComponent<Rigidbody2D>();
         cc = GetComponent<BoxCollider2D>();
-        HP = StartingHP;
+        //HP = StartingHP;
         MP = StartingMP;
         SP = 0;
         ControlMomentum = 0;
@@ -128,12 +128,11 @@ public class PlayerController : MonoBehaviour
         attackLagTimer = 0;
         AttackDamage = 10;
         canDash = true;
-        inHitstun = false;
-        isInvincible = false;
         isDashing = false;
         isAttacking = false;
-        if(GetComponentInChildren<Shield>() != null) { hasShield = GetComponentInChildren<Shield>().shieldOn; } 
-        else { Debug.Log("Shield.cs is being requested in a child object, but isn't attached to any child object"); }
+
+        if (GetComponent<PlayerHealth>() != null) { playerHealth = GetComponent<PlayerHealth>(); }
+        else { Debug.Log("PlayerHealth.cs is being requested as a component of the same object as PlayerController.cs, but could not be found on the object"); }
     }
 
     private void Update()
@@ -255,7 +254,7 @@ public class PlayerController : MonoBehaviour
     //called by the GameController
     public void ApplyMovement()
     {
-        if (!inHitstun && !isDashing)
+        if (!playerHealth.inHitstun && !isDashing)
         {
             if (isGrounded && !isJumping) //if on ground
             {
@@ -481,29 +480,12 @@ public class PlayerController : MonoBehaviour
         transform.Rotate(0.0f, 180.0f, 0.0f);
     }
 
-    public void AddHealth(int healthToAdd)
-    {
-        if ((HP += healthToAdd) < 100)
-        {
-            HP += healthToAdd;
-        }
-        else
-        {
-            HP = 100;
-        }
-        
-    }
-
     //processes if the player should take damage, and if so, how much, then calculates for death. damageType Numbers: 0 is one hit damage, 1 is damage over time. 
     //Calculated direction of hit for knockback direction.
-    public void takeDamage(Vector3 enemyPos, int damageNumber, int damageType, float damageMod, float knockbackMod)
+    public void PlayerHit(Vector3 enemyPos, int damageNumber, int damageType, float damageMod, float knockbackMod)
     {
-        hasShield = GetComponentInChildren<Shield>().shieldOn;
-
-        if (!isInvincible)
+        if (!playerHealth.isInvincible)
         {
-            if(!hasShield) { StartCoroutine(hitStun()); }
-            HP -= (int)(damageNumber * (1 - damageMod));
             if (enemyPos.x >= transform.position.x)
             {
                 float knockbackForce = jumpForce * (1 - knockbackMod);
@@ -520,33 +502,19 @@ public class PlayerController : MonoBehaviour
                 newForce.Set(0.0f, knockbackForce / 3);
                 rb.AddForce(newForce, ForceMode2D.Impulse);
             }
-            if (HP <= 0)
-            {
-                Debug.Log("Death");
-                animator.Play("PlayerDeath");
-                transform.position = StartingLocation.position;
-                HP = StartingHP;
-            }
         }
     }
 
-    IEnumerator hitStun()
+    void PlayerDeath()
     {
-        inHitstun = true;
-        StartCoroutine(Invincibility());
-        animator.Play("PlayerHurt");
-        FindObjectOfType<AudioManager>().PlaySFX("PlayerHit");
-        yield return new WaitForSeconds(1); // waits a certain number of seconds
-        inHitstun = false;
-    }
-
-    IEnumerator Invincibility()
-    {
-        isInvincible = true;
-        //animator.Play("PlayerHit");
-        yield return new WaitForSeconds(1.5f); // waits a certain number of seconds
-        isInvincible = false;
+        animator.Play("PlayerDeath");
+        transform.position = StartingLocation.position;
     }
 
     public void gainSP(int SPAmount) { SP += SPAmount; }
+
+    private void OnDestroy()
+    {
+        EventSystem.current.onPlayerDeathTrigger -= PlayerDeath;
+    }
 }

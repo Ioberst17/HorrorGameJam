@@ -9,6 +9,7 @@ public class GameController : MonoBehaviour
     private DataManager dataManager;
     [SerializeField]
     private PlayerController PlayerController;
+    private PlayerHealth playerHealth;
     private Shield playerShield;
     [SerializeField]
     private PlayerSkills playerSkills;
@@ -40,6 +41,7 @@ public class GameController : MonoBehaviour
         playerSkills = new PlayerSkills();
         LoadPlayerSkills();
 
+        playerHealth = PlayerController.gameObject.GetComponent<PlayerHealth>();
         playerShield = PlayerController.gameObject.GetComponentInChildren<Shield>();
         playerSkills.UnlockAllSkills();
 
@@ -87,7 +89,7 @@ public class GameController : MonoBehaviour
         }
     }
 
-    public int GetHP() { return PlayerController.HP; }
+    public int GetHP() { return playerHealth.HP; }
 
     public int GetMP() { return PlayerController.MP; }
     public int GetSP() { return PlayerController.SP; }

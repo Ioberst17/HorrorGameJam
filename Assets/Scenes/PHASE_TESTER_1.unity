@@ -2606,6 +2606,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerController: {fileID: 919584575}
+  playerHealth: {fileID: 0}
   sceneManagerIndexBased_Mason: {fileID: 86263942}
   spawnManager: {fileID: 49111190}
 --- !u!4 &877649769
@@ -7953,6 +7954,7 @@ MonoBehaviour:
   dataManager: {fileID: 0}
   gameController: {fileID: 641676304}
   playerController: {fileID: 919584575}
+  playerHealth: {fileID: 1547142142}
 --- !u!4 &1303225423 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1458881045126449812, guid: eb2664123c277934fb626507fe6ad021, type: 3}
@@ -8545,6 +8547,24 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1458881045040599527, guid: eb2664123c277934fb626507fe6ad021, type: 3}
   m_PrefabInstance: {fileID: 1458881044282191579}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1547142142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1547142136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef778387bd68d614e9853dacef91cca9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HP: 100
+  maxHealth: 100
+  StartingHP: 100
+  isInvincible: 0
+  inHitstun: 0
+  animator: {fileID: 0}
 --- !u!1 &1552900855
 GameObject:
   m_ObjectHideFlags: 0
