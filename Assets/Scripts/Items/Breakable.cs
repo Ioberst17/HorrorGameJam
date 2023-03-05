@@ -7,7 +7,7 @@ using UnityEngine.Tilemaps;
 [RequireComponent(typeof(Collider2D))]
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Animator))]
-public class Breakable : MonoBehaviour
+public class Breakable : MonoBehaviour, IDamageable
 {
     private Animator anim;
     private int hitCount = 3;
@@ -29,11 +29,7 @@ public class Breakable : MonoBehaviour
     {
         if (hitCount < 1 && hasBroken == false)
         {
-            spriteRenderer.enabled = false;
-            GetComponent<Collider2D>().enabled = false;
-            Instantiate(BrokenVersion, transform.position, Quaternion.identity);
-            if(GetComponent<BreakableLoot>() != null) { GetComponent<BreakableLoot>().GenerateLoot(); }
-            hasBroken = true;
+            HPZero();
         }
     }
 
@@ -43,9 +39,25 @@ public class Breakable : MonoBehaviour
         {
             if(hasBroken == false)
             {
-                hitCount = -1;
-                anim.SetTrigger("Hit");
+                TakeDamage();
             }
         }
     }
+
+    void TakeDamage()
+    {
+        hitCount += -1;
+        anim.SetTrigger("Hit");
+    }
+
+    void HPZero()
+    {
+        spriteRenderer.enabled = false;
+        GetComponent<Collider2D>().enabled = false;
+        Instantiate(BrokenVersion, transform.position, Quaternion.identity);
+        if (GetComponent<BreakableLoot>() != null) { GetComponent<BreakableLoot>().GenerateLoot(); }
+        hasBroken = true;
+    }
+
+
 }

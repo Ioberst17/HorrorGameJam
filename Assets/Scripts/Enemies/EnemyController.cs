@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour
+public class EnemyController : MonoBehaviour, IDamageable
 {
     private SpriteRenderer enemySpriteRenderer;
     public Animator animator;
@@ -161,11 +161,8 @@ public class EnemyController : MonoBehaviour
                 //isAttacking = false;
 
                 invincibilityCount = invincibilitySet;
-                HP -= attackDamage;
-                if (HP <= 0)
-                {
-                    Death();
-                }
+                TakeDamage(attackDamage);
+                if (HP <= 0) { HPZero(); }
                 else
                 {
                     Debug.Log("Health remaining is " + HP);
@@ -193,15 +190,17 @@ public class EnemyController : MonoBehaviour
         }
 
         return false;
-        
     }
+
+    void TakeDamage(int damage) { HP -= damage; }
+
     public void Flip()
     {
         facingDirection *= -1;
         transform.Rotate(0.0f, 180.0f, 0.0f);
     }
 
-    public void Death()
+    public void HPZero()
     {
         Debug.Log(name + " is dead!");
         isDead = true;
