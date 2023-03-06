@@ -193,7 +193,8 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     public void TakeDamage(int damage) 
     { 
-        HP -= damage; 
+        HP -= damage;
+        GetComponent<EnemyHealth>().UpdateHealthUI(HP);
         Debug.Log("Enemy " + gameObject.name + " was damaged! It took: " + damage + "damage. It's current HP is: " + HP);
         if (HP <= 0) { HPZero(); }
     }
