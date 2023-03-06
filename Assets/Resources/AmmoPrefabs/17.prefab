@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 7447148443237487494}
   - component: {fileID: -6588840329047734752}
   - component: {fileID: 4837668457082736041}
+  - component: {fileID: -5998482213053828127}
   m_Layer: 11
   m_Name: 17
   m_TagString: Ammo
@@ -115,7 +116,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.1, y: 0.1}
+  m_Size: {x: 0.09, y: 0.09}
   m_EdgeRadius: 0
 --- !u!50 &4165929964426901340
 Rigidbody2D:
@@ -309,3 +310,15 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &-5998482213053828127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4006209712300283521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bd8491314da3124e9b926da6ce22fbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class AmmoImpact : MonoBehaviour
 {
-    private float delay = 0.5f;
+    private float delay = 0.3f;
 
     // Update is called once per frame
     void Start()

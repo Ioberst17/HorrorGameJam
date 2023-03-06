@@ -14,7 +14,7 @@ public class InventoryManager : MonoBehaviour
     public WeaponDatabase.Database weaponData;
     public ConsumablesDatabase consumablesDatabase;
     public PlayerWeapon playerWeapon;
-    public PlayerController playerController;
+    public PlayerHealth playerHealth;
 
     [SerializeField]
     private List<PlayerConsumables> consumables = new List<PlayerConsumables>();
@@ -40,7 +40,7 @@ public class InventoryManager : MonoBehaviour
         weaponDatabase = utilities.GetComponentInChildren<WeaponDatabase>();
         consumablesDatabase = utilities.GetComponentInChildren<ConsumablesDatabase>();
         player = GameObject.Find("Player");
-        playerController = player.GetComponentInChildren<PlayerController>();
+        playerHealth = player.GetComponentInChildren<PlayerHealth>();
         playerWeapon = player.GetComponentInChildren<PlayerWeapon>();
         weaponData = weaponDatabase.weaponDatabase;
 
@@ -351,7 +351,7 @@ public class InventoryManager : MonoBehaviour
                 }
                 if (consumablesDB[i].itemType == "Instant Use")
                 {
-                    if(consumablesDB[i].itemName == "Heart") { playerController.AddHealth(10 * amount); }
+                    if(consumablesDB[i].itemName == "Heart") { playerHealth.AddHealth(10 * amount); }
 
                     isInstantUse = true;
                 }

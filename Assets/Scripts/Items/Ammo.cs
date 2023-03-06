@@ -27,14 +27,11 @@ public class Ammo : MonoBehaviour
         if (col.gameObject.GetComponent<EnemyController>() != null)
         {
             var enemyController = col.gameObject.GetComponent<EnemyController>();
-            enemyController.AmmoDamage(weaponID, weaponLevel);
-            if (isThrown)
-            {
-                StartCoroutine(ExplodeCoroutine());
-            }
+            if (isThrown) { StartCoroutine(ExplodeCoroutine()); }
             else if (!isThrown)
             {
-                Instantiate(Resources.Load("VFXPrefabs/BulletImpact"), transform.position, Quaternion.identity);
+                enemyController.AmmoHandler(weaponID, weaponLevel);
+                Instantiate(Resources.Load("VFXPrefabs/DamageImpact"), transform.position, Quaternion.identity);
                 Destroy(gameObject);
             }        
         }
@@ -42,13 +39,10 @@ public class Ammo : MonoBehaviour
 
         if (col.gameObject.tag == "Boundary" || col.gameObject.layer == BreakableEnviroLayer)
         {
-            if (isThrown)
-            {
-                StartCoroutine(ExplodeCoroutine());
-            }
+            if (isThrown) { StartCoroutine(ExplodeCoroutine()); }
             else
             {
-                Instantiate(Resources.Load("VFXPrefabs/BulletImpact"), transform.position, Quaternion.identity);
+                Instantiate(Resources.Load("VFXPrefabs/DamageImpact"), transform.position, Quaternion.identity);
                 Destroy(gameObject);
             }
             
@@ -60,7 +54,7 @@ public class Ammo : MonoBehaviour
         if(other.gameObject.GetComponent<EnemyController>() != null)
         {
             var enemyController = other.gameObject.GetComponent<EnemyController>();
-            enemyController.AmmoDamage(weaponID, weaponLevel);
+            enemyController.AmmoHandler(weaponID, weaponLevel);
         }
     }
 
@@ -70,31 +64,10 @@ public class Ammo : MonoBehaviour
     {
         animator.SetTrigger("Explode");
         FindObjectOfType<AudioManager>().PlaySFX("WeaponExplosion");
-        Destroy(gameObject, 1.5f);
+        if (GetComponent<Explode>() != null) { GetComponent<Explode>().ExplosionDamage(2f, 10f, 10); }
+        else { Debug.Log("Add the Explode.cs script to the ammo prefab that is triggering this script"); }
+        gameObject.GetComponent<Collider2D>().enabled = false;
         yield return 0;
     }
-
-    /*private void Explode()
-    {
-        Instantiate(ExplosionEffect, transform.position, transform.rotation);
-        Collider[] touchedObjects = Physics.OverlapSphere(transform.position, GrenadeRadius).Where(x => x.tag == "Enemy").ToArray();
-
-        foreach (Collider touchedObject in touchedObjects)
-        {
-            Rigidbody rigidbody = touchedObject.GetComponent<Rigidbody>();
-            if (rigidbody != null)
-            {
-                rigidbody.AddExplosionForce(ExplosionForce, transform.position, GrenadeRadius);
-            }
-
-            var target = touchedObject.gameObject.GetComponent<EnemyMovment>();
-            target.TakeDamage(DamageRate);
-
-        }
-        Destroy(gameObject);
-    https://learntechnologies.fr/2020/03/02/grenade-bomb-in-unity-tutorial-part-4/
-
-    }*/
-
 
 }

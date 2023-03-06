@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour
+public class EnemyController : MonoBehaviour, IDamageable
 {
     private SpriteRenderer enemySpriteRenderer;
     public Animator animator;
@@ -97,7 +97,7 @@ public class EnemyController : MonoBehaviour
     {
         setupHelper();
         //subscribe to important messages
-        EventSystem.current.onAttackCollision += AmmoDamage;
+        EventSystem.current.onAttackCollision += AmmoHandler;
     }
 
     // Update is called once per frame
@@ -147,7 +147,7 @@ public class EnemyController : MonoBehaviour
         }
 
     }
-    public bool calculateHit(int attackDamage, Vector3 playerPosition)
+    public bool Hit(int attackDamage, Vector3 playerPosition)
     {
         Debug.Log(name + " called");
         if (!isDead)
@@ -161,12 +161,8 @@ public class EnemyController : MonoBehaviour
                 //isAttacking = false;
 
                 invincibilityCount = invincibilitySet;
-                HP -= attackDamage;
-                if (HP <= 0)
-                {
-                    Death();
-                }
-                else
+                TakeDamage(attackDamage);
+                if(!isDead)
                 {
                     Debug.Log("Health remaining is " + HP);
                     if (transform.position.x <= playerPosition.x)
@@ -193,15 +189,23 @@ public class EnemyController : MonoBehaviour
         }
 
         return false;
-        
     }
+
+    public void TakeDamage(int damage) 
+    { 
+        HP -= damage;
+        GetComponent<EnemyHealth>().UpdateHealthUI(HP);
+        Debug.Log("Enemy " + gameObject.name + " was damaged! It took: " + damage + "damage. It's current HP is: " + HP);
+        if (HP <= 0) { HPZero(); }
+    }
+
     public void Flip()
     {
         facingDirection *= -1;
         transform.Rotate(0.0f, 180.0f, 0.0f);
     }
 
-    public void Death()
+    public void HPZero()
     {
         Debug.Log(name + " is dead!");
         isDead = true;
@@ -215,20 +219,20 @@ public class EnemyController : MonoBehaviour
 
     }
 
-    public void AmmoDamage(int weaponID, int LevelOfWeapon)
+    public void AmmoHandler(int weaponID, int LevelOfWeapon)
     {
         var ammoLevel = LevelOfWeapon - 1;
 
         switch (ammoLevel)
         {
             case 0:
-                calculateHit(weaponDatabase.weaponDatabase.entries[weaponID].level1Damage, playerController.transform.position);
+                Hit(weaponDatabase.weaponDatabase.entries[weaponID].level1Damage, playerController.transform.position);
                 break;
             case 1:
-                calculateHit(weaponDatabase.weaponDatabase.entries[weaponID].level2Damage, playerController.transform.position);
+                Hit(weaponDatabase.weaponDatabase.entries[weaponID].level2Damage, playerController.transform.position);
                 break;
             case 2:
-                calculateHit(weaponDatabase.weaponDatabase.entries[weaponID].level3Damage, playerController.transform.position);
+                Hit(weaponDatabase.weaponDatabase.entries[weaponID].level3Damage, playerController.transform.position);
                 break;
         }
         
@@ -258,7 +262,7 @@ public class EnemyController : MonoBehaviour
     private void OnDestroy()
     {
         // unsubscribe from events
-        EventSystem.current.onAttackCollision -= AmmoDamage;
+        EventSystem.current.onAttackCollision -= AmmoHandler;
     }
 
 }
