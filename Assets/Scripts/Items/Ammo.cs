@@ -27,10 +27,10 @@ public class Ammo : MonoBehaviour
         if (col.gameObject.GetComponent<EnemyController>() != null)
         {
             var enemyController = col.gameObject.GetComponent<EnemyController>();
-            enemyController.AmmoDamage(weaponID, weaponLevel);
             if (isThrown) { StartCoroutine(ExplodeCoroutine()); }
             else if (!isThrown)
             {
+                enemyController.AmmoHandler(weaponID, weaponLevel);
                 Instantiate(Resources.Load("VFXPrefabs/DamageImpact"), transform.position, Quaternion.identity);
                 Destroy(gameObject);
             }        
@@ -54,7 +54,7 @@ public class Ammo : MonoBehaviour
         if(other.gameObject.GetComponent<EnemyController>() != null)
         {
             var enemyController = other.gameObject.GetComponent<EnemyController>();
-            enemyController.AmmoDamage(weaponID, weaponLevel);
+            enemyController.AmmoHandler(weaponID, weaponLevel);
         }
     }
 
@@ -64,7 +64,9 @@ public class Ammo : MonoBehaviour
     {
         animator.SetTrigger("Explode");
         FindObjectOfType<AudioManager>().PlaySFX("WeaponExplosion");
-        Destroy(gameObject, 1.5f);
+        if (GetComponent<Explode>() != null) { GetComponent<Explode>().ExplosionDamage(2f, 10f, 10); }
+        else { Debug.Log("Add the Explode.cs script to the ammo prefab that is triggering this script"); }
+        gameObject.GetComponent<Collider2D>().enabled = false;
         yield return 0;
     }
 

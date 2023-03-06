@@ -12,14 +12,14 @@ public class PlayerHealth : Health
 
     private void Start() 
     { 
-        EventSystem.current.onPlayerHitTrigger += TakeDamage;
+        EventSystem.current.onPlayerHitTrigger += Hit;
         animator = GetComponent<Animator>();
         shield = GetComponentInChildren<Shield>();
         isInvincible = false;
         inHitstun = false;
     }
 
-    public void TakeDamage(Vector3 enemyPos, int damageNumber, int damageType, float damageMod, float knockbackMod)
+    public void Hit(Vector3 enemyPos, int damageNumber, int damageType, float damageMod, float knockbackMod)
     {
         if (!isInvincible && !shield.shieldOn) { StartCoroutine(hitStun()); }
         HP -= (int)(damageNumber * (1 - damageMod));
@@ -51,6 +51,6 @@ public class PlayerHealth : Health
 
     private void OnDestroy()
     {
-        EventSystem.current.onPlayerHitTrigger -= TakeDamage;
+        EventSystem.current.onPlayerHitTrigger -= Hit;
     }
 }

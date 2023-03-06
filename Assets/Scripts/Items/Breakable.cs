@@ -27,10 +27,7 @@ public class Breakable : MonoBehaviour, IDamageable
 
     void Update()
     {
-        if (hitCount < 1 && hasBroken == false)
-        {
-            HPZero();
-        }
+        if (hitCount < 1 && hasBroken == false) { HPZero();}
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -39,12 +36,12 @@ public class Breakable : MonoBehaviour, IDamageable
         {
             if(hasBroken == false)
             {
-                TakeDamage();
+                Hit();
             }
         }
     }
 
-    void TakeDamage()
+    void Hit()
     {
         hitCount += -1;
         anim.SetTrigger("Hit");

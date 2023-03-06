@@ -97,7 +97,7 @@ public class EnemyController : MonoBehaviour, IDamageable
     {
         setupHelper();
         //subscribe to important messages
-        EventSystem.current.onAttackCollision += AmmoDamage;
+        EventSystem.current.onAttackCollision += AmmoHandler;
     }
 
     // Update is called once per frame
@@ -147,7 +147,7 @@ public class EnemyController : MonoBehaviour, IDamageable
         }
 
     }
-    public bool calculateHit(int attackDamage, Vector3 playerPosition)
+    public bool Hit(int attackDamage, Vector3 playerPosition)
     {
         Debug.Log(name + " called");
         if (!isDead)
@@ -162,8 +162,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 
                 invincibilityCount = invincibilitySet;
                 TakeDamage(attackDamage);
-                if (HP <= 0) { HPZero(); }
-                else
+                if(!isDead)
                 {
                     Debug.Log("Health remaining is " + HP);
                     if (transform.position.x <= playerPosition.x)
@@ -192,7 +191,12 @@ public class EnemyController : MonoBehaviour, IDamageable
         return false;
     }
 
-    void TakeDamage(int damage) { HP -= damage; }
+    public void TakeDamage(int damage) 
+    { 
+        HP -= damage; 
+        Debug.Log("Enemy " + gameObject.name + " was damaged! It took: " + damage + "damage. It's current HP is: " + HP);
+        if (HP <= 0) { HPZero(); }
+    }
 
     public void Flip()
     {
@@ -214,20 +218,20 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     }
 
-    public void AmmoDamage(int weaponID, int LevelOfWeapon)
+    public void AmmoHandler(int weaponID, int LevelOfWeapon)
     {
         var ammoLevel = LevelOfWeapon - 1;
 
         switch (ammoLevel)
         {
             case 0:
-                calculateHit(weaponDatabase.weaponDatabase.entries[weaponID].level1Damage, playerController.transform.position);
+                Hit(weaponDatabase.weaponDatabase.entries[weaponID].level1Damage, playerController.transform.position);
                 break;
             case 1:
-                calculateHit(weaponDatabase.weaponDatabase.entries[weaponID].level2Damage, playerController.transform.position);
+                Hit(weaponDatabase.weaponDatabase.entries[weaponID].level2Damage, playerController.transform.position);
                 break;
             case 2:
-                calculateHit(weaponDatabase.weaponDatabase.entries[weaponID].level3Damage, playerController.transform.position);
+                Hit(weaponDatabase.weaponDatabase.entries[weaponID].level3Damage, playerController.transform.position);
                 break;
         }
         
@@ -257,7 +261,7 @@ public class EnemyController : MonoBehaviour, IDamageable
     private void OnDestroy()
     {
         // unsubscribe from events
-        EventSystem.current.onAttackCollision -= AmmoDamage;
+        EventSystem.current.onAttackCollision -= AmmoHandler;
     }
 
 }

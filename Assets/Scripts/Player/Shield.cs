@@ -8,35 +8,29 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))] // for shield image
 public class Shield : MonoBehaviour
 {
-    private PlayerController playerController;
     private SpriteRenderer spriteRenderer;
-    private Color startingSpriteColor;
     public bool shieldOn;
-    private bool checkStatus;
-    [SerializeField] private string shieldedObject;
+    public bool checkStatus;
+    public string shieldedObject;
 
-    private Vector2 blockingVec2;
-    private Vector2 attackingVec2;
     [SerializeField] private string shieldDirectionRelativeToAttack;
     [SerializeField] private string shieldPositionRelativeToAttack;
     [SerializeField] private float collisionAngle;
 
 
-    private List<int?> layersToCheck;
-    [SerializeField] private int? layer1ToCheck;
-    [SerializeField] private int? layer2ToCheck;
+    public List<int?> layersToCheck;
+    [SerializeField] public int? layer1ToCheck;
+    [SerializeField] public int? layer2ToCheck;
 
 
     [SerializeField] public List<ShieldZone> shieldZones = new List<ShieldZone>();
     private ShieldZone hitShield;
-    private bool isBlocked;
     // particle system for lock hitting
 
 
     // Start is called before the first frame update
-    void Start()
+    public void Start()
     {
-        if (gameObject.layer == LayerMask.NameToLayer("Player")) { playerController = GetComponentInParent<PlayerController>(); }
         spriteRenderer = GetComponent<SpriteRenderer>();
         ShieldStatus("Off");
         CheckObjectType();
@@ -45,17 +39,21 @@ public class Shield : MonoBehaviour
     // Update is called once per frame
     void Update() { if (Input.GetKey(KeyCode.F)) { ShieldStatus("On"); } else { ShieldStatus("Off"); } }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision) { DamageHandler(collision);}
+
+    public void DamageHandler(Collider2D collision)
     {
         for (int i = 0; i < layersToCheck.Count; i++)
-        { if (collision.gameObject.layer == layersToCheck[i]) 
+        {
+            if (collision.gameObject.layer == layersToCheck[i])
             {
-                if (shieldOn) 
+                if (shieldOn)
                 {
                     checkStatus = false;
-                    if(shieldedObject == "Player" && collision.gameObject.GetComponent<EnemyController>().isAttacking) { checkStatus = true; }
-                    else if(shieldedObject == "Enemy") { checkStatus = true; }
-                    if(checkStatus == true) 
+                    SpecificDamageChecks(collision);
+                    if (shieldedObject == "Player" && collision.gameObject.GetComponent<Explode>() != null) { checkStatus = true; }
+                    else if (shieldedObject == "Enemy") { checkStatus = true; }
+                    if (checkStatus == true)
                     {
                         hitShield = ShieldZoneCollisionCheck(CheckCollisionAngle(collision));
                         if (hitShield != null)
@@ -75,12 +73,15 @@ public class Shield : MonoBehaviour
                     Instantiate(Resources.Load("VFXPrefabs/DamageImpact"), collision.transform.position, Quaternion.identity);
                     PassThroughDamage(collision, 0, 0);
                 }
-            } 
+            }
         }
     }
 
+
+    virtual public void SpecificDamageChecks(Collider2D collision) { }
+
     // START FUNCTIONS
-    private void CheckObjectType()
+    virtual public void CheckObjectType()
     {
         if(gameObject.layer == LayerMask.NameToLayer("Player")) { shieldedObject = "Player"; }
         else if(gameObject.layer == LayerMask.NameToLayer("Enemy")) { shieldedObject = "Enemy";  }
@@ -89,11 +90,9 @@ public class Shield : MonoBehaviour
         AddCollisionsToCheckFor(shieldedObject);
     }
 
-    void AddCollisionsToCheckFor(string shieldedObject)
+    virtual public void AddCollisionsToCheckFor(string shieldedObject)
     {
-        if (shieldedObject == "Player") { layer1ToCheck = LayerMask.NameToLayer("Enemy"); layer2ToCheck = null; }
-        else if (shieldedObject == "Enemy") { layer1ToCheck = LayerMask.NameToLayer("Player"); layer2ToCheck = LayerMask.NameToLayer("Ammo"); }
-
+        if (shieldedObject == "Enemy") { layer1ToCheck = LayerMask.NameToLayer("Player"); layer2ToCheck = LayerMask.NameToLayer("Ammo"); }
         layersToCheck = new List<int?> { layer1ToCheck, layer2ToCheck };
     }
 
@@ -124,7 +123,6 @@ public class Shield : MonoBehaviour
 
         collisionAngle = AdjustAngleWithDirAndPosition(collisionAngle, shieldDirectionRelativeToAttack, shieldPositionRelativeToAttack);
 
-        Debug.Log("CollisionAngle's edited value is: " + collisionAngle);
         return collisionAngle;
     }
 
@@ -169,18 +167,6 @@ public class Shield : MonoBehaviour
         else { Debug.Log("ActivateShield function is misfiring in Shield.cs"); }   
     }
 
-    void PassThroughDamage(Collider2D collision, float damageMod, float knockbackMod)
-    {
-        if (shieldedObject == "Player")
-        {
-            EventSystem.current.PlayerHitTrigger(
-                              collision.gameObject.transform.position,
-                              collision.gameObject.GetComponent<EnemyController>().damageValue,
-                              1,
-                              damageMod,
-                              knockbackMod);
-        }
-        if(shieldedObject == "Enemy") { /*TO BE FILLED IF ENEMY USES SHIELD*/ }
-    }
+    public virtual void PassThroughDamage(Collider2D collision, float damageMod, float knockbackMod) { }
 
 }

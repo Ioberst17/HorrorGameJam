@@ -245,7 +245,7 @@ public class GameController : MonoBehaviour
     {
         //Debug.Log("flag2");
         EnemyController = GameObject.Find(enemyname).GetComponent<EnemyController>();
-        EnemyController.calculateHit(attackDamage, playerPosition);
+        EnemyController.Hit(attackDamage, playerPosition);
         Debug.Log("passing hit to " + enemyname);
 
     }

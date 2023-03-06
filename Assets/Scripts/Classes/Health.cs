@@ -11,7 +11,7 @@ public abstract class Health : MonoBehaviour, IDamageable
         if ((HP += healthToAdd) < maxHealth) { HP += healthToAdd; }
         else { HP = maxHealth; }
     }
-    public void TakeDamage() { }
+    public void Hit() { }
 
     public void HPZero() { }
 }

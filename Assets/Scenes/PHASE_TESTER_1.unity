@@ -9245,6 +9245,34 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1872391159}
   m_CullTransparentMesh: 1
+--- !u!1 &1882227560 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1017427852, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+  m_PrefabInstance: {fileID: 1458881044282191579}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1882227566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1882227560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42c05eeb9e513364db96f2f439db88e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shieldOn: 0
+  checkStatus: 0
+  shieldedObject: 
+  shieldDirectionRelativeToAttack: 
+  shieldPositionRelativeToAttack: 
+  collisionAngle: 0
+  shieldZones:
+  - minAngle: -180
+    maxAngle: 180
+    damageAbsorption: 1
+    knockbackAbsorption: 1
 --- !u!1 &1891487656
 GameObject:
   m_ObjectHideFlags: 0
@@ -10729,6 +10757,10 @@ PrefabInstance:
       propertyPath: m_Color.a
       value: 0.14117648
       objectReference: {fileID: 0}
+    - target: {fileID: 1163830602, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1458881045040599524, guid: eb2664123c277934fb626507fe6ad021, type: 3}
       propertyPath: GameController
       value: 
@@ -10785,7 +10817,8 @@ PrefabInstance:
       propertyPath: cameraToUse
       value: 
       objectReference: {fileID: 341844923}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1017427861, guid: eb2664123c277934fb626507fe6ad021, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: eb2664123c277934fb626507fe6ad021, type: 3}
 --- !u!4 &1458881044282191580 stripped
 Transform:

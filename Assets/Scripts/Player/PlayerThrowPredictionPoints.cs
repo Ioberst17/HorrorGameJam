@@ -25,11 +25,7 @@ public class PlayerThrowPredictionPoints : MonoBehaviour
     private void OnTriggerStay2D(Collider2D other)
     {
         // ignore non-interaction + player physics layers, 3rd layer should map to environment which it sould interact with
-        if (other.gameObject.layer >= 6 || other.gameObject.layer == 3) 
-        { 
-            hasCollided = true; 
-            Debug.Log("Prediction point has collided with: " + other.name); 
-        }
+        if (other.gameObject.layer >= 6 || other.gameObject.layer == 3)  {  hasCollided = true;  }
     }
 
     private void OnDisable()
