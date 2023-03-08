@@ -229,15 +229,15 @@ public class GameController : MonoBehaviour
             //Debug.Log("attack called");
             if (yInput > 0.2f)
             {
-                PlayerController.Attack(0);
+                playerPrimaryWeapon.Attack(0);
             }
             else if (yInput < -0.2f && !isGrounded)
             {
-                PlayerController.Attack(1);
+                playerPrimaryWeapon.Attack(1);
             }
             else
             {
-                PlayerController.Attack(2);
+                playerPrimaryWeapon.Attack(2);
             }
             ++AttackBuffer;
         }
@@ -304,11 +304,11 @@ public class GameController : MonoBehaviour
         {
             HandleFlipping();
         }
-        else if (PlayerWeapon.WeaponIsPointedToTheRight() && PlayerController.facingDirection == -1)
+        else if (playerSecondaryWeapon.WeaponIsPointedToTheRight() && PlayerController.facingDirection == -1)
         {
             if (xInput >= 0) { HandleFlipping(); }
         }
-        else if (!PlayerWeapon.WeaponIsPointedToTheRight() && PlayerController.facingDirection == 1)
+        else if (!playerSecondaryWeapon.WeaponIsPointedToTheRight() && PlayerController.facingDirection == 1)
         {
             if (xInput <= 0) HandleFlipping();
         }
