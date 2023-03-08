@@ -13,7 +13,7 @@ public class InventoryManager : MonoBehaviour
     public WeaponDatabase weaponDatabase;
     public WeaponDatabase.Database weaponData;
     public ConsumablesDatabase consumablesDatabase;
-    public PlayerWeapon playerWeapon;
+    public PlayerSecondaryWeapon playerWeapon;
     public PlayerHealth playerHealth;
 
     [SerializeField]
@@ -41,7 +41,7 @@ public class InventoryManager : MonoBehaviour
         consumablesDatabase = utilities.GetComponentInChildren<ConsumablesDatabase>();
         player = GameObject.Find("Player");
         playerHealth = player.GetComponentInChildren<PlayerHealth>();
-        playerWeapon = player.GetComponentInChildren<PlayerWeapon>();
+        playerWeapon = player.GetComponentInChildren<PlayerSecondaryWeapon>();
         weaponData = weaponDatabase.weaponDatabase;
 
         //subscribe to important events

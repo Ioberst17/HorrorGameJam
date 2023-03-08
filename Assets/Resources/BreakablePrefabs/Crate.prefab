@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 7449298395823986594}
   - component: {fileID: 5369545347866137772}
   - component: {fileID: 1598048361563547940}
-  - component: {fileID: 1049867471436777508}
   - component: {fileID: -4088981778093339716}
+  - component: {fileID: 9158465344069073112}
   m_Layer: 12
   m_Name: Crate
   m_TagString: Untagged
@@ -149,27 +149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BrokenVersion: {fileID: 424449650224081242, guid: 20a005cd154d5e64fa101bc9424b5446, type: 3}
-  hasBroken: 0
---- !u!95 &1049867471436777508
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6163075992393373222}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  breakableName: 
 --- !u!114 &-4088981778093339716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,3 +164,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventory: {fileID: 0}
   playerController: {fileID: 0}
+  consumablesDB:
+    entries: []
+--- !u!114 &9158465344069073112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6163075992393373222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8caa3a4426aabe478b0d423098eefbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sizeShift: 0.02
+  stepCounter: 0.2

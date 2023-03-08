@@ -27,6 +27,7 @@ public class EnemyController : MonoBehaviour, IDamageable
     public int damageValue;
 
     public int HP;
+    private int damageToPass;
 
     public int invincibilityCount;
     [SerializeField]
@@ -97,7 +98,8 @@ public class EnemyController : MonoBehaviour, IDamageable
     {
         setupHelper();
         //subscribe to important messages
-        EventSystem.current.onAttackCollision += AmmoHandler;
+        EventSystem.current.onEnemyEnviroDamage += Hit;
+        EventSystem.current.onEnemyHitCollision += Hit;
     }
 
     // Update is called once per frame
@@ -147,48 +149,43 @@ public class EnemyController : MonoBehaviour, IDamageable
         }
 
     }
-    public bool Hit(int attackDamage, Vector3 playerPosition)
+    public void Hit(int attackDamage, Vector3 playerPosition)
     {
-        Debug.Log(name + " called");
         if (!isDead)
         {
             if (invincibilityCount == 0)
             {
                 //rb.AddForce(new Vector2(5.0f * facingDirection, 5.0f), ForceMode2D.Impulse);
-                Debug.Log(name + " has been hit for " + attackDamage + "!");
-                damageInterupt = true;
-                //might have to make change this later
-                //isAttacking = false;
-
+                damageInterupt = true; //might have to make change this later //isAttacking = false;
                 invincibilityCount = invincibilitySet;
                 TakeDamage(attackDamage);
-                if(!isDead)
-                {
-                    Debug.Log("Health remaining is " + HP);
-                    if (transform.position.x <= playerPosition.x)
-                    {
-                        newVelocity.Set(-knockbackForce, 0.0f);
-                        rb.velocity = newVelocity;
-                        newForce.Set(0.0f, knockbackForce);
-                        rb.AddForce(newForce, ForceMode2D.Impulse);
-                    }
-                    else
-                    {
-                        newVelocity.Set(knockbackForce, 0.0f);
-                        rb.velocity = newVelocity;
-                        newForce.Set(0.0f, knockbackForce);
-                        rb.AddForce(newForce, ForceMode2D.Impulse);
-                    }
-                }
-                return true;
-            }
-            else
-            {
-                return false;
+                if(!isDead) { HandleHitPhysics(playerPosition); }
             }
         }
+    }
 
-        return false;
+    public void Hit(int weaponID, int LevelOfWeapon, Vector3 playerPosition) 
+    {
+        damageToPass = weaponDatabase.GetWeaponDamage(weaponID, LevelOfWeapon);
+        Hit(damageToPass, playerPosition);
+    }
+
+    public void HandleHitPhysics(Vector3 playerPosition) 
+    {
+        if (transform.position.x <= playerPosition.x)
+        {
+            newVelocity.Set(-knockbackForce, 0.0f);
+            rb.velocity = newVelocity;
+            newForce.Set(0.0f, knockbackForce);
+            rb.AddForce(newForce, ForceMode2D.Impulse);
+        }
+        else
+        {
+            newVelocity.Set(knockbackForce, 0.0f);
+            rb.velocity = newVelocity;
+            newForce.Set(0.0f, knockbackForce);
+            rb.AddForce(newForce, ForceMode2D.Impulse);
+        }
     }
 
     public void TakeDamage(int damage) 
@@ -219,25 +216,6 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     }
 
-    public void AmmoHandler(int weaponID, int LevelOfWeapon)
-    {
-        var ammoLevel = LevelOfWeapon - 1;
-
-        switch (ammoLevel)
-        {
-            case 0:
-                Hit(weaponDatabase.weaponDatabase.entries[weaponID].level1Damage, playerController.transform.position);
-                break;
-            case 1:
-                Hit(weaponDatabase.weaponDatabase.entries[weaponID].level2Damage, playerController.transform.position);
-                break;
-            case 2:
-                Hit(weaponDatabase.weaponDatabase.entries[weaponID].level3Damage, playerController.transform.position);
-                break;
-        }
-        
-        
-    }
     void setupHelper() // to load in relevant enemy stats and behavior script
     {
         if (CompareTag("Hellhound")) { EnemytypeID = 0; hellhoundBehavior = GetComponent<HellhoundBehavior>(); } // add enemyID as in enemy database + behavior component
@@ -262,7 +240,8 @@ public class EnemyController : MonoBehaviour, IDamageable
     private void OnDestroy()
     {
         // unsubscribe from events
-        EventSystem.current.onAttackCollision -= AmmoHandler;
+        EventSystem.current.onEnemyEnviroDamage -= Hit;
+        EventSystem.current.onEnemyHitCollision -= Hit;
     }
 
 }

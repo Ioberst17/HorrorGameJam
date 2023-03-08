@@ -6,46 +6,38 @@ using UnityEngine.Tilemaps;
 [RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(Collider2D))]
 [RequireComponent(typeof(Rigidbody2D))]
-[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(UIPulse))]
 public class Breakable : MonoBehaviour, IDamageable
 {
-    private Animator anim;
     private int hitCount = 3;
     private SpriteRenderer spriteRenderer;
     public GameObject BrokenVersion;
     private bool hasBroken = false;
-    public string breakableName;
+    private UIPulse pulse;
 
     // Start is called before the first frame update
     void Start()
     {
-        int BreakableEnviroLayer = LayerMask.NameToLayer("BreakableEnviro");
-        gameObject.layer = BreakableEnviroLayer;
-        anim = GetComponent<Animator>();
+        pulse = GetComponent<UIPulse>();
+        gameObject.layer = LayerMask.NameToLayer("BreakableEnviro");
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    void Update()
-    {
-        if (hitCount < 1 && hasBroken == false) { HPZero();}
-    }
+    void Update() { if (hitCount < 1 && hasBroken == false) { HPZero();} }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (/*collision.gameObject.GetComponent<PlayerController>() != null ||*/ collision.gameObject.GetComponent<Ammo>() != null)
         {
-            if(hasBroken == false)
-            {
-                Hit();
-            }
+            if (hasBroken == false) { Hit();}
         }
     }
 
-    void Hit()
-    {
-        hitCount += -1;
-        anim.SetTrigger("Hit");
-    }
+    public void Hit() { hitCount += -1; pulse.pulseTrigger = true; }
+
+    public void Hit(int Damage) { Hit(); } 
+
+    public void Hit(int Damage, Vector3 playerPos) { Hit(); }
 
     void HPZero()
     {

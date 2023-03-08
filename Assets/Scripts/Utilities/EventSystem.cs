@@ -11,16 +11,14 @@ public class EventSystem : MonoBehaviour
     private void Awake() { current = this; }
 
     // COMBAT-CALCULATIONS (WITH ENEMIES)
-    public event Action<int, int> onAttackCollision;
-    public void AttackHitTrigger(int weaponID, int weaponLevel)
-    {
-        {
-            if (onAttackCollision != null)
-            {
-                onAttackCollision(weaponID, weaponLevel);
-            }
-        }
-    }
+
+    public event Action<int, Vector3> onEnemyEnviroDamage;
+    public void EnemyEnviroDamage(int damage, Vector3 position)
+    { { if (onEnemyEnviroDamage != null) { onEnemyEnviroDamage(damage, position); } } }
+
+    public event Action<int, int, Vector3> onEnemyHitCollision;
+    public void AttackHitTrigger(int weaponID, int weaponLevel, Vector3 position)
+    { { if (onEnemyHitCollision != null) { onEnemyHitCollision(weaponID, weaponLevel, position); } } }
 
     // WEAPON-RELATED EVENTS
 

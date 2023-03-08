@@ -14,7 +14,9 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private PlayerSkills playerSkills;
     [SerializeField]
-    private PlayerWeapon PlayerWeapon;
+    private PlayerPrimaryWeapon playerPrimaryWeapon;
+    [SerializeField]
+    private PlayerSecondaryWeapon playerSecondaryWeapon;
     [SerializeField]
     private MusicController MusicController;
     [SerializeField]
@@ -43,6 +45,8 @@ public class GameController : MonoBehaviour
 
         playerHealth = PlayerController.gameObject.GetComponent<PlayerHealth>();
         playerShield = PlayerController.gameObject.GetComponentInChildren<Shield>();
+        playerPrimaryWeapon = PlayerController.GetComponentInChildren<PlayerPrimaryWeapon>();
+        playerSecondaryWeapon = PlayerController.GetComponentInChildren<PlayerSecondaryWeapon>();
         playerSkills.UnlockAllSkills();
 
         //EventSystem.current.onSkillUnlock += UnlockSkill;
@@ -143,11 +147,11 @@ public class GameController : MonoBehaviour
             {
                 HandleFlipping();
             }
-            else if(PlayerWeapon.WeaponIsPointedToTheRight() && PlayerController.facingDirection == -1)
+            else if(playerSecondaryWeapon.WeaponIsPointedToTheRight() && PlayerController.facingDirection == -1)
             {
                 if(xInput >= 0) { HandleFlipping(); }
             }
-            else if(!PlayerWeapon.WeaponIsPointedToTheRight() && PlayerController.facingDirection == 1)
+            else if(!playerSecondaryWeapon.WeaponIsPointedToTheRight() && PlayerController.facingDirection == 1)
             {
                 if (xInput <= 0) HandleFlipping();
             }
@@ -164,22 +168,22 @@ public class GameController : MonoBehaviour
                 {
                     if (Input.GetMouseButtonDown(0)) // melee attack if U
                     { 
-                        PlayerController.Attack(0);
+                        playerPrimaryWeapon.Attack(0);
                     } 
                     if (Input.GetMouseButton(1)) { EventSystem.current.AmmoCheckTrigger(1); } // shoot if Y, same logic used in below branches
                 }
                 else if((Input.GetKey(KeyCode.S) || Input.GetKey("down")) && !isGrounded){
                     if (Input.GetMouseButtonDown(0)) 
-                    { 
-                        PlayerController.Attack(1);
+                    {
+                        playerPrimaryWeapon.Attack(1);
                     }
                     if (Input.GetMouseButton(1)) { EventSystem.current.AmmoCheckTrigger(-1); }
                 }
                 else
                 {
                     if (Input.GetMouseButtonDown(0)) 
-                    { 
-                        PlayerController.Attack(2);
+                    {
+                        playerPrimaryWeapon.Attack(2);
                     }
                     if (Input.GetMouseButton(1)) { EventSystem.current.AmmoCheckTrigger(0); }
                 }
@@ -216,11 +220,6 @@ public class GameController : MonoBehaviour
                 pauseHelper = false;
             }
             isPaused = true;
-            //MusicController.MusicSource.Pause();
-            //MusicController.MusicSource2.Pause();
-            //MusicController.InvincibleMusicSource.Pause();
-            //MusicController.FXSource.Pause();
-
         }
         else
         {
@@ -234,26 +233,22 @@ public class GameController : MonoBehaviour
             {
                 gameState = "running";
             }
-            //MusicController.MusicSource.UnPause();
-            //MusicController.MusicSource2.UnPause();
-            //MusicController.InvincibleMusicSource.UnPause();
-            //MusicController.FXSource.UnPause();
         }
 
     }
-    public void passHit(string enemyname, int attackDamage, Vector3 playerPosition)
-    {
-        //Debug.Log("flag2");
-        EnemyController = GameObject.Find(enemyname).GetComponent<EnemyController>();
-        EnemyController.Hit(attackDamage, playerPosition);
-        Debug.Log("passing hit to " + enemyname);
+    //public void passHit(string enemyname, int attackDamage, Vector3 playerPosition)
+    //{
+    //    //Debug.Log("flag2");
+    //    EnemyController = GameObject.Find(enemyname).GetComponent<EnemyController>();
+    //    EnemyController.Hit(attackDamage, playerPosition);
+    //    Debug.Log("passing hit to " + enemyname);
 
-    }
+    //}
 
     public void HandleFlipping()
     {
         PlayerController.Flip();
-        PlayerWeapon.Flip();
+        playerSecondaryWeapon.Flip();
     }
 
     public bool hasJump() { return playerSkills.IsSkillUnlocked(PlayerSkills.SkillType.Jump); }

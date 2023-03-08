@@ -30,7 +30,7 @@ public class Ammo : MonoBehaviour
             if (isThrown) { StartCoroutine(ExplodeCoroutine()); }
             else if (!isThrown)
             {
-                enemyController.AmmoHandler(weaponID, weaponLevel);
+                EventSystem.current.AttackHitTrigger(weaponID, weaponLevel, transform.position);
                 Instantiate(Resources.Load("VFXPrefabs/DamageImpact"), transform.position, Quaternion.identity);
                 Destroy(gameObject);
             }        
@@ -54,7 +54,7 @@ public class Ammo : MonoBehaviour
         if(other.gameObject.GetComponent<EnemyController>() != null)
         {
             var enemyController = other.gameObject.GetComponent<EnemyController>();
-            enemyController.AmmoHandler(weaponID, weaponLevel);
+            EventSystem.current.AttackHitTrigger(weaponID, weaponLevel, GetComponentInParent<Transform>().position);
         }
     }
 
