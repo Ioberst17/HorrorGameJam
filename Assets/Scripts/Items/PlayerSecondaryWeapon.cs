@@ -63,7 +63,7 @@ public class PlayerSecondaryWeapon : MonoBehaviour
 
     void Start()
     {
-        EventSystem.current.onUpdatePlayerWeaponTrigger += WeaponChanged;
+        EventSystem.current.onUpdateSecondaryWeaponTrigger += WeaponChanged;
         EventSystem.current.onWeaponFireTrigger += WeaponFired;
         EventSystem.current.onWeaponStopTrigger += WeaponStop;
         player = GameObject.Find("Player");
@@ -227,7 +227,7 @@ public class PlayerSecondaryWeapon : MonoBehaviour
     private void OnDestroy()
     {
         // unsubscribe from events
-        EventSystem.current.onUpdatePlayerWeaponTrigger -= WeaponChanged;
+        EventSystem.current.onUpdateSecondaryWeaponTrigger -= WeaponChanged;
         EventSystem.current.onWeaponFireTrigger -= WeaponFired;
         EventSystem.current.onWeaponStopTrigger -= WeaponStop;
     }

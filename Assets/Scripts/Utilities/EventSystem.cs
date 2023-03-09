@@ -77,19 +77,34 @@ public class EventSystem : MonoBehaviour
         }
     }
 
-    public event Action<string, int> onUpdateWeaponUITrigger;
+    public event Action<string, int> onUpdatePrimaryWeaponUITrigger;
 
-    public void UpdateWeaponUITrigger(string currentWeapon, int updatedAmmo)
+    public void UpdatePrimaryWeaponUITrigger(string currentWeapon, int updatedAmmo)
     {
-        if (onUpdateWeaponUITrigger != null)
+        if (onUpdatePrimaryWeaponUITrigger != null)
         {
-            onUpdateWeaponUITrigger(currentWeapon, updatedAmmo);
+            onUpdatePrimaryWeaponUITrigger(currentWeapon, updatedAmmo);
         }
     }
 
-    public event Action<int, int> onUpdatePlayerWeaponTrigger;
+    public event Action<int, int> onUpdatePrimaryWeaponTrigger;
 
-    public void UpdatePlayerWeaponTrigger(int weaponID, int weaponLevel) { if(onUpdatePlayerWeaponTrigger != null) { onUpdatePlayerWeaponTrigger(weaponID, weaponLevel); } }
+    public void UpdatePrimaryWeaponTrigger(int weaponID, int weaponLevel) { if (onUpdatePrimaryWeaponTrigger != null) { onUpdatePrimaryWeaponTrigger(weaponID, weaponLevel); } }
+
+
+    public event Action<string, int> onUpdateSecondaryWeaponUITrigger;
+
+    public void UpdateSecondaryWeaponUITrigger(string currentWeapon, int updatedAmmo)
+    {
+        if (onUpdateSecondaryWeaponUITrigger != null)
+        {
+            onUpdateSecondaryWeaponUITrigger(currentWeapon, updatedAmmo);
+        }
+    }
+
+    public event Action<int, int> onUpdateSecondaryWeaponTrigger;
+
+    public void UpdateSecondaryWeaponTrigger(int weaponID, int weaponLevel) { if(onUpdateSecondaryWeaponTrigger != null) { onUpdateSecondaryWeaponTrigger(weaponID, weaponLevel); } }
 
     // PLAYER HEALTH-RELATED
 

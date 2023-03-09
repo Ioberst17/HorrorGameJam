@@ -23,6 +23,21 @@ public class SecondaryWeaponsManager : WeaponsManager
         
     }
 
+    public override void WeaponUIUpdate()
+    {
+        if (weaponList.Count > 0)
+        {
+            string weaponName = weaponList[currentWeaponIndex].name;
+            int weaponAmmo = weaponList[currentWeaponIndex].ammo;
+
+            int weaponID = weaponList[currentWeaponIndex].id;
+            int weaponLevel = weaponList[currentWeaponIndex].level;
+
+            EventSystem.current.UpdateSecondaryWeaponUITrigger(weaponName, weaponAmmo);
+            EventSystem.current.UpdateSecondaryWeaponTrigger(weaponID, weaponLevel);
+        }
+    }
+
     public void AddAmmo(int ammoChange)
     {
         AddAmmo(currentWeaponID, ammoChange);

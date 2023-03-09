@@ -9,41 +9,44 @@ using UnityEngine.Tilemaps;
 [RequireComponent(typeof(UIPulse))]
 public class Breakable : MonoBehaviour, IDamageable
 {
-    private int hitCount = 3;
+    [SerializeField] public int hitCount = 3;
+    [SerializeField] public bool needsToBeHitWithExplosion; 
     private SpriteRenderer spriteRenderer;
     public GameObject BrokenVersion;
-    private bool hasBroken = false;
+    public bool hasBroken = false;
     private UIPulse pulse;
 
     // Start is called before the first frame update
-    void Start()
+    public void Start()
     {
         pulse = GetComponent<UIPulse>();
         gameObject.layer = LayerMask.NameToLayer("BreakableEnviro");
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    void Update() { if (hitCount < 1 && hasBroken == false) { HPZero();} }
+    public void Update() { if (hitCount < 1 && hasBroken == false) { HPZero();} }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (/*collision.gameObject.GetComponent<PlayerController>() != null ||*/ collision.gameObject.GetComponent<Ammo>() != null)
-        {
-            if (hasBroken == false) { Hit();}
-        }
-    }
-
-    public void Hit() { hitCount += -1; pulse.pulseTrigger = true; }
+    public void Hit() { if (!hasBroken && !needsToBeHitWithExplosion) { hitCount += -1; pulse.pulseTrigger = true; } }
 
     public void Hit(int Damage) { Hit(); } 
 
     public void Hit(int Damage, Vector3 playerPos) { Hit(); }
 
-    void HPZero()
+    public void Hit(GameObject isHitBy)
+    {
+        Debug.LogFormat("{0} was just hit by {1}", gameObject.name, isHitBy.name);
+        if (!hasBroken && needsToBeHitWithExplosion) { if (isHitBy.gameObject.GetComponent<Explode>() != null) { hitCount += -1; pulse.pulseTrigger = true; } }
+        else { Hit(); }
+    }
+
+    public void Hit(int Damage, Vector3 playerPos, GameObject isHitBy) { Hit(isHitBy); }
+
+    public virtual void HPZero()
     {
         spriteRenderer.enabled = false;
         GetComponent<Collider2D>().enabled = false;
-        Instantiate(BrokenVersion, transform.position, Quaternion.identity);
+        if (BrokenVersion != null) { Instantiate(BrokenVersion, transform.position, Quaternion.identity); }
+        else { Debug.LogFormat("A BrokenVersion prefab is not attached to {0} that just broke; if you want to create a broken version, add it to the inspector", gameObject.name); }
         if (GetComponent<BreakableLoot>() != null) { GetComponent<BreakableLoot>().GenerateLoot(); }
         hasBroken = true;
     }

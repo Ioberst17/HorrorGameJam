@@ -41,7 +41,7 @@ public class PlayerData_UI_Mason : MonoBehaviour
     void Awake()
     {
         //subscribe to events
-        EventSystem.current.onUpdateWeaponUITrigger += UpdateAmmoUI;
+        EventSystem.current.onUpdateSecondaryWeaponUITrigger += UpdateAmmoUI;
         EventSystem.current.onStartTossingTrigger += StartTossForceDisplay;
         EventSystem.current.onFinishTossingTrigger += FinishTossForceDisplay;
     }
@@ -111,7 +111,7 @@ public class PlayerData_UI_Mason : MonoBehaviour
     private void OnDestroy()
     {
         // unsubscribe from events
-        EventSystem.current.onUpdateWeaponUITrigger -= UpdateAmmoUI;
+        EventSystem.current.onUpdateSecondaryWeaponUITrigger -= UpdateAmmoUI;
         EventSystem.current.onStartTossingTrigger -= StartTossForceDisplay;
         EventSystem.current.onFinishTossingTrigger -= FinishTossForceDisplay;
     }

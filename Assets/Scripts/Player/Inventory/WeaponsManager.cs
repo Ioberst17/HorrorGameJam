@@ -153,19 +153,8 @@ public class WeaponsManager : MonoBehaviour
         currentWeaponIndex = weaponLocation + weaponChange;
     }
 
-    public void WeaponUIUpdate()
+    public virtual void WeaponUIUpdate()
     {
-        if (weaponList.Count > 0)
-        {
-            string weaponName = weaponList[currentWeaponIndex].name;
-            int weaponAmmo = weaponList[currentWeaponIndex].ammo;
-
-            int weaponID = weaponList[currentWeaponIndex].id;
-            int weaponLevel = weaponList[currentWeaponIndex].level;
-
-            EventSystem.current.UpdateWeaponUITrigger(weaponName, weaponAmmo);
-            EventSystem.current.UpdatePlayerWeaponTrigger(weaponID, weaponLevel);
-        }
     }
 
     public void IncrementInventoryWeapon(int weaponChange, int weaponLocation)

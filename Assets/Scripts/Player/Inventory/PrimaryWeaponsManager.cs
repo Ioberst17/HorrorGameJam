@@ -16,6 +16,21 @@ public class PrimaryWeaponsManager : WeaponsManager
         
     }
 
+    public override void WeaponUIUpdate()
+    {
+        if (weaponList.Count > 0)
+        {
+            string weaponName = weaponList[currentWeaponIndex].name;
+            int weaponAmmo = weaponList[currentWeaponIndex].ammo;
+
+            int weaponID = weaponList[currentWeaponIndex].id;
+            int weaponLevel = weaponList[currentWeaponIndex].level;
+
+            EventSystem.current.UpdatePrimaryWeaponUITrigger(weaponName, weaponAmmo);
+            EventSystem.current.UpdatePrimaryWeaponTrigger(weaponID, weaponLevel);
+        }
+    }
+
     private void OnDestroy()
     {
         base.OnDestroy();
