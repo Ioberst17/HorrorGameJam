@@ -43,7 +43,7 @@ public class Explode : MonoBehaviour
         else if (touchedObject.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         { touchedObject.gameObject.GetComponent<EnemyController>().TakeDamage(damageToGive); }
 
-        else { target.Hit(damageToGive); } // last case is breakable objects
+        else { target.Hit(damageToGive, transform.position, gameObject); } // last case is breakable objects
     }
 
 }

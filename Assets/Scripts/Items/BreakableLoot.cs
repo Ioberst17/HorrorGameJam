@@ -45,7 +45,7 @@ public class BreakableLoot : MonoBehaviour
 
     public void GenerateAmmo() 
     {
-        string currentSecondary = inventory.GetCurrentSecondaryWeapon();
+        string currentSecondary = inventory.secondaryWeaponsManager.GetCurrentWeaponName();
         string assetPath = "ItemPrefabs/Ammo/" + currentSecondary;
         GameObject toInstantiate = Instantiate(Resources.Load(assetPath) as GameObject, transform.position, Quaternion.identity);
         Debug.Log("Instantiated game object: " + toInstantiate.name);

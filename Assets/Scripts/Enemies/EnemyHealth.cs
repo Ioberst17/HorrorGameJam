@@ -21,6 +21,8 @@ public class EnemyHealth : MonoBehaviour
         HPMax = enemyController.HP;
     }
 
+    private void Update() { healthSliderUI.transform.rotation = Quaternion.Euler(0, 0, -90); }
+
     public void UpdateHealthUI(int HP)
     {
         healthSliderUI.alpha = 1;
