@@ -296,7 +296,8 @@ public class Inventory_UI_Mason : MonoBehaviour
         dataManager.gameData.activeSecondaryWeapon = dataManager.gameData.secondaryWeapons[currentSecondarySlotNum].id;
 
         //run the loadcurrentweapons function from the inventorymanager script to load the newly selected weapons.
-        inventoryManager.LoadCurrentWeapons();
+        inventoryManager.primaryWeaponsManager.Load();
+        inventoryManager.secondaryWeaponsManager.Load();
 
         infoPanel.SetActive(false); // turn off info panel
     }

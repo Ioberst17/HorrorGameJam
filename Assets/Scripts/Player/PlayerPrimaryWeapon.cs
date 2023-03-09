@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
 
     //these are all related to attack information
     public int AttackDamage;
-    private bool isAttacking;
+    public bool isAttacking;
 
     //List of objects hit by an attack, used to let the player hit multiple things with one swing
     private List<Collider2D> hitList;
@@ -31,8 +32,10 @@ public class PlayerPrimaryWeapon : MonoBehaviour
 
     public int attackLagValue, attackLagTimer;
 
-    ContactFilter2D collisionFilter;
-    [SerializeField] private LayerMask layersToCheck;
+    [SerializeField] ContactFilter2D normalCollisionFilter;
+
+    //abilities
+    GroundSlam groundSlam;
 
     void Start()
     {
@@ -49,6 +52,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
     private void GetSupportingReferences()
     {
         weaponDatabase = GameObject.Find("WeaponDatabase").GetComponent<WeaponDatabase>();
+        groundSlam = GetComponent<GroundSlam>(); 
         playerController = GetComponentInParent<PlayerController>();
         animator = GetComponentInParent<Animator>();
     }
@@ -63,8 +67,9 @@ public class PlayerPrimaryWeapon : MonoBehaviour
     private void AddLayersToCheck() 
     {
         hitList = new List<Collider2D>();
-        collisionFilter = new ContactFilter2D();
-        collisionFilter.SetLayerMask((1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("BreakableEnviro")));
+        normalCollisionFilter = new ContactFilter2D();
+        normalCollisionFilter.SetLayerMask((1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("BreakableEnviro")));
+        
     }
 
     public void Attack(int attackDirection)
@@ -73,9 +78,9 @@ public class PlayerPrimaryWeapon : MonoBehaviour
         if (!isAttacking && !DialogueManager.GetInstance().dialogueIsPlaying)
         {
             isAttacking = true;
-            animator.Play("PlayerBasicAttack");
             FindObjectOfType<AudioManager>().PlaySFX("PlayerMelee");
-            StartCoroutine(AttackActiveFrames(attackDirection));
+            if (attackDirection == 1 && !playerController.isGrounded) { groundSlam.Execute(ADPoint1.position, ADPoint2.position); }
+            else { animator.Play("PlayerBasicAttack"); StartCoroutine(AttackActiveFrames(attackDirection)); }
         }
     }
 
@@ -115,10 +120,9 @@ public class PlayerPrimaryWeapon : MonoBehaviour
             //animator.Play("PlayerAttackDown");
         }
     }
-
     private void CheckForCollisions(Vector2 point1, Vector2 point2)
     {
-        hitListLength = Physics2D.OverlapArea(point1, point2, collisionFilter, hitList);
+        hitListLength = Physics2D.OverlapArea(point1, point2, normalCollisionFilter, hitList);
         if (hitListLength > 0)
         {
             int i = 0;

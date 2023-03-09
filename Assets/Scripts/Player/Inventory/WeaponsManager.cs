@@ -54,7 +54,7 @@ public class WeaponsManager : MonoBehaviour
         }
     }
 
-    private void Load()
+    public void Load()
     {
         if (dataManagerWeaponList == null) { weaponList = new List<PlayerWeapons>(); }
         else { weaponList = dataManagerWeaponList; }

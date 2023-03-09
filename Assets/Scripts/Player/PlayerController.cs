@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
     //used to calculate "control interta"
     public float ControlMomentum;
 
-    private bool isGrounded;
+    public bool isGrounded;
     //private bool isOnSlope;
     private bool isJumping;
     public bool isDashing;
