@@ -160,4 +160,14 @@ public class WeaponDatabase : MonoBehaviour
 
         return checker;
     }
+
+    public int GetWeaponDamage(int weaponID, int LevelOfWeapon)
+    {
+        var ammoLevel = LevelOfWeapon - 1;
+
+        if (ammoLevel == 0) { return weaponDatabase.entries[weaponID].level1Damage; }
+        else if (ammoLevel == 1) { return weaponDatabase.entries[weaponID].level2Damage; }
+        else if (ammoLevel == 2) { return weaponDatabase.entries[weaponID].level3Damage; }
+        else { Debug.LogFormat("Check to see if the correct weaponID and a Level of Weapon are being inputted to this function"); return -1; }
+    }
 }

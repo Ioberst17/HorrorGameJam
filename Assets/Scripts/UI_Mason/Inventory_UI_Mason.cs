@@ -20,12 +20,18 @@ public class Inventory_UI_Mason : MonoBehaviour
     public string nameOfWeapon;
     public int amountOfAmmo;
     public int weaponLevelNum;
-    public int currentSlotNum;
+
+
+    public int currentPrimarySlotNum;
+    public int currentSecondarySlotNum;
+    public int currentConsumableSlotNum;
 
 
     [SerializeField] private GameObject inventory;
 
     [SerializeField] private GameObject infoPanel;
+
+    [SerializeField] private GameObject exitButton;
 
     [SerializeField] private TextMeshProUGUI weaponName;
     [SerializeField] private TextMeshProUGUI weaponDamage;
@@ -232,7 +238,7 @@ public class Inventory_UI_Mason : MonoBehaviour
         weaponDamage.enabled = true;
         damageText.enabled = true;
 
-        currentSlotNum = slotNum;
+        currentPrimarySlotNum = slotNum;
 
         weaponIDNum = dataManager.gameData.primaryWeapons[slotNum].id;
         nameOfWeapon = dataManager.gameData.primaryWeapons[slotNum].name;
@@ -247,7 +253,7 @@ public class Inventory_UI_Mason : MonoBehaviour
         ammoText.enabled = true;
         weaponAmmo.enabled = true;
 
-        currentSlotNum = slotNum;
+        currentSecondarySlotNum = slotNum;
 
         weaponName.text = dataManager.gameData.secondaryWeapons[slotNum].name;
         weaponDamage.text = dataManager.gameData.secondaryWeapons[slotNum].level.ToString();
@@ -260,7 +266,7 @@ public class Inventory_UI_Mason : MonoBehaviour
         ammoText.enabled = true;
         weaponAmmo.enabled = true;
 
-        currentSlotNum = slotNum;
+        currentConsumableSlotNum = slotNum;
 
         weaponName.text = dataManager.gameData.consumables[slotNum].itemName;
         weaponAmmo.text = dataManager.gameData.consumables[slotNum].amount.ToString();
@@ -279,11 +285,19 @@ public class Inventory_UI_Mason : MonoBehaviour
 
     public void EquipWeapon()
     {
+        //Debug.Log("Current primary weapon: " + dataManager.gameData.activePrimaryWeapon.name);
+
+        //change the active primary in the datamanger script to the primary weapon that is selected in the inventory
+        dataManager.gameData.activePrimaryWeapon = dataManager.gameData.secondaryWeapons[currentPrimarySlotNum].id;
+
+        Debug.Log("New primary weapon: " + dataManager.gameData.primaryWeapons[currentPrimarySlotNum].name);
+
         //change the active secondary in the datamanger script to the secondary weapon that is selected in the inventory
-        dataManager.gameData.activeSecondaryWeapon = dataManager.gameData.secondaryWeapons[currentSlotNum].id;
+        dataManager.gameData.activeSecondaryWeapon = dataManager.gameData.secondaryWeapons[currentSecondarySlotNum].id;
 
         //run the loadcurrentweapons function from the inventorymanager script to load the newly selected weapons.
-        inventoryManager.LoadCurrentWeapons();
+        inventoryManager.primaryWeaponsManager.Load();
+        inventoryManager.secondaryWeaponsManager.Load();
 
         infoPanel.SetActive(false); // turn off info panel
     }

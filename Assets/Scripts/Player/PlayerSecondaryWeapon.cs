@@ -4,9 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
-public class PlayerWeapon : MonoBehaviour
+public class PlayerSecondaryWeapon : MonoBehaviour
 {
     private SpriteRenderer weaponSprite;
 
@@ -64,7 +63,7 @@ public class PlayerWeapon : MonoBehaviour
 
     void Start()
     {
-        EventSystem.current.onUpdatePlayerWeaponTrigger += WeaponChanged;
+        EventSystem.current.onUpdateSecondaryWeaponTrigger += WeaponChanged;
         EventSystem.current.onWeaponFireTrigger += WeaponFired;
         EventSystem.current.onWeaponStopTrigger += WeaponStop;
         player = GameObject.Find("Player");
@@ -82,7 +81,6 @@ public class PlayerWeapon : MonoBehaviour
         ammoPrefabs.Sort((randomAmmo, ammoToCompareTo) => randomAmmo.GetComponent<Ammo>().GetAmmoID().CompareTo(ammoToCompareTo.GetComponent<Ammo>().GetAmmoID()));
     
         StopFixedFire();
-
     }
 
     // Update is called once per frame, used mainly for weapon direction
@@ -229,7 +227,7 @@ public class PlayerWeapon : MonoBehaviour
     private void OnDestroy()
     {
         // unsubscribe from events
-        EventSystem.current.onUpdatePlayerWeaponTrigger -= WeaponChanged;
+        EventSystem.current.onUpdateSecondaryWeaponTrigger -= WeaponChanged;
         EventSystem.current.onWeaponFireTrigger -= WeaponFired;
         EventSystem.current.onWeaponStopTrigger -= WeaponStop;
     }

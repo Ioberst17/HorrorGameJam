@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour
+public class EnemyController : MonoBehaviour, IDamageable
 {
     private SpriteRenderer enemySpriteRenderer;
     public Animator animator;
@@ -27,6 +27,7 @@ public class EnemyController : MonoBehaviour
     public int damageValue;
 
     public int HP;
+    private int damageToPass;
 
     public int invincibilityCount;
     [SerializeField]
@@ -97,7 +98,8 @@ public class EnemyController : MonoBehaviour
     {
         setupHelper();
         //subscribe to important messages
-        EventSystem.current.onAttackCollision += AmmoDamage;
+        EventSystem.current.onEnemyEnviroDamage += Hit;
+        EventSystem.current.onEnemyHitCollision += Hit;
     }
 
     // Update is called once per frame
@@ -147,61 +149,60 @@ public class EnemyController : MonoBehaviour
         }
 
     }
-    public bool calculateHit(int attackDamage, Vector3 playerPosition)
+    public void Hit(int attackDamage, Vector3 playerPosition)
     {
-        Debug.Log(name + " called");
         if (!isDead)
         {
             if (invincibilityCount == 0)
             {
                 //rb.AddForce(new Vector2(5.0f * facingDirection, 5.0f), ForceMode2D.Impulse);
-                Debug.Log(name + " has been hit for " + attackDamage + "!");
-                damageInterupt = true;
-                //might have to make change this later
-                //isAttacking = false;
-
+                damageInterupt = true; //might have to make change this later //isAttacking = false;
                 invincibilityCount = invincibilitySet;
-                HP -= attackDamage;
-                if (HP <= 0)
-                {
-                    Death();
-                }
-                else
-                {
-                    Debug.Log("Health remaining is " + HP);
-                    if (transform.position.x <= playerPosition.x)
-                    {
-                        newVelocity.Set(-knockbackForce, 0.0f);
-                        rb.velocity = newVelocity;
-                        newForce.Set(0.0f, knockbackForce);
-                        rb.AddForce(newForce, ForceMode2D.Impulse);
-                    }
-                    else
-                    {
-                        newVelocity.Set(knockbackForce, 0.0f);
-                        rb.velocity = newVelocity;
-                        newForce.Set(0.0f, knockbackForce);
-                        rb.AddForce(newForce, ForceMode2D.Impulse);
-                    }
-                }
-                return true;
-            }
-            else
-            {
-                return false;
+                TakeDamage(attackDamage);
+                if(!isDead) { HandleHitPhysics(playerPosition); }
             }
         }
-
-        return false;
-        
     }
+
+    public void Hit(int weaponID, int LevelOfWeapon, Vector3 playerPosition) 
+    {
+        damageToPass = weaponDatabase.GetWeaponDamage(weaponID, LevelOfWeapon);
+        Hit(damageToPass, playerPosition);
+    }
+
+    public void HandleHitPhysics(Vector3 playerPosition) 
+    {
+        if (transform.position.x <= playerPosition.x)
+        {
+            newVelocity.Set(-knockbackForce, 0.0f);
+            rb.velocity = newVelocity;
+            newForce.Set(0.0f, knockbackForce);
+            rb.AddForce(newForce, ForceMode2D.Impulse);
+        }
+        else
+        {
+            newVelocity.Set(knockbackForce, 0.0f);
+            rb.velocity = newVelocity;
+            newForce.Set(0.0f, knockbackForce);
+            rb.AddForce(newForce, ForceMode2D.Impulse);
+        }
+    }
+
+    public void TakeDamage(int damage) 
+    { 
+        HP -= damage;
+        GetComponent<EnemyHealth>().UpdateHealthUI(HP);
+        Debug.Log("Enemy " + gameObject.name + " was damaged! It took: " + damage + "damage. It's current HP is: " + HP);
+        if (HP <= 0) { HPZero(); }
+    }
+
     public void Flip()
     {
         facingDirection *= -1;
         transform.Rotate(0.0f, 180.0f, 0.0f);
     }
 
-    public void Death()
+    public void HPZero()
     {
         Debug.Log(name + " is dead!");
         isDead = true;
@@ -215,25 +216,6 @@ public class EnemyController : MonoBehaviour
 
     }
 
-    public void AmmoDamage(int weaponID, int LevelOfWeapon)
-    {
-        var ammoLevel = LevelOfWeapon - 1;
-
-        switch (ammoLevel)
-        {
-            case 0:
-                calculateHit(weaponDatabase.weaponDatabase.entries[weaponID].level1Damage, playerController.transform.position);
-                break;
-            case 1:
-                calculateHit(weaponDatabase.weaponDatabase.entries[weaponID].level2Damage, playerController.transform.position);
-                break;
-            case 2:
-                calculateHit(weaponDatabase.weaponDatabase.entries[weaponID].level3Damage, playerController.transform.position);
-                break;
-        }
-        
-        
-    }
     void setupHelper() // to load in relevant enemy stats and behavior script
     {
         if (CompareTag("Hellhound")) { EnemytypeID = 0; hellhoundBehavior = GetComponent<HellhoundBehavior>(); } // add enemyID as in enemy database + behavior component
@@ -258,7 +240,8 @@ public class EnemyController : MonoBehaviour
     private void OnDestroy()
     {
         // unsubscribe from events
-        EventSystem.current.onAttackCollision -= AmmoDamage;
+        EventSystem.current.onEnemyEnviroDamage -= Hit;
+        EventSystem.current.onEnemyHitCollision -= Hit;
     }
 
 }
