@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BloodGolemProjectile : MonoBehaviour
+public class BloodGolemProjectile : EnemyProjectile
 {
     private EnemyController enemyController;
     private BloodGolemBehavior BGController;
@@ -11,10 +11,9 @@ public class BloodGolemProjectile : MonoBehaviour
     private string ParentName;
 
     // Start is called before the first frame update
-    void Start()
+    new void Start()
     {
-
-
+        base.Start();
     }
 
     // Update is called once per frame
@@ -24,7 +23,7 @@ public class BloodGolemProjectile : MonoBehaviour
     }
     public void Setup(Vector3 ShotDirection, string nameofParent)
     {
-        Debug.Log("Bloodballsetup");
+        //Debug.Log("Bloodballsetup");
         MyDirection = ShotDirection;
         ParentName = nameofParent;
         enemyController = GameObject.Find(ParentName).GetComponent<EnemyController>();
@@ -32,16 +31,16 @@ public class BloodGolemProjectile : MonoBehaviour
     }
     private void OnTriggerStay2D(Collider2D collider)
     {
-        Debug.Log("I See something " + collider.name);
+        //Debug.Log("I See something " + collider.name);
         if (collider.gameObject.layer == LayerMask.NameToLayer("Player")){
-            Debug.Log("I See player " + collider.name);
+            //Debug.Log("I See player " + collider.name);
             enemyController.OnTriggerEnter2DHelper(collider);
             BGController.BloodBallReset();
             Destroy(gameObject);
         }
         else if(collider.gameObject.layer == LayerMask.NameToLayer("Environment"))
         {
-            Debug.Log("I See environment " + collider.name);
+            //Debug.Log("I See environment " + collider.name);
             BGController.BloodBallReset();
             Destroy(gameObject);
         }

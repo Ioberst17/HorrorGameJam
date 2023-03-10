@@ -16,8 +16,9 @@ public class PlayerShield : Shield
 
     public override void SpecificDamageChecks(Collider2D collision)
     {
-        if (shieldedObject == "Player" && collision.gameObject.GetComponent<EnemyController>().isAttacking) { checkStatus = true; }
-        else if (shieldedObject == "Player" && collision.gameObject.GetComponent<Explode>() != null) { checkStatus = true; }
+        if (collision.gameObject.GetComponent<EnemyController>().isAttacking) { checkStatus = true; }
+        else if(collision.gameObject.GetComponent<EnemyProjectile>()) { checkStatus = true; }
+        else if (collision.gameObject.GetComponent<Explode>() != null) { checkStatus = true; }
     }
     public override void CheckObjectType()
     {
@@ -44,7 +45,16 @@ public class PlayerShield : Shield
                               damageMod,
                               knockbackMod);
         }
-        if (collision.gameObject.GetComponent<Explode>() != null)
+        else if (collision.gameObject.GetComponent<EnemyProjectile>() != null)
+        {
+            EventSystem.current.PlayerHitTrigger(
+                              collision.gameObject.transform.position,
+                              collision.gameObject.GetComponent<EnemyProjectile>().damageValue,
+                              1,
+                              damageMod,
+                              knockbackMod);
+        }
+        else if (collision.gameObject.GetComponent<Explode>() != null)
         {
             EventSystem.current.PlayerHitTrigger(
                               collision.gameObject.transform.position,

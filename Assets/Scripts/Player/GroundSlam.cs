@@ -17,6 +17,7 @@ public class GroundSlam : MonoBehaviour
     [SerializeField] private int attackDamage = 10;
     [SerializeField] private float reboundForceX = 10f;
     [SerializeField] private float reboundForceY = 10f;
+    private int framesSinceGroundSlamFinish;
 
     // Start is called before the first frame update
     void Start()
@@ -26,9 +27,16 @@ public class GroundSlam : MonoBehaviour
         groundSlamCollisionFilter = new ContactFilter2D();
         groundSlamCollisionFilter.SetLayerMask((1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("BreakableEnviro")) | 1 << LayerMask.NameToLayer("Environment"));
     }
+
+    void Update()
+    {
+        framesSinceGroundSlamFinish++;
+    }
+
     public void Execute(Vector2 point1, Vector2 point2)
     {
         //PlayRandomJumpSound();
+        Instantiate(Resources.Load("VFXPrefabs/GroundSlamImpact"), transform.position, Quaternion.identity);
 
         groundSlamStop = false; groundSlamCounter = 0;
         while (groundSlamStop == false && groundSlamCounter < 100)
@@ -64,7 +72,11 @@ public class GroundSlam : MonoBehaviour
                     /* Handle Particles and Sound */
                 }
 
-                Instantiate(Resources.Load("VFXPrefabs/GroundSlamImpact"), transform.position, Quaternion.identity);
+                if(framesSinceGroundSlamFinish > 60)
+                {
+                    Instantiate(Resources.Load("VFXPrefabs/GroundSlamImpact"), transform.position, Quaternion.identity);
+                    framesSinceGroundSlamFinish = 0;
+                }
             }
         }
         return false;

@@ -26,7 +26,7 @@ public class EnemyLoot : MonoBehaviour
         else if (CompareTag("Bat")) { enemyTypeID = 1; }
         else if (CompareTag("ParalysisDemon")) { enemyTypeID = 2; }
         else if (CompareTag("Spider")) { enemyTypeID = 3; }
-        else if (CompareTag("Bloodgolem")) { enemyTypeID = 4; }
+        else if (CompareTag("BloodGolem")) { enemyTypeID = 4; }
         else if (CompareTag("Gargoyle")) { enemyTypeID = 5; }
         else { enemyTypeID = -1;  Debug.Log("Check for an object named: " + name + "; it is missing an enemy tag"); }
 
