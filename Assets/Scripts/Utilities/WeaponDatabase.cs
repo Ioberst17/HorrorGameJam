@@ -63,32 +63,8 @@ public class WeaponDatabase : MonoBehaviour
             {
                 foreach (var dataEntry in columnsToFill)
                 {
-                    if (dataEntry.Name == columnNames[j])
-                    {
-                        ParseDataToTable(i, j, data, dataEntry);
-                    }
+                    if (dataEntry.Name == columnNames[j]) { ParseDataToTable(i, j, data, dataEntry);}
                 }
-
-                /*weaponDatabase.entries[i].id = int.Parse(data[numOfColumns * (i + 1)]);
-                weaponDatabase.entries[i].title = data[numOfColumns * (i + 1) + 1];
-                weaponDatabase.entries[i].tier = int.Parse(data[numOfColumns * (i + 1) + 2]);
-                weaponDatabase.entries[i].price = int.Parse(data[numOfColumns * (i + 1) + 3]);
-                weaponDatabase.entries[i].isSecondary = bool.Parse(data[numOfColumns * (i + 1) + 4]);
-                weaponDatabase.entries[i].isShot = bool.Parse(data[numOfColumns * (i + 1) + 5]);
-                weaponDatabase.entries[i].isThrown = bool.Parse(data[numOfColumns * (i + 1) + 6]);
-                weaponDatabase.entries[i].isFixedDistance = bool.Parse(data[numOfColumns * (i + 1) + 7]);
-                weaponDatabase.entries[i].isKinetic = bool.Parse(data[numOfColumns * (i + 1) + 8]);
-                weaponDatabase.entries[i].isElemental = bool.Parse(data[numOfColumns * (i + 1) + 9]);
-                weaponDatabase.entries[i].isHeavy = bool.Parse(data[numOfColumns * (i + 1) + 10]);
-                weaponDatabase.entries[i].weight = data[numOfColumns * (i + 1) + 11];
-                weaponDatabase.entries[i].level1Damage = int.Parse(data[numOfColumns * (i + 1) + 12]);
-                weaponDatabase.entries[i].level2Damage = int.Parse(data[numOfColumns * (i + 1) + 13]);
-                weaponDatabase.entries[i].level3Damage = int.Parse(data[numOfColumns * (i + 1) + 14]);
-                weaponDatabase.entries[i].level = int.Parse(data[numOfColumns * (i + 1) + 15]);
-                weaponDatabase.entries[i].isLightSource = bool.Parse(data[numOfColumns * (i + 1) + 16]);
-                weaponDatabase.entries[i].fireRate = float.Parse(data[numOfColumns * (i + 1) + 17]);
-                weaponDatabase.entries[i].description = data[numOfColumns * (i + 1) + 18];
-                weaponDatabase.entries[i].amount = int.Parse(data[numOfColumns * (i + 1) + 19]);*/
             }
         }
     }

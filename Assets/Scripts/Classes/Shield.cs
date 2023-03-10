@@ -83,8 +83,8 @@ public class Shield : MonoBehaviour
     // START FUNCTIONS
     virtual public void CheckObjectType()
     {
-        if(gameObject.layer == LayerMask.NameToLayer("Player")) { shieldedObject = "Player"; }
-        else if(gameObject.layer == LayerMask.NameToLayer("Enemy")) { shieldedObject = "Enemy";  }
+        //if(gameObject.layer == LayerMask.NameToLayer("Player")) { shieldedObject = "Player"; }
+        if(gameObject.layer == LayerMask.NameToLayer("Enemy")) { shieldedObject = "Enemy";  }
         else { Debug.Log("Shield.cs is attached to an object that does not need it"); }
 
         AddCollisionsToCheckFor(shieldedObject);

@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 6683411310108108139}
   - component: {fileID: 6683411310108108141}
   - component: {fileID: -7086905221497193101}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Projectile
-  m_TagString: Untagged
+  m_TagString: BloodGolem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -63,6 +63,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 673b511d33c848144a5c865e2cac36ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackNumber: 1
+  damageValue: 0
   Movespeed: 10
 --- !u!212 &6683411310108108141
 SpriteRenderer:

@@ -82,7 +82,6 @@ public class PlayerController : MonoBehaviour
     //Set all the initial values
     private void Start()
     {
-        EventSystem.current.onPlayerHitTrigger += Hit;
         EventSystem.current.onPlayerDeathTrigger += PlayerDeath;
 
         rb = GetComponent<Rigidbody2D>();
@@ -290,7 +289,7 @@ public class PlayerController : MonoBehaviour
 
     //processes if the player should take damage, and if so, how much, then calculates for death. damageType Numbers: 0 is one hit damage, 1 is damage over time. 
     //Calculated direction of hit for knockback direction.
-    public void Hit(Vector3 enemyPos, int damageNumber, int damageType, float damageMod, float knockbackMod)
+    public void Hit(Vector3 enemyPos, float knockbackMod)
     {
         if (!playerHealth.isInvincible)
         {
@@ -335,6 +334,5 @@ public class PlayerController : MonoBehaviour
     private void OnDestroy()
     {
         EventSystem.current.onPlayerDeathTrigger -= PlayerDeath;
-        EventSystem.current.onPlayerHitTrigger -= Hit;
     }
 }

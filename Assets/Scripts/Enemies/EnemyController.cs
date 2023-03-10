@@ -222,7 +222,7 @@ public class EnemyController : MonoBehaviour, IDamageable
         else if (CompareTag("Bat")) { EnemytypeID = 1; batBehavior = GetComponent<BatBehavior>(); }
         else if (CompareTag("ParalysisDemon")) { EnemytypeID = 2; paralysisDemonBehavior = GetComponent<ParalysisDemonBehavior>(); }
         else if (CompareTag("Spider")) { EnemytypeID = 3; SpiderBehavior = GetComponent<SpiderBehavior>(); }
-        else if (CompareTag("Bloodgolem")) { EnemytypeID = 4; GolemBehavior = GetComponent<BloodGolemBehavior>(); }
+        else if (CompareTag("BloodGolem")) { EnemytypeID = 4; GolemBehavior = GetComponent<BloodGolemBehavior>(); }
         else if (CompareTag("Gargoyle")) { EnemytypeID = 5; GargoyleBehavior = GetComponent<GargoyleBehavior>(); }
         else EnemytypeID = -1;
 
