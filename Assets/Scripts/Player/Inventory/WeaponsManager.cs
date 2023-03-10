@@ -63,7 +63,7 @@ public class WeaponsManager : MonoBehaviour
         LoadActiveWeapon();
     }
 
-    private void LoadActiveWeapon()
+    public void LoadActiveWeapon()
     {
         if (primaryOrSecondary == PrimaryOrSecondary.Primary)
         {
