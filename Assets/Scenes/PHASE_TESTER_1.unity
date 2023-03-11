@@ -9453,6 +9453,21 @@ MonoBehaviour:
     maxAngle: 180
     damageAbsorption: 1
     knockbackAbsorption: 1
+--- !u!114 &1882227571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1882227560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea123ef17079af74e82292074a78a8b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parryWindowDuration: 1.2
+  parryCooldown: 1
+  isParrying: 0
 --- !u!1 &1891487656
 GameObject:
   m_ObjectHideFlags: 0
