@@ -15,6 +15,13 @@ public class PlayerShield : Shield
         playerHealth = GetComponentInParent<PlayerHealth>();
     }
 
+    public override void Update()
+    {
+        base.Update();
+        if (Input.GetKey(KeyCode.F)) { ShieldStatus("On"); } else { ShieldStatus("Off"); }
+        if (Input.GetKeyDown(KeyCode.F)) { if(parry != null) { parry.Execute(); } }
+    }
+
     public override void SpecificDamageChecks(Collider2D collision)
     {
         if (collision.gameObject.GetComponent<EnemyController>() != null && collision.gameObject.GetComponent<EnemyController>().isAttacking) { checkStatus = true; }
@@ -68,7 +75,8 @@ public class PlayerShield : Shield
 
     public override void ReturnDamage(Collider2D collision)
     {
-        Instantiate(Resources.Load("VFXPrefabs/BulletImpact"), collision.transform.position, Quaternion.identity);
+        FindObjectOfType<AudioManager>().PlaySFX("Parry");
+        Instantiate(Resources.Load("VFXPrefabs/BulletImpact"), collision.transform.position, Quaternion.identity); // TO-DO: Swap out with a more appropriate impact
         if (collision.gameObject.GetComponent<IDamageable>() != null)
         { 
             collision.gameObject.GetComponent<IDamageable>().Hit(collision.gameObject.GetComponent<EnemyController>().damageValue, transform.position); // last case is breakable objects

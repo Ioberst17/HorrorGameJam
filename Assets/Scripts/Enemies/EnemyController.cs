@@ -184,10 +184,8 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     public void StatusModifier(string mod)
     {
-        //if (mod == "DemonBlood") { if (GetComponent<Poisoned>() != null) { GetComponent<Burnable>().Apply(); } }
-        Debug.Log("Status Modifier is being called");
-        Debug.LogFormat("Name being checked is {0}", mod);
-        if (mod == "Burn") { if (GetComponentInChildren<Burnable>() != null) { GetComponentInChildren<Burnable>().Execute(); } }
+        if (mod == "DemonBlood") { if (GetComponentInChildren<Poisoned>() != null) { GetComponentInChildren<Poisoned>().Execute(); } }
+        else if (mod == "Burn") { if (GetComponentInChildren<Burnable>() != null) { GetComponentInChildren<Burnable>().Execute(); } }
     }
 
     public void HandleHitPhysics(Vector3 playerPosition) 
