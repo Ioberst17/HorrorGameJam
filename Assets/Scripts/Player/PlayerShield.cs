@@ -6,6 +6,7 @@ public class PlayerShield : Shield
 {
     private PlayerController playerController;
     private PlayerHealth playerHealth;
+    private int parryDamage = 10;
 
     new void Start()
     {
@@ -16,7 +17,7 @@ public class PlayerShield : Shield
 
     public override void SpecificDamageChecks(Collider2D collision)
     {
-        if (collision.gameObject.GetComponent<EnemyController>().isAttacking) { checkStatus = true; }
+        if (collision.gameObject.GetComponent<EnemyController>() != null && collision.gameObject.GetComponent<EnemyController>().isAttacking) { checkStatus = true; }
         else if(collision.gameObject.GetComponent<EnemyProjectile>()) { checkStatus = true; }
         else if (collision.gameObject.GetComponent<Explode>() != null) { checkStatus = true; }
     }
@@ -38,7 +39,7 @@ public class PlayerShield : Shield
     {
         if (collision.gameObject.GetComponent<EnemyController>() != null)
         {
-            EventSystem.current.PlayerHitTrigger(
+            EventSystem.current.PlayerHitCalcTrigger(
                               collision.gameObject.transform.position,
                               collision.gameObject.GetComponent<EnemyController>().damageValue,
                               1,
@@ -47,7 +48,7 @@ public class PlayerShield : Shield
         }
         else if (collision.gameObject.GetComponent<EnemyProjectile>() != null)
         {
-            EventSystem.current.PlayerHitTrigger(
+            EventSystem.current.PlayerHitCalcTrigger(
                               collision.gameObject.transform.position,
                               collision.gameObject.GetComponent<EnemyProjectile>().damageValue,
                               1,
@@ -56,12 +57,21 @@ public class PlayerShield : Shield
         }
         else if (collision.gameObject.GetComponent<Explode>() != null)
         {
-            EventSystem.current.PlayerHitTrigger(
+            EventSystem.current.PlayerHitCalcTrigger(
                               collision.gameObject.transform.position,
                               10,
                               1,
                               damageMod,
                               knockbackMod);
+        }
+    }
+
+    public override void ReturnDamage(Collider2D collision)
+    {
+        Instantiate(Resources.Load("VFXPrefabs/BulletImpact"), collision.transform.position, Quaternion.identity);
+        if (collision.gameObject.GetComponent<IDamageable>() != null)
+        { 
+            collision.gameObject.GetComponent<IDamageable>().Hit(collision.gameObject.GetComponent<EnemyController>().damageValue, transform.position); // last case is breakable objects
         }
     }
 

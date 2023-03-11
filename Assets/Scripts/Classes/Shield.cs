@@ -12,6 +12,8 @@ public class Shield : MonoBehaviour
     public bool shieldOn;
     public bool checkStatus;
     public string shieldedObject;
+    private Parry parry;
+    private string VFXPath;
 
     [SerializeField] private string shieldDirectionRelativeToAttack;
     [SerializeField] private string shieldPositionRelativeToAttack;
@@ -31,13 +33,19 @@ public class Shield : MonoBehaviour
     // Start is called before the first frame update
     public void Start()
     {
+        EventSystem.current.onPlayerShieldHitTrigger += DamageHandler;
+
+        TryGetComponent(out parry);
         spriteRenderer = GetComponent<SpriteRenderer>();
         ShieldStatus("Off");
         CheckObjectType();
     }
 
     // Update is called once per frame
-    void Update() { if (Input.GetKey(KeyCode.F)) { ShieldStatus("On"); } else { ShieldStatus("Off"); } }
+    void Update() 
+    { if (Input.GetKey(KeyCode.F)) { ShieldStatus("On"); } else { ShieldStatus("Off"); }
+        if (Input.GetKeyDown(KeyCode.F)) { if(parry != null) { parry.Execute(); } }
+    }
 
     private void OnTriggerEnter2D(Collider2D collision) { DamageHandler(collision);}
 
@@ -56,25 +64,25 @@ public class Shield : MonoBehaviour
                     if (checkStatus == true)
                     {
                         hitShield = ShieldZoneCollisionCheck(CheckCollisionAngle(collision));
-                        if (hitShield != null)
-                        {
-                            Instantiate(Resources.Load("VFXPrefabs/BulletImpact"), collision.transform.position, Quaternion.identity);
-                            PassThroughDamage(collision, hitShield.damageAbsorption, hitShield.knockbackAbsorption);
-                        }
+
+                        if(parry != null && parry.GetParryStatus() == true) { ReturnDamage(collision); }
                         else
                         {
-                            Instantiate(Resources.Load("VFXPrefabs/BulletImpact"), collision.transform.position, Quaternion.identity);
-                            PassThroughDamage(collision, 0, 0);
+                            if (hitShield != null) { HandleDamagePass(collision, hitShield.damageAbsorption, hitShield.knockbackAbsorption, "BulletImpact"); }
+                            else { HandleDamagePass(collision, 0, 0, "BulletImpact");}
                         }
                     }
                 }
-                else
-                {
-                    Instantiate(Resources.Load("VFXPrefabs/DamageImpact"), collision.transform.position, Quaternion.identity);
-                    PassThroughDamage(collision, 0, 0);
-                }
+                else { HandleDamagePass(collision, 0, 0, "DamageImpact"); }
             }
         }
+    }
+
+    private void HandleDamagePass(Collider2D collision, float damageAbsorption, float knockbackAbsorption, string VFXToLoad)
+    {
+        VFXPath = "VFXPrefabs/" + VFXToLoad;
+        Instantiate(Resources.Load(VFXPath), collision.transform.position, Quaternion.identity);
+        PassThroughDamage(collision, damageAbsorption, knockbackAbsorption);
     }
 
 
@@ -168,5 +176,14 @@ public class Shield : MonoBehaviour
     }
 
     public virtual void PassThroughDamage(Collider2D collision, float damageMod, float knockbackMod) { }
+
+    public virtual void ReturnDamage(Collider2D collision)
+    {
+    }
+
+    private void OnDestroy()
+    {
+        EventSystem.current.onPlayerShieldHitTrigger += DamageHandler;
+    }
 
 }

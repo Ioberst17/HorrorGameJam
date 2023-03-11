@@ -13,7 +13,7 @@ public class PlayerHealth : Health
 
     private void Start() 
     { 
-        EventSystem.current.onPlayerHitTrigger += Hit;
+        EventSystem.current.onPlayerHitCalcTrigger += Hit;
         animator = GetComponent<Animator>();
         playerController = GetComponent<PlayerController>(); 
         shield = GetComponentInChildren<Shield>();
@@ -25,9 +25,16 @@ public class PlayerHealth : Health
     {
         playerController.Hit(enemyPos, knockbackMod);
         if (!isInvincible && !shield.shieldOn) { StartCoroutine(hitStun()); }
+        TakeDamage(damageNumber, damageMod);
+    }
+
+    public void TakeDamage(int damageNumber, float damageMod) 
+    {
         HP -= (int)(damageNumber * (1 - damageMod));
         if (HP <= 0) { HPZero(); }
     }
+
+    public void TakeDamage(int damageNumber) { TakeDamage(damageNumber, 0); }
 
     public new void HPZero() { Debug.Log("Player Death"); HP = StartingHP; EventSystem.current.PlayerDeathTrigger(); }
 
@@ -51,6 +58,6 @@ public class PlayerHealth : Health
 
     private void OnDestroy()
     {
-        EventSystem.current.onPlayerHitTrigger -= Hit;
+        EventSystem.current.onPlayerHitCalcTrigger -= Hit;
     }
 }
