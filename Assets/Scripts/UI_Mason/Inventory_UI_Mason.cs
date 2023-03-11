@@ -10,7 +10,6 @@ public class Inventory_UI_Mason : MonoBehaviour
 
     public DataManager dataManager;
 
-    
     public PlayerData_UI_Mason playerDataUI;
 
     [SerializeField]

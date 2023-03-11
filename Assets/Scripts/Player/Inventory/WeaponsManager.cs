@@ -65,6 +65,8 @@ public class WeaponsManager : MonoBehaviour
 
     public void LoadActiveWeapon()
     {
+        currentWeaponID = dataManager.gameData.activeSecondaryWeapon;
+
         if (primaryOrSecondary == PrimaryOrSecondary.Primary)
         {
             if (weaponDatabase.validPrimaryWeaponIDs.Contains(currentWeaponID))
