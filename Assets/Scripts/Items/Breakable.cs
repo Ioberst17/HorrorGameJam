@@ -34,7 +34,6 @@ public class Breakable : MonoBehaviour, IDamageable
 
     public void Hit(GameObject isHitBy)
     {
-        Debug.LogFormat("{0} was just hit by {1}", gameObject.name, isHitBy.name);
         if (!hasBroken && needsToBeHitWithExplosion) { if (isHitBy.gameObject.GetComponent<Explode>() != null) { hitCount += -1; pulse.pulseTrigger = true; } }
         else { Hit(); }
     }

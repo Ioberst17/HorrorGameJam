@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class PlayerShield : Shield
 {
@@ -40,7 +39,7 @@ public class PlayerShield : Shield
     {
         if (collision.gameObject.GetComponent<EnemyController>() != null)
         {
-            EventSystem.current.PlayerHitTrigger(
+            EventSystem.current.PlayerHitCalcTrigger(
                               collision.gameObject.transform.position,
                               collision.gameObject.GetComponent<EnemyController>().damageValue,
                               1,
@@ -49,7 +48,7 @@ public class PlayerShield : Shield
         }
         else if (collision.gameObject.GetComponent<EnemyProjectile>() != null)
         {
-            EventSystem.current.PlayerHitTrigger(
+            EventSystem.current.PlayerHitCalcTrigger(
                               collision.gameObject.transform.position,
                               collision.gameObject.GetComponent<EnemyProjectile>().damageValue,
                               1,
@@ -58,7 +57,7 @@ public class PlayerShield : Shield
         }
         else if (collision.gameObject.GetComponent<Explode>() != null)
         {
-            EventSystem.current.PlayerHitTrigger(
+            EventSystem.current.PlayerHitCalcTrigger(
                               collision.gameObject.transform.position,
                               10,
                               1,

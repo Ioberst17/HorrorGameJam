@@ -18,6 +18,7 @@ public class GroundSlam : MonoBehaviour
     [SerializeField] private float reboundForceX = 10f;
     [SerializeField] private float reboundForceY = 10f;
     private int framesSinceGroundSlamFinish;
+    private int minFramesToUseGroundSlamVFX = 100;
 
     // Start is called before the first frame update
     void Start()
@@ -59,10 +60,7 @@ public class GroundSlam : MonoBehaviour
                 {
                     hit.gameObject.GetComponent<IDamageable>().Hit(attackDamage, transform.position);
 
-                    if (hit.gameObject.transform.position.x >= transform.position.x) 
-                    { 
-                        playerPrimaryWeapon.playerController.AddForce(-reboundForceX, reboundForceY); 
-                    }
+                    if (hit.gameObject.transform.position.x >= transform.position.x) {  playerPrimaryWeapon.playerController.AddForce(-reboundForceX, reboundForceY); }
                     else { playerPrimaryWeapon.playerController.AddForce(reboundForceX, reboundForceY); }
 
                     /* Handle Particles and Sound */
@@ -72,7 +70,7 @@ public class GroundSlam : MonoBehaviour
                     /* Handle Particles and Sound */
                 }
 
-                if(framesSinceGroundSlamFinish > 60)
+                if(framesSinceGroundSlamFinish > minFramesToUseGroundSlamVFX)
                 {
                     Instantiate(Resources.Load("VFXPrefabs/GroundSlamImpact"), transform.position, Quaternion.identity);
                     framesSinceGroundSlamFinish = 0;

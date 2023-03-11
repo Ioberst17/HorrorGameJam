@@ -33,6 +33,8 @@ public class Shield : MonoBehaviour
     // Start is called before the first frame update
     public void Start()
     {
+        EventSystem.current.onPlayerShieldHitTrigger += DamageHandler;
+
         TryGetComponent(out parry);
         spriteRenderer = GetComponent<SpriteRenderer>();
         ShieldStatus("Off");
@@ -177,6 +179,11 @@ public class Shield : MonoBehaviour
 
     public virtual void ReturnDamage(Collider2D collision)
     {
+    }
+
+    private void OnDestroy()
+    {
+        EventSystem.current.onPlayerShieldHitTrigger += DamageHandler;
     }
 
 }
