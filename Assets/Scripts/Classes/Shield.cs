@@ -12,7 +12,7 @@ public class Shield : MonoBehaviour
     public bool shieldOn;
     public bool checkStatus;
     public string shieldedObject;
-    private Parry parry;
+    public Parry parry;
     private string VFXPath;
 
     [SerializeField] private string shieldDirectionRelativeToAttack;
@@ -42,10 +42,7 @@ public class Shield : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update() 
-    { if (Input.GetKey(KeyCode.F)) { ShieldStatus("On"); } else { ShieldStatus("Off"); }
-        if (Input.GetKeyDown(KeyCode.F)) { if(parry != null) { parry.Execute(); } }
-    }
+    public virtual void Update()  { /**/ }
 
     private void OnTriggerEnter2D(Collider2D collision) { DamageHandler(collision);}
 
@@ -65,15 +62,15 @@ public class Shield : MonoBehaviour
                     {
                         hitShield = ShieldZoneCollisionCheck(CheckCollisionAngle(collision));
 
-                        if(parry != null && parry.GetParryStatus() == true) { ReturnDamage(collision); }
+                        if(parry != null && parry.GetParryStatus() == true) { ReturnDamage(collision); } // parried
                         else
                         {
-                            if (hitShield != null) { HandleDamagePass(collision, hitShield.damageAbsorption, hitShield.knockbackAbsorption, "BulletImpact"); }
-                            else { HandleDamagePass(collision, 0, 0, "BulletImpact");}
+                            if (hitShield != null) { HandleDamagePass(collision, hitShield.damageAbsorption, hitShield.knockbackAbsorption, "BulletImpact"); } // reduced dmg pass
+                            else { HandleDamagePass(collision, 0, 0, "BulletImpact");} // regular damage pass
                         }
                     }
                 }
-                else { HandleDamagePass(collision, 0, 0, "DamageImpact"); }
+                else { HandleDamagePass(collision, 0, 0, "DamageImpact"); } // regular damage pass
             }
         }
     }
@@ -168,7 +165,7 @@ public class Shield : MonoBehaviour
         else { Debug.Log("Check CheckShieldDirection function in this script for proper functioning"); return "Neither"; }
     }
 
-    void ShieldStatus(string OnOff)
+    public void ShieldStatus(string OnOff)
     {
         if (OnOff == "On") { spriteRenderer.enabled = true; shieldOn = true; }
         else if (OnOff == "Off") { spriteRenderer.enabled = false; shieldOn = false; }
