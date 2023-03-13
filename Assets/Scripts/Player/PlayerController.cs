@@ -72,7 +72,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PlayerHealth playerHealth;
     //Health points, magic points, soul points (currency)
     public int MP;
-    public int SP;
+    public float SP, SP_MAX;
     [SerializeField] private bool hasShield;
 
     [SerializeField]
@@ -87,7 +87,8 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         cc = GetComponent<BoxCollider2D>();
         MP = StartingMP;
-        SP = 0;
+        SP_MAX = 100;
+        SP = SP_MAX;
         ControlMomentum = 0;
         animator = GetComponent<Animator>();
         mainCam = GameObject.Find("Main Camera").GetComponent<Camera>();

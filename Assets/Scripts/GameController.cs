@@ -110,7 +110,7 @@ public class GameController : MonoBehaviour
     public int GetHP() { return playerHealth.HP; }
 
     public int GetMP() { return PlayerController.MP; }
-    public int GetSP() { return PlayerController.SP; }
+    public float GetSP() { return PlayerController.SP; }
 
     public void CheckInput()
     {

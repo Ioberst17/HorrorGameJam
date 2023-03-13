@@ -42,7 +42,7 @@ public class Shield : MonoBehaviour
     }
 
     // Update is called once per frame
-    public virtual void Update()  { /**/ }
+    public virtual void Update()  { }
 
     private void OnTriggerEnter2D(Collider2D collision) { DamageHandler(collision);}
 
