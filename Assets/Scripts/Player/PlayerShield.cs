@@ -32,7 +32,7 @@ public class PlayerShield : Shield
             }
             else { FindObjectOfType<AudioManager>().PlaySFX("InsufficientStamina"); }
         }
-        if (playerController.SP < 0)
+        if (playerController.SP < 0 || !Input.GetKey(KeyCode.F))
         {
             ShieldStatus("Off");
             shieldButtonDown = false;
