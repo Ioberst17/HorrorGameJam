@@ -37,6 +37,7 @@ public class GroundSlam : MonoBehaviour
     public void Execute(Vector2 point1, Vector2 point2)
     {
         //PlayRandomJumpSound();
+        FindObjectOfType<AudioManager>().PlaySFX("PlayerMelee");
         Instantiate(Resources.Load("VFXPrefabs/GroundSlamImpact"), transform.position, Quaternion.identity);
 
         groundSlamStop = false; groundSlamCounter = 0;

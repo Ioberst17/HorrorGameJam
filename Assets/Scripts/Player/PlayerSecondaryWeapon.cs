@@ -170,7 +170,7 @@ public class PlayerSecondaryWeapon : MonoBehaviour
         throwDistanceNormalized = Mathf.Clamp01(holdForce / maxThrowBand);
         float force = throwDistanceNormalized * maxThrowSpeed;
         force += minThrowSpeed;
-        EventSystem.current.StartTossingWeaponTrigger(throwDistanceNormalized, projectileSpawnPoint.transform, force);
+        EventSystem.current.StartChargedAttackTrigger(throwDistanceNormalized, projectileSpawnPoint.transform, force);
         //EventSystem.current.StartTossingWeaponTrigger(holdTimeNormalized, projectileSpawnPoint.transform, force);
         return force;
     }
@@ -190,7 +190,7 @@ public class PlayerSecondaryWeapon : MonoBehaviour
         else {toss.GetComponent<Rigidbody2D>().AddForce((projectileSpawnPoint.transform.right).normalized * throwSpeed, ForceMode2D.Impulse); }
 
         inActiveThrow = false;
-        EventSystem.current.FinishTossingWeaponTrigger();
+        EventSystem.current.FinishChargedAttackTrigger();
     }
 
     private void FixedDistanceFire() { if (Input.GetMouseButton(1)) { fixedDistanceAmmo.SetActive(true); ToggleFlamethrowerEffects(true); }}

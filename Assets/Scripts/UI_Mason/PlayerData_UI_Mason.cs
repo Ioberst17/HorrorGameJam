@@ -42,8 +42,8 @@ public class PlayerData_UI_Mason : MonoBehaviour
     {
         //subscribe to events
         EventSystem.current.onUpdateSecondaryWeaponUITrigger += UpdateAmmoUI;
-        EventSystem.current.onStartTossingTrigger += StartTossForceDisplay;
-        EventSystem.current.onFinishTossingTrigger += FinishTossForceDisplay;
+        EventSystem.current.onStartChargingUITrigger += StartTossForceDisplay;
+        EventSystem.current.onFinshChargingUITrigger += FinishTossForceDisplay;
     }
 
     private void Start()
@@ -84,10 +84,10 @@ public class PlayerData_UI_Mason : MonoBehaviour
         weaponAmmo.text = updatedAmmo.ToString();
     } 
 
-    private void StartTossForceDisplay(float normalizedTossForce, Transform tossSpawnPoint, float tossForce)
+    private void StartTossForceDisplay(float normalizedTossForce, Transform tossSpawnPoint, float? tossForce)
     {
         ShowTossStrengthUI(normalizedTossForce);
-        PlayerThrowPredictionPointsObjectPool.Instance.ShowTossTrajectory(tossSpawnPoint, tossForce);
+        if(tossForce != null) PlayerThrowPredictionPointsObjectPool.Instance.ShowTossTrajectory(tossSpawnPoint, tossForce);
     }
 
     private void ShowTossStrengthUI(float tossForce)
@@ -112,8 +112,8 @@ public class PlayerData_UI_Mason : MonoBehaviour
     {
         // unsubscribe from events
         EventSystem.current.onUpdateSecondaryWeaponUITrigger -= UpdateAmmoUI;
-        EventSystem.current.onStartTossingTrigger -= StartTossForceDisplay;
-        EventSystem.current.onFinishTossingTrigger -= FinishTossForceDisplay;
+        EventSystem.current.onStartChargingUITrigger -= StartTossForceDisplay;
+        EventSystem.current.onFinshChargingUITrigger -= FinishTossForceDisplay;
     }
 
 }

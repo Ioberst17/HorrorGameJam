@@ -138,6 +138,10 @@ public class GameController : MonoBehaviour
             {
                 AttackButton = true;
             }
+            if (Input.GetMouseButton(0) || Input.GetKeyDown(KeyCode.U)) // if attack is triggered
+            {
+                AttackButton = true;
+            }
             if (Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.U)) // if attack is released
             {
                 AttackButton = false;
@@ -195,10 +199,40 @@ public class GameController : MonoBehaviour
                     if (Input.GetMouseButton(1)) { EventSystem.current.AmmoCheckTrigger(0); }
                 }
             }
+
+            if (Input.GetMouseButton(1) || Input.GetMouseButtonUp(0)) // if either attack or shoot is released
+            {
+                //Debug.Log("attack called");
+                if (Input.GetKey(KeyCode.W) || Input.GetKey("up"))
+                {
+                    if (AttackButton == false) // melee attack if U
+                    {
+                        playerPrimaryWeapon.Release(0);
+                    }
+                    if (Input.GetMouseButton(1)) { EventSystem.current.AmmoCheckTrigger(1); } // shoot if Y, same logic used in below branches
+                }
+                else if ((Input.GetKey(KeyCode.S) || Input.GetKey("down")) && !isGrounded)
+                {
+                    if (AttackButton == false)
+                    {
+                        playerPrimaryWeapon.Release(1);
+                    }
+                    if (Input.GetMouseButton(1)) { EventSystem.current.AmmoCheckTrigger(-1); }
+                }
+                else
+                {
+                    if (AttackButton == false)
+                    {
+                        playerPrimaryWeapon.Release(2);
+                    }
+                    if (Input.GetMouseButton(1)) { EventSystem.current.AmmoCheckTrigger(0); }
+                }
+            }
+
             if (Input.GetMouseButtonUp(1)) { EventSystem.current.WeaponStopTrigger(); }
             if (Input.GetKeyDown(KeyCode.LeftShift) && hasDash()) { PlayerController.Dash(); }
 
-            if(Input.GetKeyDown(KeyCode.F) && hasBlock()) { }
+            if(Input.GetKeyDown(KeyCode.F) && hasBlock()) { /* PORT CODE FROM PLAYERSHIELD HERE */}
             // For Spawns
             if (Input.GetKeyDown(KeyCode.Alpha1)) { SpawnManager.SpawnEnemy(0); };
             if (Input.GetKeyDown(KeyCode.Alpha2)) { SpawnManager.SpawnEnemy(1); };
