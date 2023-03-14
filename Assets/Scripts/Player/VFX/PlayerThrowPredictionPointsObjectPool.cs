@@ -22,7 +22,7 @@ public class PlayerThrowPredictionPointsObjectPool : ObjectPool
         layersToCheck = ~((1 << 0) | (1 << 1) | (1 << 2) | (1 << 4) | (1 << 5) | (1 << 6));
     }
 
-    public void ShowTossTrajectory(Transform tossSpawnPoint, float tossForce)
+    public void ShowTossTrajectory(Transform tossSpawnPoint, float? tossForce)
     {
         ClearToss();
         int counter = 0;
@@ -54,7 +54,7 @@ public class PlayerThrowPredictionPointsObjectPool : ObjectPool
         }
     }
 
-    Vector2 CalcPointPositions(float time, Transform tossSpawnPoint, float tossForce)
+    Vector2 CalcPointPositions(float time, Transform tossSpawnPoint, float? tossForce)
     {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3 transformPos = tossSpawnPoint.position;

@@ -45,18 +45,19 @@ public class EventSystem : MonoBehaviour
 
     public void WeaponStopTrigger() { if(onWeaponStopTrigger != null) { onWeaponStopTrigger(); } }
 
-    public event Action<float, Transform, float> onStartTossingTrigger; // used for UI items displayed on throw
-    public void StartTossingWeaponTrigger(float throwForceDisplayed, Transform throwPoint, float throwForce)
+    public event Action<float, Transform, float?> onStartChargingUITrigger; // used for UI items displayed on throw
+
+    public void StartChargedAttackTrigger(float throwForceDisplayed, Transform throwPoint, float? throwForce)
     {
-        if (onStartTossingTrigger != null)
+        if (onStartChargingUITrigger != null)
         {
-            onStartTossingTrigger(throwForceDisplayed, throwPoint, throwForce);
+            onStartChargingUITrigger(throwForceDisplayed, throwPoint, throwForce);
         }
     }
 
-    public event Action onFinishTossingTrigger; // used when toss weapon has started launch (after force calculated)
+    public event Action onFinshChargingUITrigger; // used when toss weapon has started launch (after force calculated)
 
-    public void FinishTossingWeaponTrigger() { if (onFinishTossingTrigger != null) {onFinishTossingTrigger(); } }
+    public void FinishChargedAttackTrigger() { if (onFinshChargingUITrigger != null) {onFinshChargingUITrigger(); } }
 
     public event Action <int, int> onWeaponLevelTrigger; // used when a weapon is leveled up
 
