@@ -82,7 +82,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
         if (!isAttacking && !DialogueManager.GetInstance().dialogueIsPlaying)
         {
             isAttacking = true;
-            if (attackDirection == 1 && !playerController.isGrounded) { groundSlam.Execute(ADPoint1.position, ADPoint2.position); }
+            if (attackDirection == 1 && !playerController.isGrounded) { groundSlam.Execute(); }
             else
             {
                 if (chargePunch != null) { chargePunch.Execute(); Debug.Log("Executing ChargePunch"); }

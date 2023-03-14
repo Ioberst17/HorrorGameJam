@@ -22,6 +22,17 @@ public class PlayerShield : Shield
     public override void Update()
     {
         base.Update();
+        if (playerController.SP < 0)
+        {
+            ShieldStatus("Off");
+            shieldButtonDown = false;
+            FindObjectOfType<AudioManager>().PlaySFX("InsufficientStamina");
+        }
+        if(!shieldButtonDown) { ChangeSP(staminaRate / 2, Time.deltaTime); }
+    }
+
+    public void ShieldButtonDown()
+    {
         if (Input.GetKeyDown(KeyCode.F))
         {
             if (playerController.SP > shieldCost)
@@ -32,18 +43,19 @@ public class PlayerShield : Shield
             }
             else { FindObjectOfType<AudioManager>().PlaySFX("InsufficientStamina"); }
         }
-        if (playerController.SP < 0 || !Input.GetKey(KeyCode.F))
-        {
-            ShieldStatus("Off");
-            shieldButtonDown = false;
-            FindObjectOfType<AudioManager>().PlaySFX("InsufficientStamina");
-        }
-        if (Input.GetKey(KeyCode.F) && shieldButtonDown == true)
-        {
-            if (playerController.SP > 0) { ChangeSP(-staminaRate, Time.deltaTime); }
-        }
-        else { ChangeSP(staminaRate / 2, Time.deltaTime); }
     }
+
+    public void ShieldButtonHeld()
+    {
+        if(shieldButtonDown == true) { if (playerController.SP > 0) { ChangeSP(-staminaRate, Time.deltaTime); } }
+    }
+
+    public void ShieldButtonUp()
+    {
+        ShieldStatus("Off");
+        shieldButtonDown = false;
+    }
+
 
     public override void SpecificDamageChecks(Collider2D collision)
     {
