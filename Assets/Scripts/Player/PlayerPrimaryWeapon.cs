@@ -45,6 +45,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
 
     void FixedUpdate()
     {
+        playerController.isAttacking = isAttacking;
         if (attackLagTimer > 0) { attackLagTimer -= 1; }
         AttackHelper();
     }
@@ -80,7 +81,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
             isAttacking = true;
             FindObjectOfType<AudioManager>().PlaySFX("PlayerMelee");
             if (attackDirection == 1 && !playerController.isGrounded) { groundSlam.Execute(ADPoint1.position, ADPoint2.position); }
-            else { animator.Play("PlayerBasicAttack"); StartCoroutine(AttackActiveFrames(attackDirection)); }
+            else { animator.Play("PlayerBasicAttack"); playerController.isAttacking = isAttacking; StartCoroutine(AttackActiveFrames(attackDirection)); }
         }
     }
 
@@ -88,11 +89,11 @@ public class PlayerPrimaryWeapon : MonoBehaviour
     {
         if(attackDirection >= 0 && attackDirection <= 2)
         {
-            yield return new WaitForSeconds(startupFrames);
+            yield return new WaitForSeconds(startupFrames/60);
             CheckAttackDirection(attackDirection, true);
-            yield return new WaitForSeconds(activeFrames); // waits a certain number of seconds
+            yield return new WaitForSeconds(activeFrames/60); // waits a certain number of seconds
             CheckAttackDirection(attackDirection, false);
-            yield return new WaitForSeconds(recoveryFrames);
+            yield return new WaitForSeconds(recoveryFrames/60);
             isAttacking = false;
         }
         else  {  isAttacking = false; Debug.LogFormat("Attack direction value should be between 0 and 2, but it is {0}", attackDirection); }
