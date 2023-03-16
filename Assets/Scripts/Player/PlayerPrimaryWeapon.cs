@@ -48,7 +48,6 @@ public class PlayerPrimaryWeapon : MonoBehaviour
 
     void FixedUpdate()
     {
-        playerController.isAttacking = isAttacking;
         if (attackLagTimer > 0) { attackLagTimer -= 1; }
         AttackHelper();
     }
@@ -99,11 +98,11 @@ public class PlayerPrimaryWeapon : MonoBehaviour
         animator.Play("PlayerBasicAttack");
         if (attackDirection >= 0 && attackDirection <= 2)
         {
-            yield return new WaitForSeconds(startupFrames/60);
+            yield return new WaitForSeconds(startupFrames);
             CheckAttackDirection(attackDirection, true);
-            yield return new WaitForSeconds(activeFrames/60); // waits a certain number of seconds
+            yield return new WaitForSeconds(activeFrames); // waits a certain number of seconds
             CheckAttackDirection(attackDirection, false);
-            yield return new WaitForSeconds(recoveryFrames/60);
+            yield return new WaitForSeconds(recoveryFrames);
             isAttacking = false;
         }
         else  {  isAttacking = false; Debug.LogFormat("Attack direction value should be between 0 and 2, but it is {0}", attackDirection); }
