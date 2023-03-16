@@ -28,6 +28,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     public int HP;
     private int damageToPass;
+    private string statusToPass;
 
     public int invincibilityCount;
     [SerializeField]
@@ -147,9 +148,9 @@ public class EnemyController : MonoBehaviour, IDamageable
 
             }
         }
-
     }
-    public void Hit(int attackDamage, Vector3 playerPosition)
+
+    public void Hit(int attackDamage, Vector3 playerPosition, string statusEffect)
     {
         if (!isDead)
         {
@@ -158,16 +159,33 @@ public class EnemyController : MonoBehaviour, IDamageable
                 //rb.AddForce(new Vector2(5.0f * facingDirection, 5.0f), ForceMode2D.Impulse);
                 damageInterupt = true; //might have to make change this later //isAttacking = false;
                 invincibilityCount = invincibilitySet;
+                Debug.Log("Hit is being called");
+                if (statusEffect != null) { StatusModifier(statusEffect); }
                 TakeDamage(attackDamage);
-                if(!isDead) { HandleHitPhysics(playerPosition); }
+                if (!isDead) { HandleHitPhysics(playerPosition); }
             }
         }
     }
 
-    public void Hit(int weaponID, int LevelOfWeapon, Vector3 playerPosition) 
+    public void Hit(int attackDamage, Vector3 playerPosition) { Hit(attackDamage, playerPosition, null); }
+
+    public void Hit(int weaponID, int LevelOfWeapon, Vector3 playerPosition)  
+    {
+        statusToPass = weaponDatabase.GetWeaponEffect(weaponID);
+        Hit(weaponID, LevelOfWeapon, playerPosition, statusToPass); 
+    }
+
+    public void Hit(int weaponID, int LevelOfWeapon, Vector3 playerPosition, string statusEffect) 
     {
         damageToPass = weaponDatabase.GetWeaponDamage(weaponID, LevelOfWeapon);
-        Hit(damageToPass, playerPosition);
+        statusEffect = weaponDatabase.GetWeaponEffect(weaponID);
+        Hit(damageToPass, playerPosition, statusEffect);
+    }
+
+    public void StatusModifier(string mod)
+    {
+        if (mod == "DemonBlood") { if (GetComponentInChildren<Poisoned>() != null) { GetComponentInChildren<Poisoned>().Execute(); } }
+        else if (mod == "Burn") { if (GetComponentInChildren<Burnable>() != null) { GetComponentInChildren<Burnable>().Execute(); } }
     }
 
     public void HandleHitPhysics(Vector3 playerPosition) 
@@ -222,7 +240,7 @@ public class EnemyController : MonoBehaviour, IDamageable
         else if (CompareTag("Bat")) { EnemytypeID = 1; batBehavior = GetComponent<BatBehavior>(); }
         else if (CompareTag("ParalysisDemon")) { EnemytypeID = 2; paralysisDemonBehavior = GetComponent<ParalysisDemonBehavior>(); }
         else if (CompareTag("Spider")) { EnemytypeID = 3; SpiderBehavior = GetComponent<SpiderBehavior>(); }
-        else if (CompareTag("Bloodgolem")) { EnemytypeID = 4; GolemBehavior = GetComponent<BloodGolemBehavior>(); }
+        else if (CompareTag("BloodGolem")) { EnemytypeID = 4; GolemBehavior = GetComponent<BloodGolemBehavior>(); }
         else if (CompareTag("Gargoyle")) { EnemytypeID = 5; GargoyleBehavior = GetComponent<GargoyleBehavior>(); }
         else EnemytypeID = -1;
 
@@ -235,7 +253,6 @@ public class EnemyController : MonoBehaviour, IDamageable
             SoulPointsDropped = loadedValue.soulPointsDropped; //45;
             knockbackForce = loadedValue.knockback; //3
         }
-
     }
     private void OnDestroy()
     {

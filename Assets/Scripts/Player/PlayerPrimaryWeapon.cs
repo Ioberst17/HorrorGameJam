@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -11,7 +12,8 @@ public class PlayerPrimaryWeapon : MonoBehaviour
     Animator animator;
 
     //these are all related to attack information
-    public int AttackDamage;
+    public int minDamage;
+    public int damageToPass;
     public bool isAttacking;
 
     //List of objects hit by an attack, used to let the player hit multiple things with one swing
@@ -36,6 +38,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
 
     //abilities
     GroundSlam groundSlam;
+    ChargePunch chargePunch;
 
     void Start()
     {
@@ -53,14 +56,16 @@ public class PlayerPrimaryWeapon : MonoBehaviour
     private void GetSupportingReferences()
     {
         weaponDatabase = GameObject.Find("WeaponDatabase").GetComponent<WeaponDatabase>();
-        groundSlam = GetComponent<GroundSlam>(); 
+        groundSlam = GetComponent<GroundSlam>();
+        chargePunch = GetComponent<ChargePunch>();
         playerController = GetComponentInParent<PlayerController>();
         animator = GetComponentInParent<Animator>();
     }
     private void InitializeValues()
     {
         attackLagTimer = 0;
-        AttackDamage = 10;
+        minDamage = 10;
+        damageToPass = minDamage;
         isAttacking = false;
         AddLayersToCheck();
     }
@@ -70,7 +75,6 @@ public class PlayerPrimaryWeapon : MonoBehaviour
         hitList = new List<Collider2D>();
         normalCollisionFilter = new ContactFilter2D();
         normalCollisionFilter.SetLayerMask((1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("BreakableEnviro")));
-        
     }
 
     public void Attack(int attackDirection)
@@ -85,9 +89,12 @@ public class PlayerPrimaryWeapon : MonoBehaviour
         }
     }
 
-    IEnumerator AttackActiveFrames(int attackDirection) // is called by the trigger event for powerups to countdown how long the power lasts
+    public void Release(int attackDirection) { if (chargePunch != null) { chargePunch.Release(attackDirection); } }
+
+    public IEnumerator AttackActiveFrames(int attackDirection) // is called by the trigger event for powerups to countdown how long the power lasts
     {
-        if(attackDirection >= 0 && attackDirection <= 2)
+        animator.Play("PlayerBasicAttack");
+        if (attackDirection >= 0 && attackDirection <= 2)
         {
             yield return new WaitForSeconds(startupFrames/60);
             CheckAttackDirection(attackDirection, true);
@@ -131,10 +138,11 @@ public class PlayerPrimaryWeapon : MonoBehaviour
             {
                 Debug.LogFormat("has hit something. It's named {0}", hitList[i].gameObject.name);
                 if (hitList[i].GetComponent<IDamageable>() != null) 
-                { hitList[i].GetComponent<IDamageable>().Hit(AttackDamage, transform.position); }
+                { hitList[i].GetComponent<IDamageable>().Hit(damageToPass, transform.position); }
                 i++;
             }
         }
+        damageToPass = minDamage;
     }
 
     private void SetPlayerVelocityForDownSwing()

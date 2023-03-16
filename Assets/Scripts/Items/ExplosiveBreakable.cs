@@ -24,6 +24,6 @@ public class ExplosiveBreakable : Breakable
         base.HPZero();
         Instantiate(Resources.Load("VFXPrefabs/Explosion"), transform.position, Quaternion.identity);
         FindObjectOfType<AudioManager>().PlaySFX("WeaponExplosion");
-        GetComponent<Explode>().ExplosionDamage(2f, 10f, 10);
+        GetComponent<Explode>().StandardExplosion(2f, 10f, 10);
     }
 }

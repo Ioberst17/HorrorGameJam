@@ -12,13 +12,13 @@ public class EventSystem : MonoBehaviour
 
     // COMBAT-CALCULATIONS (WITH ENEMIES)
 
-    public event Action<int, Vector3> onEnemyEnviroDamage;
-    public void EnemyEnviroDamage(int damage, Vector3 position)
-    { { if (onEnemyEnviroDamage != null) { onEnemyEnviroDamage(damage, position); } } }
+    public event Action<int, Vector3, string> onEnemyEnviroDamage;
+    public void EnemyEnviroDamage(int damage, Vector3 position, string statusModifier)
+    { { if (onEnemyEnviroDamage != null) { onEnemyEnviroDamage(damage, position, statusModifier); } } }
 
-    public event Action<int, int, Vector3> onEnemyHitCollision;
-    public void AttackHitTrigger(int weaponID, int weaponLevel, Vector3 position)
-    { { if (onEnemyHitCollision != null) { onEnemyHitCollision(weaponID, weaponLevel, position); } } }
+    public event Action<int, int, Vector3, string> onEnemyHitCollision;
+    public void AttackHitTrigger(int weaponID, int weaponLevel, Vector3 position, string statusModifier)
+    { { if (onEnemyHitCollision != null) { onEnemyHitCollision(weaponID, weaponLevel, position, statusModifier); } } }
 
     // WEAPON-RELATED EVENTS
 
@@ -45,18 +45,19 @@ public class EventSystem : MonoBehaviour
 
     public void WeaponStopTrigger() { if(onWeaponStopTrigger != null) { onWeaponStopTrigger(); } }
 
-    public event Action<float, Transform, float> onStartTossingTrigger; // used for UI items displayed on throw
-    public void StartTossingWeaponTrigger(float throwForceDisplayed, Transform throwPoint, float throwForce)
+    public event Action<float, Transform, float?> onStartChargingUITrigger; // used for UI items displayed on throw
+
+    public void StartChargedAttackTrigger(float throwForceDisplayed, Transform throwPoint, float? throwForce)
     {
-        if (onStartTossingTrigger != null)
+        if (onStartChargingUITrigger != null)
         {
-            onStartTossingTrigger(throwForceDisplayed, throwPoint, throwForce);
+            onStartChargingUITrigger(throwForceDisplayed, throwPoint, throwForce);
         }
     }
 
-    public event Action onFinishTossingTrigger; // used when toss weapon has started launch (after force calculated)
+    public event Action onFinshChargingUITrigger; // used when toss weapon has started launch (after force calculated)
 
-    public void FinishTossingWeaponTrigger() { if (onFinishTossingTrigger != null) {onFinishTossingTrigger(); } }
+    public void FinishChargedAttackTrigger() { if (onFinshChargingUITrigger != null) {onFinshChargingUITrigger(); } }
 
     public event Action <int, int> onWeaponLevelTrigger; // used when a weapon is leveled up
 
@@ -108,16 +109,19 @@ public class EventSystem : MonoBehaviour
 
     // PLAYER HEALTH-RELATED
 
-    public event Action<Vector3, int, int, float, float> onPlayerHitTrigger;
+    public event Action<Collider2D> onPlayerShieldHitTrigger;
 
-    public void PlayerHitTrigger(Vector3 enemyPos, int damageNumber, int damageType, float damageMod, float knockbackMod) 
+    public void PlayerShieldHitTrigger(Collider2D attacker) { if(onPlayerShieldHitTrigger != null) { onPlayerShieldHitTrigger(attacker); } }
+
+    public event Action<Vector3, int, int, float, float> onPlayerHitCalcTrigger;
+
+    public void PlayerHitCalcTrigger(Vector3 enemyPos, int damageNumber, int damageType, float damageMod, float knockbackMod) 
     { 
-        if(onPlayerHitTrigger != null) 
+        if(onPlayerHitCalcTrigger != null) 
         { 
-            onPlayerHitTrigger(enemyPos, damageNumber, damageType, damageMod, knockbackMod); 
+            onPlayerHitCalcTrigger(enemyPos, damageNumber, damageType, damageMod, knockbackMod); 
         } 
     }
-
 
     public event Action onPlayerDeathTrigger;
     public void PlayerDeathTrigger() { if(onPlayerDeathTrigger != null) { onPlayerDeathTrigger(); } }

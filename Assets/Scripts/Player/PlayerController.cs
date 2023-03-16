@@ -72,7 +72,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PlayerHealth playerHealth;
     //Health points, magic points, soul points (currency)
     public int MP;
-    public int SP;
+    public float SP, SP_MAX;
     [SerializeField] private bool hasShield;
 
     [SerializeField]
@@ -82,13 +82,13 @@ public class PlayerController : MonoBehaviour
     //Set all the initial values
     private void Start()
     {
-        EventSystem.current.onPlayerHitTrigger += Hit;
         EventSystem.current.onPlayerDeathTrigger += PlayerDeath;
 
         rb = GetComponent<Rigidbody2D>();
         cc = GetComponent<BoxCollider2D>();
         MP = StartingMP;
-        SP = 0;
+        SP_MAX = 100;
+        SP = SP_MAX;
         ControlMomentum = 0;
         animator = GetComponent<Animator>();
         mainCam = GameObject.Find("Main Camera").GetComponent<Camera>();
@@ -290,7 +290,7 @@ public class PlayerController : MonoBehaviour
 
     //processes if the player should take damage, and if so, how much, then calculates for death. damageType Numbers: 0 is one hit damage, 1 is damage over time. 
     //Calculated direction of hit for knockback direction.
-    public void Hit(Vector3 enemyPos, int damageNumber, int damageType, float damageMod, float knockbackMod)
+    public void Hit(Vector3 enemyPos, float knockbackMod)
     {
         if (!playerHealth.isInvincible)
         {
@@ -335,6 +335,5 @@ public class PlayerController : MonoBehaviour
     private void OnDestroy()
     {
         EventSystem.current.onPlayerDeathTrigger -= PlayerDeath;
-        EventSystem.current.onPlayerHitTrigger -= Hit;
     }
 }

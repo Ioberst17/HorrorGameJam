@@ -10,7 +10,6 @@ public class Inventory_UI_Mason : MonoBehaviour
 
     public DataManager dataManager;
 
-    
     public PlayerData_UI_Mason playerDataUI;
 
     [SerializeField]
@@ -296,8 +295,8 @@ public class Inventory_UI_Mason : MonoBehaviour
         dataManager.gameData.activeSecondaryWeapon = dataManager.gameData.secondaryWeapons[currentSecondarySlotNum].id;
 
         //run the loadcurrentweapons function from the inventorymanager script to load the newly selected weapons.
-        inventoryManager.primaryWeaponsManager.Load();
-        inventoryManager.secondaryWeaponsManager.Load();
+        inventoryManager.primaryWeaponsManager.LoadActiveWeapon();
+        inventoryManager.secondaryWeaponsManager.LoadActiveWeapon();
 
         infoPanel.SetActive(false); // turn off info panel
     }

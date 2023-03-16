@@ -12,6 +12,8 @@ public class Shield : MonoBehaviour
     public bool shieldOn;
     public bool checkStatus;
     public string shieldedObject;
+    public Parry parry;
+    private string VFXPath;
 
     [SerializeField] private string shieldDirectionRelativeToAttack;
     [SerializeField] private string shieldPositionRelativeToAttack;
@@ -31,13 +33,16 @@ public class Shield : MonoBehaviour
     // Start is called before the first frame update
     public void Start()
     {
+        EventSystem.current.onPlayerShieldHitTrigger += DamageHandler;
+
+        TryGetComponent(out parry);
         spriteRenderer = GetComponent<SpriteRenderer>();
         ShieldStatus("Off");
         CheckObjectType();
     }
 
     // Update is called once per frame
-    void Update() { if (Input.GetKey(KeyCode.F)) { ShieldStatus("On"); } else { ShieldStatus("Off"); } }
+    public virtual void Update()  { }
 
     private void OnTriggerEnter2D(Collider2D collision) { DamageHandler(collision);}
 
@@ -56,25 +61,25 @@ public class Shield : MonoBehaviour
                     if (checkStatus == true)
                     {
                         hitShield = ShieldZoneCollisionCheck(CheckCollisionAngle(collision));
-                        if (hitShield != null)
-                        {
-                            Instantiate(Resources.Load("VFXPrefabs/BulletImpact"), collision.transform.position, Quaternion.identity);
-                            PassThroughDamage(collision, hitShield.damageAbsorption, hitShield.knockbackAbsorption);
-                        }
+
+                        if(parry != null && parry.GetParryStatus() == true) { ReturnDamage(collision); } // parried
                         else
                         {
-                            Instantiate(Resources.Load("VFXPrefabs/BulletImpact"), collision.transform.position, Quaternion.identity);
-                            PassThroughDamage(collision, 0, 0);
+                            if (hitShield != null) { HandleDamagePass(collision, hitShield.damageAbsorption, hitShield.knockbackAbsorption, "BulletImpact"); } // reduced dmg pass
+                            else { HandleDamagePass(collision, 0, 0, "BulletImpact");} // regular damage pass
                         }
                     }
                 }
-                else
-                {
-                    Instantiate(Resources.Load("VFXPrefabs/DamageImpact"), collision.transform.position, Quaternion.identity);
-                    PassThroughDamage(collision, 0, 0);
-                }
+                else { HandleDamagePass(collision, 0, 0, "DamageImpact"); } // regular damage pass
             }
         }
+    }
+
+    private void HandleDamagePass(Collider2D collision, float damageAbsorption, float knockbackAbsorption, string VFXToLoad)
+    {
+        VFXPath = "VFXPrefabs/" + VFXToLoad;
+        Instantiate(Resources.Load(VFXPath), collision.transform.position, Quaternion.identity);
+        PassThroughDamage(collision, damageAbsorption, knockbackAbsorption);
     }
 
 
@@ -83,8 +88,8 @@ public class Shield : MonoBehaviour
     // START FUNCTIONS
     virtual public void CheckObjectType()
     {
-        if(gameObject.layer == LayerMask.NameToLayer("Player")) { shieldedObject = "Player"; }
-        else if(gameObject.layer == LayerMask.NameToLayer("Enemy")) { shieldedObject = "Enemy";  }
+        //if(gameObject.layer == LayerMask.NameToLayer("Player")) { shieldedObject = "Player"; }
+        if(gameObject.layer == LayerMask.NameToLayer("Enemy")) { shieldedObject = "Enemy";  }
         else { Debug.Log("Shield.cs is attached to an object that does not need it"); }
 
         AddCollisionsToCheckFor(shieldedObject);
@@ -160,7 +165,7 @@ public class Shield : MonoBehaviour
         else { Debug.Log("Check CheckShieldDirection function in this script for proper functioning"); return "Neither"; }
     }
 
-    void ShieldStatus(string OnOff)
+    public void ShieldStatus(string OnOff)
     {
         if (OnOff == "On") { spriteRenderer.enabled = true; shieldOn = true; }
         else if (OnOff == "Off") { spriteRenderer.enabled = false; shieldOn = false; }
@@ -168,5 +173,14 @@ public class Shield : MonoBehaviour
     }
 
     public virtual void PassThroughDamage(Collider2D collision, float damageMod, float knockbackMod) { }
+
+    public virtual void ReturnDamage(Collider2D collision)
+    {
+    }
+
+    private void OnDestroy()
+    {
+        EventSystem.current.onPlayerShieldHitTrigger += DamageHandler;
+    }
 
 }

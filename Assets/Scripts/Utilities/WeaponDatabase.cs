@@ -6,6 +6,8 @@ using System.Reflection;
 using Ink.Parsed;
 using Ink.Runtime;
 using JetBrains.Annotations;
+using System.Linq;
+using Unity.VisualScripting;
 
 public class WeaponDatabase : MonoBehaviour
 {
@@ -20,6 +22,8 @@ public class WeaponDatabase : MonoBehaviour
         public Weapons[] entries;
     }
 
+    private Weapons weaponChecker;
+
     public Database weaponDatabase = new Database();
     [SerializeField]
     private List<string> columnNames;
@@ -27,11 +31,11 @@ public class WeaponDatabase : MonoBehaviour
     private List<string> columnDataTypes;
     public List<int> validPrimaryWeaponIDs;
     public List<int> validSecondaryWeaponIDs;
-    private int numOfColumns = 20; // must be updated as CSV is updated
+    private int numOfColumns = 21; // must be updated as CSV is updated
 
-    private void Awake() 
+    private void Awake()
     {
-        textAssetData = Resources.Load<TextAsset>("TextFiles/WeaponDatabase"); 
+        textAssetData = Resources.Load<TextAsset>("TextFiles/WeaponDatabase");
         string[] data = ReadCSV();
         CreateDatabase(data);
 
@@ -47,13 +51,13 @@ public class WeaponDatabase : MonoBehaviour
 
     void CreateDatabase(string[] data)
     {
-        int numOfRows = data.Length / numOfColumns -2; // gets data length (total # of cells), then divides by # of columns to get # of rowsl -2 for header and datatype row
+        int numOfRows = data.Length / numOfColumns - 2; // gets data length (total # of cells), then divides by # of columns to get # of rowsl -2 for header and datatype row
         weaponDatabase.entries = new Weapons[numOfRows];
 
         columnNames = GetColumnData(data, "columnNames");
         columnDataTypes = GetColumnData(data, "variableDataTypes");
 
-        for (int i = 0; i < numOfRows; i++) 
+        for (int i = 0; i < numOfRows; i++)
         {
             weaponDatabase.entries[i] = new Weapons();
 
@@ -63,32 +67,8 @@ public class WeaponDatabase : MonoBehaviour
             {
                 foreach (var dataEntry in columnsToFill)
                 {
-                    if (dataEntry.Name == columnNames[j])
-                    {
-                        ParseDataToTable(i, j, data, dataEntry);
-                    }
+                    if (dataEntry.Name == columnNames[j]) { ParseDataToTable(i, j, data, dataEntry); }
                 }
-
-                /*weaponDatabase.entries[i].id = int.Parse(data[numOfColumns * (i + 1)]);
-                weaponDatabase.entries[i].title = data[numOfColumns * (i + 1) + 1];
-                weaponDatabase.entries[i].tier = int.Parse(data[numOfColumns * (i + 1) + 2]);
-                weaponDatabase.entries[i].price = int.Parse(data[numOfColumns * (i + 1) + 3]);
-                weaponDatabase.entries[i].isSecondary = bool.Parse(data[numOfColumns * (i + 1) + 4]);
-                weaponDatabase.entries[i].isShot = bool.Parse(data[numOfColumns * (i + 1) + 5]);
-                weaponDatabase.entries[i].isThrown = bool.Parse(data[numOfColumns * (i + 1) + 6]);
-                weaponDatabase.entries[i].isFixedDistance = bool.Parse(data[numOfColumns * (i + 1) + 7]);
-                weaponDatabase.entries[i].isKinetic = bool.Parse(data[numOfColumns * (i + 1) + 8]);
-                weaponDatabase.entries[i].isElemental = bool.Parse(data[numOfColumns * (i + 1) + 9]);
-                weaponDatabase.entries[i].isHeavy = bool.Parse(data[numOfColumns * (i + 1) + 10]);
-                weaponDatabase.entries[i].weight = data[numOfColumns * (i + 1) + 11];
-                weaponDatabase.entries[i].level1Damage = int.Parse(data[numOfColumns * (i + 1) + 12]);
-                weaponDatabase.entries[i].level2Damage = int.Parse(data[numOfColumns * (i + 1) + 13]);
-                weaponDatabase.entries[i].level3Damage = int.Parse(data[numOfColumns * (i + 1) + 14]);
-                weaponDatabase.entries[i].level = int.Parse(data[numOfColumns * (i + 1) + 15]);
-                weaponDatabase.entries[i].isLightSource = bool.Parse(data[numOfColumns * (i + 1) + 16]);
-                weaponDatabase.entries[i].fireRate = float.Parse(data[numOfColumns * (i + 1) + 17]);
-                weaponDatabase.entries[i].description = data[numOfColumns * (i + 1) + 18];
-                weaponDatabase.entries[i].amount = int.Parse(data[numOfColumns * (i + 1) + 19]);*/
             }
         }
     }
@@ -134,13 +114,13 @@ public class WeaponDatabase : MonoBehaviour
             string nameOfField = fieldsToLoop[i].Name;
             var dataType = data[numOfColumns * (0 + 1) + i];
 
-            if (typeOfList == "columnNames"){ toReturn.Add(nameOfField); }
+            if (typeOfList == "columnNames") { toReturn.Add(nameOfField); }
             else if (typeOfList == "variableDataTypes") { toReturn.Add(dataType); }
             else { Debug.Log("Check for typo on string 'typeOfList' input"); }
         }
         return toReturn;
     }
-    
+
 
     private List<int> CreateListOfValidWeapons(string PrimaryOrSecondary)
     {
@@ -169,5 +149,14 @@ public class WeaponDatabase : MonoBehaviour
         else if (ammoLevel == 1) { return weaponDatabase.entries[weaponID].level2Damage; }
         else if (ammoLevel == 2) { return weaponDatabase.entries[weaponID].level3Damage; }
         else { Debug.LogFormat("Check to see if the correct weaponID and a Level of Weapon are being inputted to this function"); return -1; }
+    }
+
+    public string GetWeaponEffect(int weaponID)
+    {
+        weaponChecker = Array.Find(weaponDatabase.entries, x => x.id == weaponID);
+        if (weaponChecker != null) { return weaponChecker.statusModifier; }
+
+        Debug.Log("Weapon ID could not be found in weapon database; please check input");
+        return "Error";
     }
 }

@@ -39,7 +39,7 @@ public class BloodGolemBehavior : MonoBehaviour
             if (enemyController.playerInZone && !enemyController.damageInterupt)
             {
                 ShotCountdown--;
-                Debug.Log(ShotCountdown);
+                //Debug.Log(ShotCountdown);
                 if (ShotCountdown == 0)
                 {
                     Fire();

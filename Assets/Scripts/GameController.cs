@@ -10,7 +10,7 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private PlayerController PlayerController;
     private PlayerHealth playerHealth;
-    private Shield playerShield;
+    private PlayerShield playerShield;
     [SerializeField]
     private PlayerSkills playerSkills;
     [SerializeField]
@@ -57,7 +57,7 @@ public class GameController : MonoBehaviour
         LoadPlayerSkills();
 
         playerHealth = PlayerController.gameObject.GetComponent<PlayerHealth>();
-        playerShield = PlayerController.gameObject.GetComponentInChildren<Shield>();
+        playerShield = PlayerController.gameObject.GetComponentInChildren<PlayerShield>();
         playerPrimaryWeapon = PlayerController.GetComponentInChildren<PlayerPrimaryWeapon>();
         playerSecondaryWeapon = PlayerController.GetComponentInChildren<PlayerSecondaryWeapon>();
         playerSkills.UnlockAllSkills();
@@ -110,7 +110,7 @@ public class GameController : MonoBehaviour
     public int GetHP() { return playerHealth.HP; }
 
     public int GetMP() { return PlayerController.MP; }
-    public int GetSP() { return PlayerController.SP; }
+    public float GetSP() { return PlayerController.SP; }
 
     public void CheckInput()
     {
@@ -134,30 +134,34 @@ public class GameController : MonoBehaviour
                 JumpButton = false;
                 JumpBuffer = 0;
             }
-            if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.U)) // if attack is triggered
+            if (/*Input.GetButtonDown("Fire1") ||*/ Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.U)) // if attack is triggered
             {
                 AttackButton = true;
             }
-            if (Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.U)) // if attack is released
+            if (/*Input.GetButton("Fire1") ||*/ Input.GetMouseButton(0) || Input.GetKeyDown(KeyCode.U)) // if attack is triggered
+            {
+                AttackButton = true;
+            }
+            if (/*Input.GetButtonUp("Fire1") ||*/ Input.GetMouseButtonUp(0) ||Input.GetKeyUp(KeyCode.U)) // if attack is released
             {
                 AttackButton = false;
                 AttackBuffer = 0;
             }
-            if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.Y)) // if shoot is triggered
+            if (/*Input.GetButtonDown("Fire2") ||*/ Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.Y)) // if shoot is triggered
             {
                 ShootButton = true;
             }
-            if (Input.GetMouseButtonUp(1) || Input.GetKeyUp(KeyCode.Y)) // if shoot is released
+            if (/*Input.GetButtonUp("Fire2") ||*/ Input.GetMouseButtonUp(1) || Input.GetKeyUp(KeyCode.Y)) // if shoot is released
             {
                 ShootButton = false;
                 ShootBuffer = 0;
                 EventSystem.current.WeaponStopTrigger();
             }
-            if (Input.GetKeyDown(KeyCode.I) || Input.GetKeyDown(KeyCode.LeftShift)) // if dash is triggered
+            if (/*Input.GetButtonDown("Dash") ||*/ Input.GetKeyDown(KeyCode.I) || Input.GetKeyDown(KeyCode.LeftShift)) // if dash is triggered
             {
                 DashButton = true;
             }
-            if (Input.GetKeyUp(KeyCode.I) || Input.GetKeyUp(KeyCode.LeftShift)) // if dash is released
+            if (/*Input.GetButtonUp("Dash") || */ Input.GetKeyUp(KeyCode.I) || Input.GetKeyUp(KeyCode.LeftShift)) // if dash is released
             {
                 DashButton = false;
                 DashBuffer = 0;
@@ -168,7 +172,7 @@ public class GameController : MonoBehaviour
             {
                 PlayerController.Jump();
             }
-            if (Input.GetMouseButton(1) || Input.GetMouseButtonDown(0)) // if either attack or shoot is triggered
+            if (/*Input.GetKey("Fire2") || Input.GetKeyDown("Fire1") || */ Input.GetMouseButton(1) || Input.GetMouseButtonDown(0)) // if either attack or shoot is triggered
             {
                 //Debug.Log("attack called");
                 if (Input.GetKey(KeyCode.W) || Input.GetKey("up"))
@@ -177,14 +181,14 @@ public class GameController : MonoBehaviour
                     { 
                         playerPrimaryWeapon.Attack(0);
                     } 
-                    if (Input.GetMouseButton(1)) { EventSystem.current.AmmoCheckTrigger(1); } // shoot if Y, same logic used in below branches
+                    if (/*Input.GetKey("Fire2") || */ Input.GetMouseButton(1)) { EventSystem.current.AmmoCheckTrigger(1); } // shoot if Y, same logic used in below branches
                 }
                 else if((Input.GetKey(KeyCode.S) || Input.GetKey("down")) && !isGrounded){
                     if (Input.GetMouseButtonDown(0)) 
                     {
                         playerPrimaryWeapon.Attack(1);
                     }
-                    if (Input.GetMouseButton(1)) { EventSystem.current.AmmoCheckTrigger(-1); }
+                    if (/*Input.GetKey("Fire2") || */ Input.GetMouseButton(1)) { EventSystem.current.AmmoCheckTrigger(-1); }
                 }
                 else
                 {
@@ -192,13 +196,49 @@ public class GameController : MonoBehaviour
                     {
                         playerPrimaryWeapon.Attack(2);
                     }
-                    if (Input.GetMouseButton(1)) { EventSystem.current.AmmoCheckTrigger(0); }
+                    if (/*Input.GetKeyUp("Fire2") ||*/ Input.GetMouseButton(1)) { EventSystem.current.AmmoCheckTrigger(0); }
                 }
             }
-            if (Input.GetMouseButtonUp(1)) { EventSystem.current.WeaponStopTrigger(); }
-            if (Input.GetKeyDown(KeyCode.LeftShift) && hasDash()) { PlayerController.Dash(); }
 
-            if(Input.GetKeyDown(KeyCode.F) && hasBlock()) { }
+            if (/*Input.GetKeyUp("Fire2") || Input.GetKey("PrimaryWeapon") || */ Input.GetMouseButtonUp(1) || Input.GetMouseButtonUp(0)) // if either attack or shoot is released
+            {
+                //Debug.Log("attack called");
+                if (Input.GetKey(KeyCode.W) || Input.GetKey("up"))
+                {
+                    if (AttackButton == false) // melee attack if U
+                    {
+                        playerPrimaryWeapon.Release(0);
+                    }
+                    if (/* Input.GetKey("Fire2") ||*/ Input.GetMouseButton(1)) { EventSystem.current.AmmoCheckTrigger(1); } // shoot if Y, same logic used in below branches
+                }
+                else if ((Input.GetKey(KeyCode.S) || Input.GetKey("down")) && !isGrounded)
+                {
+                    if (AttackButton == false)
+                    {
+                        playerPrimaryWeapon.Release(1);
+                    }
+                    if (/*Input.GetKey("Fire2") ||*/ Input.GetMouseButton(1)) { EventSystem.current.AmmoCheckTrigger(-1); }
+                }
+                else
+                {
+                    if (AttackButton == false)
+                    {
+                        playerPrimaryWeapon.Release(2);
+                    }
+                    if (/*Input.GetKey("Fire2") ||*/ Input.GetMouseButton(1)) { EventSystem.current.AmmoCheckTrigger(0); }
+                }
+            }
+
+            if (/*Input.GetKeyUp("Fire2") ||*/ Input.GetMouseButtonUp(1)) { EventSystem.current.WeaponStopTrigger(); }
+            if (hasDash()) { if (/*Input.GetKeyDown("Shield") ||*/ Input.GetKeyDown(KeyCode.LeftShift)) { PlayerController.Dash(); } }
+
+            if (hasBlock())
+            {
+                if (/* Input.GetKeyDown("Shield") || */ Input.GetKeyDown(KeyCode.F)) { playerShield.ShieldButtonDown(); }
+                if (/*Input.GetKey("Shield") || */ Input.GetKey(KeyCode.F)) { playerShield.ShieldButtonHeld(); }
+                if (/*Input.GetKeyUp("Shield") || */ Input.GetKeyUp(KeyCode.F)) { playerShield.ShieldButtonUp(); }
+            }
+
             // For Spawns
             if (Input.GetKeyDown(KeyCode.Alpha1)) { SpawnManager.SpawnEnemy(0); };
             if (Input.GetKeyDown(KeyCode.Alpha2)) { SpawnManager.SpawnEnemy(1); };
