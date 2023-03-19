@@ -82,9 +82,9 @@ public class PlayerPrimaryWeapon : MonoBehaviour
         if (!isAttacking && !DialogueManager.GetInstance().dialogueIsPlaying)
         {
             isAttacking = true;
+            FindObjectOfType<AudioManager>().PlaySFX("PlayerMelee");
             if (attackDirection == 1 && !playerController.isGrounded) { groundSlam.Execute(); }
-            else
-            {
+            else {
                 if (chargePunch != null) { chargePunch.Execute(); Debug.Log("Executing ChargePunch"); }
                 else { StartCoroutine(AttackActiveFrames(attackDirection)); }
             }
