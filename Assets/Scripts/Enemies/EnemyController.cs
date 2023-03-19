@@ -26,6 +26,7 @@ public class EnemyController : MonoBehaviour, IDamageable
     public EnemyDatabase enemyDatabase; // used to load in values for enemies e.g. health data, attack info
     public int damageValue;
 
+    public int HP_MAX;
     public int HP;
     private int damageToPass;
     private string statusToPass;
@@ -208,6 +209,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     public void TakeDamage(int damage) 
     { 
+
         HP -= damage;
         GetComponent<EnemyHealth>().UpdateHealthUI(HP);
         Debug.Log("Enemy " + gameObject.name + " was damaged! It took: " + damage + "damage. It's current HP is: " + HP);
@@ -249,6 +251,7 @@ public class EnemyController : MonoBehaviour, IDamageable
         {
             var loadedValue = enemyDatabase.enemyDatabase.entries[EnemytypeID];
             HP = loadedValue.health; //50;
+            HP_MAX = loadedValue.health;
             damageValue = loadedValue.attack1Damage; //10;
             SoulPointsDropped = loadedValue.soulPointsDropped; //45;
             knockbackForce = loadedValue.knockback; //3

@@ -11,7 +11,7 @@ public class EnemyLoot : MonoBehaviour
     private List<Item> ammoList = new List<Item>();
     private int enemyTypeID = -1;
     private EnemyDatabase.Database enemyDB;
-    private ConsumablesDatabase.Database consumablesDB;
+    private ConsumablesDatabase.DB consumablesDB;
     private List<GameObject> itemPrefabs;
     float lootLaunchForce = 5f;
 
@@ -19,7 +19,7 @@ public class EnemyLoot : MonoBehaviour
     private void Start()
     {
         enemyDB = GameObject.Find("EnemyDatabase").GetComponent<EnemyDatabase>().enemyDatabase;
-        consumablesDB = GameObject.Find("ConsumablesDatabase").GetComponent<ConsumablesDatabase>().consumablesDatabase;
+        consumablesDB = GameObject.Find("ConsumablesDatabase").GetComponent<ConsumablesDatabase>().data;
         itemPrefabs = GameObject.Find("ItemPrefabs").GetComponent<ItemPrefabs>().itemPrefabs;
 
         if (CompareTag("Hellhound")) { enemyTypeID = 0; } // add enemyID as in enemy database + behavior component

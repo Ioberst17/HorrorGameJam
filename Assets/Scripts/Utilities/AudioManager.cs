@@ -7,6 +7,7 @@ public class AudioManager : MonoBehaviour
 {
     public Sound[] sounds;
     public Sound[] themes;
+    public Sound currentTheme;
 
     // Start is called before the first frame update
     void Awake()
@@ -66,8 +67,13 @@ public class AudioManager : MonoBehaviour
 
     public void PlayTheme(string name)
     {
-        Sound t = Array.Find(themes, theme => theme.name == name);
-        CheckForError(t);
+        currentTheme = Array.Find(themes, theme => theme.name == name);
+        CheckForError(currentTheme);
+    }
+
+    public void UpdateThemePitch(float pitch)
+    {
+        currentTheme.source.pitch = pitch;
     }
 
     private void CheckForError(Sound sound)

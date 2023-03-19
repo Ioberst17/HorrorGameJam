@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class Poisoned : StatusEffect
 {
-    // These variables control the damage and duration of the burn.
+    // These variables control the damage and duration of the poison.
     private StatusEffectData statusData = new StatusEffectData();
-    public bool isBurning = false;
 
     public override void Start()
     {
