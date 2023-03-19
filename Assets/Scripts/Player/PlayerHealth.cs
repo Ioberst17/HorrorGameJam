@@ -10,6 +10,9 @@ public class PlayerHealth : Health
     public Animator animator;
     public PlayerController playerController;
     private Shield shield;
+    [SerializeField] private UIHealthChangeDisplay damageDisplay;
+    public float lucidityDamageModifier;
+    public int damageTaken;
 
     private void Start() 
     { 
@@ -17,8 +20,10 @@ public class PlayerHealth : Health
         animator = GetComponent<Animator>();
         playerController = GetComponent<PlayerController>(); 
         shield = GetComponentInChildren<Shield>();
+        damageDisplay = GetComponentInChildren<UIHealthChangeDisplay>();
         isInvincible = false;
         inHitstun = false;
+        lucidityDamageModifier = 1;
     }
 
     public void Hit(Vector3 enemyPos, int damageNumber, int damageType, float damageMod, float knockbackMod)
@@ -30,7 +35,8 @@ public class PlayerHealth : Health
 
     public void TakeDamage(int damageNumber, float damageMod) 
     {
-        HP -= (int)(damageNumber * (1 - damageMod));
+        damageTaken = (int)(damageNumber * (1 - damageMod) * lucidityDamageModifier);
+        HP -= damageTaken;
         if (HP <= 0) { HPZero(); }
     }
 

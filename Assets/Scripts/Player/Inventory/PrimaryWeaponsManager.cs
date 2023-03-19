@@ -5,7 +5,7 @@ using UnityEngine;
 public class PrimaryWeaponsManager : WeaponsManager
 {
     // Start is called before the first frame update
-    void Start()
+    public override void Start()
     {
         base.Start();
     }
@@ -31,7 +31,7 @@ public class PrimaryWeaponsManager : WeaponsManager
         }
     }
 
-    private void OnDestroy()
+    public override void OnDestroy()
     {
         base.OnDestroy();
     }

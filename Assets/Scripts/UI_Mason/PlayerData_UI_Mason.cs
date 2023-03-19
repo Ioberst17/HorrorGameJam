@@ -21,11 +21,13 @@ public class PlayerData_UI_Mason : MonoBehaviour
 
     [SerializeField] private Canvas ThrowForceUI;
     [SerializeField] private Image ThrowForceFill;
+    [SerializeField] private UIHealthChangeDisplay display;
     Transform StartingTransform;
     public GameObject throwPredictionPoint;
     private GameObject[] throwPredictionPoints;
     private int numberOfThrowPoints = 30;
 
+    public float healthChecker;
     public float health;
     public float mp;
     public float sp;
@@ -49,6 +51,8 @@ public class PlayerData_UI_Mason : MonoBehaviour
     private void Start()
     {
         FinishTossForceDisplay();
+        healthChecker = gameController.GetHP();
+        healthBar.fillAmount = health / 100f;
 
         //dataManager.gameData.consumables[1].amount = dataManager.gameData.consumables[1].amount + 2;
 
@@ -59,6 +63,10 @@ public class PlayerData_UI_Mason : MonoBehaviour
 
     void Update()
     {
+        if(healthChecker >  gameController.GetHP() && healthChecker <= playerHealth.maxHealth) { display.ShowChange(healthChecker - gameController.GetHP(), "Negative"); }
+        else if (healthChecker < gameController.GetHP()) { display.ShowChange(gameController.GetHP() - healthChecker, "Positive"); }
+
+        healthChecker = gameController.GetHP();
         health = gameController.GetHP();
         healthBar.fillAmount = health / 100f; //can import the max health to make this better but as for right now the hp is 100
 
