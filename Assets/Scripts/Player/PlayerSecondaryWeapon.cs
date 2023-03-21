@@ -200,10 +200,7 @@ public class PlayerSecondaryWeapon : MonoBehaviour
 
     public void Flip() // used in game controller to flip projectile spawnpoint when player changes direction; should only be called if using horizontal / vertical direction only firing
     {
-        gameObject.transform.localScale = new Vector3(
-          transform.localScale.x,
-          transform.localScale.y*-1,
-          transform.localScale.z);
+        gameObject.transform.Rotate(0.0f, 180.0f, 0.0f);
     }
 
     private void WeaponChanged(int weaponID, int weaponLevel)

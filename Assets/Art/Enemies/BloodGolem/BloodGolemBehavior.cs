@@ -12,7 +12,6 @@ public class BloodGolemBehavior : MonoBehaviour
     [SerializeField] private Transform Bloodball;
     //[SerializeField] private Rigidbody2D BloodBallrb;
     [SerializeField] private Transform Bloodballstart;
-    public int IDNumber;
 
     // Start is called before the first frame update
     void Start()
@@ -21,8 +20,6 @@ public class BloodGolemBehavior : MonoBehaviour
         enemyController.isAttacking = true;
         ShotCountdown = Shotvalue;
         bloodballActive = false;
-        IDNumber = Random.Range(0, 10000);
-        name += IDNumber;
         //Bloodballstart = Bloodball.transform.position;
     }
 
