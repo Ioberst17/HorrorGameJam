@@ -42,7 +42,8 @@ public class GameController : MonoBehaviour
     public int JumpBuffer;
     public int DashBuffer;
 
-
+    private bool pauseButtonDown;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -114,7 +115,7 @@ public class GameController : MonoBehaviour
 
     public void CheckInput()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && gameState != "Starting")
+        if ((Input.GetKeyDown(KeyCode.Escape)) && gameState != "Starting")
         {
             Debug.Log("esc");
             pauseHandler();

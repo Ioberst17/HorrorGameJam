@@ -83,7 +83,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
         if (!isAttacking && !DialogueManager.GetInstance().dialogueIsPlaying)
         {
             isAttacking = true;
-            FindObjectOfType<AudioManager>().PlaySFX("PlayerMelee");
+            
             if (attackDirection == 1 && !playerController.isGrounded) { groundSlam.Execute(); }
             else {
                 if (chargePunch != null) { chargePunch.Execute(); Debug.Log("Executing ChargePunch"); }
@@ -97,6 +97,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
     public IEnumerator AttackActiveFrames(int attackDirection) // is called by the trigger event for powerups to countdown how long the power lasts
     {
         animator.Play("PlayerBasicAttack");
+        FindObjectOfType<AudioManager>().PlaySFX("PlayerMelee");
         if (attackDirection >= 0 && attackDirection <= 2)
         {
             yield return new WaitForSeconds(startupFrames/60);
