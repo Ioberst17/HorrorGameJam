@@ -75,15 +75,22 @@ public class PlayerData_UI_Mason : MonoBehaviour
 
         sp = gameController.GetSP();
         spBar.fillAmount = sp / 100f;
-
-        /*consumableAmount.text = dataManager.gameData.consumables[1].amount.ToString();
-
+        if(dataManager.gameData.consumables.Count >= 2)
+        {
+            if (dataManager.gameData.consumables[1].amount > 0)
+            {
+                consumableAmount.text = dataManager.gameData.consumables[1].amount.ToString();
+                
+            }
+            
+        }
+        
         if (Input.GetKeyDown(KeyCode.H) && dataManager.gameData.consumables[1].amount > 0 && gameController.GetHP() < 100)
         {
             playerHealth.AddHealth(10);
             dataManager.gameData.consumables[1].amount = dataManager.gameData.consumables[1].amount - 1;
             Debug.Log("Used health kit.\n");
-        }*/
+        }
     }
 
     public void UpdateAmmoUI(string updatedWeapon, int updatedAmmo)
