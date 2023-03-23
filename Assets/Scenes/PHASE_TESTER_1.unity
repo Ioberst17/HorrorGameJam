@@ -1190,7 +1190,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pauseMenu: {fileID: 1808386227}
   controlsMenu: {fileID: 256208539}
-  quitButton: {fileID: 0}
+  quitButton: {fileID: 1872391159}
 --- !u!4 &271491802 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6692248386998842308, guid: 72c3a56afd3179d44a95acbfc542bf79, type: 3}
@@ -2365,50 +2365,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1458881044374652408, guid: eb2664123c277934fb626507fe6ad021, type: 3}
   m_PrefabInstance: {fileID: 1458881044282191579}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &717545749 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1458881044374652415, guid: eb2664123c277934fb626507fe6ad021, type: 3}
-  m_PrefabInstance: {fileID: 1458881044282191579}
-  m_PrefabAsset: {fileID: 0}
-
-  m_GameObject: {fileID: 717545744}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76b997a32f38f434f9a5c35cc4cf168c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  weaponDatabase: {fileID: 0}
-  playerController: {fileID: 0}
-  AttackDamage: 0
-  isAttacking: 0
-  attackHori: {fileID: 654352745}
-  attackUp: {fileID: 569756657}
-  attackDown: {fileID: 1538196120}
-  AHPoint1: {fileID: 1194376542}
-  AHPoint2: {fileID: 2211077}
-  AUPoint1: {fileID: 1998982668}
-  AUPoint2: {fileID: 2127296477}
-  ADPoint1: {fileID: 242279053}
-  ADPoint2: {fileID: 1874415375}
-  activeFrames: 0
-  recoveryFrames: 0
-  startupFrames: 0
-  attackLagValue: 0
-  attackLagTimer: 0
-  normalCollisionFilter:
-    useTriggers: 0
-    useLayerMask: 0
-    useDepth: 0
-    useOutsideDepth: 0
-    useNormalAngle: 0
-    useOutsideNormalAngle: 0
-    layerMask:
-      serializedVersion: 2
-      m_Bits: 0
-    minDepth: 0
-    maxDepth: 0
-    minNormalAngle: 0
-    maxNormalAngle: 0
 --- !u!114 &717545748
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3491,7 +3447,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -195, y: 100}
+  m_AnchoredPosition: {x: -292, y: 197}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1414140862
