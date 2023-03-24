@@ -4872,7 +4872,7 @@ PlatformEffector2D:
   m_UseColliderMask: 1
   m_ColliderMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 2147499839
   m_RotationalOffset: 0
   m_UseOneWay: 1
   m_UseOneWayGrouping: 0
@@ -6583,26 +6583,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 717545746, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: activeFrames
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 717545746, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: startupFrames
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 717545746, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: attackLagValue
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 717545746, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: recoveryFrames
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 1888633451, guid: eb2664123c277934fb626507fe6ad021, type: 3}
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 341844923}
-    - target: {fileID: 717545746, guid: eb2664123c277934fb626507fe6ad021, type: 3}
-      propertyPath: activeFrames
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 717545746, guid: eb2664123c277934fb626507fe6ad021, type: 3}
-      propertyPath: startupFrames
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 717545746, guid: eb2664123c277934fb626507fe6ad021, type: 3}
-      propertyPath: attackLagValue
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 717545746, guid: eb2664123c277934fb626507fe6ad021, type: 3}
-      propertyPath: recoveryFrames
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 1458881045040599524, guid: eb2664123c277934fb626507fe6ad021, type: 3}
       propertyPath: GameController
       value: 
