@@ -14,6 +14,7 @@ public class OneWayPlatform : MonoBehaviour
         effector = GetComponent<PlatformEffector2D>();
         PlatformPlayerDetection = GetComponentInChildren<OneWayPlatformPlayerDetection>();
         PlayerInZone = false;
+        effector.useColliderMask = false;
     }
 
     // Update is called once per frame
@@ -21,13 +22,13 @@ public class OneWayPlatform : MonoBehaviour
     {
         if (PlayerInZone && (Input.GetKeyUp(KeyCode.DownArrow) || Input.GetKeyUp(KeyCode.S)))
         {
-            waitTime = 0.05f;
+            waitTime = 0.5f;
         }
         if (PlayerInZone && (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S)))
         {
             if (waitTime <= 0)
             {
-                effector.rotationalOffset = 180f;
+                effector.useColliderMask = true;
                 waitTime = 0.05f;
             }
             else
@@ -37,7 +38,12 @@ public class OneWayPlatform : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.UpArrow)|| Input.GetButtonDown("Jump") || Input.GetKeyDown("up"))
         {
-            effector.rotationalOffset = 0;
+            effector.useColliderMask = false;
+        }
+        if (!PlayerInZone)
+        {
+            effector.useColliderMask = false;
+            waitTime = 0f;
         }
     }
 }
