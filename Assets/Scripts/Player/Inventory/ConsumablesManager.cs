@@ -61,11 +61,11 @@ public class ConsumablesManager : MonoBehaviour
 
     public void AddNewItemToInv(int itemID, int amount)
     {
-        for (int i = 0; i < consumablesDatabase.consumablesDatabase.entries.Length; i++)
+        for (int i = 0; i < consumablesDatabase.data.entries.Length; i++)
         {
-            if (consumablesDatabase.consumablesDatabase.entries[i].id == itemID)
+            if (consumablesDatabase.data.entries[i].id == itemID)
             {
-                var itemToAdd = consumablesDatabase.consumablesDatabase.entries[i];
+                var itemToAdd = consumablesDatabase.data.entries[i];
 
                 consumables.Add(new PlayerConsumables(
                     itemToAdd.id,

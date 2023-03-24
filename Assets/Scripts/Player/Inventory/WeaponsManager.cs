@@ -10,7 +10,7 @@ public class WeaponsManager : MonoBehaviour
     public GameObject utilities;
     public GameObject player;
     public WeaponDatabase weaponDatabase;
-    public WeaponDatabase.Database weaponData;
+    public WeaponDatabase.DB weaponData;
     public PlayerSecondaryWeapon playerSecondaryWeapon;
 
     [SerializeField]
@@ -22,7 +22,7 @@ public class WeaponsManager : MonoBehaviour
     public int currentWeaponIndex;
 
     // Start is called before the first frame update
-    public void Start()
+    public virtual void Start()
     {
         EventSystem.current.onWeaponChangeTrigger += WeaponChanged;
         EventSystem.current.onWeaponLevelTrigger += WeaponLevelChange;
@@ -30,7 +30,7 @@ public class WeaponsManager : MonoBehaviour
         dataManager = DataManager.Instance;
         utilities = GameObject.Find("Utilities");
         weaponDatabase = utilities.GetComponentInChildren<WeaponDatabase>();
-        weaponData = weaponDatabase.weaponDatabase;
+        weaponData = weaponDatabase.data;
         InitializeDataManagerReferences();
         Load();
 
@@ -180,7 +180,7 @@ public class WeaponsManager : MonoBehaviour
 
     public string GetCurrentWeaponName() { return weaponList[currentWeaponIndex].name; }
 
-    public void OnDestroy()
+    public virtual void OnDestroy()
     {
         // unsubscribe from events
         EventSystem.current.onWeaponChangeTrigger -= WeaponChanged;

@@ -116,9 +116,9 @@ public class PlayerSecondaryWeapon : MonoBehaviour
 
     private void WeaponFired(int weaponID, int weaponLevel, int ammoChange, int direction)
     {
-        if (weaponDatabase.weaponDatabase.entries[weaponID].isShot == true) { Shoot();}
-        else if (weaponDatabase.weaponDatabase.entries[weaponID].isThrown == true) { Throw(direction); }
-        else if (weaponDatabase.weaponDatabase.entries[weaponID].isFixedDistance == true) { FixedDistanceFire(); fixedDistanceCheck = true; }
+        if (weaponDatabase.data.entries[weaponID].isShot == true) { Shoot();}
+        else if (weaponDatabase.data.entries[weaponID].isThrown == true) { Throw(direction); }
+        else if (weaponDatabase.data.entries[weaponID].isFixedDistance == true) { FixedDistanceFire(); fixedDistanceCheck = true; }
         else { Debug.Log("Check WeaponDatabase, weapon is missing a TRUE value for if ammo should be shot, thrown, be a fixed distance, etc."); }
     }
 
