@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using Ink.Runtime;
 using UnityEngine.EventSystems;
+using Ink.Parsed;
 
 
 public class DialogueManager : MonoBehaviour
@@ -18,7 +19,9 @@ public class DialogueManager : MonoBehaviour
 
     private TextMeshProUGUI[] choicesText;
 
-    private Story currentStory;
+    private string[] choicesTags;
+
+    private Ink.Runtime.Story currentStory;
 
     public bool dialogueIsPlaying;
 
@@ -26,9 +29,10 @@ public class DialogueManager : MonoBehaviour
 
     private static DialogueManager instance;
 
-    private List<Choice> currentChoices;
+    private List<Ink.Runtime.Choice> currentChoices;
+    [SerializeField] List<string> currentTags;
 
-
+    [SerializeField] Morality playerMorality;
 
     private void Awake()
     {
@@ -61,6 +65,8 @@ public class DialogueManager : MonoBehaviour
             choicesText[index] = choice.GetComponentInChildren<TextMeshProUGUI>();
             index++;
         }
+
+        playerMorality = GameObject.Find("Morality").GetComponent<Morality>();
     }
 
 
@@ -84,7 +90,7 @@ public class DialogueManager : MonoBehaviour
 
     public void EnterDialogueMode(TextAsset inkJSON)
     {
-        currentStory = new Story(inkJSON.text);
+        currentStory = new Ink.Runtime.Story(inkJSON.text);
         dialogueIsPlaying = true;
         dialoguePanel.SetActive(true);
 
@@ -136,10 +142,27 @@ public class DialogueManager : MonoBehaviour
 
         int index = 0;
         //enable and initialize the choices up to the amount of choices for this line of dialogue
-        foreach (Choice choice in currentChoices)
+        foreach (Ink.Runtime.Choice choice in currentChoices)
         {
             choices[index].gameObject.SetActive(true);
             choicesText[index].text = choice.text;
+            if(choice.tags != null)
+            {
+                foreach (string tag in choice.tags)
+                {
+                    Debug.Log(("Choice at index " + index + " has a" + tag));
+                }
+            }
+
+            if(choice.tags != null)
+            {
+                foreach (object tagObj in choice.tags)
+                {
+                    string tag = tagObj.ToString();
+                    currentTags.Add(tag);
+                }
+            }
+            //
             index++;
         }
 
@@ -164,6 +187,9 @@ public class DialogueManager : MonoBehaviour
     public void MakeChoice(int choiceIndex)
     {
         //choicesDisplayed = true;
+        Debug.Log(choicesText[choiceIndex].text);
+        if (currentChoices[choiceIndex].tags.Contains("positive")) { Debug.Log("Added morality"); playerMorality.AddToMoralityLevel(1); }
+        else if (currentChoices[choiceIndex].tags.Contains("negative")) { Debug.Log("Subtracted morality"); playerMorality.AddToMoralityLevel(-1); }
         currentStory.ChooseChoiceIndex(choiceIndex);
         ContinueStory();
     }
