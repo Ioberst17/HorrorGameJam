@@ -18,7 +18,7 @@ public class ChargePunch : MonoBehaviour
     [SerializeField] int attackDirection;
 
     [SerializeField] private float chargeTime;             // the current charge time
-    [SerializeField] private bool isCharging;                // whether the punch is currently being charged
+    [SerializeField] public bool isCharging;                // whether the punch is currently being charged
 
     private void Start()
     {
