@@ -21,7 +21,7 @@ public class Door_Script : MonoBehaviour
     {
         if (playerDetected)
         {
-            if (Input.GetKey("e"))
+            if (Input.GetKeyUp(KeyCode.R))
             {
                 player.transform.position = posToGo.position;
                 playerDetected = false;
