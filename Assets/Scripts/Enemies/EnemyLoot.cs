@@ -11,7 +11,7 @@ public class EnemyLoot : MonoBehaviour
     private List<Item> ammoList = new List<Item>();
     private int enemyTypeID = -1;
     private EnemyDatabase.Database enemyDB;
-    private ConsumablesDatabase.Database consumablesDB;
+    private ConsumablesDatabase.DB consumablesDB;
     private List<GameObject> itemPrefabs;
     float lootLaunchForce = 5f;
 
@@ -19,14 +19,14 @@ public class EnemyLoot : MonoBehaviour
     private void Start()
     {
         enemyDB = GameObject.Find("EnemyDatabase").GetComponent<EnemyDatabase>().enemyDatabase;
-        consumablesDB = GameObject.Find("ConsumablesDatabase").GetComponent<ConsumablesDatabase>().consumablesDatabase;
+        consumablesDB = GameObject.Find("ConsumablesDatabase").GetComponent<ConsumablesDatabase>().data;
         itemPrefabs = GameObject.Find("ItemPrefabs").GetComponent<ItemPrefabs>().itemPrefabs;
 
         if (CompareTag("Hellhound")) { enemyTypeID = 0; } // add enemyID as in enemy database + behavior component
         else if (CompareTag("Bat")) { enemyTypeID = 1; }
         else if (CompareTag("ParalysisDemon")) { enemyTypeID = 2; }
         else if (CompareTag("Spider")) { enemyTypeID = 3; }
-        else if (CompareTag("Bloodgolem")) { enemyTypeID = 4; }
+        else if (CompareTag("BloodGolem")) { enemyTypeID = 4; }
         else if (CompareTag("Gargoyle")) { enemyTypeID = 5; }
         else { enemyTypeID = -1;  Debug.Log("Check for an object named: " + name + "; it is missing an enemy tag"); }
 

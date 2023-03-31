@@ -9,7 +9,7 @@ public class BreakableLoot : MonoBehaviour
 {
     [SerializeField] InventoryManager inventory;
     [SerializeField] PlayerController playerController;
-    [SerializeField] ConsumablesDatabase.Database consumablesDB;
+    [SerializeField] ConsumablesDatabase.DB consumablesDB;
     private List<GameObject> itemPrefabs;
     float lootLaunchForce = 5f;
 
@@ -17,7 +17,7 @@ public class BreakableLoot : MonoBehaviour
     {
         inventory = GameObject.Find("Player").GetComponent<InventoryManager>();
         playerController = GameObject.Find("PlayerModel").GetComponent<PlayerController>();
-        consumablesDB = GameObject.Find("ConsumablesDatabase").GetComponent<ConsumablesDatabase>().consumablesDatabase;
+        consumablesDB = GameObject.Find("ConsumablesDatabase").GetComponent<ConsumablesDatabase>().data;
         itemPrefabs = GameObject.Find("ItemPrefabs").GetComponent<ItemPrefabs>().itemPrefabs;
     }
 
@@ -45,7 +45,7 @@ public class BreakableLoot : MonoBehaviour
 
     public void GenerateAmmo() 
     {
-        string currentSecondary = inventory.GetCurrentSecondaryWeapon();
+        string currentSecondary = inventory.secondaryWeaponsManager.GetCurrentWeaponName();
         string assetPath = "ItemPrefabs/Ammo/" + currentSecondary;
         GameObject toInstantiate = Instantiate(Resources.Load(assetPath) as GameObject, transform.position, Quaternion.identity);
         Debug.Log("Instantiated game object: " + toInstantiate.name);

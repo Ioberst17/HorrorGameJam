@@ -28,6 +28,7 @@ public class Item : MonoBehaviour
             Debug.Log(name + " is triggered");
             EventSystem.current.ItemPickupTrigger(staticID, self.amount);
             gameObject.SetActive(false);
+            Destroy(gameObject);
         }
     }
 }

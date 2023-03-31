@@ -7,6 +7,7 @@ public class ParalysisDemonBehavior : MonoBehaviour
 
     private Vector2 newVelocity;
     EnemyController enemyController;
+    private int flipCooldown = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -22,6 +23,10 @@ public class ParalysisDemonBehavior : MonoBehaviour
     }
     public void PDPassover()
     {
+        if (flipCooldown > 0)
+        {
+            flipCooldown--;
+        }
         if (enemyController.transform.position.x >= enemyController.patrol1Point.x)
         {
             enemyController.patrolID = 1;
@@ -40,11 +45,21 @@ public class ParalysisDemonBehavior : MonoBehaviour
         }
         if (enemyController.rb.velocity.x >= 0.5f && enemyController.facingDirection == -1)
         {
-            enemyController.Flip();
+            if (flipCooldown == 0)
+            {
+                enemyController.Flip();
+
+                flipCooldown = 25;
+            }
+
         }
         else if (enemyController.rb.velocity.x <= -0.5f && enemyController.facingDirection == 1)
         {
-            enemyController.Flip();
+            if (flipCooldown == 0)
+            {
+                enemyController.Flip();
+                flipCooldown = 25;
+            }
         }
     }
 
@@ -53,15 +68,15 @@ public class ParalysisDemonBehavior : MonoBehaviour
         switch (enemyController.patrolID)
         {
             case 0:
-                newVelocity.Set(enemyController.patrolSpeed, 0);
+                newVelocity.Set(enemyController.patrolSpeed, enemyController.rb.velocity.y);
                 enemyController.rb.velocity = newVelocity;
                 break;
             case 1:
-                newVelocity.Set(-enemyController.patrolSpeed, 0);
+                newVelocity.Set(-enemyController.patrolSpeed, enemyController.rb.velocity.y);
                 enemyController.rb.velocity = newVelocity;
                 break;
             case 2:
-                newVelocity.Set(enemyController.patrolSpeed, 0);
+                newVelocity.Set(enemyController.patrolSpeed, enemyController.rb.velocity.y);
                 enemyController.rb.velocity = newVelocity;
                 break;
             default:
@@ -70,16 +85,25 @@ public class ParalysisDemonBehavior : MonoBehaviour
     }
     private void PDemonChase()
     {
-        if (enemyController.playerLocation.position.x >= transform.position.x)
+        if(flipCooldown == 0)
         {
-            newVelocity.Set(enemyController.patrolSpeed * 1.5f, 0);
-            enemyController.rb.velocity = newVelocity;
+            if (enemyController.playerLocation.position.x >= transform.position.x - 0.1f)
+            {
+                newVelocity.Set(enemyController.patrolSpeed * 1.5f, enemyController.rb.velocity.y);
+                enemyController.rb.velocity = newVelocity;
+            }
+            else if (enemyController.playerLocation.position.x < transform.position.x + 0.1f)
+            {
+                newVelocity.Set(-enemyController.patrolSpeed * 1.5f, enemyController.rb.velocity.y);
+                enemyController.rb.velocity = newVelocity;
+            }
+            else
+            {
+                newVelocity.Set(0, enemyController.rb.velocity.y);
+                enemyController.rb.velocity = newVelocity;
+            }
         }
-        else
-        {
-            newVelocity.Set(-enemyController.patrolSpeed * 1.5f, 0);
-            enemyController.rb.velocity = newVelocity;
-        }
+        
     }
 
 }

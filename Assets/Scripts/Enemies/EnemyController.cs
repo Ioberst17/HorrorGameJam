@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour
+public class EnemyController : MonoBehaviour, IDamageable
 {
     private SpriteRenderer enemySpriteRenderer;
     public Animator animator;
@@ -26,7 +26,10 @@ public class EnemyController : MonoBehaviour
     public EnemyDatabase enemyDatabase; // used to load in values for enemies e.g. health data, attack info
     public int damageValue;
 
+    public int HP_MAX;
     public int HP;
+    private int damageToPass;
+    private string statusToPass;
 
     public int invincibilityCount;
     [SerializeField]
@@ -84,7 +87,7 @@ public class EnemyController : MonoBehaviour
                 if (collider.gameObject.layer
                 == LayerMask.NameToLayer("Player") && isAttacking)
                 {
-                    playerController.takeDamage(transform.position, damageValue, 1);
+                    //playerController.takeDamage(transform.position, damageValue, 1);
                     rb.AddForce(new Vector2(knockbackForce * -facingDirection, 0.0f), ForceMode2D.Impulse);
                 }
             }
@@ -97,7 +100,8 @@ public class EnemyController : MonoBehaviour
     {
         setupHelper();
         //subscribe to important messages
-        EventSystem.current.onAttackCollision += AmmoDamage;
+        EventSystem.current.onEnemyEnviroDamage += Hit;
+        EventSystem.current.onEnemyHitCollision += Hit;
     }
 
     // Update is called once per frame
@@ -145,63 +149,80 @@ public class EnemyController : MonoBehaviour
 
             }
         }
-
     }
-    public bool calculateHit(int attackDamage, Vector3 playerPosition)
+
+    public void Hit(int attackDamage, Vector3 playerPosition, string statusEffect)
     {
-        Debug.Log(name + " called");
         if (!isDead)
         {
             if (invincibilityCount == 0)
             {
                 //rb.AddForce(new Vector2(5.0f * facingDirection, 5.0f), ForceMode2D.Impulse);
-                Debug.Log(name + " has been hit for " + attackDamage + "!");
-                damageInterupt = true;
-                //might have to make change this later
-                //isAttacking = false;
-
+                damageInterupt = true; //might have to make change this later //isAttacking = false;
                 invincibilityCount = invincibilitySet;
-                HP -= attackDamage;
-                if (HP <= 0)
-                {
-                    Death();
-                }
-                else
-                {
-                    Debug.Log("Health remaining is " + HP);
-                    if (transform.position.x <= playerPosition.x)
-                    {
-                        newVelocity.Set(-knockbackForce, 0.0f);
-                        rb.velocity = newVelocity;
-                        newForce.Set(0.0f, knockbackForce);
-                        rb.AddForce(newForce, ForceMode2D.Impulse);
-                    }
-                    else
-                    {
-                        newVelocity.Set(knockbackForce, 0.0f);
-                        rb.velocity = newVelocity;
-                        newForce.Set(0.0f, knockbackForce);
-                        rb.AddForce(newForce, ForceMode2D.Impulse);
-                    }
-                }
-                return true;
-            }
-            else
-            {
-                return false;
+                Debug.Log("Hit is being called");
+                if (statusEffect != null) { StatusModifier(statusEffect); }
+                TakeDamage(attackDamage);
+                if (!isDead) { HandleHitPhysics(playerPosition); }
             }
         }
-
-        return false;
-        
     }
+
+    public void Hit(int attackDamage, Vector3 playerPosition) { Hit(attackDamage, playerPosition, null); }
+
+    public void Hit(int weaponID, int LevelOfWeapon, Vector3 playerPosition)  
+    {
+        statusToPass = weaponDatabase.GetWeaponEffect(weaponID);
+        Hit(weaponID, LevelOfWeapon, playerPosition, statusToPass); 
+    }
+
+    public void Hit(int weaponID, int LevelOfWeapon, Vector3 playerPosition, string statusEffect) 
+    {
+        damageToPass = weaponDatabase.GetWeaponDamage(weaponID, LevelOfWeapon);
+        statusEffect = weaponDatabase.GetWeaponEffect(weaponID);
+        Hit(damageToPass, playerPosition, statusEffect);
+    }
+
+    public void StatusModifier(string mod)
+    {
+        if (mod == "DemonBlood") { if (GetComponentInChildren<Poisoned>() != null) { GetComponentInChildren<Poisoned>().Execute(); } }
+        else if (mod == "Burn") { if (GetComponentInChildren<Burnable>() != null) { GetComponentInChildren<Burnable>().Execute(); } }
+    }
+
+    public void HandleHitPhysics(Vector3 playerPosition) 
+    {
+        if (transform.position.x <= playerPosition.x)
+        {
+            newVelocity.Set(-knockbackForce, 0.0f);
+            rb.velocity = newVelocity;
+            newForce.Set(0.0f, knockbackForce);
+            rb.AddForce(newForce, ForceMode2D.Impulse);
+        }
+        else
+        {
+            newVelocity.Set(knockbackForce, 0.0f);
+            rb.velocity = newVelocity;
+            newForce.Set(0.0f, knockbackForce);
+            rb.AddForce(newForce, ForceMode2D.Impulse);
+        }
+    }
+
+    public void TakeDamage(int damage) 
+    { 
+
+        HP -= damage;
+        GetComponent<EnemyHealth>().UpdateHealthUI(HP);
+        Debug.Log("Enemy " + gameObject.name + " was damaged! It took: " + damage + "damage. It's current HP is: " + HP);
+        if (HP <= 0) { HPZero(); }
+    }
+
     public void Flip()
     {
         facingDirection *= -1;
         transform.Rotate(0.0f, 180.0f, 0.0f);
     }
 
-    public void Death()
+    public void HPZero()
     {
         Debug.Log(name + " is dead!");
         isDead = true;
@@ -211,35 +232,17 @@ public class EnemyController : MonoBehaviour
         string enemyDeathSound = gameObject.tag.ToString() + "Death"; // creates string that AudioManager recognizes; tag should match asset in AudioManager
         FindObjectOfType<AudioManager>().PlaySFX(enemyDeathSound);
         if(GetComponent<EnemyLoot>() != null) { GetComponent<EnemyLoot>().InstantiateLoot(transform.position);}
+        Destroy(gameObject);
 
     }
 
-    public void AmmoDamage(int weaponID, int LevelOfWeapon)
-    {
-        var ammoLevel = LevelOfWeapon - 1;
-
-        switch (ammoLevel)
-        {
-            case 0:
-                calculateHit(weaponDatabase.weaponDatabase.entries[weaponID].level1Damage, playerController.transform.position);
-                break;
-            case 1:
-                calculateHit(weaponDatabase.weaponDatabase.entries[weaponID].level2Damage, playerController.transform.position);
-                break;
-            case 2:
-                calculateHit(weaponDatabase.weaponDatabase.entries[weaponID].level3Damage, playerController.transform.position);
-                break;
-        }
-        
-        
-    }
     void setupHelper() // to load in relevant enemy stats and behavior script
     {
         if (CompareTag("Hellhound")) { EnemytypeID = 0; hellhoundBehavior = GetComponent<HellhoundBehavior>(); } // add enemyID as in enemy database + behavior component
         else if (CompareTag("Bat")) { EnemytypeID = 1; batBehavior = GetComponent<BatBehavior>(); }
         else if (CompareTag("ParalysisDemon")) { EnemytypeID = 2; paralysisDemonBehavior = GetComponent<ParalysisDemonBehavior>(); }
         else if (CompareTag("Spider")) { EnemytypeID = 3; SpiderBehavior = GetComponent<SpiderBehavior>(); }
-        else if (CompareTag("Bloodgolem")) { EnemytypeID = 4; GolemBehavior = GetComponent<BloodGolemBehavior>(); }
+        else if (CompareTag("BloodGolem")) { EnemytypeID = 4; GolemBehavior = GetComponent<BloodGolemBehavior>(); }
         else if (CompareTag("Gargoyle")) { EnemytypeID = 5; GargoyleBehavior = GetComponent<GargoyleBehavior>(); }
         else EnemytypeID = -1;
 
@@ -248,16 +251,17 @@ public class EnemyController : MonoBehaviour
         {
             var loadedValue = enemyDatabase.enemyDatabase.entries[EnemytypeID];
             HP = loadedValue.health; //50;
+            HP_MAX = loadedValue.health;
             damageValue = loadedValue.attack1Damage; //10;
             SoulPointsDropped = loadedValue.soulPointsDropped; //45;
             knockbackForce = loadedValue.knockback; //3
         }
-
     }
     private void OnDestroy()
     {
         // unsubscribe from events
-        EventSystem.current.onAttackCollision -= AmmoDamage;
+        EventSystem.current.onEnemyEnviroDamage -= Hit;
+        EventSystem.current.onEnemyHitCollision -= Hit;
     }
 
 }

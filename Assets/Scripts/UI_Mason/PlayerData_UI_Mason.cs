@@ -10,40 +10,51 @@ using UnityEngine.UI;
 
 public class PlayerData_UI_Mason : MonoBehaviour
 {
+    
 
     [SerializeField] private Image healthBar;
     [SerializeField] private Image mpBar;
     [SerializeField] private Image spBar;
     [SerializeField] private TextMeshProUGUI weaponName;
     [SerializeField] private TextMeshProUGUI weaponAmmo;
+    [SerializeField] private TextMeshProUGUI consumableAmount;
 
     [SerializeField] private Canvas ThrowForceUI;
     [SerializeField] private Image ThrowForceFill;
+    [SerializeField] private UIHealthChangeDisplay display;
     Transform StartingTransform;
     public GameObject throwPredictionPoint;
     private GameObject[] throwPredictionPoints;
     private int numberOfThrowPoints = 30;
 
+    public float healthChecker;
     public float health;
     public float mp;
     public float sp;
 
+    [SerializeField] private DataManager dataManager;
+
     [SerializeField] private GameController gameController;
 
     [SerializeField] private PlayerController playerController;
+    [SerializeField] private PlayerHealth playerHealth;
 
     // Start is called before the first frame update
     void Awake()
     {
         //subscribe to events
-        EventSystem.current.onUpdateWeaponUITrigger += UpdateAmmoUI;
-        EventSystem.current.onStartTossingTrigger += StartTossForceDisplay;
-        EventSystem.current.onFinishTossingTrigger += FinishTossForceDisplay;
+        EventSystem.current.onUpdateSecondaryWeaponUITrigger += UpdateAmmoUI;
+        EventSystem.current.onStartChargingUITrigger += StartTossForceDisplay;
+        EventSystem.current.onFinshChargingUITrigger += FinishTossForceDisplay;
     }
 
     private void Start()
     {
         FinishTossForceDisplay();
+        healthChecker = gameController.GetHP();
+        healthBar.fillAmount = health / 100f;
+
+        //dataManager.gameData.consumables[1].amount = dataManager.gameData.consumables[1].amount + 2;
 
         /*throwPredictionPoints = new GameObject[numberOfThrowPoints];
 
@@ -52,6 +63,10 @@ public class PlayerData_UI_Mason : MonoBehaviour
 
     void Update()
     {
+        if(healthChecker >  gameController.GetHP() && healthChecker <= playerHealth.maxHealth) { display.ShowChange(healthChecker - gameController.GetHP(), "Negative"); }
+        else if (healthChecker < gameController.GetHP()) { display.ShowChange(gameController.GetHP() - healthChecker, "Positive"); }
+
+        healthChecker = gameController.GetHP();
         health = gameController.GetHP();
         healthBar.fillAmount = health / 100f; //can import the max health to make this better but as for right now the hp is 100
 
@@ -60,6 +75,22 @@ public class PlayerData_UI_Mason : MonoBehaviour
 
         sp = gameController.GetSP();
         spBar.fillAmount = sp / 100f;
+        if(dataManager.gameData.consumables.Count >= 2)
+        {
+            if (dataManager.gameData.consumables[1].amount > 0)
+            {
+                consumableAmount.text = dataManager.gameData.consumables[1].amount.ToString();
+                
+            }
+            
+        }
+        
+        if (Input.GetKeyDown(KeyCode.H) && dataManager.gameData.consumables[1].amount > 0 && gameController.GetHP() < 100)
+        {
+            playerHealth.AddHealth(10);
+            dataManager.gameData.consumables[1].amount = dataManager.gameData.consumables[1].amount - 1;
+            Debug.Log("Used health kit.\n");
+        }
     }
 
     public void UpdateAmmoUI(string updatedWeapon, int updatedAmmo)
@@ -68,10 +99,10 @@ public class PlayerData_UI_Mason : MonoBehaviour
         weaponAmmo.text = updatedAmmo.ToString();
     } 
 
-    private void StartTossForceDisplay(float normalizedTossForce, Transform tossSpawnPoint, float tossForce)
+    private void StartTossForceDisplay(float normalizedTossForce, Transform tossSpawnPoint, float? tossForce)
     {
         ShowTossStrengthUI(normalizedTossForce);
-        PlayerThrowPredictionPointsObjectPool.Instance.ShowTossTrajectory(tossSpawnPoint, tossForce);
+        if(tossForce != null) PlayerThrowPredictionPointsObjectPool.Instance.ShowTossTrajectory(tossSpawnPoint, tossForce);
     }
 
     private void ShowTossStrengthUI(float tossForce)
@@ -81,43 +112,6 @@ public class PlayerData_UI_Mason : MonoBehaviour
         ThrowForceUI.transform.rotation = Quaternion.Euler(0, 0, 0);
         ThrowForceFill.transform.rotation = Quaternion.Euler(0, 0, 0);
     }
-
-    /*private void ShowTossTrajectory(Transform tossSpawnPoint, float tossForce)
-    {
-        for(int i = 0; i < throwPredictionPoints.Length; i++)
-        {
-            TossPredictionVisibility(true, throwPredictionPoints[i]);
-            throwPredictionPoints[i].transform.position = CalcPointPositions(i * 0.05f, tossSpawnPoint, tossForce);
-        }
-    }
-
-    Vector2 CalcPointPositions(float time, Transform tossSpawnPoint, float tossForce)
-    {
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector3 transformPos = tossSpawnPoint.position;
-        mousePos.z = transformPos.z;
-        Vector3 bulletDir = (mousePos - transformPos).normalized;
-
-        Vector2 currentPointPosition = (Vector2)tossSpawnPoint.transform.position + (Vector2)(time * tossForce * bulletDir) + (time * time) * 0.5f * Physics2D.gravity;
-        return currentPointPosition;
-    }
-
-    private void TossPredictionVisibility(bool OnOrOff, GameObject tossPoint)
-    {
-        if(OnOrOff == true)
-        {
-            Color temp = tossPoint.GetComponent<SpriteRenderer>().color;
-            temp.a = 1f;
-            tossPoint.GetComponent<SpriteRenderer>().color = temp;
-        }
-        else if (OnOrOff == false)
-        {
-            Color temp = tossPoint.GetComponent<SpriteRenderer>().color;
-            temp.a = 0f;
-            tossPoint.GetComponent<SpriteRenderer>().color = temp;
-        }
-        else { }
-    }*/
 
     private void FinishTossForceDisplay()
     {
@@ -132,9 +126,9 @@ public class PlayerData_UI_Mason : MonoBehaviour
     private void OnDestroy()
     {
         // unsubscribe from events
-        EventSystem.current.onUpdateWeaponUITrigger -= UpdateAmmoUI;
-        EventSystem.current.onStartTossingTrigger -= StartTossForceDisplay;
-        EventSystem.current.onFinishTossingTrigger -= FinishTossForceDisplay;
+        EventSystem.current.onUpdateSecondaryWeaponUITrigger -= UpdateAmmoUI;
+        EventSystem.current.onStartChargingUITrigger -= StartTossForceDisplay;
+        EventSystem.current.onFinshChargingUITrigger -= FinishTossForceDisplay;
     }
 
 }
