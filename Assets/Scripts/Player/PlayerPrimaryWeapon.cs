@@ -35,6 +35,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
     public int attackLagValue, attackLagTimer;
 
     [SerializeField] ContactFilter2D normalCollisionFilter;
+    public bool isCharging;
 
     //abilities
     GroundSlam groundSlam;
@@ -48,8 +49,10 @@ public class PlayerPrimaryWeapon : MonoBehaviour
 
     void FixedUpdate()
     {
+        playerController.isAttacking = isAttacking;
         if (attackLagTimer > 0) { attackLagTimer -= 1; }
         AttackHelper();
+        isCharging = chargePunch.isCharging;
     }
 
     private void GetSupportingReferences()
@@ -59,6 +62,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
         chargePunch = GetComponent<ChargePunch>();
         playerController = GetComponentInParent<PlayerController>();
         animator = GetComponentInParent<Animator>();
+        isCharging = chargePunch.isCharging;
     }
     private void InitializeValues()
     {
@@ -81,12 +85,16 @@ public class PlayerPrimaryWeapon : MonoBehaviour
         //Debug.Log("attack called 2");
         if (!isAttacking && !DialogueManager.GetInstance().dialogueIsPlaying)
         {
-            isAttacking = true;
-            FindObjectOfType<AudioManager>().PlaySFX("PlayerMelee");
-            if (attackDirection == 1 && !playerController.isGrounded) { groundSlam.Execute(); }
-            else {
-                if (chargePunch != null) { chargePunch.Execute(); Debug.Log("Executing ChargePunch"); }
-                else { StartCoroutine(AttackActiveFrames(attackDirection)); }
+            if(attackLagTimer == 0)
+            {
+                isAttacking = true;
+
+                if (attackDirection == 1 && !playerController.isGrounded) { groundSlam.Execute(); }
+                else
+                {
+                    if (chargePunch != null) { chargePunch.Execute(); Debug.Log("Executing ChargePunch"); }
+                    else { StartCoroutine(AttackActiveFrames(attackDirection)); }
+                }
             }
         }
     }
@@ -95,17 +103,24 @@ public class PlayerPrimaryWeapon : MonoBehaviour
 
     public IEnumerator AttackActiveFrames(int attackDirection) // is called by the trigger event for powerups to countdown how long the power lasts
     {
-        animator.Play("PlayerBasicAttack");
-        if (attackDirection >= 0 && attackDirection <= 2)
+        if (attackLagTimer == 0)
         {
-            yield return new WaitForSeconds(startupFrames);
-            CheckAttackDirection(attackDirection, true);
-            yield return new WaitForSeconds(activeFrames); // waits a certain number of seconds
-            CheckAttackDirection(attackDirection, false);
-            yield return new WaitForSeconds(recoveryFrames);
-            isAttacking = false;
+            animator.Play("PlayerBasicAttack");
+            FindObjectOfType<AudioManager>().PlaySFX("PlayerMelee");
+            attackLagTimer = attackLagValue;
+            if (attackDirection >= 0 && attackDirection <= 2)
+            {
+
+                yield return new WaitForSeconds(startupFrames / 60);
+                CheckAttackDirection(attackDirection, true);
+                yield return new WaitForSeconds(activeFrames / 60); // waits a certain number of seconds
+                CheckAttackDirection(attackDirection, false);
+                yield return new WaitForSeconds(recoveryFrames / 60);
+                isAttacking = false;
+            }
+            else { isAttacking = false; Debug.LogFormat("Attack direction value should be between 0 and 2, but it is {0}", attackDirection); }
         }
-        else  {  isAttacking = false; Debug.LogFormat("Attack direction value should be between 0 and 2, but it is {0}", attackDirection); }
+        
     }
 
     private void CheckAttackDirection(int attackDirection, bool setCondition)
