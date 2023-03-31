@@ -67,7 +67,7 @@ public class PlayerController : MonoBehaviour
     public bool isAgainstWall;
     public bool canWallJump;
     public int StartingMP;
-
+    public bool isCharging;
 
     [SerializeField] private PlayerHealth playerHealth;
     //Health points, magic points, soul points (currency)
@@ -111,9 +111,9 @@ public class PlayerController : MonoBehaviour
         else 
         {
             isGrounded = false;
-            if (!isJumping)
+            if (!isJumping && !isCharging)
             {
-                animator.Play("PlayerFall");
+                    animator.Play("PlayerFall");
             }
             //Debug.Log("isinair " + rb.velocity.y);
         }
@@ -125,7 +125,10 @@ public class PlayerController : MonoBehaviour
         else
         {
             isJumping = true;
-            animator.Play("PlayerJump");
+            if (!isCharging)
+            {
+                animator.Play("PlayerJump");
+            }
         }
 
         if (isGrounded && !isJumping)
@@ -190,7 +193,8 @@ public class PlayerController : MonoBehaviour
     //called by the GameController
     public void ApplyMovement()
     {
-        if (!playerHealth.inHitstun && !isDashing)
+        
+        if (!playerHealth.inHitstun && !isDashing && !isCharging)
         {
             if (isGrounded && !isJumping) //if on ground
             {
@@ -220,6 +224,10 @@ public class PlayerController : MonoBehaviour
                 newVelocity.Set(movementSpeed * ControlMomentum/10, rb.velocity.y);
                 rb.velocity = newVelocity;
             }
+        }
+        else if (isCharging)
+        {
+            animator.Play("PlayerCharge");
         }
     }
     private Vector3 GetNormalizedMouseDirectionFromPlayer()

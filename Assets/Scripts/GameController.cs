@@ -353,6 +353,7 @@ public class GameController : MonoBehaviour
         {
             if (xInput <= 0) HandleFlipping();
         }
+        PlayerController.isCharging = playerPrimaryWeapon.isCharging;
     }
 
 

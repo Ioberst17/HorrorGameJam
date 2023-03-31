@@ -35,6 +35,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
     public int attackLagValue, attackLagTimer;
 
     [SerializeField] ContactFilter2D normalCollisionFilter;
+    public bool isCharging;
 
     //abilities
     GroundSlam groundSlam;
@@ -51,6 +52,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
         playerController.isAttacking = isAttacking;
         if (attackLagTimer > 0) { attackLagTimer -= 1; }
         AttackHelper();
+        isCharging = chargePunch.isCharging;
     }
 
     private void GetSupportingReferences()
@@ -60,6 +62,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
         chargePunch = GetComponent<ChargePunch>();
         playerController = GetComponentInParent<PlayerController>();
         animator = GetComponentInParent<Animator>();
+        isCharging = chargePunch.isCharging;
     }
     private void InitializeValues()
     {
