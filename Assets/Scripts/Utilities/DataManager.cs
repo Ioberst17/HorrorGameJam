@@ -44,6 +44,7 @@ public class DataManager : MonoBehaviour
         public int playerLevel = 1;
         public PlayerSkills playerSkills = new PlayerSkills();
         // Inventory Data
+        public List<NarrativeItems> narrativeItems = new List<NarrativeItems>();
         [SerializeField]
         public List<PlayerConsumables> consumables = new List<PlayerConsumables>();
         [SerializeField]
@@ -83,7 +84,7 @@ public class DataManager : MonoBehaviour
     private void SaveData(GameData gameData) // used to save data to a file
     {
         //string json = JsonUtility.ToJson(gameData); // turns data into a json string
-        JSchema schemaToUse = GameDataSchema();
+        //JSchema schemaToUse = GameDataSchema();
         string json = JsonConvert.SerializeObject(gameData);
 
         //string json = EditorJsonUtility.ToJson(gameData);
@@ -131,6 +132,6 @@ public class DataManager : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        SaveData(gameData);
+        //SaveData(gameData);
     }
 }

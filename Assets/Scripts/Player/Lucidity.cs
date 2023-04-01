@@ -9,6 +9,7 @@ public class Lucidity : MonoBehaviour
     [SerializeField] private float level;
     [SerializeField] private float lucidity_MAX = 100f;
     [SerializeField] private float lucidityReducationRate = 0.0001f;
+    public float narrativeItemRateChange;
     public GameController gameController;
 
     [SerializeField] LucidityData.LevelData variablesToChange;
@@ -29,7 +30,7 @@ public class Lucidity : MonoBehaviour
 
     void Update()
     {
-        if(gameController.gameState != "isPaused") { level -= lucidityReducationRate; }
+        if(gameController.gameState != "isPaused") { level -= lucidityReducationRate * narrativeItemRateChange; }
         else { audioManager.UpdateThemePitch(1); }
 
         if(level > lucidity_MAX) { level = lucidity_MAX; }

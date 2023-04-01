@@ -12,7 +12,7 @@ public class ConsumablesDatabase : Database<Consumables>
 
     private void Awake()
     {
-        numOfColumns = 7; // must be updated as CSV is updated
+        numOfColumns = 9; // must be updated as CSV is updated
         textAssetData = Resources.Load<TextAsset>("TextFiles/ConsumablesDatabase");
         string[] data = ReadCSV();
         CreateDatabase(data);

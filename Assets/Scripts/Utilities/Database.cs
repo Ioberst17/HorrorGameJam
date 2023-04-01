@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Database<T> : MonoBehaviour
 {
@@ -14,6 +15,9 @@ public class Database<T> : MonoBehaviour
     [SerializeField]
     private List<string> columnDataTypes;
 
+    public int length;
+    [SerializeField] public string[] dataView;
+
     [Serializable]
     public class DB // create the a database of all game items
     {
@@ -24,12 +28,25 @@ public class Database<T> : MonoBehaviour
 
     public string[] ReadCSV()
     {
-        string[] data = textAssetData.text.Split(new string[] { ",", "\n" }, StringSplitOptions.None);
+        string[] lines = textAssetData.text.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+        string[] data = new string[lines.Length * numOfColumns];
+        int dataIndex = 0;
+
+        foreach (string line in lines)
+        {
+            string[] lineData = line.Split(',');
+            Array.Copy(lineData, 0, data, dataIndex * numOfColumns, numOfColumns);
+            dataIndex++;
+        }
+
+        dataView = data;
         return data;
     }
 
+
     public virtual void CreateDatabase(string[] data)
     {
+        length = data.Length;
         int numOfRows = data.Length / numOfColumns - 2; // gets data length (total # of cells), then divides by # of columns to get # of rowsl -2 for header and datatype row
         this.data.entries = new T[numOfRows];
 
@@ -58,24 +75,42 @@ public class Database<T> : MonoBehaviour
 
         if (columnDataTypes[currentColumnEntry] == "int")
         {
-            int intVal = int.Parse(data[numOfColumns * (currentRow + rowsToSkip) + currentColumnEntry]);
-            this.data.entries[currentRow].GetType().GetField(dataEntry.Name).SetValue(this.data.entries[currentRow], intVal);
+            try
+            {
+                int intVal = int.Parse(data[numOfColumns * (currentRow + rowsToSkip) + currentColumnEntry]);
+                this.data.entries[currentRow].GetType().GetField(dataEntry.Name).SetValue(this.data.entries[currentRow], intVal);
+            }
+            catch (Exception e) { ErrorHandler(e, currentColumnEntry, currentRow, rowsToSkip, data, dataEntry); }
         }
         else if (columnDataTypes[currentColumnEntry] == "string")
         {
-            string strVal = data[numOfColumns * (currentRow + rowsToSkip) + currentColumnEntry];
-            this.data.entries[currentRow].GetType().GetField(dataEntry.Name).SetValue(this.data.entries[currentRow], strVal);
+            try
+            {
+                string strVal = data[numOfColumns * (currentRow + rowsToSkip) + currentColumnEntry];
+                this.data.entries[currentRow].GetType().GetField(dataEntry.Name).SetValue(this.data.entries[currentRow], strVal);
+            }
+            catch (Exception e) { ErrorHandler(e, currentColumnEntry, currentRow, rowsToSkip, data, dataEntry); }
         }
         else if (columnDataTypes[currentColumnEntry] == "bool")
         {
-            bool boolVal = bool.Parse(data[numOfColumns * (currentRow + rowsToSkip) + currentColumnEntry]);
-            this.data.entries[currentRow].GetType().GetField(dataEntry.Name).SetValue(this.data.entries[currentRow], boolVal);
+            try
+            {
+                bool boolVal = bool.Parse(data[numOfColumns * (currentRow + rowsToSkip) + currentColumnEntry]);
+                this.data.entries[currentRow].GetType().GetField(dataEntry.Name).SetValue(this.data.entries[currentRow], boolVal);
+            }
+            catch (Exception e) { ErrorHandler(e, currentColumnEntry, currentRow, rowsToSkip, data, dataEntry); }
         }
         else if (columnDataTypes[currentColumnEntry] == "float")
         {
-            float floatVal = float.Parse(data[numOfColumns * (currentRow + rowsToSkip) + currentColumnEntry]);
-            this.data.entries[currentRow].GetType().GetField(dataEntry.Name).SetValue(this.data.entries[currentRow], floatVal);
+            try
+            {
+                float floatVal = float.Parse(data[numOfColumns * (currentRow + rowsToSkip) + currentColumnEntry]);
+                this.data.entries[currentRow].GetType().GetField(dataEntry.Name).SetValue(this.data.entries[currentRow], floatVal);
+            }
+            catch (Exception e) { ErrorHandler(e, currentColumnEntry, currentRow, rowsToSkip, data, dataEntry); }
+
         }
+        else if (columnDataTypes[currentColumnEntry] == "sprite") { }
         else { Debug.Log("No data type match. Current column is " + columnNames[currentColumnEntry] + " with data type " + columnDataTypes[currentColumnEntry]); }
     }
 
@@ -98,4 +133,18 @@ public class Database<T> : MonoBehaviour
         }
         return toReturn;
     }
+
+    private void ErrorHandler(Exception e, int currentColumnEntry, int currentRow, int rowsToSkip, string[] data, FieldInfo dataEntry)
+    {
+        int actualRow = currentRow + rowsToSkip;
+        Debug.Log("Caught an error: " + e.Message);
+        Debug.Log("The name of the current column being read is: " + columnNames[currentColumnEntry] +
+            "\nThe type of the current column being read is: " + columnDataTypes[currentColumnEntry] +
+            "\nThe current column being evaluated is: " + currentColumnEntry +
+            "\nThe current row being evaluated is: " + actualRow +
+            "\nThe index of the data array is: " + numOfColumns * (currentRow + rowsToSkip) + currentColumnEntry + 
+            "\nThe value being parsed is: " + data[numOfColumns * (currentRow + rowsToSkip) + currentColumnEntry] +
+            "\nThe entry being added to the database object is named: " + this.data.entries[currentRow].GetType().GetField(dataEntry.Name));
+    }
+    
 }
