@@ -20,6 +20,13 @@ public class EventSystem : MonoBehaviour
     public void AttackHitTrigger(int weaponID, int weaponLevel, Vector3 position, string statusModifier)
     { { if (onEnemyHitCollision != null) { onEnemyHitCollision(weaponID, weaponLevel, position, statusModifier); } } }
 
+    public event Action<int> onWaveFinished;
+
+    public void WaveFinishedTrigger(int waveNum) { if (onWaveFinished != null) { onWaveFinished(waveNum); } }
+
+    public event Action onAllWavesFinished;
+    public void AllWavesFinishedTrigger() { if (onAllWavesFinished != null) { onAllWavesFinished(); } }
+
     // WEAPON-RELATED EVENTS
 
     public event Action<int> onWeaponAddAmmoTrigger; // used to add ammo

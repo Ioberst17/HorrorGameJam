@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -35,6 +36,7 @@ public class EnemyController : MonoBehaviour, IDamageable
     [SerializeField]
     private int invincibilitySet;
     private bool isDead;
+    public event Action<EnemyController> OnDeath;
     public bool isAttacking;
     public bool playerInZone;
     public WeaponDatabase weaponDatabase; // used for ammo damage calcs
@@ -226,6 +228,7 @@ public class EnemyController : MonoBehaviour, IDamageable
     {
         Debug.Log(name + " is dead!");
         isDead = true;
+        if(OnDeath != null) { OnDeath(this); }
         CC2D.enabled = false;
         enemySpriteRenderer.enabled = false;
         playerController.gainSP(SoulPointsDropped);

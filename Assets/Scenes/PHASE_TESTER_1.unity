@@ -914,6 +914,10 @@ MonoBehaviour:
   numOfColumns: 0
   columnNames: []
   columnDataTypes: []
+  length: 0
+  dataView: []
+  data:
+    entries: []
 --- !u!1 &243034003
 GameObject:
   m_ObjectHideFlags: 0
@@ -1292,6 +1296,8 @@ MonoBehaviour:
   numOfColumns: 7
   columnNames: []
   columnDataTypes: []
+  length: 0
+  dataView: []
   data:
     entries: []
 --- !u!1 &291722939
@@ -2091,7 +2097,7 @@ MonoBehaviour:
   MusicController: {fileID: 0}
   UIController: {fileID: 0}
   CameraBehavior: {fileID: 341844925}
-  SpawnManager: {fileID: 49111190}
+  enemySpawner: {fileID: 0}
   gameState: 
   isPaused: 0
   xInput: 0
@@ -2815,7 +2821,7 @@ MonoBehaviour:
   playerController: {fileID: 919584575}
   playerHealth: {fileID: 0}
   sceneManagerIndexBased_Mason: {fileID: 86263942}
-  spawnManager: {fileID: 49111190}
+  enemySpawner: {fileID: 0}
 --- !u!4 &877649769
 Transform:
   m_ObjectHideFlags: 0
@@ -3987,6 +3993,7 @@ MonoBehaviour:
     playerLevel: 1
     playerSkills:
       unlockedSkillsList: 
+    narrativeItems: []
     consumables: []
     primaryWeapons: []
     secondaryWeapons: []
@@ -4697,6 +4704,29 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1740722375}
   m_CullTransparentMesh: 1
+--- !u!1 &1746219371 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2712541106306595560, guid: d63751759d7376b498e07f1633a7a05c, type: 3}
+  m_PrefabInstance: {fileID: 2712541107282755262}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1746219372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1746219371}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8510aba45a1cc748b6c83b0038d2073, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waves:
+  - enemyPrefabs:
+    - {fileID: 1210534858597401461, guid: 753c88793f4c0c64bac60ae5dddc5200, type: 3}
+    spawnPoints:
+    - position: {x: -6.6, y: 83, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &1748931452
 GameObject:
   m_ObjectHideFlags: 0
@@ -4876,6 +4906,8 @@ MonoBehaviour:
   numOfColumns: 21
   columnNames: []
   columnDataTypes: []
+  length: 0
+  dataView: []
   data:
     entries: []
   validPrimaryWeaponIDs: 
@@ -6832,6 +6864,10 @@ MonoBehaviour:
   dataManager: {fileID: 0}
   utilities: {fileID: 0}
   narrativeItemsDatabase: {fileID: 0}
+  narrativeItems: []
+  player: {fileID: 0}
+  lucidity: {fileID: 0}
+  lucidityImpact: 0
 --- !u!1001 &1927736784083236935
 PrefabInstance:
   m_ObjectHideFlags: 0
