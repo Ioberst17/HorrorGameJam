@@ -1,12 +1,12 @@
-﻿id,itemType,title,Amount,audioOnPickup,audioOnUse,description
-int,string,string,int,string,string,string
-0,Inventory,Currency,1,ItemPickup,,
-1,Inventory,Health Kit,1,ItemPickup,,
-2,Ammo,Revolver,1,ItemPickup,,
-3,Ammo,Hunter's Rifle,1,ItemPickup,,
-4,Ammo,Blood Bubbles,1,ItemPickup,,
-5,Ammo,Homemade Flamethrower,1,ItemPickup,,
-6,Ammo,Fireworks,1,ItemPickup,,
-7,Ammo,Hellfire Molotov,1,ItemPickup,,
-8,Instant Use,Heart,1,ItemPickup,,
-9,Instant Use,Hourglass,1,ItemPickup,,
+﻿id,itemType,title,Amount,audioOnPickup,audioOnUse,description,ammoID,sprite
+int,string,string,int,string,string,string,int,sprite
+0,Inventory,Currency,1,ItemPickup,,,0,
+1,Inventory,Health Kit,1,ItemPickup,,,0,
+2,Ammo,Revolver,1,ItemPickup,,,0,
+3,Ammo,Hunter's Rifle,1,ItemPickup,,,0,
+4,Ammo,Blood Bubbles,1,ItemPickup,,,0,
+5,Ammo,Homemade Flamethrower,1,ItemPickup,,,0,
+6,Ammo,Fireworks,1,ItemPickup,,,0,
+7,Ammo,Hellfire Molotov,1,ItemPickup,,,0,
+8,Instant Use,Heart,1,ItemPickup,,,0,
+9,Instant Use,Hourglass,1,ItemPickup,,,0,
