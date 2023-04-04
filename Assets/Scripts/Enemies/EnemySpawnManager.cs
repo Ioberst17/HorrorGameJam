@@ -2,9 +2,19 @@ using Ink.Parsed;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
+[RequireComponent(typeof(BoxCollider2D))]
 public class EnemySpawnManager : MonoBehaviour
 {
+    public int areaID;
+    public bool enemiesCleared; // used to track if area has been beaten
+    public bool respawnEveryTimePlayerEnters;
+    public Collider2D spawnTrigger;
+    private int index; // for search
+
+    public DataManager dataManager;
+
     [System.Serializable]
     public struct SpawnPoint
     {
@@ -24,9 +34,20 @@ public class EnemySpawnManager : MonoBehaviour
     private int numEnemiesSpawned = 0;
     private int numEnemiesDefeated = 0;
 
+    public void Start()
+    {
+        dataManager = DataManager.Instance;
+        spawnTrigger = GetComponent<BoxCollider2D>();
+        if(spawnTrigger.isTrigger != true) { spawnTrigger.isTrigger = true; }
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.GetComponent<PlayerController>() != null) { SpawnEnemies(); }
+        if (other.gameObject.GetComponent<PlayerController>() != null) 
+        {
+            if (CheckIfAreaCleared()) { }
+            else { SpawnEnemies(); }
+        }
     }
 
     void SpawnEnemies()
@@ -49,13 +70,15 @@ public class EnemySpawnManager : MonoBehaviour
 
         if (numEnemiesDefeated == numEnemiesSpawned)
         {
-            EventSystem.current.WaveFinishedTrigger(currentWaveIndex); Debug.Log("Wave Defeated!");
+            EventSystem.current.WaveFinishedTrigger(areaID, currentWaveIndex); Debug.Log("Wave Defeated!");
             currentWaveIndex++;
             numEnemiesDefeated = 0;
 
             if (currentWaveIndex >= waves.Length)
             {
-                EventSystem.current.AllWavesFinishedTrigger(); Debug.Log("All Waves Cleared!");
+                EventSystem.current.AllWavesFinishedTrigger(areaID); Debug.Log("All Waves Cleared!");
+                if (respawnEveryTimePlayerEnters == false) { enemiesCleared = true; }
+                SaveToDataManager();
                 return;
             }
 
@@ -63,4 +86,23 @@ public class EnemySpawnManager : MonoBehaviour
         }
     }
 
+    private void SaveToDataManager()
+    {
+        UpdateIndex();
+
+        if(index != -1) { dataManager.gameData.areaHistory.history[index].enemiesCleared = true;}
+        else { dataManager.gameData.areaHistory.history.Add(new AreaHistory.History(areaID, true)); }
+    }
+
+    private bool CheckIfAreaCleared()
+    {
+        UpdateIndex();
+        if (index != -1)
+        {
+            if (dataManager.gameData.areaHistory.history[index].enemiesCleared == true) { return true; }
+        }
+        return false;
+    }
+
+    private void UpdateIndex() { index = dataManager.gameData.areaHistory.history.FindIndex(area => area.areaID == areaID); }
 }

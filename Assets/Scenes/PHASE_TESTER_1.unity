@@ -3999,6 +3999,8 @@ MonoBehaviour:
     secondaryWeapons: []
     activePrimaryWeapon: 1
     activeSecondaryWeapon: 1
+    areaHistory:
+      history: []
 --- !u!4 &1518054525
 Transform:
   m_ObjectHideFlags: 0
@@ -4721,6 +4723,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8510aba45a1cc748b6c83b0038d2073, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  areaID: 0
+  enemiesCleared: 0
+  respawnOnPlayerReentry: 0
+  spawnTrigger: {fileID: 0}
+  dataManager: {fileID: 0}
   waves:
   - enemyPrefabs:
     - {fileID: 1210534858597401461, guid: 753c88793f4c0c64bac60ae5dddc5200, type: 3}

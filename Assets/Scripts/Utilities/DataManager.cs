@@ -22,10 +22,7 @@ public class DataManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            ClearData();
-        }
+        if (Input.GetKeyDown(KeyCode.C)) { ClearData(); }
     }
 
     [System.Serializable]
@@ -52,7 +49,9 @@ public class DataManager : MonoBehaviour
         [SerializeField]
         public List<PlayerWeapons> secondaryWeapons = new List<PlayerWeapons>();
         public int activePrimaryWeapon = 1;
-        public int activeSecondaryWeapon = 1; 
+        public int activeSecondaryWeapon = 1;
+        // Environment
+        public AreaHistory areaHistory = new AreaHistory();
     }
 
     /* FUNCTIONS */
