@@ -25,7 +25,7 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private CameraBehavior CameraBehavior;
     [SerializeField]
-    private SpawnManager SpawnManager;
+    private EnemyCreationForTesting enemySpawner;
 
     public string gameState;
     public bool isPaused;
@@ -241,13 +241,13 @@ public class GameController : MonoBehaviour
             }
 
             // For Spawns
-            if (Input.GetKeyDown(KeyCode.Alpha1)) { SpawnManager.SpawnEnemy(0); };
-            if (Input.GetKeyDown(KeyCode.Alpha2)) { SpawnManager.SpawnEnemy(1); };
-            if (Input.GetKeyDown(KeyCode.Alpha3)) { SpawnManager.SpawnEnemy(2); };
-            if (Input.GetKeyDown(KeyCode.Alpha4)) { SpawnManager.SpawnEnemy(3); };
-            if (Input.GetKeyDown(KeyCode.Alpha5)) { SpawnManager.SpawnEnemy(4); };
-            if (Input.GetKeyDown(KeyCode.Alpha6)) { SpawnManager.SpawnEnemy(5); };
-            if (Input.GetKeyDown(KeyCode.Alpha7)) { SpawnManager.SpawnEnemy(6); };
+            if (Input.GetKeyDown(KeyCode.Alpha1)) { enemySpawner.SpawnEnemy(0); };
+            if (Input.GetKeyDown(KeyCode.Alpha2)) { enemySpawner.SpawnEnemy(1); };
+            if (Input.GetKeyDown(KeyCode.Alpha3)) { enemySpawner.SpawnEnemy(2); };
+            if (Input.GetKeyDown(KeyCode.Alpha4)) { enemySpawner.SpawnEnemy(3); };
+            if (Input.GetKeyDown(KeyCode.Alpha5)) { enemySpawner.SpawnEnemy(4); };
+            if (Input.GetKeyDown(KeyCode.Alpha6)) { enemySpawner.SpawnEnemy(5); };
+            if (Input.GetKeyDown(KeyCode.Alpha7)) { enemySpawner.SpawnEnemy(6); };
 
         }
     }
