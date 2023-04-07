@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Reflection;
 using System.Linq;
-using System;
 
 public class EnemyDatabase : MonoBehaviour
 {
@@ -10,7 +9,6 @@ public class EnemyDatabase : MonoBehaviour
     // creates an enemy database (the store of enemies and information about them), and reads it from the enemyDatbase.csv in /Resources
 
     private TextAsset textAssetData; // the CSV to read from, must be assigned in Inspector
-    private EnemyData enemyChecker;
 
     [System.Serializable]
     public class Database // create the a database of all game items
@@ -54,30 +52,5 @@ public class EnemyDatabase : MonoBehaviour
                 }
             }
         }
-    }
-
-    private EnemyData GetEnemy(string nameNoSpace) 
-    {
-        enemyChecker = Array.Find(enemyDatabase.entries, x => x.nameNoSpace == nameNoSpace); //enemyDatabase.entries.Find(x => x.nameNoSpace == nameNoSpace);
-        if(enemyChecker == null) { Debug.LogFormat("Enemy data requested in 'name' was not properly input, no match was found in EnemyDatabase. Check the input and database names"); }
-        return enemyChecker; 
-    }
-
-    private int GetAttackDamage(EnemyData enemy, int attackNumber)
-    {
-        if (attackNumber == 1) { return enemy.attack1Damage; }
-        else if (attackNumber == 2) { return enemy.attack2Damage; }
-        else if (attackNumber == 3) { return enemy.attack3Damage; }
-        else if (attackNumber == 4) { return enemy.attack4Damage; }
-        else if (attackNumber == 5) { return enemy.attack5Damage; }
-        else if (attackNumber == 6) { return enemy.attack6Damage; }
-
-        Debug.Log("No attackNumber matches the number listed in EnemyDatabase.cs");
-        return -1;
-    }
-
-    public int GetAttackDamage(string enemyName, int attackNumber) 
-    {
-        return GetAttackDamage(GetEnemy(enemyName), attackNumber);
     }
 }

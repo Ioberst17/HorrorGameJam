@@ -8,13 +8,13 @@ using UnityEngine;
 public class ItemPrefabs : MonoBehaviour
 {
     public List<GameObject> itemPrefabs;
-    private ConsumablesDatabase.DB dataBase;
+    private ConsumablesDatabase.Database dataBase;
 
     // Start is called before the first frame update
     void Start()
     {
         itemPrefabs = Resources.LoadAll<GameObject>("ItemPrefabs").ToList();
-        dataBase = GameObject.Find("ConsumablesDatabase").GetComponent<ConsumablesDatabase>().data;
+        dataBase = GameObject.Find("ConsumablesDatabase").GetComponent<ConsumablesDatabase>().consumablesDatabase;
 
         UpdatePrefabs();
     }

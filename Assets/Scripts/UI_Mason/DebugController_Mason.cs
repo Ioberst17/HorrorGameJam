@@ -31,7 +31,6 @@ public class DebugController_Mason : MonoBehaviour
 
     //create refrences to needed scripts
     [SerializeField] private PlayerController playerController;
-    [SerializeField] private PlayerHealth playerHealth;
     [SerializeField] private SceneManagerIndexBased_Mason sceneManagerIndexBased_Mason;
     [SerializeField] private SpawnManager spawnManager;
 
@@ -84,7 +83,7 @@ public class DebugController_Mason : MonoBehaviour
 
         INVINCIBLE = new DebugCommands_Mason("invincible", "Player doesn't take damage.", "invincible", () =>
         {
-            playerHealth.isInvincible = true;
+            playerController.isInvincible = true;
         });
 
         RESTART = new DebugCommands_Mason("restart", "Restarts the scene.", "restart", () =>

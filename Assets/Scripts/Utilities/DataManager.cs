@@ -42,7 +42,6 @@ public class DataManager : MonoBehaviour
         // Player Data
         public float playerEXP = 0.0f;
         public int playerLevel = 1;
-        public PlayerSkills playerSkills = new PlayerSkills();
         // Inventory Data
         [SerializeField]
         public List<PlayerConsumables> consumables = new List<PlayerConsumables>();

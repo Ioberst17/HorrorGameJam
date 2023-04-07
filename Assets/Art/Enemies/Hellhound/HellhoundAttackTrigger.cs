@@ -12,10 +12,10 @@ public class HellhoundAttackTrigger : MonoBehaviour
         HellhoundBehavior = GetComponentInParent<HellhoundBehavior>();
     }
 
-    private void OnTriggerStay2D(Collider2D collider)
+    private void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.gameObject.layer
-                == LayerMask.NameToLayer("Player") && !HellhoundBehavior.justAttacked)
+                == LayerMask.NameToLayer("Player"))
         {
             HellhoundBehavior.PounceTrigger();
         }

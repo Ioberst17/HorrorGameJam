@@ -9,11 +9,6 @@ public class Broken : MonoBehaviour
 {
     private Transform[] children;
     private float torque, DirX, DirY;
-
-    [SerializeField] float torqueForce = 100f;
-    [SerializeField] float dirForce = 100f;
-
-
     private void Start()
     {
         int BrokenEnviroLayer = LayerMask.NameToLayer("BrokenEnviro");
@@ -29,11 +24,14 @@ public class Broken : MonoBehaviour
 
             AddRandomForce(child.GetComponent<Rigidbody2D>());
         }
-        Destroy(gameObject, 1f);
+        Destroy(gameObject, 2f);
     }
 
     private void AddRandomForce(Rigidbody2D rb)
     {
+        float torqueForce = 100f;
+        float dirForce = 100f;
+
         torque = Random.Range(-torqueForce, torqueForce);
         DirX = Random.Range(-dirForce, dirForce);
         DirY = Random.Range(-dirForce, dirForce);

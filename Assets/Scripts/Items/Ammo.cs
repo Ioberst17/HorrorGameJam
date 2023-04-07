@@ -11,7 +11,6 @@ public class Ammo : MonoBehaviour
     public bool isFixedDistance;
     public bool isThrown;
     public bool isExplosive;
-    public string statusModifier;
     public Animator animator;
     private int BreakableEnviroLayer;
 
@@ -28,18 +27,28 @@ public class Ammo : MonoBehaviour
         if (col.gameObject.GetComponent<EnemyController>() != null)
         {
             var enemyController = col.gameObject.GetComponent<EnemyController>();
-            if (isExplosive) { ExplosionHandler(); }
-            else if (!isExplosive) { PassDamage(weaponID, weaponLevel, transform.position, statusModifier);}        
+            enemyController.AmmoDamage(weaponID, weaponLevel);
+            if (isThrown)
+            {
+                StartCoroutine(ExplodeCoroutine());
+            }
+            else if (!isThrown)
+            {
+                Instantiate(Resources.Load("VFXPrefabs/BulletImpact"), transform.position, Quaternion.identity);
+                Destroy(gameObject);
+            }        
         }
 
 
         if (col.gameObject.tag == "Boundary" || col.gameObject.layer == BreakableEnviroLayer)
         {
-            if (isExplosive)  { ExplosionHandler(); }
+            if (isThrown)
+            {
+                StartCoroutine(ExplodeCoroutine());
+            }
             else
             {
-                if(col.gameObject.GetComponent<IDamageable>() != null) { col.gameObject.GetComponent<IDamageable>().Hit(); }
-                Instantiate(Resources.Load("VFXPrefabs/DamageImpact"), transform.position, Quaternion.identity);
+                Instantiate(Resources.Load("VFXPrefabs/BulletImpact"), transform.position, Quaternion.identity);
                 Destroy(gameObject);
             }
             
@@ -51,24 +60,41 @@ public class Ammo : MonoBehaviour
         if(other.gameObject.GetComponent<EnemyController>() != null)
         {
             var enemyController = other.gameObject.GetComponent<EnemyController>();
-            EventSystem.current.AttackHitTrigger(weaponID, weaponLevel, GetComponentInParent<Transform>().position, statusModifier);
+            enemyController.AmmoDamage(weaponID, weaponLevel);
         }
     }
 
-    private void ExplosionHandler()
+
+
+    IEnumerator ExplodeCoroutine()
     {
-        if (GetComponent<Explode>() != null) { GetComponent<Explode>().AmmoExplosion(2f, 10f, weaponID, weaponLevel) ; }
-        else { Debug.Log("Trying to call Explode function, but does not have Explode.cs script attached"); }
-        DisableInteractions();
+        animator.SetTrigger("Explode");
+        FindObjectOfType<AudioManager>().PlaySFX("WeaponExplosion");
+        Destroy(gameObject, 1.5f);
+        yield return 0;
     }
 
-    private void PassDamage(int weaponID, int weaponLevel, Vector3 position, string statusModifier)
+    /*private void Explode()
     {
-        EventSystem.current.AttackHitTrigger(weaponID, weaponLevel, transform.position, statusModifier);
-        Instantiate(Resources.Load("VFXPrefabs/DamageImpact"), transform.position, Quaternion.identity);
+        Instantiate(ExplosionEffect, transform.position, transform.rotation);
+        Collider[] touchedObjects = Physics.OverlapSphere(transform.position, GrenadeRadius).Where(x => x.tag == "Enemy").ToArray();
+
+        foreach (Collider touchedObject in touchedObjects)
+        {
+            Rigidbody rigidbody = touchedObject.GetComponent<Rigidbody>();
+            if (rigidbody != null)
+            {
+                rigidbody.AddExplosionForce(ExplosionForce, transform.position, GrenadeRadius);
+            }
+
+            var target = touchedObject.gameObject.GetComponent<EnemyMovment>();
+            target.TakeDamage(DamageRate);
+
+        }
         Destroy(gameObject);
-    }
+    https://learntechnologies.fr/2020/03/02/grenade-bomb-in-unity-tutorial-part-4/
 
-    private void DisableInteractions() { GetComponent<Collider2D>().enabled = false; GetComponent<SpriteRenderer>().enabled = false; }
+    }*/
+
 
 }

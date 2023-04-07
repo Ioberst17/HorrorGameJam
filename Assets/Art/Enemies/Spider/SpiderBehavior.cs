@@ -14,9 +14,6 @@ public class SpiderBehavior : MonoBehaviour
     private Vector2 newVelocity;
     [SerializeField]
     private LayerMask whatIsGround;
-    private int spiderCooldown;
-    private int flipCooldown;
-    public bool isattacking;
 
     // Start is called before the first frame update
     void Start()
@@ -27,21 +24,15 @@ public class SpiderBehavior : MonoBehaviour
         spriteRenderer.flipY = true;
         enemyController.rb.gravityScale = 0;
         initialFall = false;
-        spiderCooldown = 0;
-        flipCooldown = 0;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        isattacking = enemyController.isAttacking;
         if (attackCooldown > 0)
         {
             attackCooldown--;
-        }
-        if (spiderCooldown > 0)
-        {
-            spiderCooldown--;
         }
         if (enemyController.rb.velocity.y == 0.0f)
         {
@@ -61,49 +52,18 @@ public class SpiderBehavior : MonoBehaviour
         {
             enemyController.isAttacking = false;
             enemyController.animator.Play("SpiderWalk");
-            spiderCooldown = 8;
         }
-        if (enemyController.rb.velocity.x >= 0.5f && enemyController.facingDirection == -1 && !enemyController.isAttacking && isGrounded)
+        if (enemyController.rb.velocity.x >= 0.5f && enemyController.facingDirection == -1)
         {
-            if (flipCooldown == 0)
-            {
-                enemyController.Flip();
-
-                flipCooldown = 10;
-            }
-
+            enemyController.Flip();
         }
-        else if (enemyController.rb.velocity.x <= -0.5f && enemyController.facingDirection == 1 && !enemyController.isAttacking && isGrounded)
+        else if (enemyController.rb.velocity.x <= -0.5f && enemyController.facingDirection == 1)
         {
-            if (flipCooldown == 0)
-            {
-                enemyController.Flip();
-                flipCooldown = 10;
-            }
+            enemyController.Flip();
         }
     }
     public void spiderPassover()
     {
-        if (attackCooldown > 0)
-        {
-            attackCooldown--;
-        }
-        if (spiderCooldown > 0)
-        {
-            spiderCooldown--;
-        }
-        if (flipCooldown > 0)
-        {
-            flipCooldown--;
-        }
-        if (enemyController.rb.velocity.y == 0.0f)
-        {
-            isGrounded = Physics2D.OverlapCircle(new Vector2(transform.position.x, transform.position.y - .5f), .15f, whatIsGround);
-        }
-        else
-        {
-            isGrounded = false;
-        }
         if (enemyController.transform.position.x >= enemyController.patrol1Point.x)
         {
             enemyController.patrolID = 1;
@@ -121,7 +81,7 @@ public class SpiderBehavior : MonoBehaviour
                 spriteRenderer.flipY = false;
                 enemyController.rb.gravityScale = 1;
             }
-            else if(!initialFall && isGrounded && !enemyController.isAttacking && (attackCooldown == 0) && (spiderCooldown == 0))
+            else if(!initialFall && isGrounded && !enemyController.isAttacking && (attackCooldown == 0))
             {
                 SpiderAttackGround();
             }
@@ -179,9 +139,7 @@ public class SpiderBehavior : MonoBehaviour
             }
 
         }
-        newVelocity.Set(0.0f, 0.0f);
-        enemyController.rb.velocity = newVelocity;
-        enemyController.rb.AddForce(new Vector2(4.0f * enemyController.facingDirection, 3.0f), ForceMode2D.Impulse);
+        enemyController.rb.AddForce(new Vector2(2.0f * enemyController.facingDirection, 5.0f), ForceMode2D.Impulse);
         enemyController.isAttacking = true;
     }
 }

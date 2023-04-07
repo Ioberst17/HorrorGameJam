@@ -10,7 +10,6 @@ public class Weapons
     public int tier;
     public int price;
     public bool isSecondary, isShot, isThrown, isFixedDistance;
-    public string statusModifier;
     public bool isKinetic, isElemental, isHeavy; // note: isHeavy is not for a weight attribute, but a weapon type attribute (kinetic, elemental, heavy)
     public string weight;
     public int level1Damage;
