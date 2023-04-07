@@ -8,7 +8,7 @@ public class BloodGolemProjectile : EnemyProjectile
     private BloodGolemBehavior BGController;
     private Vector3 MyDirection;
     public float Movespeed;
-    private string ParentName;
+    public string ParentName;
 
     // Start is called before the first frame update
     new void Start()
