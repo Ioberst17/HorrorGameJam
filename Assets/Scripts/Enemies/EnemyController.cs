@@ -27,6 +27,7 @@ public class EnemyController : MonoBehaviour, IDamageable
     public EnemyDatabase enemyDatabase; // used to load in values for enemies e.g. health data, attack info
     public int damageValue;
 
+    private EnemyHealth enemyHealth;
     public int HP_MAX;
     public int HP;
     private int damageToPass;
@@ -65,6 +66,7 @@ public class EnemyController : MonoBehaviour, IDamageable
         isAttacking = false;
         rb = GetComponent<Rigidbody2D>();
         CC2D = GetComponent<CapsuleCollider2D>();
+        enemyHealth = GetComponent<EnemyHealth>();
         playerController = GameObject.Find("PlayerModel").GetComponent<PlayerController>();
         playerLocation = GameObject.Find("PlayerModel").transform;
         weaponDatabase = GameObject.Find("WeaponDatabase").GetComponent<WeaponDatabase>();
@@ -213,7 +215,7 @@ public class EnemyController : MonoBehaviour, IDamageable
     { 
 
         HP -= damage;
-        GetComponent<EnemyHealth>().UpdateHealthUI(HP);
+        enemyHealth.UpdateHealthUI(HP);
         Debug.Log("Enemy " + gameObject.name + " was damaged! It took: " + damage + "damage. It's current HP is: " + HP);
         if (HP <= 0) { HPZero(); }
     }

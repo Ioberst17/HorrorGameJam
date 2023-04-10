@@ -36,11 +36,11 @@ public class DataManager : MonoBehaviour
     public class GameData // data to be saved between sessions in Json format - n.b Unity Json utility does not support arrays
     {
         public int timesPlayed = 0;
-        // Player Data
+        [Header("Player Data")]
         public float playerEXP = 0.0f;
         public int playerLevel = 1;
         public PlayerSkills playerSkills = new PlayerSkills();
-        // Inventory Data
+        [Header("Inventory Data")]
         public List<NarrativeItems> narrativeItems = new List<NarrativeItems>();
         [SerializeField]
         public List<PlayerConsumables> consumables = new List<PlayerConsumables>();
@@ -50,7 +50,7 @@ public class DataManager : MonoBehaviour
         public List<PlayerWeapons> secondaryWeapons = new List<PlayerWeapons>();
         public int activePrimaryWeapon = 1;
         public int activeSecondaryWeapon = 1;
-        // Environment
+        [Header("Environment Data")]
         public AreaHistory areaHistory = new AreaHistory();
     }
 
