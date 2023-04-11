@@ -14,6 +14,8 @@ public class BloodGolemBehavior : MonoBehaviour
     [SerializeField] private Transform Bloodball;
     //[SerializeField] private Rigidbody2D BloodBallrb;
     [SerializeField] private Transform Bloodballstart;
+    [SerializeField]
+    private GameObject particleEffect;
     public int IDNumber;
     // Start is called before the first frame update
     void Start()
@@ -48,7 +50,7 @@ public class BloodGolemBehavior : MonoBehaviour
                 {
                     if (ChargeCountdown == 15)
                     {
-                        //StartCoroutine(BloodballCharge());
+                        StartCoroutine(BloodballCharge());
                         ChargeCountdown--;
                     }
                     else
@@ -64,7 +66,7 @@ public class BloodGolemBehavior : MonoBehaviour
             else
             {
                 ShotCountdown = Shotvalue;
-                ChargeCountdown = 15;
+                ChargeCountdown = 60;
                 enemyController.damageInterupt = false;
                 chargeInterupt = true;
                 
@@ -73,7 +75,7 @@ public class BloodGolemBehavior : MonoBehaviour
         else
         {
             ShotCountdown = Shotvalue;
-            ChargeCountdown = 15;
+            ChargeCountdown = 60;
         }
 
     }
@@ -99,27 +101,9 @@ public class BloodGolemBehavior : MonoBehaviour
     }
     IEnumerator BloodballCharge()
     {
-        
-        while (ChargeCountdown > 1)
-        {
-            yield return new WaitForSeconds(0.01f);
-        }
-        if (chargeInterupt)
-        {
-            Vector3 tempVector = new Vector3(enemyController.playerLocation.position.x, enemyController.playerLocation.position.y + 1, enemyController.playerLocation.position.z);
-            tempVector = (tempVector - transform.position).normalized;
-            //Debug.Log(tempVector);
-            Transform BloodBallObject = Instantiate(Bloodball, Bloodballstart.position, Quaternion.identity);
-            //Debug.Log(Bloodballstart.position);
-            bloodballActive = true;
-            enemyController.isAttacking = true;
-            //Debug.Log("Firing laser");
-            //Debug.Log(transform.position + " " + enemyController.playerLocation.position);
-
-            Debug.DrawLine(transform.position, enemyController.playerLocation.position, Color.blue, 100f);
-            BloodBallObject.GetComponent<BloodGolemProjectile>().Setup(tempVector, this.name);
-        }
-        chargeInterupt = false;
+        particleEffect.SetActive(true);
+        yield return new WaitForSeconds(1f);
+        particleEffect.SetActive(false);
         yield return null;
     }
 }
