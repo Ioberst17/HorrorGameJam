@@ -104,5 +104,9 @@ public class EnemySpawnManager : MonoBehaviour
         return false;
     }
 
-    private void UpdateIndex() { index = dataManager.gameData.areaHistory.history.FindIndex(area => area.areaID == areaID); }
+    private void UpdateIndex() 
+    { 
+        if(dataManager.gameData.areaHistory.history == null) { Debug.Log("Trying to access History within DataManager's AreaHistory; however, the variable is null"); }
+        else { index = dataManager.gameData.areaHistory.history.FindIndex(area => area.areaID == areaID); }
+    }
 }

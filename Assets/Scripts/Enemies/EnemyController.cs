@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour, IDamageable
 {
-    private SpriteRenderer enemySpriteRenderer;
+    private SpriteRenderer spriteRenderer;
     public Animator animator;
     public Rigidbody2D rb;
     private CapsuleCollider2D CC2D;
@@ -32,6 +32,8 @@ public class EnemyController : MonoBehaviour, IDamageable
     public int HP;
     private int damageToPass;
     private string statusToPass;
+    [Tooltip("The higher blinkFrequency is, the faster blinking is for hit stun")]
+    private float blinkFrequency = 30f; // higher, isfaster blinking for hit stun
 
     public int invincibilityCount;
     [SerializeField]
@@ -78,7 +80,7 @@ public class EnemyController : MonoBehaviour, IDamageable
         invincibilityCount = 0;
         patrolID = 0;
        
-        enemySpriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+        spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
     }
 
     //this is what actually deals the damage
@@ -150,9 +152,14 @@ public class EnemyController : MonoBehaviour, IDamageable
             if(!playerInZone && invincibilityCount == 0)
             {
                 CC2D.enabled = true;
-
             }
+            // hitStunBlink
+            // calculate the blink time based on frequency
+            float blinkTime = Mathf.Sin(Time.time * blinkFrequency);
+            // set the sprite renderer to be visible if blink time is positive, otherwise invisible
+            spriteRenderer.enabled = (blinkTime > 0f);
         }
+        else { spriteRenderer.enabled = true; }
     }
 
     public void Hit(int attackDamage, Vector3 playerPosition, string statusEffect)
@@ -232,7 +239,7 @@ public class EnemyController : MonoBehaviour, IDamageable
         isDead = true;
         if(OnDeath != null) { OnDeath(this); }
         CC2D.enabled = false;
-        enemySpriteRenderer.enabled = false;
+        spriteRenderer.enabled = false;
         playerController.gainSP(SoulPointsDropped);
         string enemyDeathSound = gameObject.tag.ToString() + "Death"; // creates string that AudioManager recognizes; tag should match asset in AudioManager
         FindObjectOfType<AudioManager>().PlaySFX(enemyDeathSound);

@@ -9,29 +9,38 @@ using UnityEngine;
 public class GroundSlam : MonoBehaviour
 {
     PlayerPrimaryWeapon playerPrimaryWeapon;
+    PlayerHealth playerHealth;
     PlayerController playerController;
-    private List<Collider2D> groundSlamHitList;
+    public List<Collider2D> groundSlamHitList;
     private int groundSlamHitListLength;
     [SerializeField] ContactFilter2D groundSlamCollisionFilter;
-    [SerializeField] bool groundSlamStop;
-    [SerializeField] int groundSlamCounter;
+    [SerializeField] bool groundSlamStop = true;
+    SpriteRenderer spriteRenderer;
+    Collider2D detectionCollider;
+    public bool isGroundSlam;
+    private GameObject dustCloudPrefab;
+    private bool damagableFlag, nonDamagableFlag;
+
+    [Header("Ground Slam Settings")]
     [SerializeField] private float groundSlamSpeed = -20f;
     [SerializeField] private int attackDamage = 10;
     [SerializeField] private float reboundForceX = 10f;
     [SerializeField] private float reboundForceY = 10f;
-    private int framesSinceGroundSlamFinish;
-    private int minFramesBetweenGroundSlamVFX = 100;
+    [SerializeField] private int framesSinceLastGroundSlamVFX;
+    [SerializeField] private int minFramesBetweenGroundSlamVFX;
+    private Vector2 detectionColliderCenter, detectionColliderHalfSize, bottomLeftCorner, upperRightCorner, detectionColliderUpperCenter; 
     
-    SpriteRenderer spriteRenderer;
-    Collider2D detectionCollider;
+    
 
     // Start is called before the first frame update
     void Start()
     {
         spriteRenderer = transform.Find("GroundSlamDetector").GetComponent<SpriteRenderer>();
         detectionCollider = transform.Find("GroundSlamDetector").GetComponent<Collider2D>();
+        playerHealth = GetComponentInParent<PlayerHealth>();
         ActivateDetection(false);
         playerPrimaryWeapon = GetComponent<PlayerPrimaryWeapon>();
+        playerController = playerPrimaryWeapon.GetComponentInParent<PlayerController>();
         groundSlamHitList = new List<Collider2D>();
         groundSlamCollisionFilter = new ContactFilter2D();
         groundSlamCollisionFilter.SetLayerMask((1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("BreakableEnviro")) | 1 << LayerMask.NameToLayer("Environment"));
@@ -39,7 +48,21 @@ public class GroundSlam : MonoBehaviour
 
     void Update()
     {
-        framesSinceGroundSlamFinish++;
+        if (framesSinceLastGroundSlamVFX <= minFramesBetweenGroundSlamVFX + 1) { framesSinceLastGroundSlamVFX++; }
+    }
+
+    private void FixedUpdate()
+    {
+        if (groundSlamStop == false && !playerController.isGrounded)
+        {
+            if (CheckIfFinished(DoGroundSlam())) { }
+            if(groundSlamStop == true)
+            {
+                if(damagableFlag == true) { DamagableSoundAndVFX(); }
+                if (nonDamagableFlag == true) { NonDamagableSoundAndVFX(); }
+                damagableFlag = false; nonDamagableFlag = false;
+            }
+        }
     }
 
     void ActivateDetection(bool state)
@@ -50,66 +73,87 @@ public class GroundSlam : MonoBehaviour
 
     public void Execute()
     {
-        //PlayRandomJumpSound();
+        isGroundSlam = true; playerHealth.isInvincible = true; groundSlamStop = false; ActivateDetection(true);
         FindObjectOfType<AudioManager>().PlaySFX("PlayerMelee");
         Instantiate(Resources.Load("VFXPrefabs/GroundSlamImpact"), transform.position, Quaternion.identity);
-
-        groundSlamStop = false; groundSlamCounter = 0;
-        while (groundSlamStop == false && groundSlamCounter < 1000)
-        {
-            if (CheckIfFinished(DoGroundSlam())){ groundSlamStop = true; }
-            groundSlamCounter++;
-        }
-        ActivateDetection(false);
-        playerPrimaryWeapon.isAttacking = false;
     }
 
     List<Collider2D> DoGroundSlam()
     {
-        if (framesSinceGroundSlamFinish > minFramesBetweenGroundSlamVFX)
+        if (framesSinceLastGroundSlamVFX >= minFramesBetweenGroundSlamVFX)
         {
             Instantiate(Resources.Load("VFXPrefabs/GroundSlamImpact"), transform.position, Quaternion.identity);
-            framesSinceGroundSlamFinish = 0;
+            framesSinceLastGroundSlamVFX = 0;
         }
-        ActivateDetection(true);
-        playerPrimaryWeapon.playerController.SetVelocity(0, groundSlamSpeed);
-        Vector2 center = spriteRenderer.gameObject.transform.position;
-        Vector2 halfSize = new Vector2(spriteRenderer.bounds.size.x / 2f, spriteRenderer.bounds.size.y / 2f);
-        groundSlamHitListLength = Physics2D.OverlapArea(center - halfSize, center + halfSize, groundSlamCollisionFilter, groundSlamHitList);
-        return groundSlamHitList;
+        
+        playerController.SetVelocity(0, groundSlamSpeed);
+        return Detect();
+    }
 
+    List<Collider2D> Detect()
+    {
+        DetectionSetup();
+        groundSlamHitList = Physics2D.OverlapAreaAll(bottomLeftCorner, upperRightCorner, groundSlamCollisionFilter.layerMask).ToList();
+        return groundSlamHitList;
+    }
+
+    void DetectionSetup()
+    {
+        detectionColliderCenter = spriteRenderer.gameObject.transform.position;
+        detectionColliderHalfSize = new Vector2(spriteRenderer.bounds.size.x / 2f, spriteRenderer.bounds.size.y / 2f);
+        bottomLeftCorner = detectionColliderCenter - detectionColliderHalfSize;
+        upperRightCorner = detectionColliderCenter + detectionColliderHalfSize;
+        detectionColliderUpperCenter = detectionColliderCenter + new Vector2(0, spriteRenderer.bounds.size.y / 2f);
     }
 
     private bool CheckIfFinished(List<Collider2D> groundSlamHits)
     {
         if (groundSlamHits.Count > 0)
         {
-            foreach (Collider2D hit in groundSlamHits)
-            {
-                if (hit.gameObject.layer == LayerMask.NameToLayer("Enemy") || hit.gameObject.layer == LayerMask.NameToLayer("BreakableEnviro"))
-                {
-                    hit.gameObject.GetComponent<IDamageable>().Hit(attackDamage, transform.position);
-
-                    if (hit.gameObject.transform.position.x >= transform.position.x) { playerPrimaryWeapon.playerController.AddForce(-reboundForceX, reboundForceY); }
-                    else { playerPrimaryWeapon.playerController.AddForce(reboundForceX, reboundForceY); }
-
-                    /* Handle Particles and Sound */
-                    return true;
-                }
-                else if (hit.gameObject.layer == LayerMask.NameToLayer("Environment") || hit.gameObject.tag == "Boundary")
-                {
-                    /* Handle Particles and Sound */
-                    return true;
-                }
+            foreach (Collider2D hit in groundSlamHits) 
+            { if (hit.gameObject.layer == LayerMask.NameToLayer("Enemy") || hit.gameObject.layer == LayerMask.NameToLayer("BreakableEnviro"))
+                { OnHit(hit); Bounce(hit); damagableFlag = true; }
+            }
+            foreach (Collider2D hit in groundSlamHits) 
+            { if (hit.gameObject.layer == LayerMask.NameToLayer("Environment") || hit.gameObject.tag == "Boundary")
+                { OnHit(hit); nonDamagableFlag = true; }
             }
         }
         return false;
     }
 
-    private void PlayRandomJumpSound()
+    bool OnHit(Collider2D hit)
     {
-        int jumpAssetChoice = Random.Range(1, 9);
-        string jumpAssetToUse = "Jump" + jumpAssetChoice.ToString();
-        FindObjectOfType<AudioManager>().PlaySFX(jumpAssetToUse);
+        ResetConditions(hit);
+        return true;
     }
+
+    void DamagableSoundAndVFX()
+    {
+        // handle sound and VFX
+    }
+
+    void NonDamagableSoundAndVFX()
+    {
+        FindObjectOfType<AudioManager>().PlaySFX("GroundSlam");
+        DetectionSetup();
+        Instantiate(Resources.Load("VFXPrefabs/DustCloud"), detectionColliderUpperCenter, Quaternion.identity);
+    }
+
+
+    void Bounce(Collider2D hit)
+    {
+        playerController.SetVelocity(0, reboundForceY);
+        if (hit.GetComponent<IDamageable>() != null) { hit.gameObject.GetComponent<IDamageable>().Hit(attackDamage, transform.position); }
+        Debug.Log("Sending player up at " + reboundForceY + " velocity");
+    }
+
+    void ResetConditions(Collider2D hit)
+    {
+        groundSlamStop = true; playerPrimaryWeapon.isAttacking = false; isGroundSlam = false; ActivateDetection(false);
+        Debug.Log("Hit gameObject named: " + hit.gameObject.name);
+        Invoke("InvincibilityOff", .5f);
+    }
+
+    void InvincibilityOff() { playerHealth.isInvincible = false; }
 }

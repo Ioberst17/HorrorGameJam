@@ -82,19 +82,8 @@ public class DataManager : MonoBehaviour
 
     private void SaveData(GameData gameData) // used to save data to a file
     {
-        //string json = JsonUtility.ToJson(gameData); // turns data into a json string
-        //JSchema schemaToUse = GameDataSchema();
         string json = JsonConvert.SerializeObject(gameData);
 
-        //string json = EditorJsonUtility.ToJson(gameData);
-
-        //var options = new JsonSerializerOptions { WriteIndented = true };
-
-        /*JsonSerializer serializer = new JsonSerializer();
-        serializer.Converters.Add(new JavaScriptDateTimeConverter());
-        serializer.NullValueHandling = NullValueHandling.Ignore;*/
-
-        //string json = JsonSerializer.Serialize(gameData, options);
         File.WriteAllText(Application.persistentDataPath + "/savefile.json", json); // uses System.IO namespace to write to a consistent folder, with name savefile.json
 
         Debug.Log(json);
@@ -106,10 +95,8 @@ public class DataManager : MonoBehaviour
         if (File.Exists(path)) // check if file exists
         {
             string json = File.ReadAllText(path); // reads file content to json string
-            //GameData gameData = JsonUtility.FromJson<GameData>(json); // reads json string data to variable data
 
             gameData = JsonConvert.DeserializeObject<GameData>(json);
-            //gameData = JsonSerializer.Deserialize<GameData>(json);
 
             return gameData;
         }

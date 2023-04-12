@@ -18,5 +18,5 @@ public class AreaHistory
 
     public List<History> history;
 
-    public AreaHistory() { }
+    public AreaHistory() { history = new List<History>(); }
 }
