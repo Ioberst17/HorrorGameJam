@@ -66,7 +66,6 @@ public class GargoyleBehavior : MonoBehaviour
     private int firebreathDamage;
     [SerializeField]
     private LayerMask whatIsPlayer;
-
     private Collider2D[] hitlist;
 
     // Start is called before the first frame update
@@ -104,11 +103,19 @@ public class GargoyleBehavior : MonoBehaviour
         playerIsOnLeftSide = (Mathf.Abs(bottomRightPoint.position.x - enemyController.playerLocation.position.x) > Mathf.Abs(topLeftPoint.position.x - enemyController.playerLocation.position.x));
         if (!phase2)
         {
-            phase2 = (HP <= StartingHP * (3 / 4));
+            phase2 = (HP <= StartingHP * 0.75);
+            if (phase2)
+            {
+                enemyController.invincibilityCount = 100;
+            }
         }
         if (!ragemode)
         {
-            ragemode = (HP <= StartingHP * (1 / 3));
+            ragemode = (HP <= StartingHP * 0.33);
+            if (ragemode)
+            {
+                enemyController.invincibilityCount = 100;
+            }
         }
         if (bossAction == "Dormant" && enemyController.playerInZone)
         {
@@ -218,12 +225,10 @@ public class GargoyleBehavior : MonoBehaviour
             if (Mathf.Abs(DistanceToPlayerX) > 2)
             {
                 StartCoroutine(AirAttack());
+                isAttacking = true;
                 yield return new WaitWhile(() => isAttacking);
                 //yield return new WaitForSeconds(1f);
             }
-            yield return new WaitForSeconds(0.5f);
-            TurnCheck();
-            Hover();
             yield return new WaitForSeconds(0.5f);
         }
         yield return new WaitWhile(() => isAttacking);

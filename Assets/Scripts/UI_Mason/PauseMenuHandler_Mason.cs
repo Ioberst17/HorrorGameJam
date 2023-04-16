@@ -6,21 +6,24 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenuHandler_Mason : MonoBehaviour
 {
-    public static bool GameIsPaused = false;
 
     public GameObject pauseMenu;
-
     public GameObject controlsMenu;
 
     [SerializeField]
     private GameObject quitButton;
+    public GameController gameController;
 
+    private void Start()
+    {
+        gameController = GameObject.Find("GameController").GetComponent<GameController>();
+    }
     // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (GameIsPaused)
+            if (gameController.isPaused)
             {
                 Resume();
             }
@@ -29,22 +32,29 @@ public class PauseMenuHandler_Mason : MonoBehaviour
                 Pause();
             }
         }
+        
+    }
+    private void LateUpdate()
+    {
+        if (!gameController.isPaused && pauseMenu.activeSelf)
+        {
+            Debug.Log("Pause trigger");
+            Resume();
+        }
     }
 
     public void Resume()
     {
         pauseMenu.SetActive(false);
         controlsMenu.SetActive(false);
-        Time.timeScale = 1.0f;
-        GameIsPaused = false;
+        //Time.timeScale = 1.0f;
     }
 
     void Pause()
     {
         pauseMenu.SetActive(true);
         quitButton.SetActive(false);
-        Time.timeScale = 0f;
-        GameIsPaused = true;
+        //Time.timeScale = 0f;
     }
 
     public void LoadControls()
