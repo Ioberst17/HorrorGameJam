@@ -797,6 +797,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 3939883375913402969, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3939883375913402969, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -850,7 +854,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3939883376374803737, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
@@ -1308,6 +1312,7 @@ MonoBehaviour:
   pauseMenu: {fileID: 1808386227}
   controlsMenu: {fileID: 256208539}
   quitButton: {fileID: 1872391159}
+  gameController: {fileID: 0}
 --- !u!4 &271491802 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6692248386998842308, guid: 72c3a56afd3179d44a95acbfc542bf79, type: 3}
@@ -1940,6 +1945,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 641676304}
+        m_TargetAssemblyTypeName: GameController, Assembly-CSharp
+        m_MethodName: pauseHandler
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 261940846}
         m_TargetAssemblyTypeName: PauseMenuHandler_Mason, Assembly-CSharp
         m_MethodName: Resume
