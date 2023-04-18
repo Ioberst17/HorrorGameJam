@@ -10,7 +10,6 @@ public class Database<T> : MonoBehaviour where T : IShoppable
 {
     public TextAsset textAssetData; // the CSV to read from, must be assigned in Inspector
     public int numOfColumns;
-    [SerializeField] bool hasCostField;
     public int numOfDataRows;
 
     // for CSV Header Rows
@@ -21,11 +20,12 @@ public class Database<T> : MonoBehaviour where T : IShoppable
     [SerializeField] private List<string> columnDataTypesLong = new List<string>();
 
     // Internal variables for building
-    private int searchIndexerProp, searchIndexerField;
+    private int IndexForClassProperties, IndexForClassField;
     private string columnName, dataType;
-    private bool matchFound;
     private int rowsToSkip = 5; // this refers to the 'header rows' in the CSVs that describe data
     public int length;
+    PropertyInfo[] propertyInfo;
+    FieldInfo[] fieldInfo;
     [SerializeField] public string[] dataView;
 
     [Serializable]
@@ -56,8 +56,6 @@ public class Database<T> : MonoBehaviour where T : IShoppable
 
     public virtual void CreateDatabase(string[] data)
     {
-        hasCostField = typeof(T).GetProperties().Any(prop => prop.Name == "cost");
-
         UpdateColumnData(data);
         UpdateRowNum(data);
 
@@ -66,43 +64,7 @@ public class Database<T> : MonoBehaviour where T : IShoppable
         this.data.entries[0] = (T)Activator.CreateInstance(typeof(T));
 
         T currentInstance = (T)Activator.CreateInstance(typeof(T));
-        PropertyInfo[] propertyInfo = currentInstance.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
-        FieldInfo[] fieldInfo = currentInstance.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
-
-        //if (propertyInfo.Length == 0)
-        //{
-        //    Debug.LogWarning("No public properties found in type: " + typeof(T));
-        //    return;
-        //}
-
-        //if (fieldInfo.Length == 0)
-        //{
-        //    Debug.LogWarning("No public fields found in type: " + typeof(T));
-        //    return;
-        //}
-
-        if (currentInstance is Consumables)
-        {
-            var item = currentInstance as Consumables;
-            propertyInfo = item.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            fieldInfo = item.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
-        }
-        else if (currentInstance is Weapons)
-        {
-            var item = currentInstance as Weapons;
-            propertyInfo = item.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            fieldInfo = item.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
-        }
-        else if (currentInstance is NarrativeItems)
-        {
-            var item = currentInstance as NarrativeItems;
-            propertyInfo = item.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            fieldInfo = item.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
-        }
-
-        Debug.Log("Working on type of: " + typeof(T));
-        Debug.Log("PropertyInfo length is: " + propertyInfo.Length);
-        Debug.Log("FieldInfo length is: " + fieldInfo.Length);
+        UpdateClassInfoReference(currentInstance);
 
         for (int i = 0; i < numOfDataRows; i++)
         {
@@ -111,37 +73,23 @@ public class Database<T> : MonoBehaviour where T : IShoppable
             {
                 columnName = columnNames[j];
                 dataType = columnDataTypes[j];
-                Debug.Log("Current row is: " + i + "; Current column is: " + j + "; Column name is: " + columnName);
 
-                searchIndexerProp = -1; searchIndexerField = -1;
+                IndexForClassProperties = -1; IndexForClassField = -1;
 
-                searchIndexerField = Array.FindIndex(fieldInfo, p => p.Name == columnName);
+                IndexForClassField = Array.FindIndex(fieldInfo, p => p.Name == columnName);
                 var fieldInfoObj = Array.Find(fieldInfo, p => p.Name == columnName);
-                if (fieldInfoObj != null) { Debug.Log("Looking for " + fieldInfoObj.Name + "; its data type is: " + fieldInfoObj.FieldType + ". Checking against name: " + columnName); }
-                if (searchIndexerField >= 0)
-                {
-                    Debug.Log("Current row is: " + i + "; Current column is: " + j + "; Found a field; It's name is: " + columnName);
-                    if (j > fieldInfo.Length) { Debug.Log("Column index is: " + j + " is greater than fieldInfo.Length: " + fieldInfo.Length); }
-                    ParseDataToTable(i, j, data, fieldInfo[searchIndexerField], dataType);
-                }
-                searchIndexerProp = Array.FindIndex(propertyInfo, p => p.Name == columnName);
+                if (IndexForClassField >= 0) { ParseDataToTable(i, j, data, fieldInfo[IndexForClassField], dataType); }
+
+                IndexForClassProperties = Array.FindIndex(propertyInfo, p => p.Name == columnName);
                 var propInfoObj = Array.Find(propertyInfo, p => p.Name == columnName);
-                if (propInfoObj != null) { Debug.Log("Looking for " + propInfoObj.Name + "; its data type is: " + propInfoObj.PropertyType + ". Checking against name: " + columnName); }
-                if (searchIndexerProp >= 0)
+                if (IndexForClassProperties >= 0)
                 {
-                    if (columnName == "cost" && hasCostField && this.data.entries[i] is IShoppable itemWithCostProperty)
+                    if (columnName == "cost" && this.data.entries[i] is IShoppable itemWithCostProperty)
                     {
-                        Debug.Log("Current row is: " + i + "; Current column is: " + j + "; Found a prop; It's name is: " + columnName);
-                        //var (columnIndex, _) = GetColumnInfo(data, columnName);
-                        //int cost = int.Parse(data[numOfColumns * (i + rowsToSkip) + j]);
-                        //itemWithCostProperty.cost = cost;
-                        ParseDataToTable(i, j, data, propertyInfo[searchIndexerProp], dataType);
+                        ParseDataToTable(i, j, data, propertyInfo[IndexForClassProperties], dataType);
                     }
                 }
-                if (searchIndexerProp !>=0 && searchIndexerField! >= 0)
-                {
-                    Debug.Log("Current row is: " + i + "; Current column is: " + j + "; did not find a prop or field");
-                }
+                if (IndexForClassProperties !>=0 && IndexForClassField! >= 0) { Debug.Log("Current row is: " + i + "; Current column is: " + j + "; did not find a prop or field in class that matches"); }
             }
         }
     }
@@ -198,22 +146,10 @@ public class Database<T> : MonoBehaviour where T : IShoppable
         else { Debug.Log("No data type match. Current column is " + columnNames[currentColumnEntry] + " with data type " + columnDataTypes[currentColumnEntry]); }
     }
 
-    private (int, string) GetColumnInfo(string[] data, string columnName)
+    void UpdateClassInfoReference<I>(I item)
     {
-        int columnIndex = -1;
-        string dataType = "";
-
-        for (int i = 0; i < numOfColumns; i++)
-        {
-            if (data[i] == columnName)
-            {
-                columnIndex = i;
-                dataType = data[numOfColumns + i];
-                break;
-            }
-        }
-
-        return (columnIndex, dataType);
+        propertyInfo = item.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+        fieldInfo = item.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
     }
 
     public void UpdateColumnData(string[] data)

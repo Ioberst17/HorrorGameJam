@@ -789,75 +789,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1001 &179928038
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 3939883375913402969, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 3939883375913402969, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3939883376374803736, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
-      propertyPath: m_RootOrder
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 3939883376374803736, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0.19210577
-      objectReference: {fileID: 0}
-    - target: {fileID: 3939883376374803736, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 86.139496
-      objectReference: {fileID: 0}
-    - target: {fileID: 3939883376374803736, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.038977116
-      objectReference: {fileID: 0}
-    - target: {fileID: 3939883376374803736, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3939883376374803736, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3939883376374803736, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3939883376374803736, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3939883376374803736, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3939883376374803736, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3939883376374803736, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3939883376374803737, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
-      propertyPath: m_Name
-      value: GargoyleBase
-      objectReference: {fileID: 0}
-    - target: {fileID: 3939883376374803737, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
 --- !u!1 &210153192
 GameObject:
   m_ObjectHideFlags: 0
@@ -981,8 +912,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textAssetData: {fileID: 0}
   numOfColumns: 0
+  numOfDataRows: 0
   columnNames: []
   columnDataTypes: []
+  columnItemClass: []
+  columnClassFieldOrProperty: []
+  columnDataTypesLong: []
   length: 0
   dataView: []
   data:
@@ -1364,8 +1299,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textAssetData: {fileID: 0}
   numOfColumns: 7
+  numOfDataRows: 0
   columnNames: []
   columnDataTypes: []
+  columnItemClass: []
+  columnClassFieldOrProperty: []
+  columnDataTypesLong: []
   length: 0
   dataView: []
   data:
@@ -2159,6 +2098,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acabd2794932fa74d853316f9089c3b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  consumablesDB: {fileID: 0}
+  weaponsDB: {fileID: 0}
+  inventory: {fileID: 0}
+  narrativeItems: {fileID: 0}
+  consumables: {fileID: 0}
+  secondaryWeapons: {fileID: 0}
   shopWeapons: []
   shopConsumables: []
   shopUI: {fileID: 0}
@@ -5013,8 +4958,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textAssetData: {fileID: 0}
   numOfColumns: 21
+  numOfDataRows: 0
   columnNames: []
   columnDataTypes: []
+  columnItemClass: []
+  columnClassFieldOrProperty: []
+  columnDataTypesLong: []
   length: 0
   dataView: []
   data:

@@ -19,8 +19,9 @@ public class NarrativeItems : IShoppable
     public string modifier;
 
     // Shop information
-    public int isPurchasable;
-    [SerializeField] public int cost { get; set; }
+    public bool isPurchasable;
+    [SerializeField] private int _cost;
+    public int cost { get; set; }
     public int shopAmountPerPurchase;
     public int shopStock;
     
