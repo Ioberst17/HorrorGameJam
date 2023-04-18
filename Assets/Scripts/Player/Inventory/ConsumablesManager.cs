@@ -70,7 +70,47 @@ public class ConsumablesManager : MonoBehaviour
                 consumables.Add(new PlayerConsumables(
                     itemToAdd.id,
                     itemToAdd.itemType,
-                    itemToAdd.itemName,
+                    itemToAdd.name,
+                    amount,
+                    itemToAdd.audioOnPickup,
+                    itemToAdd.audioOnUse,
+                    itemToAdd.description));
+
+                FindObjectOfType<AudioManager>().PlaySFX(itemToAdd.audioOnPickup);
+            }
+        }
+    }
+
+    public bool AddExistingItemToInventory(string itemName, int amount)
+    {
+        bool itemInInv = false;
+        if (consumables != null)
+        {
+            for (int i = 0; i < consumables.Count; i++)
+            {
+                if (consumables[i].itemName == itemName)
+                {
+                    consumables[i].amount += amount;
+                    FindObjectOfType<AudioManager>().PlaySFX(consumables[i].audioOnPickup);
+                    itemInInv = true;
+                }
+            }
+        }
+        return itemInInv;
+    }
+
+    public void AddNewItemToInv(string itemName, int amount)
+    {
+        for (int i = 0; i < consumablesDatabase.data.entries.Length; i++)
+        {
+            if (consumablesDatabase.data.entries[i].name == itemName)
+            {
+                var itemToAdd = consumablesDatabase.data.entries[i];
+
+                consumables.Add(new PlayerConsumables(
+                    itemToAdd.id,
+                    itemToAdd.itemType,
+                    itemToAdd.name,
                     amount,
                     itemToAdd.audioOnPickup,
                     itemToAdd.audioOnUse,
