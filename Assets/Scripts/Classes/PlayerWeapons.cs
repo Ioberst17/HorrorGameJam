@@ -11,8 +11,9 @@ public class PlayerWeapons
     public int ammo;
     public bool isSecondary;
     public float fireRate;
+    public int ammoLimit;
 
-    public PlayerWeapons(string name, int id, int level, int ammo, bool isSecondary, float fireRate)
+    public PlayerWeapons(string name, int id, int level, int ammo, bool isSecondary, float fireRate, int ammoLimit)
     {
         this.name = name;
         this.id = id;
@@ -20,6 +21,7 @@ public class PlayerWeapons
         this.ammo = ammo;
         this.isSecondary = isSecondary;
         this.fireRate = fireRate;
+        this.ammoLimit = ammoLimit;
     }
 
 }

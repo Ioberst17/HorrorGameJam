@@ -36,11 +36,11 @@ public class DataManager : MonoBehaviour
     public class GameData // data to be saved between sessions in Json format - n.b Unity Json utility does not support arrays
     {
         public int timesPlayed = 0;
-        // Player Data
+        [Header("Player Data")]
         public float playerEXP = 0.0f;
         public int playerLevel = 1;
         public PlayerSkills playerSkills = new PlayerSkills();
-        // Inventory Data
+        [Header("Inventory Data")]
         public List<NarrativeItems> narrativeItems = new List<NarrativeItems>();
         [SerializeField]
         public List<PlayerConsumables> consumables = new List<PlayerConsumables>();
@@ -50,7 +50,7 @@ public class DataManager : MonoBehaviour
         public List<PlayerWeapons> secondaryWeapons = new List<PlayerWeapons>();
         public int activePrimaryWeapon = 1;
         public int activeSecondaryWeapon = 1;
-        // Environment
+        [Header("Environment Data")]
         public AreaHistory areaHistory = new AreaHistory();
     }
 
@@ -82,19 +82,8 @@ public class DataManager : MonoBehaviour
 
     private void SaveData(GameData gameData) // used to save data to a file
     {
-        //string json = JsonUtility.ToJson(gameData); // turns data into a json string
-        //JSchema schemaToUse = GameDataSchema();
         string json = JsonConvert.SerializeObject(gameData);
 
-        //string json = EditorJsonUtility.ToJson(gameData);
-
-        //var options = new JsonSerializerOptions { WriteIndented = true };
-
-        /*JsonSerializer serializer = new JsonSerializer();
-        serializer.Converters.Add(new JavaScriptDateTimeConverter());
-        serializer.NullValueHandling = NullValueHandling.Ignore;*/
-
-        //string json = JsonSerializer.Serialize(gameData, options);
         File.WriteAllText(Application.persistentDataPath + "/savefile.json", json); // uses System.IO namespace to write to a consistent folder, with name savefile.json
 
         Debug.Log(json);
@@ -106,10 +95,8 @@ public class DataManager : MonoBehaviour
         if (File.Exists(path)) // check if file exists
         {
             string json = File.ReadAllText(path); // reads file content to json string
-            //GameData gameData = JsonUtility.FromJson<GameData>(json); // reads json string data to variable data
 
             gameData = JsonConvert.DeserializeObject<GameData>(json);
-            //gameData = JsonSerializer.Deserialize<GameData>(json);
 
             return gameData;
         }

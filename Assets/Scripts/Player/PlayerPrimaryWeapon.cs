@@ -89,10 +89,10 @@ public class PlayerPrimaryWeapon : MonoBehaviour
             {
                 isAttacking = true;
 
-                if (attackDirection == 1 && !playerController.isGrounded) { groundSlam.Execute(); }
+                if (attackDirection == 1 && !playerController.isGrounded && !groundSlam.isGroundSlam) { groundSlam.Execute(); }
                 else
                 {
-                    if (chargePunch != null) { chargePunch.Execute(); Debug.Log("Executing ChargePunch"); }
+                    if (chargePunch != null) { chargePunch.Execute(); }
                     else { StartCoroutine(AttackActiveFrames(attackDirection)); }
                 }
             }

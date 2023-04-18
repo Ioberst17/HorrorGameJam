@@ -127,11 +127,11 @@ public class WeaponsManager : MonoBehaviour
         {
             if (weapon.isSecondary == true && primaryOrSecondary == PrimaryOrSecondary.Secondary)
             {
-                weaponList.Add(new PlayerWeapons(weapon.title, weapon.id, weapon.level, 0, weapon.isSecondary, weapon.fireRate));
+                weaponList.Add(new PlayerWeapons(weapon.name, weapon.id, weapon.level, 0, weapon.isSecondary, weapon.fireRate, weapon.ammoLimit));
                 EventSystem.current.WeaponChangeTrigger(0);
             }
             else if((weapon.isSecondary == false && primaryOrSecondary == PrimaryOrSecondary.Primary))
-            { weaponList.Add(new PlayerWeapons(weapon.title, weapon.id, weapon.level, 0, weapon.isSecondary, weapon.fireRate)); }
+            { weaponList.Add(new PlayerWeapons(weapon.name, weapon.id, weapon.level, 0, weapon.isSecondary, weapon.fireRate, weapon.ammoLimit)); }
         }
     }
     public void WeaponLevelChange(int weaponID, int levelChange)

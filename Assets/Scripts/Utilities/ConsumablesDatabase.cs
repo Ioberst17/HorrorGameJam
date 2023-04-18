@@ -12,7 +12,7 @@ public class ConsumablesDatabase : Database<Consumables>
 
     private void Awake()
     {
-        numOfColumns = 9; // must be updated as CSV is updated
+        numOfColumns = 14; // must be updated as CSV is updated
         textAssetData = Resources.Load<TextAsset>("TextFiles/ConsumablesDatabase");
         string[] data = ReadCSV();
         CreateDatabase(data);
@@ -23,7 +23,7 @@ public class ConsumablesDatabase : Database<Consumables>
         string toReturn = "No Match"; Debug.Log("ReturnNameFromID in ConsumablesDatabase.cs returned no match");
         for(int i = 0; i < this.data.entries.Length; i++)
         {
-            if (id == this.data.entries[i].id) { toReturn = this.data.entries[i].itemName; }
+            if (id == this.data.entries[i].id) { toReturn = this.data.entries[i].name; }
         }
         return toReturn;
     }
@@ -33,7 +33,7 @@ public class ConsumablesDatabase : Database<Consumables>
         int toReturn = -1; Debug.Log("ReturnNameFromID in ConsumablesDatabase.cs returned no match");
         for (int i = 0; i < this.data.entries.Length; i++)
         {
-            if (name == this.data.entries[i].itemName) { toReturn = this.data.entries[i].id; }
+            if (name == this.data.entries[i].name) { toReturn = this.data.entries[i].id; }
         }
         return toReturn;
     }

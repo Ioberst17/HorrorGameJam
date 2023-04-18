@@ -6,13 +6,16 @@ public class PlayerHealth : Health
 {
     public int StartingHP;
     public bool isInvincible;
-    public bool inHitstun;
+    public bool inHitStun;
+    private float blinkFrequency = 30f; // higher, isfaster blinking for hit stun
+    private SpriteRenderer spriteRenderer;
     public Animator animator;
     public PlayerController playerController;
     private Shield shield;
     [SerializeField] private UIHealthChangeDisplay damageDisplay;
     public float lucidityDamageModifier;
     public int damageTaken;
+    private float standardInvincibilityLength = 1.5f;
 
     private void Start() 
     { 
@@ -21,16 +24,33 @@ public class PlayerHealth : Health
         playerController = GetComponent<PlayerController>(); 
         shield = GetComponentInChildren<Shield>();
         damageDisplay = GetComponentInChildren<UIHealthChangeDisplay>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         isInvincible = false;
-        inHitstun = false;
+        inHitStun = false;
         lucidityDamageModifier = 1;
+    }
+
+    private void FixedUpdate()
+    {
+        if(inHitStun == true)
+        {
+            // hitStunBlink
+            // calculate the blink time based on frequency
+            float blinkTime = Mathf.Sin(Time.time * blinkFrequency);
+            // set the sprite renderer to be visible if blink time is positive, otherwise invisible
+            spriteRenderer.enabled = (blinkTime > 0f);
+        }
+        else { spriteRenderer.enabled = true; }
     }
 
     public void Hit(Vector3 enemyPos, int damageNumber, int damageType, float damageMod, float knockbackMod)
     {
-        playerController.Hit(enemyPos, knockbackMod);
+        if (!isInvincible)
+        {
+            TakeDamage(damageNumber, damageMod);
+            playerController.Hit(enemyPos, knockbackMod);
+        }
         if (!isInvincible && !shield.shieldOn) { StartCoroutine(hitStun()); }
-        TakeDamage(damageNumber, damageMod);
     }
 
     public void TakeDamage(int damageNumber, float damageMod) 
@@ -46,19 +66,19 @@ public class PlayerHealth : Health
 
     IEnumerator hitStun()
     {
-        inHitstun = true;
-        StartCoroutine(Invincibility());
+        inHitStun = true;
+        StartCoroutine(Invincibility(standardInvincibilityLength));
         animator.Play("PlayerHurt");
         FindObjectOfType<AudioManager>().PlaySFX("PlayerHit");
         yield return new WaitForSeconds(1); // waits a certain number of seconds
-        inHitstun = false;
+        inHitStun = false;
     }
 
-    IEnumerator Invincibility()
+    public IEnumerator Invincibility(float length)
     {
         isInvincible = true;
         //animator.Play("PlayerHit");
-        yield return new WaitForSeconds(1.5f); // waits a certain number of seconds
+        yield return new WaitForSeconds(length); // waits a certain number of seconds
         isInvincible = false;
     }
 

@@ -47,6 +47,7 @@ public class PlayerController : MonoBehaviour
     //To make the player temporarily unable to control themselves
 
     public bool isAttacking;
+    private GroundSlam groundSlam;
 
 
     //private float xInput;
@@ -98,6 +99,7 @@ public class PlayerController : MonoBehaviour
 
         if (GetComponent<PlayerHealth>() != null) { playerHealth = GetComponent<PlayerHealth>(); }
         else { Debug.Log("PlayerHealth.cs is being requested as a component of the same object as PlayerController.cs, but could not be found on the object"); }
+        groundSlam = GetComponentInChildren<GroundSlam>();
     }
 
     //Does anything in the environment layer overlap with the circle while not on the way up
@@ -193,8 +195,8 @@ public class PlayerController : MonoBehaviour
     //called by the GameController
     public void ApplyMovement()
     {
-        
-        if (!playerHealth.inHitstun && !isDashing && !isCharging)
+        if(groundSlam.isGroundSlam == true) { SetVelocity(0, rb.velocity.y); }
+        else if (!playerHealth.inHitStun && !isDashing && !isCharging)
         {
             if (isGrounded && !isJumping) //if on ground
             {

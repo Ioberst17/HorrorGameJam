@@ -1,13 +1,16 @@
-id,title,tier,price,isSecondary,isShot,isThrown,isFixedDistance,statusModifier,isKinetic,isElemental,isHeavy,weight,Level1Damage,Level2Damage,Level3Damage,level,isLightSource,fireRate,description,amount
-int,string,int,int,bool,bool,bool,bool,string,bool,bool,bool,string,int,int,int,int,bool,float,string,int
-0,Flashlight,3,0,FALSE,TRUE,FALSE,FALSE,,FALSE,TRUE,FALSE,Light,1,2,3,1,TRUE,1,TBD,1
-1,Manhole cover,3,0,FALSE,TRUE,FALSE,FALSE,,FALSE,FALSE,TRUE,Heavy,0,0,0,1,FALSE,1,TBD,1
-2,Revolver,2,200,TRUE,TRUE,FALSE,FALSE,,TRUE,FALSE,FALSE,Light,5,10,15,1,FALSE,0.5,TBD,1
-3,Hunter's Rifle,1,500,TRUE,TRUE,FALSE,FALSE,,FALSE,FALSE,TRUE,Heavy,20,20,20,1,FALSE,1.2,TBD,1
-4,Blood Bubbles,1,0,TRUE,FALSE,TRUE,FALSE,DemonBlood,FALSE,TRUE,FALSE,Light,10,15,20,1,FALSE,1,TBD,1
-5,Sword (machete),3,10,FALSE,TRUE,FALSE,FALSE,,TRUE,FALSE,FALSE,Medium,20,25,30,1,FALSE,1,TBD,1
-6,Flagpole Spear,2,50,FALSE,TRUE,FALSE,FALSE,,TRUE,FALSE,TRUE,Heavy,5,5,5,1,FALSE,1,TBD,1
-7,Homemade Flamethrower,2,450,TRUE,FALSE,FALSE,TRUE,Burn,FALSE,TRUE,FALSE,Heavy,8,8,8,1,TRUE,0,TBD,1
-8,Fireworks,2,25,TRUE,FALSE,TRUE,FALSE,,FALSE,TRUE,FALSE,Light,6,6,6,1,TRUE,1,TBD,1
-9,Hellfire Molotov,1,0,TRUE,FALSE,TRUE,FALSE,Burn,FALSE,TRUE,FALSE,Light,6,6,6,1,TRUE,1,TBD,1
-10,Fire Axe,1,0,FALSE,TRUE,FALSE,FALSE,,TRUE,TRUE,TRUE,Heavy,21,21,21,1,TRUE,1,TBD,1
+id,classType,name,description,amount,tier,isSecondary,isShot,isThrown,isFixedDistance,statusModifier,isKinetic,isElemental,isHeavy,weight,level1Damage,level2Damage,level3Damage,level,isLightSource,fireRate,ammoLimit,isPurchasable,cost,shopAmountPerPurchase,shopStock
+int,string,string,string,int,int,bool,bool,bool,bool,string,bool,bool,bool,string,int,int,int,int,bool,float,int,bool,int,int,int
+Standard,Standard,Standard,Standard,Standard,Unique,Unique,Unique,Unique,Unique,Unique,Unique,Unique,Unique,Unique,Unique,Unique,Unique,Unique,Unique,Unique,Unique,Shop,Shop,Shop,Shop
+Field,Field,Field,Field,Field,Field,Field,Field,Field,Field,Field,Field,Field,Field,Field,Field,Field,Field,Field,Field,Field,Field,Field,Property,Field,Field
+System.Int32,System.String,System.String,System.String,System.Int32,System.Int32,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.String,System.Boolean,System.Boolean,System.Boolean,System.String,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean,System.Float,System.Int32,System.Boolean,System.Int32,System.Int32,System.Int32
+0,Weapon,Flashlight,TBD,1,3,FALSE,TRUE,FALSE,FALSE,,FALSE,TRUE,FALSE,Light,1,2,3,1,TRUE,1,2000,FALSE,0,0,0
+1,Weapon,Manhole cover,TBD,1,3,FALSE,TRUE,FALSE,FALSE,,FALSE,FALSE,TRUE,Heavy,0,0,0,1,FALSE,1,2000,FALSE,0,0,0
+2,Weapon,Revolver,TBD,1,2,TRUE,TRUE,FALSE,FALSE,,TRUE,FALSE,FALSE,Light,5,10,15,1,FALSE,0.5,2000,FALSE,200,0,0
+3,Weapon,Hunter's Rifle,TBD,1,1,TRUE,TRUE,FALSE,FALSE,,FALSE,FALSE,TRUE,Heavy,20,20,20,1,FALSE,1.2,2000,TRUE,500,1,1
+4,Weapon,Blood Bubbles,TBD,1,1,TRUE,FALSE,TRUE,FALSE,DemonBlood,FALSE,TRUE,FALSE,Light,10,15,20,1,FALSE,1,2000,FALSE,0,0,0
+5,Weapon,Sword (machete),TBD,1,3,FALSE,TRUE,FALSE,FALSE,,TRUE,FALSE,FALSE,Medium,20,25,30,1,FALSE,1,2000,FALSE,10,0,0
+6,Weapon,Flagpole Spear,TBD,1,2,FALSE,TRUE,FALSE,FALSE,,TRUE,FALSE,TRUE,Heavy,5,5,5,1,FALSE,1,2000,FALSE,50,0,0
+7,Weapon,Homemade Flamethrower,TBD,1,2,TRUE,FALSE,FALSE,TRUE,Burn,FALSE,TRUE,FALSE,Heavy,8,8,8,1,TRUE,0,9001,TRUE,450,1,1
+8,Weapon,Fireworks,TBD,1,2,TRUE,FALSE,TRUE,FALSE,,FALSE,TRUE,FALSE,Light,6,6,6,1,TRUE,1,2000,FALSE,25,0,0
+9,Weapon,Hellfire Molotov,TBD,1,1,TRUE,FALSE,TRUE,FALSE,Burn,FALSE,TRUE,FALSE,Light,6,6,6,1,TRUE,1,2000,FALSE,0,0,0
+10,Weapon,Fire Axe,TBD,1,1,FALSE,TRUE,FALSE,FALSE,,TRUE,TRUE,TRUE,Heavy,21,21,21,1,TRUE,1,2000,FALSE,0,0,0
