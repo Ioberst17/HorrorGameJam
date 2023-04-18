@@ -789,6 +789,75 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1001 &179928038
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3939883375913402969, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3939883375913402969, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3939883376374803736, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
+      propertyPath: m_RootOrder
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 3939883376374803736, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.19210577
+      objectReference: {fileID: 0}
+    - target: {fileID: 3939883376374803736, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 86.139496
+      objectReference: {fileID: 0}
+    - target: {fileID: 3939883376374803736, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.038977116
+      objectReference: {fileID: 0}
+    - target: {fileID: 3939883376374803736, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3939883376374803736, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3939883376374803736, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3939883376374803736, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3939883376374803736, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3939883376374803736, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3939883376374803736, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3939883376374803737, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
+      propertyPath: m_Name
+      value: GargoyleBase
+      objectReference: {fileID: 0}
+    - target: {fileID: 3939883376374803737, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 8901830a31f7a88458e6baac49b21638, type: 3}
 --- !u!1 &210153192
 GameObject:
   m_ObjectHideFlags: 0
@@ -1243,6 +1312,7 @@ MonoBehaviour:
   pauseMenu: {fileID: 1808386227}
   controlsMenu: {fileID: 256208539}
   quitButton: {fileID: 1872391159}
+  gameController: {fileID: 0}
 --- !u!4 &271491802 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6692248386998842308, guid: 72c3a56afd3179d44a95acbfc542bf79, type: 3}
@@ -1875,6 +1945,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 641676304}
+        m_TargetAssemblyTypeName: GameController, Assembly-CSharp
+        m_MethodName: pauseHandler
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 261940846}
         m_TargetAssemblyTypeName: PauseMenuHandler_Mason, Assembly-CSharp
         m_MethodName: Resume

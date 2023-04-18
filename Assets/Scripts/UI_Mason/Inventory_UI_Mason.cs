@@ -7,7 +7,7 @@ using TMPro;
 
 public class Inventory_UI_Mason : MonoBehaviour
 {
-
+    public GameController gameController;
     public DataManager dataManager;
 
     public PlayerData_UI_Mason playerDataUI;
@@ -95,6 +95,7 @@ public class Inventory_UI_Mason : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        gameController = GameObject.Find("GameController").GetComponent<GameController>();
         // initialize the textmeshpro vars to false.
         weaponDamage.enabled = false;
         weaponAmmo.enabled = false;
@@ -159,12 +160,21 @@ public class Inventory_UI_Mason : MonoBehaviour
             if (inventoryOpen)
             {
                 CloseInventory();
-                Time.timeScale = 1.0f; // resumes time in game
+                //Time.timeScale = 1.0f; // resumes time in game
+                if (gameController.isPaused)
+                {
+                    gameController.pauseHandler();
+                }
+                
             }
             else
             {
                 OpenInventory();
-                Time.timeScale = 0f; // pauses time game still a slight bug with the player being able to queue attacks and audio still playing when clicking around.
+                //Time.timeScale = 0f; // pauses time game still a slight bug with the player being able to queue attacks and audio still playing when clicking around.
+                if (!gameController.isPaused)
+                {
+                    gameController.pauseHandler();
+                }
             }
 
             for (int i = 0; i < dataManager.gameData.primaryWeapons.Count; i++)
@@ -193,6 +203,10 @@ public class Inventory_UI_Mason : MonoBehaviour
             }
 
             
+        }
+        if(!gameController.isPaused && inventoryOpen)
+        {
+            CloseInventory();
         }
     }
 
