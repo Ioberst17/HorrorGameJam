@@ -10,7 +10,7 @@ public class Currency : Item
     private new void Start()
     {
         base.Initialize();
-        amount = 1;
+        self.amount = 1;
         id = 0;
     }
 }

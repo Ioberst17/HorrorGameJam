@@ -10,21 +10,12 @@ namespace Ink.UnityIntegration {
 		Vector2 scrollPosition;
 		static int announcementVersionPreviouslySeen;
 
-		private static Texture2D _logoIcon;
-		public static Texture2D logoIcon {
-			get {
-				if(_logoIcon == null) {
-					_logoIcon = Resources.Load<Texture2D>("InkLogoIcon");
-				}
-				return _logoIcon;
-			}
-		}
-
 		static InkUnityIntegrationStartupWindow () {
-			UnityEditor.EditorApplication.delayCall += TryCreateWindow;      
+			UnityEditor.EditorApplication.delayCall += TryCreateWindow;
 		}
 
 		static void TryCreateWindow() {
+			if (InkSettings.instance.suppressStartupWindow) return;
 			announcementVersionPreviouslySeen = EditorPrefs.GetInt(editorPrefsKeyForVersionSeen, -1);
 			if(announcementVersion != announcementVersionPreviouslySeen) {
 				ShowWindow();
@@ -45,12 +36,13 @@ namespace Ink.UnityIntegration {
 			var areaSize = new Vector2(90,90);
 			GUILayout.BeginArea(new Rect((position.width-areaSize.x)*0.5f, 15, areaSize.x, areaSize.y));
 			EditorGUILayout.BeginVertical();
-			EditorGUILayout.LabelField(new GUIContent(logoIcon), GUILayout.Width(areaSize.x), GUILayout.Height(areaSize.x*((float)logoIcon.height/logoIcon.width)));
+			EditorGUILayout.LabelField(new GUIContent(InkEditorUtils.inkLogoIcon), GUILayout.Width(areaSize.x), GUILayout.Height(areaSize.x*((float)InkEditorUtils.inkLogoIcon.height/InkEditorUtils.inkLogoIcon.width)));
 			GUILayout.Space(5);
 			EditorGUILayout.LabelField("Version "+InkLibrary.unityIntegrationVersionCurrent.ToString(), EditorStyles.centeredGreyMiniLabel);
 			EditorGUILayout.LabelField("Ink version "+InkLibrary.inkVersionCurrent.ToString(), EditorStyles.centeredGreyMiniLabel);
 			EditorGUILayout.EndVertical();
 			GUILayout.EndArea();
+
 
 			GUILayout.Space(20+areaSize.y);
 			
@@ -69,6 +61,9 @@ namespace Ink.UnityIntegration {
 				if (GUILayout.Button("❤️Support Us!❤️")) {
 					Application.OpenURL("https://www.patreon.com/inkle");
 				}
+				if (GUILayout.Button("Discord Community+Support")) {
+					Application.OpenURL("https://discord.gg/inkle");
+				}
 				if (GUILayout.Button("Close")) {
 					Close();
 				}
@@ -80,6 +75,37 @@ namespace Ink.UnityIntegration {
 			{
 				scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
 				{
+					// 1.1.5
+					EditorGUILayout.BeginVertical(GUI.skin.box);
+					EditorGUILayout.LabelField("Version 1.1.7:", EditorStyles.boldLabel);
+					EditorGUILayout.LabelField("• Rework of the plugin's INCLUDE hierarchy system, allowing for previously unhandled valid setups.", EditorStyles.wordWrappedLabel);
+					EditorGUILayout.LabelField("• Changes the OpenInEditor function to use AssetDatabase.OpenAsset, which correctly uses the OS file editor.", EditorStyles.wordWrappedLabel);
+					EditorGUILayout.LabelField("• Prevents the Ink Player Window from showing itself when scripts are recompiled.", EditorStyles.wordWrappedLabel);
+					EditorGUILayout.EndVertical();
+					// 1.1.5
+					EditorGUILayout.BeginVertical(GUI.skin.box);
+					EditorGUILayout.LabelField("Version 1.1.5:", EditorStyles.boldLabel);
+					EditorGUILayout.LabelField("• Adds InkSettings.suppressStartupWindow, which can be used to prevent this window from appearing (requested for some CI/CD pipelines).", EditorStyles.wordWrappedLabel);
+					EditorGUILayout.LabelField("• Adds links to Discord for community support in help menu, startup window and setting menu.", EditorStyles.wordWrappedLabel);
+					EditorGUILayout.LabelField("• Fixes an issue where InkSettings ScriptableObjects wouldn't be unloaded.", EditorStyles.wordWrappedLabel);
+					EditorGUILayout.LabelField("• Updates build documentation for this plugin.", EditorStyles.wordWrappedLabel);
+					EditorGUILayout.EndVertical();
+					// 1.1.1
+					EditorGUILayout.BeginVertical(GUI.skin.box);
+					EditorGUILayout.LabelField("Version 1.1.1:", EditorStyles.boldLabel);
+					EditorGUILayout.LabelField("• Updates ink to 1.1.1.", EditorStyles.wordWrappedLabel);
+					EditorGUILayout.LabelField("• The InkCompiler.OnCompileInk event now fires once when the compilation stack completes and returns an array of compiled files", EditorStyles.wordWrappedLabel);
+					EditorGUILayout.LabelField("• Fixes some async threading issues when compiling", EditorStyles.wordWrappedLabel);
+					EditorGUILayout.LabelField("• Adds JSON formatting for save states copied or saved via the Ink Player Window", EditorStyles.wordWrappedLabel);
+					EditorGUILayout.LabelField("• Use the Unity Progress API to show compilation. Useful for large ink projects!", EditorStyles.wordWrappedLabel);
+					EditorGUILayout.LabelField("• Included files now show their own included files in the Inspector", EditorStyles.wordWrappedLabel);
+					EditorGUILayout.LabelField("• Various optimisations", EditorStyles.wordWrappedLabel);
+					EditorGUILayout.EndVertical();
+					// 1.0.2
+					EditorGUILayout.BeginVertical(GUI.skin.box);
+					EditorGUILayout.LabelField("Version 1.0.2:", EditorStyles.boldLabel);
+					EditorGUILayout.LabelField("• Fix a very rare but quite nasty compilation bug.", EditorStyles.wordWrappedLabel);
+					EditorGUILayout.EndVertical();
                     // 1.0.0
 					EditorGUILayout.BeginVertical(GUI.skin.box);
 					EditorGUILayout.LabelField("🎉Version 1.0.0🎉:", EditorStyles.boldLabel);
@@ -94,7 +120,6 @@ namespace Ink.UnityIntegration {
 					EditorGUILayout.LabelField("• Moved persistent compilation tracking code from InkLibrary into InkCompiler", EditorStyles.wordWrappedLabel);
 					EditorGUILayout.LabelField("• Use Unity's new ScriptableSingleton for InkLibrary, InkSettings and InkCompiler on 2020+", EditorStyles.wordWrappedLabel);
 					EditorGUILayout.EndVertical();
-					EditorGUILayout.BeginVertical(GUI.skin.box);
                     // 0.9.71
 					EditorGUILayout.BeginVertical(GUI.skin.box);
 					EditorGUILayout.LabelField("Version 0.9.71:", EditorStyles.boldLabel);
@@ -102,6 +127,7 @@ namespace Ink.UnityIntegration {
 					EditorGUILayout.EndVertical();
 					EditorGUILayout.BeginVertical(GUI.skin.box);
                     // 0.9.60
+					EditorGUILayout.BeginVertical(GUI.skin.box);
 					EditorGUILayout.LabelField("Version 0.9.60:", EditorStyles.boldLabel);
 					EditorGUILayout.LabelField("• Moved InkLibrary and InkSettings from Assets into Library and ProjectSettings.", EditorStyles.wordWrappedLabel);
 					EditorGUILayout.LabelField("   ‣ InkLibrary should no longer be tracked in source control.", EditorStyles.wordWrappedLabel);
@@ -117,7 +143,5 @@ namespace Ink.UnityIntegration {
 
 			EditorGUILayout.EndVertical();
 		}
-
-		
 	}
 }

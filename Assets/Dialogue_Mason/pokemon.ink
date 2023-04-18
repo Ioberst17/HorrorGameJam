@@ -2,11 +2,13 @@
 
 === main ===
 Which pokemon do you choose?
-    +[Charmander]
+    +[Charmander] 
+        #positive
         -> chosen("Charmander")
     +[Bulbasaur]
         -> chosen("Bulbasaur")
-    +[Squirtle]
+    +[Squirtle] 
+        #negative
         -> chosen("Squirtle")
 
 === chosen(pokemon) ===

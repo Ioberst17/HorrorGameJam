@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -43,10 +45,10 @@ public class PlayerController : MonoBehaviour
     public Camera mainCam;
 
     //To make the player temporarily unable to control themselves
-    public bool inHitstun;
 
     public bool isAttacking;
-    public bool isInvincible;
+    private GroundSlam groundSlam;
+
 
     //private float xInput;
     public int facingDirection = 1;
@@ -57,7 +59,7 @@ public class PlayerController : MonoBehaviour
     //used to calculate "control interta"
     public float ControlMomentum;
 
-    private bool isGrounded;
+    public bool isGrounded;
     //private bool isOnSlope;
     private bool isJumping;
     public bool isDashing;
@@ -65,48 +67,15 @@ public class PlayerController : MonoBehaviour
     private bool canJump;
     public bool isAgainstWall;
     public bool canWallJump;
-    public int StartingHP;
     public int StartingMP;
+    public bool isCharging;
 
-
+    [SerializeField] private PlayerHealth playerHealth;
     //Health points, magic points, soul points (currency)
-    [Range(0, 100)]
-    public int HP;
     public int MP;
-    public int SP;
+    public float SP, SP_MAX;
+    [SerializeField] private bool hasShield;
 
-    //these are all related to attack information
-    public int AttackDamage;
-    //List of objects hit by an attack, used to let the player hit multiple things with one swing
-    private Collider2D[] hitlist;
-    //These are all the objects used for the physical hit detection
-    [SerializeField]
-    private GameObject attackHori;
-    [SerializeField]
-    private Transform AHPoint1;
-    [SerializeField]
-    private Transform AHPoint2;
-    [SerializeField]
-    private GameObject attackUp;
-    [SerializeField]
-    private Transform AUPoint1;
-    [SerializeField]
-    private Transform AUPoint2;
-    [SerializeField]
-    private GameObject attackDown;
-    [SerializeField]
-    private Transform ADPoint1;
-    [SerializeField]
-    private Transform ADPoint2;
-    [SerializeField]
-    private float activeFrames;
-    [SerializeField]
-    private float recoveryFrames;
-    [SerializeField]
-    private float startupFrames;
-
-    public int attackLagValue;
-    public int attackLagTimer;
     [SerializeField]
     private Transform StartingLocation;
 
@@ -114,35 +83,23 @@ public class PlayerController : MonoBehaviour
     //Set all the initial values
     private void Start()
     {
+        EventSystem.current.onPlayerDeathTrigger += PlayerDeath;
+
         rb = GetComponent<Rigidbody2D>();
         cc = GetComponent<BoxCollider2D>();
-        HP = StartingHP;
         MP = StartingMP;
-        SP = 0;
+        SP_MAX = 100;
+        SP = SP_MAX;
         ControlMomentum = 0;
         animator = GetComponent<Animator>();
         mainCam = GameObject.Find("Main Camera").GetComponent<Camera>();
         visualEffects = transform.Find("VisualEffects").gameObject.GetComponent<PlayerParticleSystems>();
-        attackLagTimer = 0;
-        AttackDamage = 10;
         canDash = true;
-        inHitstun = false;
-        isInvincible = false;
         isDashing = false;
-        isAttacking = false;
-    }
-    private void Update()
-    {
-        
-    }
 
-    private void FixedUpdate()
-    {
-        if(attackLagTimer > 0)
-        {
-            attackLagTimer -= 1;
-        }
-        AttackHelper();
+        if (GetComponent<PlayerHealth>() != null) { playerHealth = GetComponent<PlayerHealth>(); }
+        else { Debug.Log("PlayerHealth.cs is being requested as a component of the same object as PlayerController.cs, but could not be found on the object"); }
+        groundSlam = GetComponentInChildren<GroundSlam>();
     }
 
     //Does anything in the environment layer overlap with the circle while not on the way up
@@ -151,15 +108,14 @@ public class PlayerController : MonoBehaviour
         if (rb.velocity.y == 0.0f)
         {
             isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, whatIsGround);
-            
             //Debug.Log("isgrounded " + rb.velocity.y);
         }
         else 
         {
             isGrounded = false;
-            if (!isJumping)
+            if (!isJumping && !isCharging)
             {
-                animator.Play("PlayerFall");
+                    animator.Play("PlayerFall");
             }
             //Debug.Log("isinair " + rb.velocity.y);
         }
@@ -171,7 +127,10 @@ public class PlayerController : MonoBehaviour
         else
         {
             isJumping = true;
-            animator.Play("PlayerJump");
+            if (!isCharging)
+            {
+                animator.Play("PlayerJump");
+            }
         }
 
         if (isGrounded && !isJumping)
@@ -212,35 +171,21 @@ public class PlayerController : MonoBehaviour
             {
                 canJump = false;
                 isJumping = true;
-                newVelocity.Set(0.0f, 0.0f);
-                rb.velocity = newVelocity;
-                newForce.Set(0.0f, jumpForce);
-                rb.AddForce(newForce, ForceMode2D.Impulse);
+                SetVelocity();
+                AddForce(0f, jumpForce);
                 animator.Play("PlayerJump");
-                { // play random jump sound
-                    int jumpAssetChoice = Random.Range(1, 9);
-                    string jumpAssetToUse = "Jump" + jumpAssetChoice.ToString();
-                    FindObjectOfType<AudioManager>().PlaySFX(jumpAssetToUse);
-                }
-
+                PlayRandomJumpSound();
             }
             else if (isAgainstWall && canWallJump)
             {
-                ControlMomentum = 30 * -facingDirection;
+                ControlMomentum = 20 * -facingDirection;
                 Flip();
-
                 canWallJump = false;
                 isJumping = true;
-                newVelocity.Set(0.0f, 0.0f);
-                rb.velocity = newVelocity;
-                newForce.Set(jumpForce / 2 * -facingDirection, jumpForce);
-                rb.AddForce(newForce, ForceMode2D.Impulse);
+                SetVelocity();
+                AddForce(jumpForce / 2 * -facingDirection, jumpForce);
+                PlayRandomJumpSound();
                 animator.Play("PlayerJump");
-                { // play random jump sound
-                    int jumpAssetChoice = Random.Range(1, 9);
-                    string jumpAssetToUse = "Jump" + jumpAssetChoice.ToString();
-                    FindObjectOfType<AudioManager>().PlaySFX(jumpAssetToUse);
-                }
                 visualEffects.PlayEffect("MovementDust");
             }
         }
@@ -250,24 +195,23 @@ public class PlayerController : MonoBehaviour
     //called by the GameController
     public void ApplyMovement()
     {
-        if (!inHitstun && !isDashing)
+        if(groundSlam.isGroundSlam == true) { SetVelocity(0, rb.velocity.y); }
+        else if (!playerHealth.inHitStun && !isDashing && !isCharging)
         {
             if (isGrounded && !isJumping) //if on ground
             {
 
-                newVelocity.Set(movementSpeed * ControlMomentum/50, rb.velocity.y);
+                newVelocity.Set(movementSpeed * ControlMomentum/10, rb.velocity.y);
                 rb.velocity = newVelocity;
                 if(!isAttacking && !isJumping)
                 {
                     if (rb.velocity.x == 0 || DialogueManager.GetInstance().dialogueIsPlaying)
                     {
-                        newVelocity.Set(0, 0);
-                        rb.velocity = newVelocity;
+                        SetVelocity();
                         if(GameController.xInput == 0)
                         {
                             animator.Play("PlayerIdle");
                         }
-                        
                     }
                     else
                     {
@@ -279,60 +223,15 @@ public class PlayerController : MonoBehaviour
             }
             else if (!isGrounded) //If in air
             {
-                newVelocity.Set(movementSpeed * ControlMomentum/50, rb.velocity.y);
+                newVelocity.Set(movementSpeed * ControlMomentum/10, rb.velocity.y);
                 rb.velocity = newVelocity;
             }
         }
-    }
-
-    //0 is up, 1 is down, 2 is neutral
-    public void Attack(int attackDirection)
-    {
-        //Debug.Log("attack called 2");
-        if (!isAttacking && !DialogueManager.GetInstance().dialogueIsPlaying)
+        else if (isCharging)
         {
-            isAttacking = true;
-            animator.Play("PlayerBasicAttack");
-            FindObjectOfType<AudioManager>().PlaySFX("PlayerMelee");
-            StartCoroutine(AttackActiveFrames(attackDirection));
+            animator.Play("PlayerCharge");
         }
     }
-
-    //controlls the attack frame data
-    IEnumerator AttackActiveFrames(int attackDirection) // is called by the trigger event for powerups to countdown how long the power lasts
-    {
-        switch (attackDirection)
-        {
-            case 0:
-                yield return new WaitForSeconds(startupFrames);
-                attackUp.SetActive(true);
-                yield return new WaitForSeconds(activeFrames); // waits a certain number of seconds
-                attackUp.SetActive(false);
-                yield return new WaitForSeconds(recoveryFrames);
-                isAttacking = false;
-                break;
-            case 1:
-                yield return new WaitForSeconds(startupFrames);
-                attackDown.SetActive(true);
-                yield return new WaitForSeconds(activeFrames); // waits a certain number of seconds
-                attackDown.SetActive(false);
-                yield return new WaitForSeconds(recoveryFrames);
-                isAttacking = false;
-                break;
-            case 2:
-                yield return new WaitForSeconds(startupFrames);
-                attackHori.SetActive(true);
-                yield return new WaitForSeconds(activeFrames); // waits a certain number of seconds
-                attackHori.SetActive(false);
-                yield return new WaitForSeconds(recoveryFrames);
-                isAttacking = false;
-                break;
-            default:
-                isAttacking = false;
-                break;
-        }
-    }
-
     private Vector3 GetNormalizedMouseDirectionFromPlayer()
     {
         Vector3 mousePos = Input.mousePosition;
@@ -351,9 +250,8 @@ public class PlayerController : MonoBehaviour
         if (GameController.xInput == 0 & GameController.yInput == 0)
         {
             Vector3 direction = GetNormalizedMouseDirectionFromPlayer();
-            newVelocity.Set(direction.x * movementSpeed * 2, direction.y * movementSpeed * 2);
+            SetVelocity(direction.x * movementSpeed * 2, direction.y * movementSpeed * 2);
             //newVelocity.Set(movementSpeed * 2 * facingDirection, 0);
-            rb.velocity = newVelocity;
         }
         else
         {
@@ -393,82 +291,6 @@ public class PlayerController : MonoBehaviour
         yield return null;
     }
 
-    //This opperates the attack hit detection
-    public void AttackHelper()
-    {
-        //normal attack
-        if (attackHori.activeSelf)
-        {
-            //Debug.Log("Swinging");
-            
-
-            if (Physics2D.OverlapArea(AHPoint1.position, AHPoint2.position, whatIsEnemy))
-            {
-                hitlist = Physics2D.OverlapAreaAll(AHPoint1.position, AHPoint2.position, whatIsEnemy);
-                int i = 0;
-                while (i < hitlist.Length)
-                {
-                    //Debug.Log(hitlist[i]);
-                    if (hitlist[i].GetType() == typeof(UnityEngine.CapsuleCollider2D))
-                    {
-                        GameController.passHit(hitlist[i].name, AttackDamage, transform.position);
-                    }
-                    i++;
-                }
-
-            }
-        }
-        //up attack
-        if (attackUp.activeSelf)
-        {
-            //Debug.Log("Swinging");
-            //animator.Play("PlayUp");
-
-            if (Physics2D.OverlapArea(AUPoint1.position, AUPoint2.position, whatIsEnemy))
-            {
-                hitlist = Physics2D.OverlapAreaAll(AUPoint1.position, AUPoint2.position, whatIsEnemy);
-                int i = 0;
-                while (i < hitlist.Length)
-                {
-                    //Debug.Log(hitlist[i]);
-                    if (hitlist[i].GetType() == typeof(UnityEngine.CapsuleCollider2D))
-                    {
-                        GameController.passHit(hitlist[i].name, AttackDamage, transform.position);
-                    }
-                    i++;
-                }
-
-            }
-        }
-        //down attack
-        if (attackDown.activeSelf)
-        {
-            //Debug.Log("Swinging");
-            //animator.Play("PlayerAttackDown");
-
-            if (Physics2D.OverlapArea(ADPoint1.position, ADPoint2.position, whatIsEnemy))
-            {
-                newVelocity.Set(0.0f, 0.0f);
-                rb.velocity = newVelocity;
-                newForce.Set(0.0f, jumpForce * 0.66f);
-                rb.AddForce(newForce, ForceMode2D.Impulse);
-
-                hitlist = Physics2D.OverlapAreaAll(ADPoint1.position, ADPoint2.position, whatIsEnemy);
-                int i = 0;
-                while (i < hitlist.Length)
-                {
-                    //Debug.Log(hitlist[i]);
-                    if (hitlist[i].GetType() == typeof(UnityEngine.CapsuleCollider2D))
-                    {
-                        GameController.passHit(hitlist[i].name, AttackDamage, transform.position);
-                    }
-                    i++;
-                }
-
-            }
-        }
-    }
-
     //flips the model
     public void Flip()
     {
@@ -476,63 +298,52 @@ public class PlayerController : MonoBehaviour
         transform.Rotate(0.0f, 180.0f, 0.0f);
     }
 
-    public void AddHealth(int healthToAdd)
-    {
-        HP += healthToAdd;
-    }
-
     //processes if the player should take damage, and if so, how much, then calculates for death. damageType Numbers: 0 is one hit damage, 1 is damage over time. 
     //Calculated direction of hit for knockback direction.
-    public void takeDamage(Vector3 enemyPos, int damageNumber, int damageType)
+    public void Hit(Vector3 enemyPos, float knockbackMod)
     {
-        if (!isInvincible)
+        if (!playerHealth.isInvincible)
         {
-            StartCoroutine(hitStun());
-            HP -= damageNumber;
-            if (enemyPos.x >= transform.position.x)
-            {
-                newVelocity.Set(-5.0f, 0.0f);
-                rb.velocity = newVelocity;
-                newForce.Set(0.0f, jumpForce);
-                rb.AddForce(newForce, ForceMode2D.Impulse);
-            }
-            else
-            {
-                newVelocity.Set(5.0f, 0.0f);
-                rb.velocity = newVelocity;
-                newForce.Set(0.0f, jumpForce);
-                rb.AddForce(newForce, ForceMode2D.Impulse);
-            }
-            if (HP <= 0)
-            {
-                Debug.Log("Death");
-                animator.Play("PlayerDeath");
-                transform.position = StartingLocation.position;
-                HP = StartingHP;
-            }
+            float knockbackForce = jumpForce * (1 - knockbackMod);
+
+            if (enemyPos.x >= transform.position.x) { SetVelocity(-knockbackForce / 3, 0.0f); }
+            else { SetVelocity(knockbackForce / 3, 0.0f); }
+
+            AddForce(0.0f, knockbackForce / 3);
         }
     }
 
-    IEnumerator hitStun()
+    void PlayerDeath()
     {
-        inHitstun = true;
-        StartCoroutine(Invincibility());
-        animator.Play("PlayerHurt");
-        FindObjectOfType<AudioManager>().PlaySFX("PlayerHit");
-        yield return new WaitForSeconds(1); // waits a certain number of seconds
-        inHitstun = false;
+        animator.Play("PlayerDeath");
+        transform.position = StartingLocation.position;
     }
 
-    IEnumerator Invincibility()
+    public void gainSP(int SPAmount) { SP += SPAmount; }
+
+    public void SetVelocity() { SetVelocity(0, 0); }
+
+    public void SetVelocity(float xVel, float yVel)
     {
-        isInvincible = true;
-        //animator.Play("PlayerHit");
-        yield return new WaitForSeconds(1.5f); // waits a certain number of seconds
-        isInvincible = false;
+        newVelocity.Set(xVel, yVel);
+        rb.velocity = newVelocity;
     }
 
-    public void gainSP(int SPAmount)
+    public void AddForce(float xDirForce, float yDirForce)
     {
-        SP += SPAmount;
+        newForce.Set(xDirForce, yDirForce);
+        rb.AddForce(newForce, ForceMode2D.Impulse);
+    }
+
+    private void PlayRandomJumpSound()
+    {
+        int jumpAssetChoice = Random.Range(1, 9);
+        string jumpAssetToUse = "Jump" + jumpAssetChoice.ToString();
+        FindObjectOfType<AudioManager>().PlaySFX(jumpAssetToUse);
+    }
+
+    private void OnDestroy()
+    {
+        EventSystem.current.onPlayerDeathTrigger -= PlayerDeath;
     }
 }

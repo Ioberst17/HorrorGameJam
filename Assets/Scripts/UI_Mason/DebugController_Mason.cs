@@ -32,7 +32,7 @@ public class DebugController_Mason : MonoBehaviour
     //create refrences to needed scripts
     [SerializeField] private PlayerController playerController;
     [SerializeField] private SceneManagerIndexBased_Mason sceneManagerIndexBased_Mason;
-    [SerializeField] private SpawnManager spawnManager;
+    [SerializeField] private EnemyCreationForTesting enemySpawner;
 
     [SerializeField] private DebugCommandBase debugCommandBase;
     [SerializeField] private DebugCommands_Mason debugCommands;
@@ -103,7 +103,7 @@ public class DebugController_Mason : MonoBehaviour
 
         SPAWN_ENEMY = new DebugCommands_Mason<int>("spawn_enemy", "Spawns an enemy based on its idNum.", "spawn_enemy <idNum>", (x) =>
         {
-            spawnManager.SpawnEnemy(x);
+            enemySpawner.SpawnEnemy(x);
         });
 
         HELP = new DebugCommands_Mason("help", "Show list of commands.", "help", () =>

@@ -22,10 +22,7 @@ public class DataManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            ClearData();
-        }
+        if (Input.GetKeyDown(KeyCode.C)) { ClearData(); }
     }
 
     [System.Serializable]
@@ -39,10 +36,12 @@ public class DataManager : MonoBehaviour
     public class GameData // data to be saved between sessions in Json format - n.b Unity Json utility does not support arrays
     {
         public int timesPlayed = 0;
-        // Player Data
+        [Header("Player Data")]
         public float playerEXP = 0.0f;
         public int playerLevel = 1;
-        // Inventory Data
+        public PlayerSkills playerSkills = new PlayerSkills();
+        [Header("Inventory Data")]
+        public List<NarrativeItems> narrativeItems = new List<NarrativeItems>();
         [SerializeField]
         public List<PlayerConsumables> consumables = new List<PlayerConsumables>();
         [SerializeField]
@@ -50,7 +49,9 @@ public class DataManager : MonoBehaviour
         [SerializeField]
         public List<PlayerWeapons> secondaryWeapons = new List<PlayerWeapons>();
         public int activePrimaryWeapon = 1;
-        public int activeSecondaryWeapon = 1; 
+        public int activeSecondaryWeapon = 1;
+        [Header("Environment Data")]
+        public AreaHistory areaHistory = new AreaHistory();
     }
 
     /* FUNCTIONS */
@@ -81,19 +82,8 @@ public class DataManager : MonoBehaviour
 
     private void SaveData(GameData gameData) // used to save data to a file
     {
-        //string json = JsonUtility.ToJson(gameData); // turns data into a json string
-        JSchema schemaToUse = GameDataSchema();
         string json = JsonConvert.SerializeObject(gameData);
 
-        //string json = EditorJsonUtility.ToJson(gameData);
-
-        //var options = new JsonSerializerOptions { WriteIndented = true };
-
-        /*JsonSerializer serializer = new JsonSerializer();
-        serializer.Converters.Add(new JavaScriptDateTimeConverter());
-        serializer.NullValueHandling = NullValueHandling.Ignore;*/
-
-        //string json = JsonSerializer.Serialize(gameData, options);
         File.WriteAllText(Application.persistentDataPath + "/savefile.json", json); // uses System.IO namespace to write to a consistent folder, with name savefile.json
 
         Debug.Log(json);
@@ -105,10 +95,8 @@ public class DataManager : MonoBehaviour
         if (File.Exists(path)) // check if file exists
         {
             string json = File.ReadAllText(path); // reads file content to json string
-            //GameData gameData = JsonUtility.FromJson<GameData>(json); // reads json string data to variable data
 
             gameData = JsonConvert.DeserializeObject<GameData>(json);
-            //gameData = JsonSerializer.Deserialize<GameData>(json);
 
             return gameData;
         }
@@ -130,6 +118,6 @@ public class DataManager : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        SaveData(gameData);
+        //SaveData(gameData);
     }
 }

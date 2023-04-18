@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using mixpanel;
 
-public class SpawnManager : MonoBehaviour
+public class EnemyCreationForTesting : MonoBehaviour
 {
     /* DECLARATIONS */
 

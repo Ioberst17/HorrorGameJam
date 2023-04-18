@@ -25,6 +25,13 @@ public class EventSystem : MonoBehaviour
         }
     }
 
+    public event Action<int, int> onWaveFinished;
+
+    public void WaveFinishedTrigger(int areaID, int waveNum) { if (onWaveFinished != null) { onWaveFinished(areaID, waveNum); } }
+
+    public event Action <int> onAllWavesFinished;
+    public void AllWavesFinishedTrigger(int areaID) { if (onAllWavesFinished != null) { onAllWavesFinished(areaID); } }
+
     // WEAPON-RELATED EVENTS
 
     public event Action<int> onWeaponAddAmmoTrigger; // used to add ammo
