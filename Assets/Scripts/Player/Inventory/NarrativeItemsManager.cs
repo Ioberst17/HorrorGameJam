@@ -27,7 +27,7 @@ public class NarrativeItemsManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.J)) { AddItem(7); }
+        if (Input.GetKeyDown(KeyCode.J)) { AddItem(6); }
     }
 
     private void Load()
@@ -61,13 +61,10 @@ public class NarrativeItemsManager : MonoBehaviour
 
     private void GetCumulativeImpact()
     {
-        lucidityImpact = 0;
-        foreach(NarrativeItems item in narrativeItems)
-        {
-            if(item.stat == "Lucidity") { lucidityImpact += item.amount; }
-        }
+        if(narrativeItems.Count == 0) { PassChanges(1); }
+        else { foreach (NarrativeItems item in narrativeItems) { if (item.stat == "Lucidity") { lucidityImpact += item.amount; } } }
         PassChanges(lucidityImpact + 1);
     }
 
-    private void PassChanges(float change) { lucidity.narrativeItemRateChange = lucidityImpact; }
+    private void PassChanges(float change) { lucidity.narrativeItemRateChange = change; }
 }

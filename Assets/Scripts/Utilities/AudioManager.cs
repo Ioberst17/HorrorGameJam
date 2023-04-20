@@ -44,6 +44,13 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    public Sound GetSFX(string name) 
+    {
+        Sound s = Array.Find(sounds, sound => sound.name == name);
+        if (s == null) { Debug.LogWarning("AudioManager: sound " + name + " not found. Check for in AudioManager"); }
+        return s;
+    }
+
     public void PlaySFX (string name)
     {
         Sound s = Array.Find(sounds, sound => sound.name == name);

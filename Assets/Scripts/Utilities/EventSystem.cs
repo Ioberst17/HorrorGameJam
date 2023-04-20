@@ -110,9 +110,9 @@ public class EventSystem : MonoBehaviour
         }
     }
 
-    public event Action<int, int> onUpdateSecondaryWeaponTrigger;
+    public event Action<int, string, int> onUpdateSecondaryWeaponTrigger;
 
-    public void UpdateSecondaryWeaponTrigger(int weaponID, int weaponLevel) { if(onUpdateSecondaryWeaponTrigger != null) { onUpdateSecondaryWeaponTrigger(weaponID, weaponLevel); } }
+    public void UpdateSecondaryWeaponTrigger(int weaponID, string weaponName, int weaponLevel) { if(onUpdateSecondaryWeaponTrigger != null) { onUpdateSecondaryWeaponTrigger(weaponID, weaponName, weaponLevel); } }
 
     // PLAYER HEALTH-RELATED
 

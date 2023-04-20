@@ -34,7 +34,7 @@ public class SecondaryWeaponsManager : WeaponsManager
             int weaponLevel = weaponList[currentWeaponIndex].level;
 
             EventSystem.current.UpdateSecondaryWeaponUITrigger(weaponName, weaponAmmo);
-            EventSystem.current.UpdateSecondaryWeaponTrigger(weaponID, weaponLevel);
+            EventSystem.current.UpdateSecondaryWeaponTrigger(weaponID, weaponName, weaponLevel);
         }
     }
 
