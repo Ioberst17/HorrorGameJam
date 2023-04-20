@@ -32,6 +32,7 @@ public class PlayerData_UI_Mason : MonoBehaviour
     public float mp;
     public float sp;
 
+
     [SerializeField] private DataManager dataManager;
 
     [SerializeField] private GameController gameController;
@@ -53,6 +54,8 @@ public class PlayerData_UI_Mason : MonoBehaviour
         FinishTossForceDisplay();
         healthChecker = gameController.GetHP();
         healthBar.fillAmount = health / 100f;
+
+
 
         //dataManager.gameData.consumables[1].amount = dataManager.gameData.consumables[1].amount + 2;
 
@@ -91,6 +94,8 @@ public class PlayerData_UI_Mason : MonoBehaviour
             dataManager.gameData.consumables[1].amount = dataManager.gameData.consumables[1].amount - 1;
             Debug.Log("Used health kit.\n");
         }
+
+        
     }
 
     public void UpdateAmmoUI(string updatedWeapon, int updatedAmmo)
@@ -130,5 +135,8 @@ public class PlayerData_UI_Mason : MonoBehaviour
         EventSystem.current.onStartChargingUITrigger -= StartTossForceDisplay;
         EventSystem.current.onFinshChargingUITrigger -= FinishTossForceDisplay;
     }
+
+
+
 
 }
