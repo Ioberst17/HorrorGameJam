@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class Weapons : IShoppable
+public class Weapons : IDatabaseItem, IShoppable
 {
     // Standard Information
-    public int id;
-    public string classType;
-    public string name;
-    public string description;
+    [SerializeField] private int _id;
+    public int id { get { return _id; } set { _id = value; } }
+    [SerializeField] private string _classType;
+    public string classType { get { return _classType; } set { _classType = value; } }
+    [SerializeField] private string _name;
+    public string name { get { return _name; } set { _name = value; } }
+    [SerializeField] private string _description;
+    public string description { get { return _description; } set { _description = value; } }
     public int amount;
 
     // Unique Information
@@ -29,7 +33,7 @@ public class Weapons : IShoppable
     // Shop Information
     public bool isPurchasable;
     [SerializeField] private int _cost;
-    public int cost { get; set; }
+    public int cost { get { return _cost; } set { _cost = value; } }
     public int shopAmountPerPurchase;
     public int shopStock;
 }

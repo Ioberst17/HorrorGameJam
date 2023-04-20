@@ -4,17 +4,21 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 [System.Serializable]
-public class Consumables : IShoppable
+public class Consumables : IDatabaseItem, IShoppable
 {
     // Standard Info
-    public int id;
-    public string classType;
+    [SerializeField] private int _id;
+    public int id { get { return _id; } set { _id = value; } }
+    [SerializeField] private string _classType;
+    public string classType { get { return _classType; } set { _classType = value; } }
+    [SerializeField] private string _name;
+    public string name { get { return _name; } set { _name = value; } }
+    [SerializeField] private string _description;
+    public string description { get { return _description; } set { _description = value; } }
     public string itemType;
-    public string name;
     public int amount;
     public string audioOnPickup;
     public string audioOnUse;
-    public string description;
     public Sprite sprite;
 
     // Unique Info

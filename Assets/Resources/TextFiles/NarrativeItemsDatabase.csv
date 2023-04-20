@@ -1,13 +1,13 @@
-id,classType,name,amount,audioOnAcquisition,description,sprite,stat,modifier,isPurchasable,cost,shopAmountPerPurchase,shopStock
-int,string,string,float,string,string,sprite,string,string,bool,int,int,int
+id,classType,name,description,amount,audioOnAcquisition,sprite,stat,modifier,isPurchasable,cost,shopAmountPerPurchase,shopStock
+int,string,string,string,float,string,sprite,string,string,bool,int,int,int
 Standard,Standard,Standard,Standard,Standard,Standard,Standard,Unique,Unique,Shop,Shop,Shop,Shop
-Field,Field,Field,Field,Field,Field,Field,Field,Field,Field,Property,Field,Field
-System.Int32,System.String,System.String,System.Float,System.String,System.String,UnityEngine.Sprite,System.String,System.String,System.Boolean,System.Int32,System.Int32,System.Int32
-0,NarrativeItem,Baby's Candy,-0.02,NeedToAssign,It's just that easy. (-)Lucidity,,Lucidity,PercentReduction,FALSE,0,0,0
-1,NarrativeItem,Band-aid,0.02,NeedToAssign,Helping*** not hurting. (+)Lucidity,,Lucidity,PercentReduction,FALSE,0,0,0
-2,NarrativeItem,Stolen Teddy Bear,-0.05,NeedToAssign,Who says these are only for kids? - Lucidity,,Lucidity,PercentReduction,FALSE,0,0,0
-3,NarrativeItem,Epipen,0.05,NeedToAssign,Fancy yourself a hero*** huh? + Lucidity,,Lucidity,PercentReduction,FALSE,0,0,0
-4,NarrativeItem,Human Rib,-0.1,NeedToAssign,Adam? Is that you? -- Lucidity,,Lucidity,PercentReduction,FALSE,0,0,0
-5,NarrativeItem,Practice AED,0.1,NeedToAssign,Red Cross*** watch out! ++ Lucidity,,Lucidity,PercentReduction,FALSE,0,0,0
-6,NarrativeItem,Brain in a jar,-0.2,NeedToAssign,Do you want to build a monster? - - - Lucidity,,Lucidity,PercentReduction,FALSE,0,0,0
-7,NarrativeItem,Caduceus,0.2,NeedToAssign,You know you didn't take an actual oath right? +++ Lucidity,,Lucidity,PercentReduction,FALSE,0,0,0
+Property,Property,Property,Property,Field,Field,Field,Field,Field,Field,Property,Field,Field
+System.Int32,System.String,System.String,System.String,System.Float,System.String,UnityEngine.Sprite,System.String,System.String,System.Boolean,System.Int32,System.Int32,System.Int32
+0,NarrativeItem,Baby's Candy,It's just that easy. (-)Lucidity,-0.02,NeedToAssign,,Lucidity,PercentReduction,FALSE,0,0,0
+1,NarrativeItem,Band-aid,Helping*** not hurting. (+)Lucidity,0.02,NeedToAssign,,Lucidity,PercentReduction,FALSE,0,0,0
+2,NarrativeItem,Stolen Teddy Bear,Who says these are only for kids? - Lucidity,-0.05,NeedToAssign,,Lucidity,PercentReduction,FALSE,0,0,0
+3,NarrativeItem,Epipen,Fancy yourself a hero*** huh? + Lucidity,0.05,NeedToAssign,,Lucidity,PercentReduction,FALSE,0,0,0
+4,NarrativeItem,Human Rib,Adam? Is that you? -- Lucidity,-0.1,NeedToAssign,,Lucidity,PercentReduction,FALSE,0,0,0
+5,NarrativeItem,Practice AED,Red Cross*** watch out! ++ Lucidity,0.1,NeedToAssign,,Lucidity,PercentReduction,FALSE,0,0,0
+6,NarrativeItem,Brain in a jar,Do you want to build a monster? - - - Lucidity,-0.2,NeedToAssign,,Lucidity,PercentReduction,FALSE,0,0,0
+7,NarrativeItem,Caduceus,You know you didn't take an actual oath right? +++ Lucidity,0.2,NeedToAssign,,Lucidity,PercentReduction,FALSE,0,0,0
