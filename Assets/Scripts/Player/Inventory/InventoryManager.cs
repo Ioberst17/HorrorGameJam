@@ -95,19 +95,19 @@ public class InventoryManager : MonoBehaviour // INTENDED TO MANAGE ITEM ACTIVIT
             {
                 if (consumablesDB[i].itemType == "Ammo")
                 {
-                    if(secondaryWeaponsManager.GetCurrentWeaponName() == consumablesDB[i].itemName) { secondaryWeaponsManager.AddAmmo(amount); }
+                    if(secondaryWeaponsManager.GetCurrentWeaponName() == consumablesDB[i].name) { secondaryWeaponsManager.AddAmmo(amount); }
                     else
                     {
-                        secondaryWeaponsManager.AddAmmo(consumablesDB[i].itemName, amount);
+                        secondaryWeaponsManager.AddAmmo(consumablesDB[i].name, amount);
                         // TO-DO: Placeholder for event firing background inventory UI update (i.e. if ammo is for non-current weapon)
                     }
                     isAmmo = true;  
                 }
                 if (consumablesDB[i].itemType == "Instant Use")
                 {
-                    if(consumablesDB[i].itemName == "Heart") { playerHealth.AddHealth(10 * amount); }
-                    else if(consumablesDB[i].itemName == "Hourglass") { lucidity.Increase("Hourglass"); }
-                    else { Debug.LogFormat("Consumable is of type Instant Use, but it's name ({0}) does not match any in the Consumable DB", consumablesDB[i].itemName); }
+                    if(consumablesDB[i].name == "Heart") { playerHealth.AddHealth(10 * amount); }
+                    else if(consumablesDB[i].name == "Hourglass") { lucidity.Increase("Hourglass"); }
+                    else { Debug.LogFormat("Consumable is of type Instant Use, but it's name ({0}) does not match any in the Consumable DB", consumablesDB[i].name); }
 
                     isInstantUse = true;
                 }

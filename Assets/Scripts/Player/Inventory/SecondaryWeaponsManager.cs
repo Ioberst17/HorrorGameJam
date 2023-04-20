@@ -6,7 +6,7 @@ public class SecondaryWeaponsManager : WeaponsManager
 {
     private float lastWeaponUseTime;
     // Start is called before the first frame update
-    void Start()
+    public override void Start()
     {
         base.Start();
         EventSystem.current.onWeaponAddAmmoTrigger += AddAmmo;
@@ -47,13 +47,19 @@ public class SecondaryWeaponsManager : WeaponsManager
     public void AddAmmo(int weaponID, int ammoChange)
     {
         for (int i = 0; i < weaponList.Count; i++)
-        { if (weaponList[i].id == weaponID) { weaponList[i].ammo += ammoChange; } }
+        { if (weaponList[i].id == weaponID) { AddIfBelowAmmoLimit(ammoChange, i); } }
     } // used when needing to add to a weapon with a specific ID e.g. non-current weapon
 
     public void AddAmmo(string weaponName, int ammoChange)
     {
         for (int i = 0; i < weaponList.Count; i++)
-        { if (weaponList[i].name == weaponName) { weaponList[i].ammo += ammoChange; } }
+        { if (weaponList[i].name == weaponName) { AddIfBelowAmmoLimit(ammoChange, i); } }
+    }
+
+    void AddIfBelowAmmoLimit(int ammoChange, int weaponIndex)
+    {
+        if (weaponList[weaponIndex].ammoLimit <= weaponList[weaponIndex].ammo + ammoChange) { weaponList[weaponIndex].ammo = weaponList[weaponIndex].ammoLimit; }
+        else { weaponList[weaponIndex].ammo += ammoChange; }
     }
 
     public void WeaponFired(int weaponID, int weaponLevel, int ammoChange, int direction)

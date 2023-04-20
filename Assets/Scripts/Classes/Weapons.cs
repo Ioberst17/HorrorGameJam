@@ -3,12 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class Weapons 
+public class Weapons : IShoppable
 {
+    // Standard Information
     public int id;
-    public string title;
+    public string classType;
+    public string name;
+    public string description;
+    public int amount;
+
+    // Unique Information
     public int tier;
-    public int price;
     public bool isSecondary, isShot, isThrown, isFixedDistance;
     public string statusModifier;
     public bool isKinetic, isElemental, isHeavy; // note: isHeavy is not for a weight attribute, but a weapon type attribute (kinetic, elemental, heavy)
@@ -19,6 +24,12 @@ public class Weapons
     public int level;
     public bool isLightSource;
     public float fireRate;
-    public string description;
-    public int amount;
+    public int ammoLimit;
+
+    // Shop Information
+    public bool isPurchasable;
+    [SerializeField] private int _cost;
+    public int cost { get; set; }
+    public int shopAmountPerPurchase;
+    public int shopStock;
 }
