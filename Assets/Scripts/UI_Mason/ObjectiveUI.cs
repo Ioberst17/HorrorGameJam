@@ -16,6 +16,9 @@ public class ObjectiveUI : MonoBehaviour
     private int areaNum; // PLACEHOLDER we'll use the roomNum to dictate the objective for the room (ex. kill all enemies, find the door, kill boss, etc.)
 
 
+    //[SerializeField] public EnemySpawnManager enemySpawnManager;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,8 +30,9 @@ public class ObjectiveUI : MonoBehaviour
     {
         /*TODO: add if that checks if all enemies in room have died and if so run 
          * the UpdateObjectiveUI with a number correlating to the room being cleared*/
+        //if (enemySpawnManager.enemiesCleared) { UpdateObjectiveUI(7); }
 
-        UpdateObjectiveUI(areaNum); // only here for testing, function will mainly be called in script that handles moving rooms, as well as a room clear check inside this update.
+        //UpdateObjectiveUI(areaNum); // only here for testing, function will mainly be called in script that handles moving rooms, as well as a room clear check inside this update.
     }
 
     /* create a function that takes in the roomNumber and then changes the text of the objective ui based on that
