@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static SiblingComponentUtils;
-
+using SpriteGlow;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(PlayerPrimaryWeapon))]
 public class ChargePunch : MonoBehaviour
@@ -19,10 +20,18 @@ public class ChargePunch : MonoBehaviour
     [SerializeField] public bool isCharging;                // whether the punch is currently being charged
 
 
-    // VFX Related
+    [Header("VFX Related")]
     private GameObject visualEffects;
-    ParticleSystem partSystem1, partSystem2, partSystem3, partSystem4;
-    [SerializeField] bool particleTrigger;
+    private GameObject particleParent;
+    ParticleSystem partSystem1, partSystem2, partSystem3, partSystem4, partSystem5;
+    ParticleSystem[] particleSystems;
+    bool particleTrigger;
+    [SerializeField] private SpriteGlowEffect spriteGlow; private bool glowTrigger;
+    float glowFrequency = 5, glowAmplitude = 5;
+    float outlineFrequency = 2, outlineAmplitude = 2;
+    [SerializeField] int glowVal;
+    [SerializeField] int outlineVal;
+    int glowMidPoint = 5, outlineMidpoint = 5;
 
     //SFX Related
     private bool falconSFXFlag;
@@ -34,19 +43,18 @@ public class ChargePunch : MonoBehaviour
     private void Start()
     {
         playerPrimaryWeapon = GetComponent<PlayerPrimaryWeapon>();
-        LoadParticleSystems();
+        LoadVFXReferences();
         Sound punch1Sound = FindObjectOfType<AudioManager>().GetSFX("ChargePunch1");
         punch1Length = punch1Sound.clip.length;
         ParticleSystemsOn(false);
     }
 
-    void LoadParticleSystems()
+    void LoadVFXReferences()
     {
         visualEffects = transform.GetSibling("VisualEffects").gameObject;
-        partSystem1 = visualEffects.transform.Find("PunchWindParticlesTop1").GetComponent<ParticleSystem>();
-        partSystem2 = visualEffects.transform.Find("PunchWindParticlesTop2").GetComponent<ParticleSystem>();
-        partSystem3 = visualEffects.transform.Find("PunchWindParticlesFloor1").GetComponent<ParticleSystem>();
-        partSystem4 = visualEffects.transform.Find("PunchWindParticlesFloor2").GetComponent<ParticleSystem>();
+        particleParent = visualEffects.transform.Find("PunchWindParticles").gameObject;
+        particleSystems = particleParent.GetComponentsInChildren<ParticleSystem>();
+        spriteGlow = visualEffects.GetComponentInParent<SpriteGlowEffect>();
     }
 
     public void Execute() { isCharging = true; }
@@ -61,6 +69,7 @@ public class ChargePunch : MonoBehaviour
             CalcForce();
             HandleChargeVFX();
             HandleChargeSound();
+            if (glowTrigger) { HandleGlow(); }
         }
         if (falconSFXPlaying) { sfxPlayTime += Time.deltaTime; }
     }
@@ -95,6 +104,16 @@ public class ChargePunch : MonoBehaviour
         }
     }
 
+    void HandleGlow()
+    {
+        // Calculate the oscillating values for glow and outline properties
+        glowVal = Mathf.Max(1, Mathf.RoundToInt(Mathf.Sin(Time.time * glowFrequency) * glowAmplitude + glowMidPoint));
+        outlineVal = Mathf.Max(1, Mathf.RoundToInt(Mathf.Sin(Time.time * outlineFrequency) * outlineAmplitude + outlineMidpoint));
+
+        spriteGlow.GlowBrightness = glowVal;
+        spriteGlow.OutlineWidth = outlineVal;
+    }
+
     void FinishSound() { FindObjectOfType<AudioManager>().PlaySFX("ChargePunch2"); falconSFXFlag = false; sfxPlayTime = 0; falconSFXPlaying = false; }
 
     private void HandleChargeVFX() 
@@ -103,14 +122,22 @@ public class ChargePunch : MonoBehaviour
         {
             EventSystem.current.StartChargedAttackTrigger(holdTimeNormalized, gameObject.transform, null);
             if (particleTrigger == false) { ParticleSystemsOn(true); }
+            if (glowTrigger == false) { GlowOn(true); spriteGlow.GlowBrightness = 0; spriteGlow.OutlineWidth = 0; }
         } 
     }
 
     void ParticleSystemsOn(bool status)
     {
-        if (status == true) { partSystem1.Play(); partSystem2.Play(); partSystem3.Play(); partSystem4.Play(); particleTrigger = true; }
-        else { partSystem1.Stop(); partSystem2.Stop(); partSystem3.Stop(); partSystem4.Stop(); particleTrigger = false; }
+        if (status == true) { foreach (ParticleSystem ps in particleSystems) { ps.Play(); } particleTrigger = true; }
+        else { foreach (ParticleSystem ps in particleSystems) { ps.Stop(); } particleTrigger = false; }
     }
+
+    void GlowOn(bool status)
+    {
+        if (status == true) { glowTrigger = true; }
+        else { glowTrigger = false; spriteGlow.GlowBrightness = 0; spriteGlow.OutlineWidth = 0; }
+    }
+
 
     void ReleasePunch()
     {
@@ -119,7 +146,7 @@ public class ChargePunch : MonoBehaviour
         isCharging = false;
         chargeTime = 0;
         HandleFinishSound();
-        ParticleSystemsOn(false);
+        ParticleSystemsOn(false); GlowOn(false);
         //Instantiate(punchEffect, transform.position, Quaternion.identity);
         EventSystem.current.FinishChargedAttackTrigger();
     }

@@ -11,6 +11,9 @@ public class PlayerShield : Shield
     [SerializeField] float staminaRate = 50f;
     private float spChecker;
     private bool shieldButtonDown;
+    private EnemyController currentAttacker;
+    [SerializeField] private int enemyAttackNumber;
+    private int enemyDamageVal;
 
     new void Start()
     {
@@ -59,6 +62,7 @@ public class PlayerShield : Shield
 
     public override void SpecificDamageChecks(Collider2D collision)
     {
+        if(collision.gameObject.tag == "EnemyAttack") { checkStatus = true; }
         if (collision.gameObject.GetComponent<EnemyController>() != null && collision.gameObject.GetComponent<EnemyController>().isAttacking) { checkStatus = true; }
         else if(collision.gameObject.GetComponent<EnemyProjectile>()) { checkStatus = true; }
         else if (collision.gameObject.GetComponent<Explode>() != null) { checkStatus = true; }
@@ -77,13 +81,53 @@ public class PlayerShield : Shield
         base.AddCollisionsToCheckFor(shieldedObject);
     }
 
+    EnemyController CheckForEnemyController(Collider2D collision)
+    {
+        currentAttacker = collision.GetComponentInParent<EnemyController>();
+        if(currentAttacker != null) { return currentAttacker; }
+        currentAttacker = collision.GetComponentInChildren<EnemyController>();
+        if(currentAttacker != null) { return currentAttacker; }
+        return null;
+    }
+
+    int GetEnemyDamageVal(Collider2D collision)
+    {
+        enemyAttackNumber = collision.gameObject.GetComponent<EnemyAttackNumber>().enemyAttackNumber;
+        if(CheckForEnemyController(collision) != null)
+        {
+            if(enemyAttackNumber == 1) { return currentAttacker.GetComponent<EnemyController>().dmgVal1; }
+            if(enemyAttackNumber == 2) { return currentAttacker.GetComponent<EnemyController>().dmgVal2; }
+            if(enemyAttackNumber == 3) { return currentAttacker.GetComponent<EnemyController>().dmgVal3; }
+            if(enemyAttackNumber == 4) { return currentAttacker.GetComponent<EnemyController>().dmgVal4; }
+            if(enemyAttackNumber == 5) { return currentAttacker.GetComponent<EnemyController>().dmgVal5; }
+            if(enemyAttackNumber == 6) { return currentAttacker.GetComponent<EnemyController>().dmgVal6; }
+
+        }
+        else { Debug.Log("Player Shield is detecting an Enemy Attack tag on game object: " + collision.gameObject.name + ", but it contains no Enemy Controller in its parent or children"); }
+        return -1;
+    }
+
     public override void PassThroughDamage(Collider2D collision, float damageMod, float knockbackMod) 
     {
-        if (collision.gameObject.GetComponent<EnemyController>() != null)
+        if (collision.gameObject.tag == "EnemyAttack")
+        {
+            enemyDamageVal = GetEnemyDamageVal(collision);
+            if (enemyDamageVal != -1) 
+            {
+                EventSystem.current.PlayerHitCalcTrigger(
+                  collision.gameObject.transform.position,
+                  enemyDamageVal,
+                  1,
+                  damageMod,
+                  knockbackMod);
+            }
+            else { Debug.Log("Couldn't find a damage value in the enemy controller of the attacking object that matches the enemyAttackNumber listed on the attacking object"); }
+        }
+        else if (collision.gameObject.GetComponent<EnemyController>() != null)
         {
             EventSystem.current.PlayerHitCalcTrigger(
                               collision.gameObject.transform.position,
-                              collision.gameObject.GetComponent<EnemyController>().damageValue,
+                              collision.gameObject.GetComponent<EnemyController>().dmgVal1,
                               1,
                               damageMod,
                               knockbackMod);
@@ -114,7 +158,7 @@ public class PlayerShield : Shield
         Instantiate(Resources.Load("VFXPrefabs/BulletImpact"), collision.transform.position, Quaternion.identity); // TO-DO: Swap out with a more appropriate impact
         if (collision.gameObject.GetComponent<IDamageable>() != null)
         { 
-            collision.gameObject.GetComponent<IDamageable>().Hit(collision.gameObject.GetComponent<EnemyController>().damageValue, transform.position); 
+            collision.gameObject.GetComponent<IDamageable>().Hit(collision.gameObject.GetComponent<EnemyController>().dmgVal1, transform.position); 
         }
     }
 

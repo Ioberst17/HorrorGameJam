@@ -75,6 +75,11 @@ public class Shield : MonoBehaviour
         }
     }
 
+    public void DirectDamageHandler(GameObject self, int attackNum)
+    {
+
+    }
+
     private void HandleDamagePass(Collider2D collision, float damageAbsorption, float knockbackAbsorption, string VFXToLoad)
     {
         VFXPath = "VFXPrefabs/" + VFXToLoad;
