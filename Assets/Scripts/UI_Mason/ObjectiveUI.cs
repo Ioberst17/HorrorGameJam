@@ -18,6 +18,9 @@ public class ObjectiveUI : MonoBehaviour
     //[SerializeField] public EnemySpawnManager enemySpawnManager;
 
 
+    //[SerializeField] public EnemySpawnManager enemySpawnManager;
+
+
     // Start is called before the first frame update
     void Start()
     {
