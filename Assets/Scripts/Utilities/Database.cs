@@ -1,3 +1,4 @@
+using Ink.Parsed;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,11 +7,13 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class Database<T> : MonoBehaviour where T : IShoppable
+public class Database<T> : MonoBehaviour where T : IDatabaseItem, IShoppable
 {
     public TextAsset textAssetData; // the CSV to read from, must be assigned in Inspector
     public int numOfColumns;
     public int numOfDataRows;
+    private T returnedItem;
+    private bool foundItemToReturn;
 
     // for CSV Header Rows
     [SerializeField] private List<string> columnNames = new List<string>();
@@ -82,13 +85,8 @@ public class Database<T> : MonoBehaviour where T : IShoppable
 
                 IndexForClassProperties = Array.FindIndex(propertyInfo, p => p.Name == columnName);
                 var propInfoObj = Array.Find(propertyInfo, p => p.Name == columnName);
-                if (IndexForClassProperties >= 0)
-                {
-                    if (columnName == "cost" && this.data.entries[i] is IShoppable itemWithCostProperty)
-                    {
-                        ParseDataToTable(i, j, data, propertyInfo[IndexForClassProperties], dataType);
-                    }
-                }
+                if (IndexForClassProperties >= 0) { ParseDataToTable(i, j, data, propertyInfo[IndexForClassProperties], dataType); }
+
                 if (IndexForClassProperties !>=0 && IndexForClassField! >= 0) { Debug.Log("Current row is: " + i + "; Current column is: " + j + "; did not find a prop or field in class that matches"); }
             }
         }
@@ -187,5 +185,23 @@ public class Database<T> : MonoBehaviour where T : IShoppable
 
             
     }
-    
+
+    // Generic Functions for Child Databases
+
+    public T ReturnItemFromID(int id)
+    {
+        foundItemToReturn = false;
+        for (int i = 0; i < this.data.entries.Length; i++) { if (id == this.data.entries[i].id) { foundItemToReturn = true; return this.data.entries[i]; } }
+        if(foundItemToReturn == false) { Debug.LogFormat("Could not find item with ID: {0}; Check for presence or mispellings", id); }
+        return default(T);
+    }
+
+    public T ReturnItemFromName(string name)
+    {
+        foundItemToReturn = false;
+        for (int i = 0; i < this.data.entries.Length; i++) { if (name == this.data.entries[i].name) { foundItemToReturn = true; return this.data.entries[i]; } }
+        if (foundItemToReturn == false) { Debug.LogFormat("Could not find item with name: {0}; Check for presence or mispellings", name); }
+        return default(T);
+    }
+
 }
