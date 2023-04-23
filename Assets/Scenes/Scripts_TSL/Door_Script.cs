@@ -7,6 +7,7 @@ public class Door_Script : MonoBehaviour
     public bool playerDetected;
     [SerializeField] Transform posToGo;
     [SerializeField] Transform player;
+    [SerializeField] ObjectiveUI objectiveUI;
 
 
 
@@ -25,6 +26,7 @@ public class Door_Script : MonoBehaviour
             {
                 player.transform.position = posToGo.position;
                 playerDetected = false;
+                objectiveUI.UpdateObjectiveUI(2); // This calls ObjectiveUI Update function and for now passes ID2 meaning "Kill all enemies in room"
             }
         }
     }
