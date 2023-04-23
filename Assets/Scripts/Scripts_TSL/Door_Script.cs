@@ -5,10 +5,10 @@ using UnityEngine;
 public class Door_Script : MonoBehaviour
 {
     public bool playerDetected;
+    public GameObject door;
     [SerializeField] Transform posToGo;
     [SerializeField] Transform player;
     [SerializeField] ObjectiveUI objectiveUI;
-
 
 
     // Start is called before the first frame update
@@ -16,7 +16,6 @@ public class Door_Script : MonoBehaviour
     {
         playerDetected = false;
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -26,7 +25,12 @@ public class Door_Script : MonoBehaviour
             {
                 player.transform.position = posToGo.position;
                 playerDetected = false;
-                objectiveUI.UpdateObjectiveUI(2); // This calls ObjectiveUI Update function and for now passes ID2 meaning "Kill all enemies in room"
+
+                // call the objectiveUI and update it when specific doors are used
+                if (door.name == "Door_House1")
+                {
+                    objectiveUI.UpdateObjectiveUI(2); // This calls ObjectiveUI Update function and for now passes ID2 meaning "Kill all enemies in room"
+                }
             }
         }
     }
