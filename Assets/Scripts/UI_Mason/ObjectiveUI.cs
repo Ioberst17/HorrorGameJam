@@ -15,6 +15,8 @@ public class ObjectiveUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI objectiveText;
     private int areaNum; // PLACEHOLDER we'll use the roomNum to dictate the objective for the room (ex. kill all enemies, find the door, kill boss, etc.)
 
+    //[SerializeField] public EnemySpawnManager enemySpawnManager;
+
 
     //[SerializeField] public EnemySpawnManager enemySpawnManager;
 
@@ -35,9 +37,9 @@ public class ObjectiveUI : MonoBehaviour
         //UpdateObjectiveUI(areaNum); // only here for testing, function will mainly be called in script that handles moving rooms, as well as a room clear check inside this update.
     }
 
-    /* create a function that takes in the roomNumber and then changes the text of the objective ui based on that
-     * 
-     * need to correlate roomNumbers with objective text 
+    // create a function that takes in the roomNumber and then changes the text of the objective ui based on that
+     
+     /* need to correlate roomNumbers with objective text 
      * (ex. kill all enemies = roomNumber 1, find the door = roomNumber 2, kill boss = roomNumber 3, etc.)*/
 
     public void UpdateObjectiveUI(int areaID) //allow this function to be called when the player moves rooms 
@@ -50,7 +52,7 @@ public class ObjectiveUI : MonoBehaviour
         {
             objectiveText.text = "Kill all enemies!";
         }
-        else if(areaID == 7)
+        else if (areaID == 7)
         {
             objectiveText.text = "Room cleared!";
         }
