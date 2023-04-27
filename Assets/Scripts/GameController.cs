@@ -84,16 +84,16 @@ public class GameController : MonoBehaviour
     {
         for (int i = 0; i < playerSkills.unlockedSkillsList.Count; i++)
         {
-            if (!dataManager.gameData.playerSkills.unlockedSkillsList.Contains(playerSkills.unlockedSkillsList[i]))
-                { dataManager.gameData.playerSkills.unlockedSkillsList.Add(playerSkills.unlockedSkillsList[i]); }
+            if (!dataManager.sessionData.playerSkills.unlockedSkillsList.Contains(playerSkills.unlockedSkillsList[i]))
+                { dataManager.sessionData.playerSkills.unlockedSkillsList.Add(playerSkills.unlockedSkillsList[i]); }
         }
     }
 
     private void LoadPlayerSkills() 
     {
-        for (int i = 0; i < dataManager.gameData.playerSkills.unlockedSkillsList.Count; i++)
+        for (int i = 0; i < dataManager.sessionData.playerSkills.unlockedSkillsList.Count; i++)
         {
-            playerSkills.unlockedSkillsList.Add(dataManager.gameData.playerSkills.unlockedSkillsList[i]);
+            playerSkills.unlockedSkillsList.Add(dataManager.sessionData.playerSkills.unlockedSkillsList[i]);
         }
     }
 

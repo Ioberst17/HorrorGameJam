@@ -78,12 +78,16 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     private Transform StartingLocation;
+    private Transform parentTransform;
+    DataManager dataManager;
 
 
     //Set all the initial values
     private void Start()
     {
         EventSystem.current.onPlayerDeathTrigger += PlayerDeath;
+        dataManager = DataManager.Instance;
+        parentTransform = gameObject.GetComponentInParent<Transform>();
 
         rb = GetComponent<Rigidbody2D>();
         cc = GetComponent<BoxCollider2D>();
@@ -100,6 +104,12 @@ public class PlayerController : MonoBehaviour
         if (GetComponent<PlayerHealth>() != null) { playerHealth = GetComponent<PlayerHealth>(); }
         else { Debug.Log("PlayerHealth.cs is being requested as a component of the same object as PlayerController.cs, but could not be found on the object"); }
         groundSlam = GetComponentInChildren<GroundSlam>();
+    }
+
+    private void Update()
+    {
+        dataManager.sessionData.lastKnownWorldLocationX = parentTransform.position.x;
+        dataManager.sessionData.lastKnownWorldLocationY = parentTransform.position.y;
     }
 
     //Does anything in the environment layer overlap with the circle while not on the way up

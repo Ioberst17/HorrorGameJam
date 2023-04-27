@@ -5,10 +5,12 @@ using TMPro;
 using Ink.Runtime;
 using UnityEngine.EventSystems;
 using Ink.Parsed;
+using static AreaHistory;
 
 
 public class DialogueManager : MonoBehaviour
 {
+    public DataManager dataManager;
 
     [Header("Dialogue UI")]
     [SerializeField] private GameObject dialoguePanel;
@@ -22,6 +24,7 @@ public class DialogueManager : MonoBehaviour
     private string[] choicesTags;
 
     private Ink.Runtime.Story currentStory;
+    private StoryHistory storyHistory;
 
     public bool dialogueIsPlaying;
 
@@ -43,8 +46,6 @@ public class DialogueManager : MonoBehaviour
         instance = this;
     }
 
-
-
     public static DialogueManager GetInstance()
     {
         return instance;
@@ -54,6 +55,7 @@ public class DialogueManager : MonoBehaviour
 
     private void Start()
     {
+        dataManager = DataManager.Instance;
         dialogueIsPlaying = false;
         dialoguePanel.SetActive(false);
 
@@ -91,10 +93,22 @@ public class DialogueManager : MonoBehaviour
     public void EnterDialogueMode(TextAsset inkJSON)
     {
         currentStory = new Ink.Runtime.Story(inkJSON.text);
+        AddDataManagerFunctionality();
         dialogueIsPlaying = true;
         dialoguePanel.SetActive(true);
 
         ContinueStory();
+    }
+
+    public void AddDataManagerFunctionality()
+    {
+        currentStory.BindExternalFunction("SaveCurrent", () => dataManager.SaveData());
+        currentStory.BindExternalFunction("SaveNew", (int fileNumber) => dataManager.SaveData(fileNumber));
+
+        currentStory.BindExternalFunction("SeeIfFileHasBeenSavedBefore", () => dataManager.SeeIfFileHasBeenSavedBefore()); ;
+        currentStory.BindExternalFunction("GetSpecificFilePlayTime", (int fileNumber) => dataManager.GetFilePlayTime(fileNumber));
+
+        currentStory.BindExternalFunction("PlaySaveSound", () => FindObjectOfType<AudioManager>().PlaySFX("SaveSound"));
     }
 
 
@@ -188,8 +202,11 @@ public class DialogueManager : MonoBehaviour
     {
         //choicesDisplayed = true;
         Debug.Log(choicesText[choiceIndex].text);
-        if (currentChoices[choiceIndex].tags.Contains("positive")) { Debug.Log("Added morality"); playerMorality.AddToMoralityLevel(1); }
-        else if (currentChoices[choiceIndex].tags.Contains("negative")) { Debug.Log("Subtracted morality"); playerMorality.AddToMoralityLevel(-1); }
+        if (currentChoices[choiceIndex].tags != null)
+        {
+            if (currentChoices[choiceIndex].tags.Contains("positive")) { Debug.Log("Added morality"); playerMorality.AddToMoralityLevel(1); }
+            else if (currentChoices[choiceIndex].tags.Contains("negative")) { Debug.Log("Subtracted morality"); playerMorality.AddToMoralityLevel(-1); }
+        }
         currentStory.ChooseChoiceIndex(choiceIndex);
         ContinueStory();
     }

@@ -57,7 +57,7 @@ public class PlayerData_UI_Mason : MonoBehaviour
 
 
 
-        //dataManager.gameData.consumables[1].amount = dataManager.gameData.consumables[1].amount + 2;
+        //dataManager.sessionData.consumables[1].amount = dataManager.sessionData.consumables[1].amount + 2;
 
         /*throwPredictionPoints = new GameObject[numberOfThrowPoints];
 
@@ -78,20 +78,20 @@ public class PlayerData_UI_Mason : MonoBehaviour
 
         sp = gameController.GetSP();
         spBar.fillAmount = sp / 100f;
-        if(dataManager.gameData.consumables.Count >= 2)
+        if(dataManager.sessionData.consumables.Count >= 2)
         {
-            if (dataManager.gameData.consumables[1].amount > 0)
+            if (dataManager.sessionData.consumables[1].amount > 0)
             {
-                consumableAmount.text = dataManager.gameData.consumables[1].amount.ToString();
+                consumableAmount.text = dataManager.sessionData.consumables[1].amount.ToString();
                 
             }
             
         }
         
-        if (Input.GetKeyDown(KeyCode.H) && dataManager.gameData.consumables[1].amount > 0 && gameController.GetHP() < 100)
+        if (Input.GetKeyDown(KeyCode.H) && dataManager.sessionData.consumables[1].amount > 0 && gameController.GetHP() < 100)
         {
             playerHealth.AddHealth(10);
-            dataManager.gameData.consumables[1].amount = dataManager.gameData.consumables[1].amount - 1;
+            dataManager.sessionData.consumables[1].amount = dataManager.sessionData.consumables[1].amount - 1;
             Debug.Log("Used health kit.\n");
         }
 
