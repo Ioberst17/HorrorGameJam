@@ -6,7 +6,7 @@ using UnityEngine.Rendering.Universal;
 
 public class Lucidity : MonoBehaviour
 {
-    [SerializeField] public float level;
+    [SerializeField] private float level;
     [SerializeField] private float lucidity_MAX = 100f;
     [SerializeField] private float lucidityReducationRate = 0.0001f;
     public float narrativeItemRateChange;
