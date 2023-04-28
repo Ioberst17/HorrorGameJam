@@ -6,6 +6,7 @@ using Newtonsoft.Json.Schema.Generation;
 using System.Collections.Generic;
 using Ink.Parsed;
 using UnityEngine.SceneManagement;
+using System;
 
 public class DataManager : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class DataManager : MonoBehaviour
 
     [SerializeField] int currentFile;
     int currentSceneIndex = 0;
+    bool loadedGameFromFile;
 
     /* CLASS STRUCTURES */
 
@@ -102,11 +104,14 @@ public class DataManager : MonoBehaviour
 
     public void SaveData() { if(currentFile != 0 ) SaveData(currentFile); }
 
-    private void LoadGame(int fileNumber)
+    public void LoadGame(int fileNumber)
     {
+        loadedGameFromFile = true;
         sessionData = LoadData(fileNumber);
+        gameData = LoadData(fileNumber);
         sessionData.timesPlayed++;
         currentFile = fileNumber;
+        LoadPlayerInNewScene();
     }
 
     private GameData LoadData(int fileNumber)
@@ -119,6 +124,11 @@ public class DataManager : MonoBehaviour
             sessionData = new GameData();
             return sessionData;
         }
+    }
+
+    private void LoadPlayerInNewScene()
+    {
+        SceneManager.LoadScene(sessionData.currentSceneBuildIndex);
     }
 
     private GameData CacheFileData(int fileNumber)
@@ -137,12 +147,11 @@ public class DataManager : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        sessionData.currentSceneBuildIndex = currentSceneIndex;
+        if (currentFile != 0 ) { EventSystem.current.GameFileLoadedTrigger(gameData); }
     }
 
-    private void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
+    private void OnDisable() { SceneManager.sceneLoaded -= OnSceneLoaded; }
 
     private void OnApplicationQuit()
     {

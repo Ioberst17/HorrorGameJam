@@ -2,6 +2,7 @@ using UnityEngine.Audio;
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
 
 public class AudioManager : MonoBehaviour
 {
@@ -36,11 +37,17 @@ public class AudioManager : MonoBehaviour
 
     private void Start() // handles theme music
     {
-        if(SceneManager.GetActiveScene().buildIndex == 0) { PlayTheme("Title Theme"); }
+        //float sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 1f);
+
+        //SetSFXVolume(sfxVolume);
+        
+
+        if (SceneManager.GetActiveScene().buildIndex == 0) { PlayTheme("Title Theme"); SetThemeVolume(); }
         else
         {
             string themeToPlay = "Scene " + SceneManager.GetActiveScene().buildIndex.ToString() + " Theme";
             PlayTheme(themeToPlay);
+            SetThemeVolume();
         }
     }
 
@@ -91,5 +98,35 @@ public class AudioManager : MonoBehaviour
             return;
         }
         else { sound.source.Play(); }
+    }
+
+    public void SetSFXVolume(float volume)
+    {
+        foreach (Sound s in sounds)
+        {
+            s.source.volume = volume;
+        }
+
+        PlayerPrefs.SetFloat("SFXVolume", volume);
+    }
+
+    public void SetThemeVolume(float volume)
+    {
+        foreach (Sound t in themes) { t.source.volume = volume; }
+
+        currentTheme.source.volume = volume;
+
+        PlayerPrefs.SetFloat("ThemeVolume", volume);
+    }
+
+    public void SetThemeVolume()
+    {
+        float themeVolume = PlayerPrefs.GetFloat("ThemeVolume", 1f);
+
+        foreach (Sound t in themes) { t.source.volume = themeVolume; }
+
+        currentTheme.source.volume = themeVolume;
+
+        PlayerPrefs.SetFloat("ThemeVolume", themeVolume);
     }
 }

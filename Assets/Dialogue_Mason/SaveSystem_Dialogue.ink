@@ -5,6 +5,7 @@ EXTERNAL SeeIfFileHasBeenSavedBefore()
 EXTERNAL GetSpecificFilePlayTime(int)
 
 EXTERNAL PlaySaveSound()
+EXTERNAL PlaySaveVFX()
 
 ->Start
 
@@ -26,17 +27,20 @@ Looks like you haven't saved on this journey before. Pick a card, any card.
 == SaveFile1 ==
 ~SaveNew(1)
 ~PlaySaveSound()
--> DoneSaving
+~PlaySaveVFX()
+-> END
 
 == SaveFile2 ==
-- { ~SaveNew(2) }
+~SaveNew(2)
 ~PlaySaveSound()
--> DoneSaving
+~PlaySaveVFX()
+-> END
 
 == SaveCurrentGame ==
 ~SaveCurrent()
 ~PlaySaveSound()
--> DoneSaving  
+~PlaySaveVFX()
+-> END
 
 == ERROR_SaveGame ==
 An error occurred while saving the game. Please try again.
@@ -66,4 +70,7 @@ An error occurred while saving the game. Please try again.
 ~ return int
 
 === function PlaySaveSound() ===
+~ return 1
+
+=== function PlaySaveVFX() ===
 ~ return 1

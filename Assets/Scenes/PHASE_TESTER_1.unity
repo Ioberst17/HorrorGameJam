@@ -8159,17 +8159,21 @@ PrefabInstance:
       propertyPath: GameController
       value: 
       objectReference: {fileID: 641676304}
+    - target: {fileID: 1458881045040599524, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: parentTransform
+      value: 
+      objectReference: {fileID: 1303225423}
     - target: {fileID: 1458881045126449812, guid: eb2664123c277934fb626507fe6ad021, type: 3}
       propertyPath: m_RootOrder
       value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1458881045126449812, guid: eb2664123c277934fb626507fe6ad021, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.77
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1458881045126449812, guid: eb2664123c277934fb626507fe6ad021, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -97.17
+      value: 84
       objectReference: {fileID: 0}
     - target: {fileID: 1458881045126449812, guid: eb2664123c277934fb626507fe6ad021, type: 3}
       propertyPath: m_LocalPosition.z
@@ -11989,6 +11993,7 @@ GameObject:
   - component: {fileID: 7556300794160035811}
   - component: {fileID: 7556300794160035810}
   - component: {fileID: 7556300794160035812}
+  - component: {fileID: 7556300794160035813}
   m_Layer: 0
   m_Name: Visual
   m_TagString: Untagged
@@ -12075,12 +12080,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8f6d3c6e4250e84192f5b34ce9e71bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  glowColor: {r: 1, g: 1, b: 1, a: 1}
-  glowBrightness: 2
-  outlineWidth: 1
+  glowColor: {r: 0, g: 0.47948313, b: 1, a: 1}
+  glowBrightness: 1
+  outlineWidth: 0
   alphaThreshold: 0.01
-  drawOutside: 0
+  drawOutside: 1
   enableInstancing: 0
+--- !u!114 &7556300794160035813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7556300794160035808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c98978a51d039244bc3c4524c21f9ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteGlow: {fileID: 7556300794160035812}
+  glowVal: 0
+  outlineVal: 0
 --- !u!4 &7556300794876695664
 Transform:
   m_ObjectHideFlags: 0

@@ -11,6 +11,7 @@ public class SceneHandler_Mason : MonoBehaviour
     public GameObject mainMenuScreen;
     public GameObject loadGameScreen;
     public GameObject controlsScreen;
+    public GameObject optionsScreen;
     
 
     //open main scene
@@ -51,7 +52,9 @@ public class SceneHandler_Mason : MonoBehaviour
     }
 
     public void CloseLoadGameOptions() { mainMenuScreen.SetActive(true); loadGameScreen.SetActive(false); }
-    public void OpenLoadGameOptions() { mainMenuScreen.SetActive(false); loadGameScreen.SetActive(true); }
+    public void OpenLoadGameOptions() { mainMenuScreen.SetActive(false); loadGameScreen.SetActive(true); }    
+    public void CloseOptionsMenu() { mainMenuScreen.SetActive(true); optionsScreen.SetActive(false); }
+    public void OpenOptionsMenu() { mainMenuScreen.SetActive(false); optionsScreen.SetActive(true); }
 }
 
 

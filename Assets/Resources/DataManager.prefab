@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5790950174769301433}
   - component: {fileID: 5790950174769301432}
+  - component: {fileID: 7161237250421059887}
   m_Layer: 0
   m_Name: DataManager
   m_TagString: Untagged
@@ -24,7 +25,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5790950174769301439}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -51,6 +52,9 @@ MonoBehaviour:
     playerLevel: 1
     playerSkills:
       unlockedSkillsList: 
+    currentSceneBuildIndex: 1
+    lastKnownWorldLocationX: 0
+    lastKnownWorldLocationY: 0
     narrativeItems: []
     consumables: []
     primaryWeapons: []
@@ -66,6 +70,27 @@ MonoBehaviour:
     playerLevel: 1
     playerSkills:
       unlockedSkillsList: 
+    currentSceneBuildIndex: 1
+    lastKnownWorldLocationX: 0
+    lastKnownWorldLocationY: 0
+    narrativeItems: []
+    consumables: []
+    primaryWeapons: []
+    secondaryWeapons: []
+    activePrimaryWeapon: 1
+    activeSecondaryWeapon: 1
+    areaHistory:
+      history: []
+  tempGameData:
+    timesPlayed: 0
+    timePlayed: 0
+    playerEXP: 0
+    playerLevel: 1
+    playerSkills:
+      unlockedSkillsList: 
+    currentSceneBuildIndex: 1
+    lastKnownWorldLocationX: 0
+    lastKnownWorldLocationY: 0
     narrativeItems: []
     consumables: []
     primaryWeapons: []
@@ -75,3 +100,15 @@ MonoBehaviour:
     areaHistory:
       history: []
   currentFile: 0
+--- !u!114 &7161237250421059887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5790950174769301439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e30434615f1c164fbbfbcecaf24b46c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

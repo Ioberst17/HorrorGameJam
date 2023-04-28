@@ -6,6 +6,7 @@ using Ink.Runtime;
 using UnityEngine.EventSystems;
 using Ink.Parsed;
 using static AreaHistory;
+using static SiblingComponentUtils;
 
 
 public class DialogueManager : MonoBehaviour
@@ -55,6 +56,11 @@ public class DialogueManager : MonoBehaviour
 
     private void Start()
     {
+        if (gameObject.GetSiblingComponent<SpriteGlowSupport>() != null)
+        {
+            Debug.Log("The name of Sprite Glow Support Effect's gameObject is: " + gameObject.GetSiblingComponent<SpriteGlowSupport>().gameObject);
+        }
+        
         dataManager = DataManager.Instance;
         dialogueIsPlaying = false;
         dialoguePanel.SetActive(false);
@@ -90,25 +96,29 @@ public class DialogueManager : MonoBehaviour
 
 
 
-    public void EnterDialogueMode(TextAsset inkJSON)
+    public void EnterDialogueMode(TextAsset inkJSON, GameObject saveLocation)
     {
         currentStory = new Ink.Runtime.Story(inkJSON.text);
-        AddDataManagerFunctionality();
+        AddDataManagerFunctionality(saveLocation);
         dialogueIsPlaying = true;
         dialoguePanel.SetActive(true);
 
         ContinueStory();
     }
 
-    public void AddDataManagerFunctionality()
+    public void AddDataManagerFunctionality(GameObject saveLocation)
     {
-        currentStory.BindExternalFunction("SaveCurrent", () => dataManager.SaveData());
-        currentStory.BindExternalFunction("SaveNew", (int fileNumber) => dataManager.SaveData(fileNumber));
+        if(saveLocation.transform.parent.name.Contains("SaveGamePoint"))
+        {
+            currentStory.BindExternalFunction("SaveCurrent", () => dataManager.SaveData());
+            currentStory.BindExternalFunction("SaveNew", (int fileNumber) => dataManager.SaveData(fileNumber));
 
-        currentStory.BindExternalFunction("SeeIfFileHasBeenSavedBefore", () => dataManager.SeeIfFileHasBeenSavedBefore()); ;
-        currentStory.BindExternalFunction("GetSpecificFilePlayTime", (int fileNumber) => dataManager.GetFilePlayTime(fileNumber));
+            currentStory.BindExternalFunction("SeeIfFileHasBeenSavedBefore", () => dataManager.SeeIfFileHasBeenSavedBefore()); ;
+            currentStory.BindExternalFunction("GetSpecificFilePlayTime", (int fileNumber) => dataManager.GetFilePlayTime(fileNumber));
 
-        currentStory.BindExternalFunction("PlaySaveSound", () => FindObjectOfType<AudioManager>().PlaySFX("SaveSound"));
+            currentStory.BindExternalFunction("PlaySaveSound", () => FindObjectOfType<AudioManager>().PlaySFX("ItemPickup")); // PLACEHOLDER, Swap later for more apt sounds
+            currentStory.BindExternalFunction("PlaySaveVFX", () => saveLocation.GetSiblingComponent<SpriteGlowSupport>().PlayGlow());
+        }
     }
 
 

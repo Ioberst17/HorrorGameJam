@@ -78,16 +78,21 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     private Transform StartingLocation;
-    private Transform parentTransform;
+    [SerializeField] private Transform parentTransform;
     DataManager dataManager;
 
 
     //Set all the initial values
-    private void Start()
+
+    private void OnEnable()
     {
         EventSystem.current.onPlayerDeathTrigger += PlayerDeath;
+        EventSystem.current.onGameFileLoaded += SetPosition;
+    }
+
+    private void Start()
+    {
         dataManager = DataManager.Instance;
-        parentTransform = gameObject.GetComponentInParent<Transform>();
 
         rb = GetComponent<Rigidbody2D>();
         cc = GetComponent<BoxCollider2D>();
@@ -108,8 +113,8 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        dataManager.sessionData.lastKnownWorldLocationX = parentTransform.position.x;
-        dataManager.sessionData.lastKnownWorldLocationY = parentTransform.position.y;
+        dataManager.sessionData.lastKnownWorldLocationX = transform.position.x;
+        dataManager.sessionData.lastKnownWorldLocationY = transform.position.y;
     }
 
     //Does anything in the environment layer overlap with the circle while not on the way up
@@ -331,6 +336,12 @@ public class PlayerController : MonoBehaviour
 
     public void gainSP(int SPAmount) { SP += SPAmount; }
 
+    public void SetPosition(DataManager.GameData gameData)
+    {
+        Debug.Log("Attempting to set position...");
+        parentTransform.position = new Vector2(gameData.lastKnownWorldLocationX, gameData.lastKnownWorldLocationY);
+    }
+
     public void SetVelocity() { SetVelocity(0, 0); }
 
     public void SetVelocity(float xVel, float yVel)
@@ -355,5 +366,6 @@ public class PlayerController : MonoBehaviour
     private void OnDestroy()
     {
         EventSystem.current.onPlayerDeathTrigger -= PlayerDeath;
+        EventSystem.current.onGameFileLoaded -= SetPosition;
     }
 }
