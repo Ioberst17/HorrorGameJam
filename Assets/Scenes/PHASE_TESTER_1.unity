@@ -8169,11 +8169,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1458881045126449812, guid: eb2664123c277934fb626507fe6ad021, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 8
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1458881045126449812, guid: eb2664123c277934fb626507fe6ad021, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 84
+      value: -97
       objectReference: {fileID: 0}
     - target: {fileID: 1458881045126449812, guid: eb2664123c277934fb626507fe6ad021, type: 3}
       propertyPath: m_LocalPosition.z
@@ -12101,6 +12101,8 @@ MonoBehaviour:
   spriteGlow: {fileID: 7556300794160035812}
   glowVal: 0
   outlineVal: 0
+  glowDuration: 1
+  glowLoop: 0
 --- !u!4 &7556300794876695664
 Transform:
   m_ObjectHideFlags: 0
