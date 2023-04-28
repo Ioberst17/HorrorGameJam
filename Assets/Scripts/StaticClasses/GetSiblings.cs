@@ -2,19 +2,19 @@ using UnityEngine;
 
 public static class SiblingComponentUtils
 {
-    public static T AddSiblingComponent<T>(this Component component) where T : Component
+    public static T AddSiblingComponent<T>(this GameObject gameObject) where T : Component
     {
-        if (component == null || component.transform.parent == null)
+        if (gameObject == null || gameObject.transform.parent == null)
         {
             return null;
         }
 
-        Transform parent = component.transform.parent;
+        Transform parent = gameObject.transform.parent;
 
         for (int i = 0; i < parent.childCount; i++)
         {
             Transform sibling = parent.GetChild(i);
-            if (sibling != component.transform)
+            if (sibling.gameObject != gameObject)
             {
                 T siblingComponent = sibling.GetComponent<T>();
                 if (siblingComponent != null)
@@ -31,19 +31,19 @@ public static class SiblingComponentUtils
         return newSiblingComponent;
     }
 
-    public static T GetSiblingComponent<T>(this Component component) where T : Component
+    public static T GetSiblingComponent<T>(this GameObject gameObject) where T : Component
     {
-        if (component == null || component.transform.parent == null)
+        if (gameObject == null || gameObject.transform.parent == null)
         {
             return null;
         }
 
-        Transform parent = component.transform.parent;
+        Transform parent = gameObject.transform.parent;
 
         for (int i = 0; i < parent.childCount; i++)
         {
             Transform sibling = parent.GetChild(i);
-            if (sibling != component.transform)
+            if (sibling.gameObject != gameObject)
             {
                 T siblingComponent = sibling.GetComponent<T>();
                 if (siblingComponent != null)

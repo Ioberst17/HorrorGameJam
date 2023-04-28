@@ -78,12 +78,21 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     private Transform StartingLocation;
+    [SerializeField] private Transform parentTransform;
+    DataManager dataManager;
 
 
     //Set all the initial values
-    private void Start()
+
+    private void OnEnable()
     {
         EventSystem.current.onPlayerDeathTrigger += PlayerDeath;
+        EventSystem.current.onGameFileLoaded += SetPosition;
+    }
+
+    private void Start()
+    {
+        dataManager = DataManager.Instance;
 
         rb = GetComponent<Rigidbody2D>();
         cc = GetComponent<BoxCollider2D>();
@@ -100,6 +109,12 @@ public class PlayerController : MonoBehaviour
         if (GetComponent<PlayerHealth>() != null) { playerHealth = GetComponent<PlayerHealth>(); }
         else { Debug.Log("PlayerHealth.cs is being requested as a component of the same object as PlayerController.cs, but could not be found on the object"); }
         groundSlam = GetComponentInChildren<GroundSlam>();
+    }
+
+    private void Update()
+    {
+        dataManager.sessionData.lastKnownWorldLocationX = transform.position.x;
+        dataManager.sessionData.lastKnownWorldLocationY = transform.position.y;
     }
 
     //Does anything in the environment layer overlap with the circle while not on the way up
@@ -321,6 +336,12 @@ public class PlayerController : MonoBehaviour
 
     public void gainSP(int SPAmount) { SP += SPAmount; }
 
+    public void SetPosition(DataManager.GameData gameData)
+    {
+        Debug.Log("Attempting to set position...");
+        parentTransform.position = new Vector2(gameData.lastKnownWorldLocationX, gameData.lastKnownWorldLocationY);
+    }
+
     public void SetVelocity() { SetVelocity(0, 0); }
 
     public void SetVelocity(float xVel, float yVel)
@@ -345,5 +366,6 @@ public class PlayerController : MonoBehaviour
     private void OnDestroy()
     {
         EventSystem.current.onPlayerDeathTrigger -= PlayerDeath;
+        EventSystem.current.onGameFileLoaded -= SetPosition;
     }
 }

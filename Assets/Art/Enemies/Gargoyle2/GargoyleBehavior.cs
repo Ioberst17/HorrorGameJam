@@ -31,41 +31,37 @@ public class GargoyleBehavior : MonoBehaviour
     [SerializeField]
     private int groundSpeed;
 
+    [Header("Gargoyle Attacks")]
+    // GroundSwipe
+    [SerializeField] private GameObject groundSwipe;
+    [SerializeField] private Transform groundSwipePoint1;
+    [SerializeField] private Transform groundSwipePoint2;
+    [SerializeField] private int groundSwipeDamage;
+    private SpriteRenderer groundSwipeSprite;
+    private BoxCollider2D groundSwipeCollider;
+    //GroundSlam
+    [SerializeField] private GameObject groundSlam;
+    [SerializeField] private Transform groundSlamPoint1;
+    [SerializeField] private Transform groundSlamPoint2;
+    [SerializeField] private int groundSlamDamage;
+    private SpriteRenderer groundSlamSprite;
+    private BoxCollider2D groundSlamCollider;
+    //AirSwipe
+    [SerializeField] private GameObject airSwipe;
+    [SerializeField] private Transform airSwipePoint1;
+    [SerializeField] private Transform airSwipePoint2;
+    [SerializeField] private int airSwipeDamage;
+    private SpriteRenderer airSwipeSprite;
+    private BoxCollider2D airSwipeCollider;
+    //FireBreath
+    [SerializeField] private GameObject firebreath;
+    [SerializeField] private Transform firebreathPoint1;
+    [SerializeField] private Transform firebreathPoint2;
+    [SerializeField] private int firebreathDamage;
+    private SpriteRenderer firebreathSprite;
+    private BoxCollider2D firebreathCollider;
 
-    [SerializeField]
-    private GameObject groundswipe;
-    [SerializeField]
-    private Transform groundswipePoint1;
-    [SerializeField]
-    private Transform groundswipePoint2;
-    [SerializeField]
-    private int groundswipeDamage;
-    [SerializeField]
-    private GameObject groundSlam;
-    [SerializeField]
-    private Transform GroundSlamPoint1;
-    [SerializeField]
-    private Transform GroundSlamPoint2;
-    [SerializeField]
-    private int groundSlamDamage;
-    [SerializeField]
-    private GameObject airSwipe;
-    [SerializeField]
-    private Transform airSwipePoint1;
-    [SerializeField]
-    private Transform airSwipePoint2;
-    [SerializeField]
-    private int airSwipeDamage;
-    [SerializeField]
-    private GameObject firebreath;
-    [SerializeField]
-    private Transform firebreathPoint1;
-    [SerializeField]
-    private Transform firebreathPoint2;
-    [SerializeField]
-    private int firebreathDamage;
-    [SerializeField]
-    private LayerMask whatIsPlayer;
+    [SerializeField] private LayerMask whatIsPlayer;
     private Collider2D[] hitlist;
 
     // Start is called before the first frame update
@@ -73,6 +69,7 @@ public class GargoyleBehavior : MonoBehaviour
     {
         enemyController = GetComponent<EnemyController>();
         playerController = GameObject.Find("PlayerModel").GetComponent<PlayerController>();
+        whatIsPlayer = LayerMask.NameToLayer("Player");
         //animator = GetComponentInParent<Animator>();
         bossAction = "Dormant";
         bossState = "Grounded";
@@ -86,10 +83,23 @@ public class GargoyleBehavior : MonoBehaviour
         StartingHP = enemyController.HP;
         HP = StartingHP;
         enemyController.HP = HP;
+        GetAttackObjects();
     }
 
     // Update is called once per frame
     void Update()
+    {
+        groundSlamSprite = groundSlam.GetComponentInChildren<SpriteRenderer>(); 
+        groundSlamCollider = groundSlam.GetComponentInChildren<BoxCollider2D>();        
+        groundSwipeSprite = groundSwipe.GetComponentInChildren<SpriteRenderer>(); 
+        groundSwipeCollider = groundSwipe.GetComponentInChildren<BoxCollider2D>();        
+        airSwipeSprite = airSwipe.GetComponentInChildren<SpriteRenderer>(); 
+        airSwipeCollider = airSwipe.GetComponentInChildren<BoxCollider2D>();        
+        firebreathSprite = firebreath.GetComponentInChildren<SpriteRenderer>(); 
+        firebreathCollider = firebreath.GetComponentInChildren<BoxCollider2D>();
+    }
+
+    void GetAttackObjects()
     {
 
     }
@@ -416,9 +426,9 @@ public class GargoyleBehavior : MonoBehaviour
         {
             case 0:
                 yield return new WaitForSeconds(0.5f);
-                groundswipe.SetActive(true);
+                groundSwipe.SetActive(true);
                 yield return new WaitForSeconds(0.11f); // waits a certain number of seconds
-                groundswipe.SetActive(false);
+                groundSwipe.SetActive(false);
                 yield return new WaitForSeconds(0.17f);
                 isAttacking = false;
                 //yield return new WaitForSeconds(0.11f);
@@ -456,42 +466,54 @@ public class GargoyleBehavior : MonoBehaviour
     //This opperates the attack hit detection
     public void AttackHelper()
     {
-        if (groundswipe.activeSelf)
+        if (groundSwipe.activeSelf)
         {
-
-            if (Physics2D.OverlapArea(groundswipePoint1.position, groundswipePoint2.position, whatIsPlayer))
-            {
-                //playerController.Hit(transform.position, groundswipeDamage, 1);
-                playerController.Hit(transform.position, 1);
-            }
+            AdjustAttackColliders(groundSwipePoint1, groundSwipePoint2, groundSwipeSprite, groundSwipeCollider);
+            //if (Physics2D.OverlapArea(groundSwipePoint1.position, groundSwipePoint2.position, whatIsPlayer))
+            //{
+            //    //playerController.Hit(transform.position, groundswipeDamage, 1);
+            //    playerController.Hit(transform.position, 1);
+            //}
         }
         else if (airSwipe.activeSelf)
         {
-
-            if (Physics2D.OverlapArea(airSwipePoint1.position, airSwipePoint2.position, whatIsPlayer))
-            {
-                //playerController.takeDamage(transform.position, airSwipeDamage, 1);
-                playerController.Hit(transform.position, 1);
-            }
+            AdjustAttackColliders(airSwipePoint1, airSwipePoint2, airSwipeSprite, airSwipeCollider);
+            
+            //if (Physics2D.OverlapArea(airSwipePoint1.position, airSwipePoint2.position, whatIsPlayer))
+            //{
+            //    //playerController.takeDamage(transform.position, airSwipeDamage, 1);
+            //    playerController.Hit(transform.position, 1);
+            //}
         }
         else if (groundSlam.activeSelf)
         {
-
-            if (Physics2D.OverlapArea(GroundSlamPoint1.position, GroundSlamPoint2.position, whatIsPlayer))
-            {
-                //playerController.takeDamage(transform.position, groundSlamDamage, 1);
-                playerController.Hit(transform.position, 1);
-            }
+            AdjustAttackColliders(groundSlamPoint1, groundSlamPoint2, groundSlamSprite, groundSlamCollider);
+            //if (Physics2D.OverlapArea(groundSlamPoint1.position, groundSlamPoint2.position, whatIsPlayer))
+            //{
+            //    //playerController.takeDamage(transform.position, groundSlamDamage, 1);
+            //    playerController.Hit(transform.position, 1);
+            //}
 
         }
         else if (firebreath.activeSelf)
         {
-
-            if (Physics2D.OverlapArea(firebreathPoint1.position, firebreathPoint2.position, whatIsPlayer))
-            {
-                //playerController.takeDamage(transform.position, firebreathDamage, 1);
-                playerController.Hit(transform.position, 1);
-            }
+            AdjustAttackColliders(firebreathPoint1, firebreathPoint2, firebreathSprite, firebreathCollider);
+            //if (Physics2D.OverlapArea(firebreathPoint1.position, firebreathPoint2.position, whatIsPlayer))
+            //{
+            //    //playerController.takeDamage(transform.position, firebreathDamage, 1);
+            //    playerController.Hit(transform.position, 1);
+            //}
         }
+    }
+
+    void AdjustAttackColliders(Transform position1, Transform position2, SpriteRenderer spriteRenderer, BoxCollider2D boxCollider)
+    {
+        // Calculate the size of the sprite and collider based on the distance between the two points
+        float distance = Vector2.Distance(position1.position, position2.position);
+        spriteRenderer.size = new Vector2(distance, spriteRenderer.size.y);
+        boxCollider.size = new Vector2(distance, boxCollider.size.y);
+
+        // Position the child object halfway between the two points
+        spriteRenderer.gameObject.transform.position = (position1.position + position2.position) / 2f;
     }
 }

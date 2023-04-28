@@ -43,13 +43,13 @@ public class WeaponsManager : MonoBehaviour
     {
         if (primaryOrSecondary == PrimaryOrSecondary.Primary) 
         { 
-            dataManagerWeaponList = dataManager.gameData.primaryWeapons;
-            activeWeapon = dataManager.gameData.activePrimaryWeapon;
+            dataManagerWeaponList = dataManager.sessionData.primaryWeapons;
+            activeWeapon = dataManager.sessionData.activePrimaryWeapon;
         }
         else if (primaryOrSecondary == PrimaryOrSecondary.Secondary) 
         {
-            dataManagerWeaponList = dataManager.gameData.secondaryWeapons; 
-            activeWeapon = dataManager.gameData.activeSecondaryWeapon;
+            dataManagerWeaponList = dataManager.sessionData.secondaryWeapons; 
+            activeWeapon = dataManager.sessionData.activeSecondaryWeapon;
         }
     }
 
@@ -65,7 +65,7 @@ public class WeaponsManager : MonoBehaviour
 
     public void LoadActiveWeapon()
     {
-        currentWeaponID = dataManager.gameData.activeSecondaryWeapon;
+        currentWeaponID = dataManager.sessionData.activeSecondaryWeapon;
 
         if (primaryOrSecondary == PrimaryOrSecondary.Primary)
         {

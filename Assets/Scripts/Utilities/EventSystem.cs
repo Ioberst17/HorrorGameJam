@@ -149,4 +149,8 @@ public class EventSystem : MonoBehaviour
 
     public void SkillUnlockTrigger(PlayerSkills.SkillType skill) {if(onSkillUnlock != null) { onSkillUnlock(skill); } }
 
+    public event Action <DataManager.GameData> onGameFileLoaded;
+
+    public void GameFileLoadedTrigger(DataManager.GameData dataToSend) { if(onGameFileLoaded != null) { onGameFileLoaded(dataToSend); } }
+
 }

@@ -21,11 +21,11 @@ public class ConsumablesManager : MonoBehaviour
 
     private void Load()
     {
-        if (dataManager.gameData.consumables == null) { consumables = new List<PlayerConsumables>(); }
-        else { consumables = dataManager.gameData.consumables; }
+        if (dataManager.sessionData.consumables == null) { consumables = new List<PlayerConsumables>(); }
+        else { consumables = dataManager.sessionData.consumables; }
     }
 
-    private void Save(){ dataManager.gameData.consumables = consumables; }
+    private void Save(){ dataManager.sessionData.consumables = consumables; }
 
     public int CheckForConsumable(int itemID)
     {

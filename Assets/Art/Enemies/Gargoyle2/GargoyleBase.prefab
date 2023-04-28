@@ -204,9 +204,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3939883374894104763}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GroundSlam
-  m_TagString: Untagged
+  m_TagString: EnemyAttack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -335,9 +335,11 @@ GameObject:
   m_Component:
   - component: {fileID: 3939883375295265037}
   - component: {fileID: 3939883375295265036}
-  m_Layer: 0
+  - component: {fileID: 7041298519094199441}
+  - component: {fileID: 2470782882228128220}
+  m_Layer: 8
   m_Name: GroundSlamVisual
-  m_TagString: Untagged
+  m_TagString: EnemyAttack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -409,6 +411,45 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!61 &7041298519094199441
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3939883375295265026}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
+--- !u!114 &2470782882228128220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3939883375295265026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0317c72b0e9c96740a72bea1c4d25cbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyAttackNumber: 3
 --- !u!1 &3939883375756583699
 GameObject:
   m_ObjectHideFlags: 0
@@ -419,9 +460,11 @@ GameObject:
   m_Component:
   - component: {fileID: 3939883375756583698}
   - component: {fileID: 3939883375756583709}
-  m_Layer: 0
+  - component: {fileID: 2000045030923562296}
+  - component: {fileID: 8433693164747174008}
+  m_Layer: 8
   m_Name: GSVisual
-  m_TagString: Untagged
+  m_TagString: EnemyAttack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -493,6 +536,45 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!61 &2000045030923562296
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3939883375756583699}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
+--- !u!114 &8433693164747174008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3939883375756583699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0317c72b0e9c96740a72bea1c4d25cbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyAttackNumber: 3
 --- !u!1 &3939883375821875138
 GameObject:
   m_ObjectHideFlags: 0
@@ -748,13 +830,13 @@ MonoBehaviour:
   ongoingPattern: 0
   actionRandomizer: 0
   groundSpeed: 5
-  groundswipe: {fileID: 3939883376462527392}
-  groundswipePoint1: {fileID: 3939883375017413163}
-  groundswipePoint2: {fileID: 3939883376422566904}
-  groundswipeDamage: 0
+  groundSwipe: {fileID: 3939883376462527392}
+  groundSwipePoint1: {fileID: 3939883375017413163}
+  groundSwipePoint2: {fileID: 3939883376422566904}
+  groundSwipeDamage: 0
   groundSlam: {fileID: 3939883374894104760}
-  GroundSlamPoint1: {fileID: 3939883374720126478}
-  GroundSlamPoint2: {fileID: 3939883376012176052}
+  groundSlamPoint1: {fileID: 3939883374720126478}
+  groundSlamPoint2: {fileID: 3939883376012176052}
   groundSlamDamage: 0
   airSwipe: {fileID: 3939883376176913795}
   airSwipePoint1: {fileID: 3939883376461500360}
@@ -789,7 +871,13 @@ MonoBehaviour:
   patrolSpeed: 0
   patrolID: 0
   enemyDatabase: {fileID: 0}
-  damageValue: 0
+  dmgVal1: 0
+  dmgVal2: 0
+  dmgVal3: 0
+  dmgVal4: 0
+  dmgVal5: 0
+  dmgVal6: 0
+  mostRecentAttack: 0
   HP_MAX: 0
   HP: 0
   invincibilityCount: 0
@@ -826,9 +914,10 @@ GameObject:
   m_Component:
   - component: {fileID: 3939883375918357437}
   - component: {fileID: 3939883375918357436}
-  m_Layer: 0
+  - component: {fileID: 7624028092286342253}
+  m_Layer: 8
   m_Name: ASVisual
-  m_TagString: Untagged
+  m_TagString: EnemyAttack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -900,6 +989,32 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!61 &7624028092286342253
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3939883375918357426}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
 --- !u!1 &3939883376012176053
 GameObject:
   m_ObjectHideFlags: 0
@@ -975,9 +1090,10 @@ GameObject:
   m_Component:
   - component: {fileID: 3939883376252486151}
   - component: {fileID: 3939883376252486150}
-  m_Layer: 0
+  - component: {fileID: 6501771727438145830}
+  m_Layer: 8
   m_Name: FBVisual
-  m_TagString: Untagged
+  m_TagString: EnemyAttack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1049,6 +1165,32 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!61 &6501771727438145830
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3939883376252486148}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
 --- !u!1 &3939883376342731982
 GameObject:
   m_ObjectHideFlags: 0
@@ -1186,9 +1328,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3939883376462527395}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GroundSwipe
-  m_TagString: Untagged
+  m_TagString: EnemyAttack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

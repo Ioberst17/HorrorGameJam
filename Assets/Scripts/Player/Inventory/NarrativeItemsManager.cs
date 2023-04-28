@@ -32,12 +32,12 @@ public class NarrativeItemsManager : MonoBehaviour
 
     private void Load()
     {
-        if (dataManager.gameData.narrativeItems == null) { narrativeItems = new List<NarrativeItems>(); }
-        else { narrativeItems = dataManager.gameData.narrativeItems; }
+        if (dataManager.sessionData.narrativeItems == null) { narrativeItems = new List<NarrativeItems>(); }
+        else { narrativeItems = dataManager.sessionData.narrativeItems; }
         GetCumulativeImpact();
     }
 
-    private void Save() { dataManager.gameData.narrativeItems = narrativeItems; }
+    private void Save() { dataManager.sessionData.narrativeItems = narrativeItems; }
 
     public void AddItem(int itemID)
     {

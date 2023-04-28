@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-
+using System.ComponentModel.Design;
 
 public class SceneHandler_Mason : MonoBehaviour
 {
-    //variables for the main menu and controls screen
+    //variables for the menu items, assigned in inspector
     public GameObject mainMenuScreen;
+    public GameObject loadGameScreen;
     public GameObject controlsScreen;
+    public GameObject optionsScreen;
+    
 
     //open main scene
     public void StartGame()
@@ -47,6 +50,11 @@ public class SceneHandler_Mason : MonoBehaviour
         //set the controlscreen canvas to off
         controlsScreen.SetActive(false);
     }
+
+    public void CloseLoadGameOptions() { mainMenuScreen.SetActive(true); loadGameScreen.SetActive(false); }
+    public void OpenLoadGameOptions() { mainMenuScreen.SetActive(false); loadGameScreen.SetActive(true); }    
+    public void CloseOptionsMenu() { mainMenuScreen.SetActive(true); optionsScreen.SetActive(false); }
+    public void OpenOptionsMenu() { mainMenuScreen.SetActive(false); optionsScreen.SetActive(true); }
 }
 
 
