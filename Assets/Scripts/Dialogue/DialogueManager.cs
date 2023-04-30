@@ -144,7 +144,6 @@ public class DialogueManager : MonoBehaviour
         dialoguePanel.SetActive(false);
         dialogueText.text = "";
         if (destroyDialogueTriggerObject) { Destroy(dialogueTriggerObject); destroyDialogueTriggerObject = false; }
-
     }
 
 

@@ -195,6 +195,30 @@ MonoBehaviour:
     pitch: 1
     loop: 0
     source: {fileID: 0}
+  - name: GroundSlam
+    clip: {fileID: 8300000, guid: 7f2f515ac70bb074ea10ebd5d49c974e, type: 3}
+    volume: 0.127
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: ChargePunch1
+    clip: {fileID: 8300000, guid: 1c62dde19130a454fb4ee6a1c1145ebf, type: 3}
+    volume: 0.127
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: ChargePunch2
+    clip: {fileID: 8300000, guid: e86a5b91b3536784db4d5e1f8ecdb108, type: 3}
+    volume: 0.127
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: DramaticItem
+    clip: {fileID: 8300000, guid: 63c91c0fa8ba7fd4fb2d370472857442, type: 3}
+    volume: 0.645
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
   themes:
   - name: Title Theme
     clip: {fileID: 8300000, guid: 1e6c6272beceea84f903228aef4d13f8, type: 3}
@@ -213,4 +237,11 @@ MonoBehaviour:
     volume: 0.5
     pitch: 1
     loop: 1
+    source: {fileID: 0}
+  currentTheme:
+    name: 
+    clip: {fileID: 0}
+    volume: 0
+    pitch: 0
+    loop: 0
     source: {fileID: 0}
