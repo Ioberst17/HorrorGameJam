@@ -5,17 +5,20 @@ using UnityEngine;
 
 public class FindObjectsByFileID : MonoBehaviour
 {
+
     [SerializeField]
     List<int> fileIDs;
     Object tempObj;
 
     void Start()
     {
+#if UNITY_EDITOR
         if (fileIDs != null)
         {
             // get the object with the specified fileID
             foreach (int fileID in fileIDs)
             {
+
                 tempObj = EditorUtility.InstanceIDToObject(fileID);
                 if (tempObj != null)
                 {
@@ -29,5 +32,6 @@ public class FindObjectsByFileID : MonoBehaviour
                 }
             }
         }
+#endif
     }
 }
