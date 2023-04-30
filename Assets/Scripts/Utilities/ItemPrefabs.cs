@@ -16,22 +16,22 @@ public class ItemPrefabs : MonoBehaviour
         itemPrefabs = Resources.LoadAll<GameObject>("ItemPrefabs").ToList();
         dataBase = GameObject.Find("ConsumablesDatabase").GetComponent<ConsumablesDatabase>().data;
 
-        UpdatePrefabs();
+        //UpdatePrefabs();
     }
 
-    void UpdatePrefabs()
-    {
+    //void UpdatePrefabs()
+    //{
 
-        foreach(GameObject item in itemPrefabs)
-        {
-            for (int i = 0; i < dataBase.entries.Length; i++)
-            {
-                if (item.GetComponent<Item>().staticID == dataBase.entries[i].id)
-                {
-                    item.GetComponent<Item>().self = new Consumables (dataBase.entries[i]);
-                } 
-            }
-        }
-    }
+    //    foreach(GameObject item in itemPrefabs)
+    //    {
+    //        for (int i = 0; i < dataBase.entries.Length; i++)
+    //        {
+    //            if (item.GetComponent<PickupableItem>().staticID == dataBase.entries[i].id)
+    //            {
+    //                item.GetComponent<PickupableItem>().consumablesSelf = new Consumables (dataBase.entries[i]);
+    //            } 
+    //        }
+    //    }
+    //}
 
 }

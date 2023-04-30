@@ -5582,6 +5582,7 @@ MonoBehaviour:
     knockbackAbsorption: 1
   shieldCost: 20
   staminaRate: 40
+  enemyAttackNumber: 0
 --- !u!114 &1882227571
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20311,7 +20312,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 0.8755493, b: 0.1377359, a: 1}
+      maxColor: {r: 0.9978976, g: 1, b: 0, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -25336,7 +25337,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.8301887, g: 0.29641563, b: 0, a: 1}
+      maxColor: {r: 0.83137256, g: 0.65708834, b: 0, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -25774,15 +25775,15 @@ ParticleSystem:
   ShapeModule:
     serializedVersion: 6
     enabled: 1
-    type: 5
+    type: 12
     angle: 30
     length: 5
-    boxThickness: {x: 0, y: 0, z: 0}
-    radiusThickness: 0
+    boxThickness: {x: 0, y: 1, z: 0}
+    radiusThickness: 1
     donutRadius: 0.2
     m_Position: {x: 0, y: 0, z: 0}
-    m_Rotation: {x: -90, y: 0, z: 0}
-    m_Scale: {x: 1, y: 1, z: 1}
+    m_Rotation: {x: 0, y: 0, z: 0}
+    m_Scale: {x: 1, y: 1, z: 0}
     placementMode: 0
     m_MeshMaterialIndex: 0
     m_MeshNormalOffset: 0
@@ -25861,7 +25862,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 0.0001
+      value: 1
       mode: 0
       spread: 0
       speed:
@@ -35737,6 +35738,7 @@ MonoBehaviour:
   SP_MAX: 0
   hasShield: 0
   StartingLocation: {fileID: 1458881046011527861}
+  parentTransform: {fileID: 1458881045126449812}
 --- !u!95 &1458881045040599525
 Animator:
   serializedVersion: 4
@@ -36865,6 +36867,7 @@ MonoBehaviour:
     _name: 
     _description: 
     amount: 0
+    audioOnAcquisition: 
     tier: 0
     isSecondary: 0
     isShot: 0

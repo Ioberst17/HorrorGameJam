@@ -10,29 +10,60 @@ public class DialogueTrigger : MonoBehaviour
     [Header("Ink JSON")]
     [SerializeField] private TextAsset inkJSON;
 
+    public bool instantReact;
     private bool playerInRange;
+    private bool playerCollision;
+
+    [HideInInspector]public bool isNewExperience;
+    public bool destroyObjectAfterUse = true;
 
     private void Awake()
     {
         playerInRange = false;
-        visualCue.SetActive(false);
     }
 
     private void Update()
     {
-        if (playerInRange && !DialogueManager.GetInstance().dialogueIsPlaying)
+        if (!instantReact)
         {
-            visualCue.SetActive(true);
-
-            if (Input.GetKeyDown(KeyCode.E))
+            if (playerInRange && !DialogueManager.GetInstance().dialogueIsPlaying)
             {
-                DialogueManager.GetInstance().EnterDialogueMode(inkJSON, this.gameObject);
+                visualCue.SetActive(true);
+
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    DialogueManager.GetInstance().EnterDialogueMode(inkJSON, this.gameObject);
+                }
+            }
+            else { visualCue.SetActive(false); }
+        }
+
+        
+        if(instantReact && playerCollision && !DialogueManager.GetInstance().dialogueIsPlaying)
+        {
+            if (CheckIfNewWeaponExperience()) { DialogueManager.GetInstance().EnterDialogueMode(inkJSON, this.gameObject); }
+        }
+    }
+
+    public bool CheckIfNewWeaponExperience()
+    {
+        if (GetComponent<PickupableItem>() != null) 
+        {
+            if (GetComponent<PickupableItem>().itemType == PickupableItem.ItemTypeOptions.Weapons)
+            {
+                int staticID = GetComponent<PickupableItem>().staticID;
+                int isACurrentPrimaryWeap = FindObjectOfType<PrimaryWeaponsManager>().CheckInPrimaryWeapons(staticID); 
+                int isACurrentSecondaryWeap = FindObjectOfType<SecondaryWeaponsManager>().CheckInPrimaryWeapons(staticID);
+
+                if (isACurrentPrimaryWeap == -1 && isACurrentSecondaryWeap == -1) 
+                { 
+                    isNewExperience = true;
+                    EventSystem.current.ItemPickupTrigger(this.GetComponent<PickupableItem>());
+                    return true; 
+                }
             }
         }
-        else
-        {
-            visualCue.SetActive(false);
-        }
+        return false;
     }
 
 
@@ -43,6 +74,11 @@ public class DialogueTrigger : MonoBehaviour
             playerInRange = true;
             Debug.Log("Player is in Range");
         }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.GetComponent<PlayerController>() != null) { playerCollision = true; }
     }
 
     private void OnTriggerExit2D(Collider2D collider)

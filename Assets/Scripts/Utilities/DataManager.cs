@@ -168,4 +168,18 @@ public class DataManager : MonoBehaviour
         Debug.Log("File " + fileNumber + " time played is " + tempGameData.timePlayed);
         return tempGameData.timePlayed;
     }
+
+    public string GetFilePlayTimePrettyPrint(int fileNumber)
+    {
+        return FloatToTimeString(GetFilePlayTime(fileNumber));
+    }
+
+    public string FloatToTimeString(float timeInSeconds)
+    {
+        int hours = Mathf.FloorToInt(timeInSeconds / 3600f);
+        int minutes = Mathf.FloorToInt((timeInSeconds % 3600f) / 60f);
+        return hours.ToString("0") + ":" + minutes.ToString("00");
+    }
+
+
 }

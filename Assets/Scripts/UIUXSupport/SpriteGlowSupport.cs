@@ -3,14 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(SpriteGlowEffect))]
 public class SpriteGlowSupport : MonoBehaviour
 {
-    [SerializeField] private SpriteGlowEffect spriteGlow; private bool glowTrigger;
-    float glowFrequency = 5, glowAmplitude = 5;
-    float outlineFrequency = 2, outlineAmplitude = 2;
+    [SerializeField] private SpriteGlowEffect spriteGlow;
+    [SerializeField] float glowFrequency = 5; 
+    [Range(0f, 5f)] [SerializeField] float glowAmplitude = 5;
+    [SerializeField] float outlineFrequency = 2;
+    [SerializeField] float outlineAmplitude = 2;
     [SerializeField] int glowVal;
     [SerializeField] int outlineVal;
-    int glowMidPoint = 5, outlineMidpoint = 5;
+    [Range(0f, 10f)][SerializeField] float glowMidPoint = 5;
+    [Range(0f, 10f)][SerializeField] float outlineMidpoint = 5;
 
     [SerializeField] float glowDuration = 1.0f;
     [SerializeField] bool glowLoop = false;
@@ -29,15 +33,8 @@ public class SpriteGlowSupport : MonoBehaviour
         spriteGlow.OutlineWidth = outlineVal;
     }
 
-    void GlowOn(bool status)
-    {
-        if (status == true) { glowTrigger = true; }
-        else { glowTrigger = false; spriteGlow.GlowBrightness = 0; spriteGlow.OutlineWidth = 0; }
-    }
-
     public void PlayGlow()
     {
-        Debug.Log("Attempting play glow");
         initialGlowBrightness = spriteGlow.GlowBrightness;
         initialOutlineWidth = spriteGlow.OutlineWidth;
         isGlowing = true;
@@ -46,6 +43,10 @@ public class SpriteGlowSupport : MonoBehaviour
 
     private void Update()
     {
+        if (glowLoop)
+        {
+            HandleGlow();
+        }
         if (isGlowing)
         {
             HandleGlow();
@@ -53,18 +54,9 @@ public class SpriteGlowSupport : MonoBehaviour
             glowTimer += Time.deltaTime;
             if (glowTimer >= glowDuration)
             {
-                if (glowLoop)
-                {
-                    glowTimer = 0.0f;
-                    spriteGlow.GlowBrightness = initialGlowBrightness;
-                    spriteGlow.OutlineWidth = initialOutlineWidth;
-                }
-                else
-                {
-                    isGlowing = false;
-                    spriteGlow.GlowBrightness = initialGlowBrightness;
-                    spriteGlow.OutlineWidth = initialOutlineWidth;
-                }
+                isGlowing = false;
+                spriteGlow.GlowBrightness = initialGlowBrightness;
+                spriteGlow.OutlineWidth = initialOutlineWidth;
             }
         }
     }

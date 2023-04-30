@@ -18,35 +18,50 @@ public class AudioSettings : MonoBehaviour
         audioManager = FindObjectOfType<AudioManager>();
         sfxSlider = ComponentFinder.FindComponent<Slider>("SFXSlider");
         themeSlider = ComponentFinder.FindComponent<Slider>("ThemeSlider");
-        
 
-        //sfxSlider = GameObject.Find("SFXSlider").GetComponent<Slider>();
-        //themeSlider = GameObject.Find("ThemeSlider").GetComponent<Slider>();
+        SFXInitializationCheck();
+        ThemeInitializationCheck();
+    }
 
-        // Load the saved volume levels
-        //sfxSlider.value = PlayerPrefs.GetFloat(SFX_VOLUME_KEY, 1f);
-        themeSlider.value = PlayerPrefs.GetFloat(THEME_VOLUME_KEY, 1f);
+    void SFXInitializationCheck()
+    {
+        if (sfxSlider == null) { Debug.Log("Add a game object named 'SFXSlider' to the scene that has a slider component. Note the capitals. It will be used as a slider for the player to control from the pause menu options."); }
+        else
+        {
+            sfxSlider.value = PlayerPrefs.GetFloat(SFX_VOLUME_KEY, 1f);
+            //audioManager.SetSFXVolume(sfxSlider.value);
+            sfxSlider.onValueChanged.AddListener(SetSFXVolume);
+        }
+    }
 
-        // Update the volume levels
-        //audioManager.SetSFXVolume(sfxSlider.value);
-        //audioManager.SetThemeVolume(themeSlider.value);
-
-        // Add listeners to the sliders
-        //sfxSlider.onValueChanged.AddListener(SetSFXVolume);
-        themeSlider.onValueChanged.AddListener(SetThemeVolume);
+    void ThemeInitializationCheck()
+    {
+        if (themeSlider == null) { Debug.Log("Add a game object named 'ThemeSlider' to the scene that has a slider component. Note the capitals. It will be used as a slider for the player to control from the pause menu options."); }
+        else
+        {
+            themeSlider.value = PlayerPrefs.GetFloat(THEME_VOLUME_KEY, 1f);
+            //audioManager.SetThemeVolume(themeSlider.value);
+            themeSlider.onValueChanged.AddListener(SetThemeVolume);
+        }
     }
 
     // Set the SFX volume level
     public void SetSFXVolume(float volume)
     {
-        audioManager.SetSFXVolume(volume);
-        PlayerPrefs.SetFloat(SFX_VOLUME_KEY, volume);
+        if(sfxSlider != null)
+        {
+            audioManager.SetSFXVolume(volume);
+            PlayerPrefs.SetFloat(SFX_VOLUME_KEY, volume);
+        }
     }
 
     // Set the theme volume level
     public void SetThemeVolume(float volume)
     {
-        audioManager.SetThemeVolume(volume);
-        PlayerPrefs.SetFloat(THEME_VOLUME_KEY, volume);
+        if (themeSlider != null)
+        {
+            audioManager.SetThemeVolume(volume);
+            PlayerPrefs.SetFloat(THEME_VOLUME_KEY, volume);
+        }
     }
 }

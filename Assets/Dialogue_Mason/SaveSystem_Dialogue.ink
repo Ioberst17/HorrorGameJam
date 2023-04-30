@@ -12,10 +12,10 @@ EXTERNAL PlaySaveVFX()
 == Start ==
 Hey, kid - wanna save your game?
 * [Yeah!] -> CheckSaveGame
-* [Nevermind] -> Done
+* [Nevermind] -> END
 
 == CheckSaveGame ==
-{SeeIfFileHasBeenSavedBefore(): -> SaveCurrentGame |-> SaveGameOptions }
+{SeeIfFileHasBeenSavedBefore(): {SaveCurrent()} {PlaySaveSound()} {PlaySaveVFX()} -> END |-> SaveGameOptions }
 
 
 == SaveGameOptions ==
