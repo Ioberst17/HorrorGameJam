@@ -24,4 +24,15 @@ public class PlayerWeapons
         this.ammoLimit = ammoLimit;
     }
 
+    public PlayerWeapons(Weapons weapon)
+    {
+        this.name = weapon.name;
+        this.id = weapon.id;
+        this.level = weapon.level;
+        this.ammo = weapon.ammoLimit;
+        this.isSecondary = weapon.isSecondary;
+        this.fireRate = weapon.fireRate;
+        this.ammoLimit = weapon.ammoLimit;
+    }
+
 }

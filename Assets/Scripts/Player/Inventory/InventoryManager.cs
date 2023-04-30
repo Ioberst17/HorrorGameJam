@@ -30,7 +30,7 @@ public class InventoryManager : MonoBehaviour // INTENDED TO MANAGE ITEM ACTIVIT
 
 
         //items
-        EventSystem.current.onItemPickupTrigger += AddConsumableItem;
+        EventSystem.current.onItemPickupTrigger += AddItem;
     }
 
     private void InitializeUtilities()
@@ -72,13 +72,29 @@ public class InventoryManager : MonoBehaviour // INTENDED TO MANAGE ITEM ACTIVIT
         }
     }
 
-    void AddConsumableItem(int itemID, int amount)
+    public void AddItem(PickupableItem item)
     {
-        bool isNeither = CheckIfItemIsAmmoOrInstantUse(itemID, amount); 
+        if (item.itemType == PickupableItem.ItemTypeOptions.Weapons) { AddWeapon(item.staticID); } 
+        else if (item.itemType == PickupableItem.ItemTypeOptions.NarrativeItems) { AddNarrativeItem(item.staticID); }
+        else if (item.itemType == PickupableItem.ItemTypeOptions.Consumables) { AddConsumable(item.staticID, item.pickupAmount); }
+        else { Debug.Log("Make sure ItemTypeOptions is selected for this item's script: " + item.gameObject.name); }
+    }
+
+    void AddWeapon(int staticID) 
+    { 
+        if (secondaryWeaponsManager.primaryOrSecondary == WeaponsManager.PrimaryOrSecondary.Secondary) { secondaryWeaponsManager.AddWeapon(staticID); }
+        else { /* WILL ADD IF MORE PRIMARY WEAPONS ARE ADDED*/ }
+    }
+
+    void AddNarrativeItem(int staticID) { narrativeItemsManager.AddItem(staticID); }
+
+    public void AddConsumable(int staticID, int amount)
+    {
+        bool isNeither = CheckIfItemIsAmmoOrInstantUse(staticID, amount);
         if (isNeither == true)
         {
-            bool itemInInv = consumablesManager.AddExistingItemToInventory(itemID, amount);
-            if (itemInInv == false) { consumablesManager.AddNewItemToInv(itemID, amount);}
+            bool itemInInv = consumablesManager.AddExistingItemToInventory(staticID, amount);
+            if (itemInInv == false) { consumablesManager.AddNewItemToInv(staticID, amount); }
         }
     }
 
@@ -122,6 +138,6 @@ public class InventoryManager : MonoBehaviour // INTENDED TO MANAGE ITEM ACTIVIT
 
     void OnDestroy()
     {
-        EventSystem.current.onItemPickupTrigger -= AddConsumableItem;
+        EventSystem.current.onItemPickupTrigger -= AddItem;
     }
 }

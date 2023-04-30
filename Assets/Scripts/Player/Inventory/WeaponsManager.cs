@@ -37,7 +37,7 @@ public class WeaponsManager : MonoBehaviour
         AddWeaponsForTesting();
     }
 
-    void AddWeaponsForTesting() { for (int i = 0; i < weaponData.entries.Length; i++) { AddWeapon(weaponData.entries[i]); } }
+    void AddWeaponsForTesting() { for (int i = 0; i < weaponData.entries.Length; i++) { if (i != 3) { AddWeapon(weaponData.entries[i]); } } }
 
     void InitializeDataManagerReferences()
     {
@@ -117,22 +117,40 @@ public class WeaponsManager : MonoBehaviour
         int indexInPrimary = -1;
         int indexInSecondary = -1;
 
+        indexInPrimary = CheckInPrimaryWeapons(weapon.id);
+        indexInSecondary = CheckInSecondaryWeapons(weapon.id);
+        
+        if (indexInPrimary == -1 && indexInSecondary == -1) { AddNewWeaponExperience(weapon); }
+    }
+    public int CheckInPrimaryWeapons(int weaponID)
+    {
         if (weaponList == null && primaryOrSecondary == PrimaryOrSecondary.Primary) { Debug.Log("Primary Weapons Inventory list is null - check if initialized properly"); }
-        else { if (weaponList.Count > 0) { indexInPrimary = weaponList.FindIndex(gameObject => Equals(weapon.id, gameObject.id)); } } // returns -1 if object isn't indexed
+        else { if (weaponList.Count > 0) { return weaponList.FindIndex(gameObject => Equals(weaponID, gameObject.id)); } } // returns -1 if object isn't indexed
+        return -1;
+    }
 
+    public int CheckInSecondaryWeapons(int weaponID)
+    {
         if (weaponList == null && primaryOrSecondary == PrimaryOrSecondary.Secondary) { Debug.Log("Secondary Weapons Inventory list is null - check if initialized properly"); }
-        else{ if (weaponList.Count > 0) { indexInSecondary = weaponList.FindIndex(gameObject => Equals(weapon.id, gameObject.id)); }}
+        else { if (weaponList.Count > 0) { return weaponList.FindIndex(gameObject => Equals(weaponID, gameObject.id)); } }
+        return -1;
+    }
 
-        if (indexInPrimary == -1 && indexInSecondary == -1)
+    void AddNewWeaponExperience(Weapons weapon)
+    {
+        if (weapon.isSecondary == true && primaryOrSecondary == PrimaryOrSecondary.Secondary)
         {
-            if (weapon.isSecondary == true && primaryOrSecondary == PrimaryOrSecondary.Secondary)
-            {
-                weaponList.Add(new PlayerWeapons(weapon.name, weapon.id, weapon.level, 0, weapon.isSecondary, weapon.fireRate, weapon.ammoLimit));
-                EventSystem.current.WeaponChangeTrigger(0);
-            }
-            else if((weapon.isSecondary == false && primaryOrSecondary == PrimaryOrSecondary.Primary))
-            { weaponList.Add(new PlayerWeapons(weapon.name, weapon.id, weapon.level, 0, weapon.isSecondary, weapon.fireRate, weapon.ammoLimit)); }
+            weaponList.Add(new PlayerWeapons(weapon));
+            FindObjectOfType<AudioManager>().PlaySFX(weapon.audioOnAcquisition);
+            EventSystem.current.WeaponChangeTrigger(0);
         }
+        else if ((weapon.isSecondary == false && primaryOrSecondary == PrimaryOrSecondary.Primary))
+        { weaponList.Add(new PlayerWeapons(weapon)); }
+    }
+
+    public void AddWeapon(int staticID)
+    {
+        AddWeapon(weaponDatabase.ReturnItemFromID(staticID));
     }
     public void WeaponLevelChange(int weaponID, int levelChange)
     {

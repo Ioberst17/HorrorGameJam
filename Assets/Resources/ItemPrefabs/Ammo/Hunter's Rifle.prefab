@@ -10,11 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 8261691395377593331}
   - component: {fileID: 6382896186646633366}
-  - component: {fileID: -104015291929974473}
   - component: {fileID: -1798801302918512207}
   - component: {fileID: -2779056742419228927}
   - component: {fileID: -4277335024598274376}
   - component: {fileID: -4372982569501472569}
+  - component: {fileID: -8906230790656404643}
   m_Layer: 10
   m_Name: Hunter's Rifle
   m_TagString: Item
@@ -89,31 +89,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &-104015291929974473
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8595062681068344401}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2bd2759f65991e348a5c9903a0c5a55e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  self:
-    id: 0
-    itemType: 
-    itemName: 
-    amount: 0
-    audioOnPickup: 
-    audioOnUse: 
-    description: 
-    sprite: {fileID: 0}
-  staticID: 3
-  spriteRenderer: {fileID: 0}
-  itemID: 3
-  amount: 50
 --- !u!96 &-1798801302918512207
 TrailRenderer:
   serializedVersion: 2
@@ -295,3 +270,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.04, y: 0.06}
   m_EdgeRadius: 0
+--- !u!114 &-8906230790656404643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8595062681068344401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f85df4a721f0aa340bcc9f39013c051a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  staticID: 3
+  itemType: 0
+  pickupAmount: 1

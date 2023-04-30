@@ -37,7 +37,6 @@ public class LoadGameListener : MonoBehaviour
 
     private void OnLoadGame(int fileNumber)
     {
-        Debug.Log("OnLoadGame is being called");
-        DataManager.Instance.LoadGame(fileNumber);
+        if (DataManager.Instance.GetFilePlayTime(fileNumber) > 0) { DataManager.Instance.LoadGame(fileNumber); }
     }
 }

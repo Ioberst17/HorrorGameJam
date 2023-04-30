@@ -27,6 +27,9 @@ public class DialogueManager : MonoBehaviour
     private Ink.Runtime.Story currentStory;
     private StoryHistory storyHistory;
 
+    private bool destroyDialogueTriggerObject;
+    private GameObject dialogueTriggerObject;
+
     public bool dialogueIsPlaying;
 
     public bool choicesDisplayed = false;
@@ -96,38 +99,51 @@ public class DialogueManager : MonoBehaviour
 
 
 
-    public void EnterDialogueMode(TextAsset inkJSON, GameObject saveLocation)
+    public void EnterDialogueMode(TextAsset inkJSON, GameObject triggerObject)
     {
         currentStory = new Ink.Runtime.Story(inkJSON.text);
-        AddDataManagerFunctionality(saveLocation);
+        CheckIfSavePoint(triggerObject);
+        CheckIfNewExperience(triggerObject);
         dialogueIsPlaying = true;
         dialoguePanel.SetActive(true);
 
         ContinueStory();
     }
 
-    public void AddDataManagerFunctionality(GameObject saveLocation)
+    public void CheckIfSavePoint(GameObject triggerObject)
     {
-        if(saveLocation.transform.parent.name.Contains("SaveGamePoint"))
+        if (triggerObject.transform.parent != null && triggerObject.transform.parent.name.Contains("SaveGamePoint"))
         {
             currentStory.BindExternalFunction("SaveCurrent", () => dataManager.SaveData());
             currentStory.BindExternalFunction("SaveNew", (int fileNumber) => dataManager.SaveData(fileNumber));
 
-            currentStory.BindExternalFunction("SeeIfFileHasBeenSavedBefore", () => dataManager.SeeIfFileHasBeenSavedBefore()); ;
-            currentStory.BindExternalFunction("GetSpecificFilePlayTime", (int fileNumber) => dataManager.GetFilePlayTime(fileNumber));
+            currentStory.BindExternalFunction("SeeIfFileHasBeenSavedBefore", () => dataManager.SeeIfFileHasBeenSavedBefore());
+            currentStory.BindExternalFunction("GetSpecificFilePlayTime", (int fileNumber) => dataManager.GetFilePlayTimePrettyPrint(fileNumber));
 
             currentStory.BindExternalFunction("PlaySaveSound", () => FindObjectOfType<AudioManager>().PlaySFX("ItemPickup")); // PLACEHOLDER, Swap later for more apt sounds
-            currentStory.BindExternalFunction("PlaySaveVFX", () => saveLocation.GetSiblingComponent<SpriteGlowSupport>().PlayGlow());
+            currentStory.BindExternalFunction("PlaySaveVFX", () => triggerObject.GetSiblingComponent<SpriteGlowSupport>().PlayGlow());
         }
     }
 
-
+    void CheckIfNewExperience(GameObject triggerObject)
+    {
+        if (triggerObject.GetComponent<DialogueTrigger>().isNewExperience) 
+        {
+            destroyDialogueTriggerObject = true; dialogueTriggerObject = triggerObject;
+            if(triggerObject.GetComponent<PickupableItem>().itemType == PickupableItem.ItemTypeOptions.Weapons)
+            {
+                int weaponID = triggerObject.GetComponent<PickupableItem>().staticID;
+                currentStory.variablesState["weaponDescription"] = FindObjectOfType<WeaponDatabase>().ReturnItemFromID(weaponID).description;
+            }
+        }
+    }
 
     public void ExitDialogueMode()
     {
         dialogueIsPlaying = false;
         dialoguePanel.SetActive(false);
         dialogueText.text = "";
+        if (destroyDialogueTriggerObject) { Destroy(dialogueTriggerObject); destroyDialogueTriggerObject = false; }
 
     }
 

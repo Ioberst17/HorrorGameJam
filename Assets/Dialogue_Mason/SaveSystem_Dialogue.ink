@@ -15,7 +15,7 @@ Hey, kid - wanna save your game?
 * [Nevermind] -> Done
 
 == CheckSaveGame ==
-{SeeIfFileHasBeenSavedBefore(): -> SaveCurrentGame |-> SaveGameOptions }
+{SeeIfFileHasBeenSavedBefore(): {SaveCurrent()} {PlaySaveSound()} {PlaySaveVFX()} -> END |-> SaveGameOptions }
 
 
 == SaveGameOptions ==

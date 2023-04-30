@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 3043493983713607274}
   - component: {fileID: 3043493983713607275}
-  - component: {fileID: 3043493983713607252}
   - component: {fileID: -8747022828457396482}
   - component: {fileID: 8689306023778330600}
   - component: {fileID: 8293183967335164738}
+  - component: {fileID: -6099768394240339129}
   m_Layer: 10
   m_Name: Health Kit
   m_TagString: Item
@@ -88,29 +88,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &3043493983713607252
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3043493983713607253}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa6fe136d46aa664ebd30b0dd0fcf5d0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  self:
-    id: 0
-    itemType: 
-    itemName: 
-    amount: 0
-    audioOnPickup: 
-    audioOnUse: 
-    description: 
-    sprite: {fileID: 0}
-  staticID: 1
-  spriteRenderer: {fileID: 0}
 --- !u!50 &-8747022828457396482
 Rigidbody2D:
   serializedVersion: 4
@@ -266,3 +243,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.3934803, y: 1.1791285}
   m_EdgeRadius: 0
+--- !u!114 &-6099768394240339129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3043493983713607253}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f85df4a721f0aa340bcc9f39013c051a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  staticID: 1
+  itemType: 0
+  pickupAmount: 1
