@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8947179134693237869}
   - component: {fileID: -5437275695806891155}
   - component: {fileID: 5542210300694861145}
-  - component: {fileID: 5445898191069316697}
+  - component: {fileID: -3641354805858048618}
   m_Layer: 10
   m_Name: Heart
   m_TagString: Item
@@ -261,7 +261,7 @@ PolygonCollider2D:
       - {x: 1.27, y: -0.049999997}
       - {x: 1.27, y: 1.01}
       - {x: 1.03, y: 1.27}
---- !u!114 &5445898191069316697
+--- !u!114 &-3641354805858048618
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -270,18 +270,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1531767124515931869}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad30177c76f02824ba148078d83ee22f, type: 3}
+  m_Script: {fileID: 11500000, guid: f85df4a721f0aa340bcc9f39013c051a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  self:
-    id: 0
-    itemType: 
-    itemName: 
-    amount: 0
-    audioOnPickup: 
-    audioOnUse: 
-    description: 
-    ammoID: 0
-    sprite: {fileID: 0}
   staticID: 8
-  spriteRenderer: {fileID: 0}
+  itemType: 0
+  pickupAmount: 1

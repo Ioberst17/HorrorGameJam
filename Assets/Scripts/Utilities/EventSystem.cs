@@ -140,13 +140,17 @@ public class EventSystem : MonoBehaviour
 
     // OTHER PLAYER-RELATED
 
-    public event Action<int, int> onItemPickupTrigger;
+    public event Action<PickupableItem> onItemPickupTrigger;
 
-    public void ItemPickupTrigger(int itemID, int amount) { if(onItemPickupTrigger != null) { onItemPickupTrigger(itemID, amount); } }
+    public void ItemPickupTrigger(PickupableItem item) { if(onItemPickupTrigger != null) { onItemPickupTrigger(item); } }
 
     
     public event Action<PlayerSkills.SkillType> onSkillUnlock;
 
     public void SkillUnlockTrigger(PlayerSkills.SkillType skill) {if(onSkillUnlock != null) { onSkillUnlock(skill); } }
+
+    public event Action <DataManager.GameData> onGameFileLoaded;
+
+    public void GameFileLoadedTrigger(DataManager.GameData dataToSend) { if(onGameFileLoaded != null) { onGameFileLoaded(dataToSend); } }
 
 }

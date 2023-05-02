@@ -15,6 +15,7 @@ public class Weapons : IDatabaseItem, IShoppable
     [SerializeField] private string _description;
     public string description { get { return _description; } set { _description = value; } }
     public int amount;
+    public string audioOnAcquisition;
 
     // Unique Information
     public int tier;

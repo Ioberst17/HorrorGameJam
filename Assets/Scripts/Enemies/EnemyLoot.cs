@@ -8,7 +8,7 @@ public class EnemyLoot : MonoBehaviour
 {
     public GameObject droppedItemPrefab;
     [SerializeField] List<Loot> lootList = new List<Loot>();
-    private List<Item> ammoList = new List<Item>();
+    private List<PickupableItem> ammoList = new List<PickupableItem>();
     private int enemyTypeID = -1;
     private EnemyDatabase.Database enemyDB;
     private ConsumablesDatabase.DB consumablesDB;
@@ -84,7 +84,7 @@ public class EnemyLoot : MonoBehaviour
                     {
                         GameObject lootGameObject = Instantiate(itemPrefabs[i], spawnPosition, Quaternion.identity);
                         Debug.Log("Loot was instantiated, it's called: " + lootGameObject.name); // is not being called
-                        lootGameObject.GetComponent<Item>().self.amount = item.amount;
+                        lootGameObject.GetComponent<PickupableItem>().pickupAmount = item.amount;
                         lootLaunch(lootGameObject);
                     }
                 }

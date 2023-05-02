@@ -10,11 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 3636742413416577315}
   - component: {fileID: 1750698738641262918}
-  - component: {fileID: 8323727256751575787}
   - component: {fileID: 1393812790244696449}
   - component: {fileID: -2110073018728819408}
   - component: {fileID: 6302833054087908404}
   - component: {fileID: -3170709001567610020}
+  - component: {fileID: -7339639302146641554}
   m_Layer: 10
   m_Name: Fireworks
   m_TagString: Item
@@ -89,31 +89,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &8323727256751575787
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4006209712300283521}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2bd2759f65991e348a5c9903a0c5a55e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  self:
-    id: 0
-    itemType: 
-    itemName: 
-    amount: 0
-    audioOnPickup: 
-    audioOnUse: 
-    description: 
-    sprite: {fileID: 0}
-  staticID: 6
-  spriteRenderer: {fileID: 0}
-  itemID: 6
-  amount: 30
 --- !u!96 &1393812790244696449
 TrailRenderer:
   serializedVersion: 2
@@ -295,3 +270,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.09754667, y: 0.10411304}
   m_EdgeRadius: 0
+--- !u!114 &-7339639302146641554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4006209712300283521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f85df4a721f0aa340bcc9f39013c051a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  staticID: 6
+  itemType: 0
+  pickupAmount: 1

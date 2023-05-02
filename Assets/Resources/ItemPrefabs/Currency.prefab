@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 780535186170960907}
   - component: {fileID: 4303161115565117531}
   - component: {fileID: 6178931866661294740}
-  - component: {fileID: -1695937097886978747}
+  - component: {fileID: -7200411086873770720}
   m_Layer: 10
   m_Name: Currency
   m_TagString: Untagged
@@ -254,7 +254,7 @@ TrailRenderer:
   m_MinVertexDistance: 0.1
   m_Autodestruct: 0
   m_Emitting: 1
---- !u!114 &-1695937097886978747
+--- !u!114 &-7200411086873770720
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -263,18 +263,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 582460260983012526}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4cd2e5a54b927d343b1c55f3b594e9c2, type: 3}
+  m_Script: {fileID: 11500000, guid: f85df4a721f0aa340bcc9f39013c051a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  self:
-    id: 0
-    itemType: Inventory
-    itemName: Currency
-    amount: 1
-    audioOnPickup: ItemPickup
-    audioOnUse: 
-    description: 
-    ammoID: 0
-    sprite: {fileID: 21300000, guid: 4da84fcbf0d51b24a9dfcf43d47ca16d, type: 3}
   staticID: 0
-  spriteRenderer: {fileID: 0}
+  itemType: 0
+  pickupAmount: 1

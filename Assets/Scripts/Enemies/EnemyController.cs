@@ -25,7 +25,8 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     //the attack power of the enemy and other internal values
     public EnemyDatabase enemyDatabase; // used to load in values for enemies e.g. health data, attack info
-    public int damageValue;
+    public int dmgVal1, dmgVal2, dmgVal3, dmgVal4, dmgVal5, dmgVal6;
+    public int mostRecentAttack;
 
     private EnemyHealth enemyHealth;
     public int HP_MAX;
@@ -264,7 +265,12 @@ public class EnemyController : MonoBehaviour, IDamageable
             var loadedValue = enemyDatabase.enemyDatabase.entries[EnemytypeID];
             HP = loadedValue.health; //50;
             HP_MAX = loadedValue.health;
-            damageValue = loadedValue.attack1Damage; //10;
+            dmgVal1 = loadedValue.attack1Damage; //10;
+            dmgVal2 = loadedValue.attack2Damage;
+            dmgVal3 = loadedValue.attack3Damage;
+            dmgVal4 = loadedValue.attack4Damage;
+            dmgVal5 = loadedValue.attack5Damage;
+            dmgVal6 = loadedValue.attack6Damage;
             SoulPointsDropped = loadedValue.soulPointsDropped; //45;
             knockbackForce = loadedValue.knockback; //3
         }

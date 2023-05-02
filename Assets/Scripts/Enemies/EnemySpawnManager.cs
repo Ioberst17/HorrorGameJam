@@ -90,8 +90,8 @@ public class EnemySpawnManager : MonoBehaviour
     {
         UpdateIndex();
 
-        if(index != -1) { dataManager.gameData.areaHistory.history[index].enemiesCleared = true;}
-        else { dataManager.gameData.areaHistory.history.Add(new AreaHistory.History(areaID, true)); }
+        if(index != -1) { dataManager.sessionData.areaHistory.history[index].enemiesCleared = true;}
+        else { dataManager.sessionData.areaHistory.history.Add(new AreaHistory.History(areaID, true)); }
     }
 
     private bool CheckIfAreaCleared()
@@ -99,14 +99,14 @@ public class EnemySpawnManager : MonoBehaviour
         UpdateIndex();
         if (index != -1)
         {
-            if (dataManager.gameData.areaHistory.history[index].enemiesCleared == true) { return true; }
+            if (dataManager.sessionData.areaHistory.history[index].enemiesCleared == true) { return true; }
         }
         return false;
     }
 
     private void UpdateIndex() 
     { 
-        if(dataManager.gameData.areaHistory.history == null) { Debug.Log("Trying to access History within DataManager's AreaHistory; however, the variable is null"); }
-        else { index = dataManager.gameData.areaHistory.history.FindIndex(area => area.areaID == areaID); }
+        if(dataManager.sessionData.areaHistory.history == null) { Debug.Log("Trying to access History within DataManager's AreaHistory; however, the variable is null"); }
+        else { index = dataManager.sessionData.areaHistory.history.FindIndex(area => area.areaID == areaID); }
     }
 }

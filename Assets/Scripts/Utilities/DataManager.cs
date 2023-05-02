@@ -4,6 +4,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Schema;
 using Newtonsoft.Json.Schema.Generation;
 using System.Collections.Generic;
+using Ink.Parsed;
+using UnityEngine.SceneManagement;
+using System;
 
 public class DataManager : MonoBehaviour
 {
@@ -15,31 +18,40 @@ public class DataManager : MonoBehaviour
     // i.e. there is a "get" (read-access), but not a "set" (write-access) except for "private set" (write-access within it's class)
     // this is also known as Singleton structure
 
-    public SessionData seshData = new SessionData(); // creates a new instance of class SessionData
+    public GameData sessionData = new GameData(); // creates a new instance of class SessionData
     public GameData gameData = new GameData(); // creates a new instance of class GameData
+    public GameData tempGameData = new GameData();
+
+    [SerializeField] int currentFile;
+    int currentSceneIndex = 0;
+    bool loadedGameFromFile;
 
     /* CLASS STRUCTURES */
 
-    void Update()
+    private void OnEnable()
     {
-        if (Input.GetKeyDown(KeyCode.C)) { ClearData(); }
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    [System.Serializable]
-    public class SessionData
-    {
-        // class attributes of TBD session data
-        // e.g. public int hitPoints;
+    void Update() 
+    { 
+        if (Input.GetKeyDown(KeyCode.C)) { ClearData(); } 
+        if(currentSceneIndex != 0) { sessionData.timePlayed += Time.deltaTime; }
     }
+
 
     [System.Serializable] // called to make class serializable i.e. turn from an object to bytes for storage; eventually, deserialized when used again (from bytes back to object)
     public class GameData // data to be saved between sessions in Json format - n.b Unity Json utility does not support arrays
     {
         public int timesPlayed = 0;
+        public float timePlayed = 0;
         [Header("Player Data")]
         public float playerEXP = 0.0f;
         public int playerLevel = 1;
         public PlayerSkills playerSkills = new PlayerSkills();
+        public int currentSceneBuildIndex = 1; // defaults to first scene (non-title)
+        public float lastKnownWorldLocationX;
+        public float lastKnownWorldLocationY;
         [Header("Inventory Data")]
         public List<NarrativeItems> narrativeItems = new List<NarrativeItems>();
         [SerializeField]
@@ -52,6 +64,8 @@ public class DataManager : MonoBehaviour
         public int activeSecondaryWeapon = 1;
         [Header("Environment Data")]
         public AreaHistory areaHistory = new AreaHistory();
+        [Header("Story Data")]
+        public StoryHistory storyHistory = new StoryHistory();
     }
 
     /* FUNCTIONS */
@@ -68,56 +82,104 @@ public class DataManager : MonoBehaviour
         {
             Destroy(gameObject); // Destroy the GameObject, this component is attached to
         }
-
-        gameData = LoadData();
-        gameData.timesPlayed++;
     }
 
     public void ClearData()
     {
-        GameData gameData = new GameData();
-        SaveData(gameData);
-        Instance.gameData = LoadData();
+        sessionData = new GameData();
+        gameData = new GameData();
+        SaveData(1); // defaults to file 1
+        Instance.sessionData = LoadData(1);
     }
 
-    private void SaveData(GameData gameData) // used to save data to a file
+    public void SaveData(int fileNumber) // used to save data to a file
     {
+        foreach (var field in typeof(GameData).GetFields()) { field.SetValue(gameData, field.GetValue(sessionData)); }
+        currentFile = fileNumber;
+
         string json = JsonConvert.SerializeObject(gameData);
-
-        File.WriteAllText(Application.persistentDataPath + "/savefile.json", json); // uses System.IO namespace to write to a consistent folder, with name savefile.json
-
+        File.WriteAllText(Application.persistentDataPath + "/savefile" + fileNumber.ToString() + ".json", json);
         Debug.Log(json);
     }
 
-    private GameData LoadData()
+    public void SaveData() { if(currentFile != 0 ) SaveData(currentFile); }
+
+    public void LoadGame(int fileNumber)
     {
-        string path = Application.persistentDataPath + "/savefile.json"; // writes a string with the path file to check
-        if (File.Exists(path)) // check if file exists
-        {
-            string json = File.ReadAllText(path); // reads file content to json string
+        loadedGameFromFile = true;
+        sessionData = LoadData(fileNumber);
+        gameData = LoadData(fileNumber);
+        sessionData.timesPlayed++;
+        currentFile = fileNumber;
+        LoadPlayerInNewScene();
+    }
 
-            gameData = JsonConvert.DeserializeObject<GameData>(json);
-
-            return gameData;
-        }
+    private GameData LoadData(int fileNumber)
+    {
+        string path = Application.persistentDataPath + "/savefile" + fileNumber.ToString() + ".json"; // writes a string with the path file to check
+        if (File.Exists(path)) { return LoadingCode(path); }
         else
         {
-            GameData gameData = new GameData();
-            return gameData;
+            gameData = new GameData();
+            sessionData = new GameData();
+            return sessionData;
         }
     }
 
-    private JSchema GameDataSchema()
+    private void LoadPlayerInNewScene()
     {
-        JSchemaGenerator generator = new JSchemaGenerator();
-
-        JSchema schema = generator.Generate(typeof(GameData));
-
-        return schema;
+        SceneManager.LoadScene(sessionData.currentSceneBuildIndex);
     }
+
+    private GameData CacheFileData(int fileNumber)
+    {
+        string path = Application.persistentDataPath + "/savefile" + fileNumber.ToString() + ".json"; // writes a string with the path file to check
+        if (File.Exists(path)) { return LoadingCode(path); }
+        else { return new GameData(); }
+    }
+
+    private GameData LoadingCode(string path)
+    {
+        string json = File.ReadAllText(path); // reads file content to json string
+        return JsonConvert.DeserializeObject<GameData>(json);
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        sessionData.currentSceneBuildIndex = currentSceneIndex;
+        if (currentFile != 0 ) { EventSystem.current.GameFileLoadedTrigger(gameData); }
+    }
+
+    private void OnDisable() { SceneManager.sceneLoaded -= OnSceneLoaded; }
 
     private void OnApplicationQuit()
     {
-        //SaveData(gameData);
+        //SaveData(sessionData);
     }
+
+    // GET SPECIFIC DATA
+
+    public bool SeeIfFileHasBeenSavedBefore() { Debug.Log("Time played is greater than 0: " + (gameData.timePlayed > 0.0f).ToString());  return gameData.timePlayed > 0.0f; }
+
+    public float GetFilePlayTime(int fileNumber)
+    {
+        tempGameData = CacheFileData(fileNumber);
+        Debug.Log("File " + fileNumber + " time played is " + tempGameData.timePlayed);
+        return tempGameData.timePlayed;
+    }
+
+    public string GetFilePlayTimePrettyPrint(int fileNumber)
+    {
+        return FloatToTimeString(GetFilePlayTime(fileNumber));
+    }
+
+    public string FloatToTimeString(float timeInSeconds)
+    {
+        int hours = Mathf.FloorToInt(timeInSeconds / 3600f);
+        int minutes = Mathf.FloorToInt((timeInSeconds % 3600f) / 60f);
+        return hours.ToString("0") + ":" + minutes.ToString("00");
+    }
+
+
 }

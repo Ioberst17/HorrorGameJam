@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
-public class NPCShop : MonoBehaviour
+public class NPCShop<T> : MonoBehaviour where T : IShoppable
 {
     private GameObject utilities;
     [SerializeField] private ConsumablesDatabase consumablesDB;
@@ -60,7 +60,7 @@ public class NPCShop : MonoBehaviour
     public void BuyItem(Consumables item)
     {
         // if item is consumable
-        EventSystem.current.ItemPickupTrigger(item.id, item.shopAmountPerPurchase);
+        inventory.AddConsumable(item.id, item.shopAmountPerPurchase);
 
         // if item is weapon
         // secondaryWeapons.AddWeapon(/*should pass in the reference*/)

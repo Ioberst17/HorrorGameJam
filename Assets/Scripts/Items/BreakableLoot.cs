@@ -10,7 +10,6 @@ public class BreakableLoot : MonoBehaviour
     [SerializeField] InventoryManager inventory;
     [SerializeField] PlayerController playerController;
     [SerializeField] ConsumablesDatabase.DB consumablesDB;
-    private List<GameObject> itemPrefabs;
     float lootLaunchForce = 5f;
 
     private void Start()
@@ -18,7 +17,6 @@ public class BreakableLoot : MonoBehaviour
         inventory = GameObject.Find("Player").GetComponent<InventoryManager>();
         playerController = GameObject.Find("PlayerModel").GetComponent<PlayerController>();
         consumablesDB = GameObject.Find("ConsumablesDatabase").GetComponent<ConsumablesDatabase>().data;
-        itemPrefabs = GameObject.Find("ItemPrefabs").GetComponent<ItemPrefabs>().itemPrefabs;
     }
 
     public void GenerateLoot()

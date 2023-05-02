@@ -177,29 +177,29 @@ public class Inventory_UI_Mason : MonoBehaviour
                 }
             }
 
-            for (int i = 0; i < dataManager.gameData.primaryWeapons.Count; i++)
+            for (int i = 0; i < dataManager.sessionData.primaryWeapons.Count; i++)
             {
                 meleeSlots[i].SetActive(true); //turn on inventory slots for melee weapons the player has in their inventory.
 
-                //Debug.Log("weapon=" + dataManager.gameData.primaryWeapons[i].id + " /n");
+                //Debug.Log("weapon=" + dataManager.sessionData.primaryWeapons[i].id + " /n");
             }
 
-            for (int i = 0; i < dataManager.gameData.secondaryWeapons.Count; i++)
+            for (int i = 0; i < dataManager.sessionData.secondaryWeapons.Count; i++)
             {
                 rangedSlots[i].SetActive(true); //turn on inventory slots for ranged weapons the player has in their inventory.
 
-                rangedAmmoNumbers[i].text = dataManager.gameData.secondaryWeapons[i].ammo.ToString();
+                rangedAmmoNumbers[i].text = dataManager.sessionData.secondaryWeapons[i].ammo.ToString();
 
-                //Debug.Log(" rangedweapon=" + dataManager.gameData.secondaryWeapons[i].id + " /n");
+                //Debug.Log(" rangedweapon=" + dataManager.sessionData.secondaryWeapons[i].id + " /n");
             }
 
-            for (int i = 0; i < dataManager.gameData.consumables.Count; i++)
+            for (int i = 0; i < dataManager.sessionData.consumables.Count; i++)
             {
                 consumableSlots[i].SetActive(true); // turn on inventory slots for consumables the player has in their inventory.
 
-                consumableCount[i].text = dataManager.gameData.consumables[i].amount.ToString(); //update the amount of consumable per item.
+                consumableCount[i].text = dataManager.sessionData.consumables[i].amount.ToString(); //update the amount of consumable per item.
 
-                //Debug.Log("consumable=" + dataManager.gameData.consumables[i].id + " /n");
+                //Debug.Log("consumable=" + dataManager.sessionData.consumables[i].id + " /n");
             }
 
             
@@ -253,10 +253,10 @@ public class Inventory_UI_Mason : MonoBehaviour
 
         currentPrimarySlotNum = slotNum;
 
-        weaponIDNum = dataManager.gameData.primaryWeapons[slotNum].id;
-        nameOfWeapon = dataManager.gameData.primaryWeapons[slotNum].name;
-        weaponName.text = dataManager.gameData.primaryWeapons[slotNum].name;
-        weaponDamage.text = dataManager.gameData.primaryWeapons[slotNum].level.ToString();
+        weaponIDNum = dataManager.sessionData.primaryWeapons[slotNum].id;
+        nameOfWeapon = dataManager.sessionData.primaryWeapons[slotNum].name;
+        weaponName.text = dataManager.sessionData.primaryWeapons[slotNum].name;
+        weaponDamage.text = dataManager.sessionData.primaryWeapons[slotNum].level.ToString();
     }
     public void OpenInfoPanelRanged(int slotNum) //opens the ranged weapon panel in the inventory and turns on the text fields and fills them with the info of the current selected weapon.
     {
@@ -268,9 +268,9 @@ public class Inventory_UI_Mason : MonoBehaviour
 
         currentSecondarySlotNum = slotNum;
 
-        weaponName.text = dataManager.gameData.secondaryWeapons[slotNum].name;
-        weaponDamage.text = dataManager.gameData.secondaryWeapons[slotNum].level.ToString();
-        weaponAmmo.text = dataManager.gameData.secondaryWeapons[slotNum].ammo.ToString();
+        weaponName.text = dataManager.sessionData.secondaryWeapons[slotNum].name;
+        weaponDamage.text = dataManager.sessionData.secondaryWeapons[slotNum].level.ToString();
+        weaponAmmo.text = dataManager.sessionData.secondaryWeapons[slotNum].ammo.ToString();
     }
     public void OpenInfoPanelConsumable(int slotNum) //opens the consumable panel in the inventory and turns on the text fields and fills them with the info of the current selected item.
     {
@@ -281,9 +281,9 @@ public class Inventory_UI_Mason : MonoBehaviour
 
         currentConsumableSlotNum = slotNum;
 
-        weaponName.text = dataManager.gameData.consumables[slotNum].itemName;
-        weaponAmmo.text = dataManager.gameData.consumables[slotNum].amount.ToString();
-        description.text = dataManager.gameData.consumables[slotNum].description;
+        weaponName.text = dataManager.sessionData.consumables[slotNum].itemName;
+        weaponAmmo.text = dataManager.sessionData.consumables[slotNum].amount.ToString();
+        description.text = dataManager.sessionData.consumables[slotNum].description;
     }
 
     public void CloseInfoPanel() //just close the info panel. assigned to the equip button.
@@ -298,15 +298,15 @@ public class Inventory_UI_Mason : MonoBehaviour
 
     public void EquipWeapon()
     {
-        //Debug.Log("Current primary weapon: " + dataManager.gameData.activePrimaryWeapon.name);
+        //Debug.Log("Current primary weapon: " + dataManager.sessionData.activePrimaryWeapon.name);
 
         //change the active primary in the datamanger script to the primary weapon that is selected in the inventory
-        dataManager.gameData.activePrimaryWeapon = dataManager.gameData.secondaryWeapons[currentPrimarySlotNum].id;
+        dataManager.sessionData.activePrimaryWeapon = dataManager.sessionData.secondaryWeapons[currentPrimarySlotNum].id;
 
-        Debug.Log("New primary weapon: " + dataManager.gameData.primaryWeapons[currentPrimarySlotNum].name);
+        Debug.Log("New primary weapon: " + dataManager.sessionData.primaryWeapons[currentPrimarySlotNum].name);
 
         //change the active secondary in the datamanger script to the secondary weapon that is selected in the inventory
-        dataManager.gameData.activeSecondaryWeapon = dataManager.gameData.secondaryWeapons[currentSecondarySlotNum].id;
+        dataManager.sessionData.activeSecondaryWeapon = dataManager.sessionData.secondaryWeapons[currentSecondarySlotNum].id;
 
         //run the loadcurrentweapons function from the inventorymanager script to load the newly selected weapons.
         inventoryManager.primaryWeaponsManager.LoadActiveWeapon();

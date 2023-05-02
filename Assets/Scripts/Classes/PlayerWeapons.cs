@@ -23,5 +23,4 @@ public class PlayerWeapons
         this.fireRate = fireRate;
         this.ammoLimit = ammoLimit;
     }
-
 }
