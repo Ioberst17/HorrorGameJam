@@ -590,7 +590,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 109.1624, y: -26.3226}
+  m_AnchoredPosition: {x: 109.162415, y: -26.32257}
   m_SizeDelta: {x: 183.3249, y: 23.6453}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &123467599
@@ -6530,7 +6530,7 @@ Transform:
   - {fileID: 876788866}
   - {fileID: 231223724}
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1978206124 stripped
 GameObject:
@@ -6869,7 +6869,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4771185929085782008, guid: 21071c1d7a2c7534e87a5d077fe4f2fd, type: 3}
       propertyPath: m_RootOrder
-      value: 12
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 4771185929085782008, guid: 21071c1d7a2c7534e87a5d077fe4f2fd, type: 3}
       propertyPath: m_AnchorMax.x
@@ -7864,6 +7864,50 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 648145155, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1458881044085820166, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1458881044374652408, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1458881044476195767, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1458881044548638254, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1458881044663540982, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1458881044685643087, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1458881044707389196, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1458881044800793614, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1458881044889808783, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1458881044941643619, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1458881045040599524, guid: eb2664123c277934fb626507fe6ad021, type: 3}
       propertyPath: GameController
       value: 
@@ -7874,11 +7918,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1458881045126449812, guid: eb2664123c277934fb626507fe6ad021, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.77
+      value: -0.83
       objectReference: {fileID: 0}
     - target: {fileID: 1458881045126449812, guid: eb2664123c277934fb626507fe6ad021, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -97.17
+      value: -96.98
       objectReference: {fileID: 0}
     - target: {fileID: 1458881045126449812, guid: eb2664123c277934fb626507fe6ad021, type: 3}
       propertyPath: m_LocalPosition.z
@@ -7915,6 +7959,18 @@ PrefabInstance:
     - target: {fileID: 1458881045126449814, guid: eb2664123c277934fb626507fe6ad021, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 1458881045285035849, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1458881045358273131, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1458881045363811431, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6450055456109401609, guid: eb2664123c277934fb626507fe6ad021, type: 3}
       propertyPath: cameraToUse
