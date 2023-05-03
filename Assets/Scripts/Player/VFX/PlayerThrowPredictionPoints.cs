@@ -13,15 +13,6 @@ public class PlayerThrowPredictionPoints : MonoBehaviour
         hasCollided = false;
     }
 
-    private void Update()
-    {
-
-        /*if (Time.time >= (timeActivated + activeTime))
-        {
-            PlayerThrowPredictionPointsObjectPool.Instance.AddToPool(gameObject);
-        }*/
-    }
-
     private void OnTriggerStay2D(Collider2D other)
     {
         // ignore non-interaction + player physics layers, 3rd layer should map to environment which it sould interact with

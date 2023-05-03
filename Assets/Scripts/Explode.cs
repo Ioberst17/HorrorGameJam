@@ -62,7 +62,7 @@ public class Explode : MonoBehaviour
         { EventSystem.current.PlayerShieldHitTrigger(touchedObject); }
 
         else if (touchedObject.gameObject.layer == LayerMask.NameToLayer("Enemy"))
-        { EventSystem.current.AttackHitTrigger(weaponID, weaponLevel, transform.position, null); }
+        { EventSystem.current.EnemyHitTrigger(weaponID, weaponLevel, transform.position, null); }
 
         else { target.Hit(touchedObject.gameObject); } // last case is breakable objects
     }

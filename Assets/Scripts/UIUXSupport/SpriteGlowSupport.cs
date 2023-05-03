@@ -41,7 +41,7 @@ public class SpriteGlowSupport : MonoBehaviour
         glowTimer = 0.0f;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (glowLoop)
         {

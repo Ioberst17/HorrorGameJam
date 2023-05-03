@@ -46,13 +46,10 @@ public class GroundSlam : MonoBehaviour
         groundSlamCollisionFilter.SetLayerMask((1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("BreakableEnviro")) | 1 << LayerMask.NameToLayer("Environment"));
     }
 
-    void Update()
-    {
-        if (framesSinceLastGroundSlamVFX <= minFramesBetweenGroundSlamVFX + 1) { framesSinceLastGroundSlamVFX++; }
-    }
-
     private void FixedUpdate()
     {
+        if (framesSinceLastGroundSlamVFX <= minFramesBetweenGroundSlamVFX + 1) { framesSinceLastGroundSlamVFX++; }
+
         if (groundSlamStop == false && !playerController.isGrounded)
         {
             if (CheckIfFinished(DoGroundSlam())) { }

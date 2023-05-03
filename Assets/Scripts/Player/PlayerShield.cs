@@ -22,17 +22,22 @@ public class PlayerShield : Shield
         playerHealth = GetComponentInParent<PlayerHealth>();
     }
 
-    public override void Update()
+    void Update()
     {
-        base.Update();
         if (playerController.SP < 0)
         {
             ShieldStatus("Off");
             shieldButtonDown = false;
             FindObjectOfType<AudioManager>().PlaySFX("InsufficientStamina");
         }
-        if(!shieldButtonDown) { ChangeSP(staminaRate / 2, Time.deltaTime); }
     }
+
+    private void FixedUpdate()
+    {
+        if (!shieldButtonDown) { ChangeSP(staminaRate / 2, Time.deltaTime); }
+    }
+
+
 
     public void ShieldButtonDown()
     {

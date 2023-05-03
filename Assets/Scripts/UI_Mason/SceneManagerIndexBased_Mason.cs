@@ -36,6 +36,8 @@ public class SceneManagerIndexBased_Mason : MonoBehaviour
 
         //if the scenes index is higher than index#1 reload scene with index # 1
         //add one to the phasenumber to prime the load to phase 2
+        if(activeScene.buildIndex == 0) { SceneManager.LoadScene(2); }
+
         if (activeScene.buildIndex > 1)
         {
             phaseNum++;
@@ -56,14 +58,10 @@ public class SceneManagerIndexBased_Mason : MonoBehaviour
 
     }
 
+    public void LoadCombatMode() { SceneManager.LoadScene("CombatMode"); }
+
     public void ReloadScene()
     {
         SceneManager.LoadScene(activeScene.buildIndex);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 }

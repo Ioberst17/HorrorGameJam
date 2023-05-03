@@ -17,7 +17,7 @@ public class EventSystem : MonoBehaviour
     { { if (onEnemyEnviroDamage != null) { onEnemyEnviroDamage(damage, position, statusModifier); } } }
 
     public event Action<int, int, Vector3, string> onEnemyHitCollision;
-    public void AttackHitTrigger(int weaponID, int weaponLevel, Vector3 position, string statusModifier)
+    public void EnemyHitTrigger(int weaponID, int weaponLevel, Vector3 position, string statusModifier)
     { { if (onEnemyHitCollision != null) { onEnemyHitCollision(weaponID, weaponLevel, position, statusModifier); } } }
 
     public event Action<int, int> onWaveFinished;

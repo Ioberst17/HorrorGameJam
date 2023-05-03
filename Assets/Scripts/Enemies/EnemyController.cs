@@ -182,11 +182,11 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     public void Hit(int attackDamage, Vector3 playerPosition) { Hit(attackDamage, playerPosition, null); }
 
-    public void Hit(int weaponID, int LevelOfWeapon, Vector3 playerPosition)  
-    {
-        statusToPass = weaponDatabase.GetWeaponEffect(weaponID);
-        Hit(weaponID, LevelOfWeapon, playerPosition, statusToPass); 
-    }
+    //public void Hit(int weaponID, int LevelOfWeapon, Vector3 playerPosition)  
+    //{
+    //    statusToPass = weaponDatabase.GetWeaponEffect(weaponID);
+    //    Hit(weaponID, LevelOfWeapon, playerPosition, statusToPass); 
+    //}
 
     public void Hit(int weaponID, int LevelOfWeapon, Vector3 playerPosition, string statusEffect) 
     {

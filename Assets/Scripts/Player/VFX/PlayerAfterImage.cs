@@ -47,10 +47,10 @@ public class PlayerAfterImage : MonoBehaviour
         alpha = alphaMultiplier;
         color = new Color(1f, 1f, 1f, alpha);
         spriteRenderer.color = color;
+    }
 
-        if(Time.time >=(timeActivated + activeTime))
-        {
-            PlayerAfterImageObjectPool.Instance.AddToPool(gameObject);
-        }
+    private void FixedUpdate()
+    {
+        if (Time.time >= (timeActivated + activeTime)) { PlayerAfterImageObjectPool.Instance.AddToPool(gameObject); }
     }
 }
