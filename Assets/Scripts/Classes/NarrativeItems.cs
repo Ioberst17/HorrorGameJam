@@ -15,8 +15,8 @@ public class NarrativeItems : IDatabaseItem, IShoppable
     [SerializeField] private string _description;
     public string description { get { return _description; } set { _description = value; } }
     public float amount;
-    public string audioOnAcquisition;
     public Sprite sprite;
+    public string audioOnAcquisition;
 
     // Unique Information
     public string stat;
@@ -47,6 +47,6 @@ public class NarrativeItems : IDatabaseItem, IShoppable
         this.description = input.description;
         this.cost = input.cost;
         this.shopAmountPerPurchase = input.shopAmountPerPurchase;
-        this.sprite = Resources.Load<Sprite>("Sprites/" + name);
+        this.sprite = Resources.Load<Sprite>("Sprites/NarrativeItems" + name);
     }
 }

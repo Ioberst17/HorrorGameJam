@@ -36,25 +36,25 @@ public class SceneManagerIndexBased_Mason : MonoBehaviour
 
         //if the scenes index is higher than index#1 reload scene with index # 1
         //add one to the phasenumber to prime the load to phase 2
-        if(activeScene.buildIndex == 0) { SceneManager.LoadScene(2); }
+        if(SceneManager.GetActiveScene().buildIndex == 0) { SceneManager.LoadScene(2); }
 
-        if (activeScene.buildIndex > 1)
-        {
-            phaseNum++;
-            SceneManager.LoadScene(1);
-        }
-        else if (activeScene.buildIndex <= 1 && phaseNum == 1) //first loop, main menu -> overworld -> phase 1
-        {
-            SceneManager.LoadScene(activeScene.buildIndex + 1);
-        }
-        else if (activeScene.buildIndex <= 1 && phaseNum == 2) // second loop, overworld -> phase 2
-        {
-            SceneManager.LoadScene(activeScene.buildIndex + 2);
-        }
-        else if (activeScene.buildIndex <= 1 && phaseNum == 3) // third loop, overworld -> phase 3
-        {
-            SceneManager.LoadScene(activeScene.buildIndex + 3);
-        }
+        //if (activeScene.buildIndex > 1)
+        //{
+        //    phaseNum++;
+        //    SceneManager.LoadScene(1);
+        //}
+        //else if (activeScene.buildIndex <= 1 && phaseNum == 1) //first loop, main menu -> overworld -> phase 1
+        //{
+        //    SceneManager.LoadScene(activeScene.buildIndex + 1);
+        //}
+        //else if (activeScene.buildIndex <= 1 && phaseNum == 2) // second loop, overworld -> phase 2
+        //{
+        //    SceneManager.LoadScene(activeScene.buildIndex + 2);
+        //}
+        //else if (activeScene.buildIndex <= 1 && phaseNum == 3) // third loop, overworld -> phase 3
+        //{
+        //    SceneManager.LoadScene(activeScene.buildIndex + 3);
+        //}
 
     }
 

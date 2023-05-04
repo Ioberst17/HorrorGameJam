@@ -21,7 +21,7 @@ public class WeaponDatabase : Database<Weapons>
 
     private void Awake()
     {
-        numOfColumns = 27;
+        numOfColumns = 28;
         textAssetData = Resources.Load<TextAsset>("TextFiles/WeaponDatabase");
         string[] data = ReadCSV();
         CreateDatabase(data);
