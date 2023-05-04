@@ -140,7 +140,17 @@ public class Database<T> : MonoBehaviour where T : IDatabaseItem, IShoppable
             }
             catch (Exception e) { ErrorHandler(e, currentColumnEntry, currentRow, rowsToSkip, data, dataEntry); }
         }
-        else if (columnDataTypes[currentColumnEntry] == "sprite") { }
+        else if (columnDataTypes[currentColumnEntry] == "sprite") 
+        {
+            try
+            {
+                string strVal = data[numOfColumns * (currentRow + rowsToSkip) + currentColumnEntry];
+                Sprite spriteVal = Resources.Load<Sprite>(strVal);
+                if (dataEntry is FieldInfo fieldInfo) { fieldInfo.SetValue(this.data.entries[currentRow], spriteVal); }
+                else if (dataEntry is PropertyInfo propertyInfo) { propertyInfo.SetValue(this.data.entries[currentRow], spriteVal); }
+            }
+            catch (Exception e) { ErrorHandler(e, currentColumnEntry, currentRow, rowsToSkip, data, dataEntry); }
+        }
         else { Debug.Log("No data type match. Current column is " + columnNames[currentColumnEntry] + " with data type " + columnDataTypes[currentColumnEntry]); }
     }
 
