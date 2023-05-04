@@ -1,26 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using UnityEngine;
 
-[RequireComponent(typeof(SpriteRenderer))]
-[RequireComponent(typeof(Animator))]
-public class Burnable : StatusEffect
+public class Stunned : StatusEffect
 {
-    // These variables control the damage and duration of the burn.
+    // These variables control the damage and duration of the poison.
     private StatusEffectData statusData = new StatusEffectData();
 
     public override void Start()
     {
         base.Start();
 
-        effectDuration = statusData.burnDuration;
-        damageToPass = statusData.burnDamage;
+        effectDuration = statusData.stunnedDuration;
+        applyStatusEffect = true;
     }
 
     public override void Execute() { base.Execute(); }
 
     public override void FixedUpdate() { base.FixedUpdate(); }
-
-
 }

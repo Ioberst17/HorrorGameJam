@@ -33,6 +33,8 @@ public class EnemyController : MonoBehaviour, IDamageable
     public int HP;
     private int damageToPass;
     private string statusToPass;
+    public bool isStunned;
+    [SerializeField]
     [Tooltip("The higher blinkFrequency is, the faster blinking is for hit stun")]
     private float blinkFrequency = 30f; // higher, isfaster blinking for hit stun
 
@@ -115,37 +117,39 @@ public class EnemyController : MonoBehaviour, IDamageable
     //1 is bat, 2 is paralysis demon, 3 is hellhound, 4 is blood golem, 5 is Gargoyle.
     void FixedUpdate()
     {
-        if (EnemytypeID == 5)
+        if (!isStunned) // do something, if not stunned
         {
-            GargoyleBehavior.GargoylePassover();
-        }
-        else if (!isDead && invincibilityCount == 0)
-        {
-            switch (EnemytypeID)
+            if (EnemytypeID == 5)
             {
-                case 0:
-                    hellhoundBehavior.HellhoundPassover();
-                    break;
-                case 1:
-                    batBehavior.BatPassover();
-                    break;
-                case 2:
-                    paralysisDemonBehavior.PDPassover();
-                    break;
-                case 3:
-                    SpiderBehavior.spiderPassover();
-                    break;
-                case 4:
-                    GolemBehavior.GolemPassover();
-                    break;
-                default:
-                    break;
+                GargoyleBehavior.GargoylePassover();
+            }
+            else if (!isDead && invincibilityCount == 0)
+            {
+                switch (EnemytypeID)
+                {
+                    case 0:
+                        hellhoundBehavior.HellhoundPassover();
+                        break;
+                    case 1:
+                        batBehavior.BatPassover();
+                        break;
+                    case 2:
+                        paralysisDemonBehavior.PDPassover();
+                        break;
+                    case 3:
+                        SpiderBehavior.spiderPassover();
+                        break;
+                    case 4:
+                        GolemBehavior.GolemPassover();
+                        break;
+                    default:
+                        break;
+                }
             }
         }
         else
         {
-            //newVelocity.Set(0, 0);
-            //rb.velocity = newVelocity;
+            // do nothing
         }
         if (invincibilityCount > 0)
         {
@@ -163,24 +167,27 @@ public class EnemyController : MonoBehaviour, IDamageable
         else { spriteRenderer.enabled = true; }
     }
 
-    public void Hit(int attackDamage, Vector3 playerPosition, string statusEffect)
+    public void Hit(int attackDamage, Vector3 playerPosition, string statusEffect, EnemyController enemyController)
     {
         if (!isDead)
         {
-            if (invincibilityCount == 0)
+            if(enemyController == this || enemyController == null) // latter condition is used by PlayerPrimaryWeapon
             {
-                //rb.AddForce(new Vector2(5.0f * facingDirection, 5.0f), ForceMode2D.Impulse);
-                damageInterupt = true; //might have to make change this later //isAttacking = false;
-                invincibilityCount = invincibilitySet;
-                Debug.Log("Hit is being called");
-                if (statusEffect != null) { StatusModifier(statusEffect); }
-                TakeDamage(attackDamage);
-                if (!isDead) { HandleHitPhysics(playerPosition); }
-            }
+                if (invincibilityCount == 0)
+                {
+                    //rb.AddForce(new Vector2(5.0f * facingDirection, 5.0f), ForceMode2D.Impulse);
+                    damageInterupt = true; //might have to make change this later //isAttacking = false;
+                    invincibilityCount = invincibilitySet;
+                    Debug.Log("Hit is being called");
+                    if (statusEffect != null) { StatusModifier(statusEffect); }
+                    TakeDamage(attackDamage);
+                    if (!isDead) { HandleHitPhysics(playerPosition); }
+                }
+            } 
         }
     }
 
-    public void Hit(int attackDamage, Vector3 playerPosition) { Hit(attackDamage, playerPosition, null); }
+    public void Hit(int attackDamage, Vector3 playerPosition) { Hit(attackDamage, playerPosition, null, null); } // used 
 
     //public void Hit(int weaponID, int LevelOfWeapon, Vector3 playerPosition)  
     //{
@@ -188,17 +195,18 @@ public class EnemyController : MonoBehaviour, IDamageable
     //    Hit(weaponID, LevelOfWeapon, playerPosition, statusToPass); 
     //}
 
-    public void Hit(int weaponID, int LevelOfWeapon, Vector3 playerPosition, string statusEffect) 
+    public void Hit(int weaponID, int LevelOfWeapon, Vector3 playerPosition, string statusEffect, EnemyController enemyController) 
     {
         damageToPass = weaponDatabase.GetWeaponDamage(weaponID, LevelOfWeapon);
         statusEffect = weaponDatabase.GetWeaponEffect(weaponID);
-        Hit(damageToPass, playerPosition, statusEffect);
+        Hit(damageToPass, playerPosition, statusEffect, enemyController);
     }
 
     public void StatusModifier(string mod)
     {
         if (mod == "DemonBlood") { if (GetComponentInChildren<Poisoned>() != null) { GetComponentInChildren<Poisoned>().Execute(); } }
         else if (mod == "Burn") { if (GetComponentInChildren<Burnable>() != null) { GetComponentInChildren<Burnable>().Execute(); } }
+        else if (mod == "Stunned") { if (GetComponentInChildren<Stunned>() != null) { GetComponentInChildren<Stunned>().Execute(); } }
     }
 
     public void HandleHitPhysics(Vector3 playerPosition) 

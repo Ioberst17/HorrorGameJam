@@ -55,8 +55,8 @@ public class GroundSlam : MonoBehaviour
             if (CheckIfFinished(DoGroundSlam())) { }
             if(groundSlamStop == true)
             {
-                if(damagableFlag == true) { DamagableSoundAndVFX(); }
-                if (nonDamagableFlag == true) { NonDamagableSoundAndVFX(); }
+                if(damagableFlag == true) { HitDamagableSoundAndVFX(); }
+                if (nonDamagableFlag == true) { HitNonDamagableSoundAndVFX(); }
                 damagableFlag = false; nonDamagableFlag = false;
             }
         }
@@ -107,12 +107,12 @@ public class GroundSlam : MonoBehaviour
     {
         if (groundSlamHits.Count > 0)
         {
-            foreach (Collider2D hit in groundSlamHits) 
-            { if (hit.gameObject.layer == LayerMask.NameToLayer("Enemy") || hit.gameObject.layer == LayerMask.NameToLayer("BreakableEnviro"))
+            foreach (Collider2D hit in groundSlamHits)
+            {
+                if (hit.gameObject.layer == LayerMask.NameToLayer("Enemy") || hit.gameObject.layer == LayerMask.NameToLayer("BreakableEnviro"))
                 { OnHit(hit); Bounce(hit); damagableFlag = true; }
-            }
-            foreach (Collider2D hit in groundSlamHits) 
-            { if (hit.gameObject.layer == LayerMask.NameToLayer("Environment") || hit.gameObject.tag == "Boundary")
+
+                else if (hit.gameObject.layer == LayerMask.NameToLayer("Environment") || hit.gameObject.tag == "Boundary")
                 { OnHit(hit); nonDamagableFlag = true; }
             }
         }
@@ -125,12 +125,12 @@ public class GroundSlam : MonoBehaviour
         return true;
     }
 
-    void DamagableSoundAndVFX()
+    void HitDamagableSoundAndVFX()
     {
         // handle sound and VFX
     }
 
-    void NonDamagableSoundAndVFX()
+    void HitNonDamagableSoundAndVFX()
     {
         FindObjectOfType<AudioManager>().PlaySFX("GroundSlam");
         DetectionSetup();
