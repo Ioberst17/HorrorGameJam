@@ -111,7 +111,7 @@ public class PlayerController : MonoBehaviour
         groundSlam = GetComponentInChildren<GroundSlam>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         dataManager.sessionData.lastKnownWorldLocationX = transform.position.x;
         dataManager.sessionData.lastKnownWorldLocationY = transform.position.y;

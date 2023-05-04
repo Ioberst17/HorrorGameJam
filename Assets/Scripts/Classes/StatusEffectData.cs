@@ -14,6 +14,10 @@ public class StatusEffectData
     public int poisonedDamage = 1;
     public int poisonedDuration = 5;
 
+    // Stunned
+    public int stunnedDuration = 3;
+
+
     public StatusEffectData()
     {
     }

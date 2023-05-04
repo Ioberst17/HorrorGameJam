@@ -43,6 +43,7 @@ public class AudioManager : MonoBehaviour
         
 
         if (SceneManager.GetActiveScene().buildIndex == 0) { PlayTheme("Title Theme"); SetThemeVolume(); }
+        else if (SceneManager.GetActiveScene().name == "CombatMode") { PlayTheme("Scene 2 Theme"); SetThemeVolume(); }
         else
         {
             string themeToPlay = "Scene " + SceneManager.GetActiveScene().buildIndex.ToString() + " Theme";

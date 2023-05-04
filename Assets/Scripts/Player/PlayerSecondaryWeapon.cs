@@ -17,7 +17,7 @@ public class PlayerSecondaryWeapon : MonoBehaviour
     private float projectileSpawnOffset = 0f; // distance from weaponSprite and projectile generation
     private float projectileXOffset;
     private float projectileYOffset;
-    public int ammoSpeed = 500;
+    public int ammoSpeed;
     private int ammoGravity = 0;
 
     [Header("Weapon Settings")]
@@ -84,7 +84,7 @@ public class PlayerSecondaryWeapon : MonoBehaviour
     }
 
     // Update is called once per frame, used mainly for weapon direction
-    void Update()
+    void FixedUpdate()
     {
         HandleWeaponDirection();
         HandleThrowing();

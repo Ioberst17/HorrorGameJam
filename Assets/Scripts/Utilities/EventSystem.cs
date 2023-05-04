@@ -12,13 +12,13 @@ public class EventSystem : MonoBehaviour
 
     // COMBAT-CALCULATIONS (WITH ENEMIES)
 
-    public event Action<int, Vector3, string> onEnemyEnviroDamage;
-    public void EnemyEnviroDamage(int damage, Vector3 position, string statusModifier)
-    { { if (onEnemyEnviroDamage != null) { onEnemyEnviroDamage(damage, position, statusModifier); } } }
+    public event Action<int, Vector3, string, EnemyController> onEnemyEnviroDamage;
+    public void EnemyEnviroDamage(int damage, Vector3 position, string statusModifier, EnemyController enemyController)
+    { { if (onEnemyEnviroDamage != null) { onEnemyEnviroDamage(damage, position, statusModifier, enemyController); } } }
 
-    public event Action<int, int, Vector3, string> onEnemyHitCollision;
-    public void AttackHitTrigger(int weaponID, int weaponLevel, Vector3 position, string statusModifier)
-    { { if (onEnemyHitCollision != null) { onEnemyHitCollision(weaponID, weaponLevel, position, statusModifier); } } }
+    public event Action<int, int, Vector3, string, EnemyController> onEnemyHitCollision;
+    public void EnemyHitTrigger(int weaponID, int weaponLevel, Vector3 position, string statusModifier, EnemyController enemyController)
+    { { if (onEnemyHitCollision != null) { onEnemyHitCollision(weaponID, weaponLevel, position, statusModifier, enemyController); } } }
 
     public event Action<int, int> onWaveFinished;
 

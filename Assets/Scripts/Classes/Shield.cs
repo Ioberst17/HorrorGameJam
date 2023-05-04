@@ -41,9 +41,6 @@ public class Shield : MonoBehaviour
         CheckObjectType();
     }
 
-    // Update is called once per frame
-    public virtual void Update()  { }
-
     private void OnTriggerEnter2D(Collider2D collision) { DamageHandler(collision);}
 
     public void DamageHandler(Collider2D collision)

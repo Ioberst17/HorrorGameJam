@@ -15,6 +15,7 @@ public class StatusEffect : MonoBehaviour
     // should be filled in the child Status Effect
     public float effectDuration;
     public int damageToPass;
+    public bool affectsMovement;
     
     public SpriteRenderer spriteRenderer;
     public Animator animator;
@@ -24,13 +25,14 @@ public class StatusEffect : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+
         TryGetComponent(out particles);
         spriteRenderer.enabled = false;
     }
 
     public virtual void Execute() { applyStatusEffect = true; }
 
-    public virtual void Update()
+    public virtual void FixedUpdate()
     {
         if (applyStatusEffect)
         {
@@ -52,13 +54,14 @@ public class StatusEffect : MonoBehaviour
 
     public virtual void AffectMovement()
     {
-        if (gameObject.GetComponentInParent<EnemyController>() != null) { /*gameObject.GetComponentInParent<EnemyController>().AffectMovement();*/ }
+        if (GetComponentInParent<EnemyController>() != null  && affectsMovement) 
+        { GetComponentInParent<EnemyController>().isStunned = true; }
         //else if (gameObject.layer == LayerMask.NameToLayer("Player")) { // affect movement }
     }
 
     public virtual void TakeDamage(int damage)
     {
-        if (gameObject.GetComponentInParent<EnemyController>() != null) { gameObject.GetComponentInParent<EnemyController>().TakeDamage(damage); }
+        if (GetComponentInParent<EnemyController>() != null) { GetComponentInParent<EnemyController>().TakeDamage(damage); }
         //else if (gameObject.layer == LayerMask.NameToLayer("Player")) { gameObject.GetComponent<PlayerHealth>().TakeDamage(damage); }
     }
 

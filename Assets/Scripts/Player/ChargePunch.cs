@@ -61,7 +61,7 @@ public class ChargePunch : MonoBehaviour
 
     public void Release(int attackDirection) { this.attackDirection = attackDirection; isCharging = false; ReleasePunch(); }
 
-    void Update()
+    void FixedUpdate()
     {
         if (isCharging)
         {
