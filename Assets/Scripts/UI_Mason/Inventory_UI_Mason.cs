@@ -152,58 +152,56 @@ public class Inventory_UI_Mason : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ToggleUI()
     {
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (inventoryOpen)
         {
-            if (inventoryOpen)
+            CloseInventory();
+            //Time.timeScale = 1.0f; // resumes time in game
+            if (gameController.isPaused)
             {
-                CloseInventory();
-                //Time.timeScale = 1.0f; // resumes time in game
-                if (gameController.isPaused)
-                {
-                    gameController.pauseHandler();
-                }
-                
-            }
-            else
-            {
-                OpenInventory();
-                //Time.timeScale = 0f; // pauses time game still a slight bug with the player being able to queue attacks and audio still playing when clicking around.
-                if (!gameController.isPaused)
-                {
-                    gameController.pauseHandler();
-                }
+                gameController.pauseHandler();
             }
 
-            for (int i = 0; i < dataManager.sessionData.primaryWeapons.Count; i++)
-            {
-                meleeSlots[i].SetActive(true); //turn on inventory slots for melee weapons the player has in their inventory.
-
-                //Debug.Log("weapon=" + dataManager.sessionData.primaryWeapons[i].id + " /n");
-            }
-
-            for (int i = 0; i < dataManager.sessionData.secondaryWeapons.Count; i++)
-            {
-                rangedSlots[i].SetActive(true); //turn on inventory slots for ranged weapons the player has in their inventory.
-
-                rangedAmmoNumbers[i].text = dataManager.sessionData.secondaryWeapons[i].ammo.ToString();
-
-                //Debug.Log(" rangedweapon=" + dataManager.sessionData.secondaryWeapons[i].id + " /n");
-            }
-
-            for (int i = 0; i < dataManager.sessionData.consumables.Count; i++)
-            {
-                consumableSlots[i].SetActive(true); // turn on inventory slots for consumables the player has in their inventory.
-
-                consumableCount[i].text = dataManager.sessionData.consumables[i].amount.ToString(); //update the amount of consumable per item.
-
-                //Debug.Log("consumable=" + dataManager.sessionData.consumables[i].id + " /n");
-            }
-
-            
         }
+        else
+        {
+            OpenInventory();
+            //Time.timeScale = 0f; // pauses time game still a slight bug with the player being able to queue attacks and audio still playing when clicking around.
+            if (!gameController.isPaused)
+            {
+                gameController.pauseHandler();
+            }
+        }
+
+        for (int i = 0; i < dataManager.sessionData.primaryWeapons.Count; i++)
+        {
+            meleeSlots[i].SetActive(true); //turn on inventory slots for melee weapons the player has in their inventory.
+
+            //Debug.Log("weapon=" + dataManager.sessionData.primaryWeapons[i].id + " /n");
+        }
+
+        for (int i = 0; i < dataManager.sessionData.secondaryWeapons.Count; i++)
+        {
+            rangedSlots[i].SetActive(true); //turn on inventory slots for ranged weapons the player has in their inventory.
+
+            rangedAmmoNumbers[i].text = dataManager.sessionData.secondaryWeapons[i].ammo.ToString();
+
+            //Debug.Log(" rangedweapon=" + dataManager.sessionData.secondaryWeapons[i].id + " /n");
+        }
+
+        for (int i = 0; i < dataManager.sessionData.consumables.Count; i++)
+        {
+            consumableSlots[i].SetActive(true); // turn on inventory slots for consumables the player has in their inventory.
+
+            consumableCount[i].text = dataManager.sessionData.consumables[i].amount.ToString(); //update the amount of consumable per item.
+
+            //Debug.Log("consumable=" + dataManager.sessionData.consumables[i].id + " /n");
+        }
+    }
+
+    private void Update() 
+    { 
         if(!gameController.isPaused && inventoryOpen)
         {
             CloseInventory();

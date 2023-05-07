@@ -117,7 +117,7 @@ public class ChargePunch : MonoBehaviour
     void FinishSound() { FindObjectOfType<AudioManager>().PlaySFX("ChargePunch2"); falconSFXFlag = false; sfxPlayTime = 0; falconSFXPlaying = false; }
 
     private void HandleChargeVFX() 
-    { 
+    {
         if (chargeTime > 0.2f) 
         {
             EventSystem.current.StartChargedAttackTrigger(holdTimeNormalized, gameObject.transform, null);
@@ -142,11 +142,11 @@ public class ChargePunch : MonoBehaviour
     void ReleasePunch()
     {
         playerPrimaryWeapon.damageToPass = playerPrimaryWeapon.minDamage + damageToPass;
-        StartCoroutine(playerPrimaryWeapon.AttackActiveFrames(attackDirection));
         isCharging = false;
         chargeTime = 0;
         HandleFinishSound();
         ParticleSystemsOn(false); GlowOn(false);
+        StartCoroutine(playerPrimaryWeapon.AttackActiveFrames(attackDirection));
         //Instantiate(punchEffect, transform.position, Quaternion.identity);
         EventSystem.current.FinishChargedAttackTrigger();
     }

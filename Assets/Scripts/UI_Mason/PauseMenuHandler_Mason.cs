@@ -18,22 +18,6 @@ public class PauseMenuHandler_Mason : MonoBehaviour
     {
         gameController = GameObject.Find("GameController").GetComponent<GameController>();
     }
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (gameController.isPaused)
-            {
-                Resume();
-            }
-            else
-            {
-                Pause();
-            }
-        }
-        
-    }
     private void LateUpdate()
     {
         if (!gameController.isPaused && pauseMenu.activeSelf)
@@ -48,6 +32,12 @@ public class PauseMenuHandler_Mason : MonoBehaviour
         pauseMenu.SetActive(false);
         controlsMenu.SetActive(false);
         //Time.timeScale = 1.0f;
+    }
+
+    public void TogglePauseUI()
+    {
+        if (gameController.isPaused) { Resume(); }
+        else { Pause(); }
     }
 
     void Pause()

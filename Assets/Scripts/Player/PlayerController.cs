@@ -37,6 +37,7 @@ public class PlayerController : MonoBehaviour
 
     private Animator animator;
     private PlayerParticleSystems visualEffects;
+    private PlayerPrimaryWeapon playerPrimaryWeapon;
 
     //all related to dash functionality and tracking. 
     public bool canDash;
@@ -59,7 +60,7 @@ public class PlayerController : MonoBehaviour
     //used to calculate "control interta"
     public float ControlMomentum;
 
-    public bool isGrounded;
+    [SerializeField] private bool _isGrounded; public bool IsGrounded { get; set; }
     //private bool isOnSlope;
     private bool isJumping;
     public bool isDashing;
@@ -96,6 +97,7 @@ public class PlayerController : MonoBehaviour
 
         rb = GetComponent<Rigidbody2D>();
         cc = GetComponent<BoxCollider2D>();
+        playerPrimaryWeapon = FindObjectOfType<PlayerPrimaryWeapon>();
         MP = StartingMP;
         SP_MAX = 100;
         SP = SP_MAX;
@@ -115,6 +117,7 @@ public class PlayerController : MonoBehaviour
     {
         dataManager.sessionData.lastKnownWorldLocationX = transform.position.x;
         dataManager.sessionData.lastKnownWorldLocationY = transform.position.y;
+        isCharging = playerPrimaryWeapon.isCharging;
     }
 
     //Does anything in the environment layer overlap with the circle while not on the way up
@@ -122,12 +125,12 @@ public class PlayerController : MonoBehaviour
     {
         if (rb.velocity.y == 0.0f)
         {
-            isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, whatIsGround);
+            _isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, whatIsGround);
             //Debug.Log("isgrounded " + rb.velocity.y);
         }
         else 
         {
-            isGrounded = false;
+            _isGrounded = false;
             if (!isJumping && !isCharging)
             {
                     animator.Play("PlayerFall");
@@ -148,7 +151,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (isGrounded && !isJumping)
+        if (_isGrounded && !isJumping)
         {
             canJump = true;
             canWallJump = true;
@@ -158,7 +161,6 @@ public class PlayerController : MonoBehaviour
                 canDash = true;
             }
         }
-        GameController.isGrounded = isGrounded;
     }
 
     
@@ -210,10 +212,10 @@ public class PlayerController : MonoBehaviour
     //called by the GameController
     public void ApplyMovement()
     {
-        if(groundSlam.isGroundSlam == true) { SetVelocity(0, rb.velocity.y); }
-        else if (!playerHealth.inHitStun && !isDashing && !isCharging)
+        if(groundSlam.IsGroundSlam == true) { SetVelocity(0, rb.velocity.y); }
+        if (!playerHealth.inHitStun && !isDashing && !isCharging)
         {
-            if (isGrounded && !isJumping) //if on ground
+            if (_isGrounded && !isJumping) //if on ground
             {
 
                 newVelocity.Set(movementSpeed * ControlMomentum/10, rb.velocity.y);
@@ -225,7 +227,7 @@ public class PlayerController : MonoBehaviour
                         SetVelocity();
                         if(GameController.xInput == 0)
                         {
-                            animator.Play("PlayerIdle");
+                            animator.Play("PlayerIdle"); 
                         }
                     }
                     else
@@ -236,7 +238,7 @@ public class PlayerController : MonoBehaviour
                 }
 
             }
-            else if (!isGrounded) //If in air
+            else if (!_isGrounded) //If in air
             {
                 newVelocity.Set(movementSpeed * ControlMomentum/10, rb.velocity.y);
                 rb.velocity = newVelocity;
@@ -244,16 +246,22 @@ public class PlayerController : MonoBehaviour
         }
         else if (isCharging)
         {
-            animator.Play("PlayerCharge");
+            if (CheckIfAnimationIsPlaying("PlayerBasicAttack")){ }
+            else { animator.Play("PlayerCharge"); } 
         }
     }
-    private Vector3 GetNormalizedMouseDirectionFromPlayer()
+
+    bool CheckIfAnimationIsPlaying(string animationName) 
     {
-        Vector3 mousePos = Input.mousePosition;
-        Vector3 playerPos = mainCam.GetComponent<Camera>().WorldToScreenPoint(transform.position);
-        Vector3 direction = mousePos - playerPos;
-        direction = direction.normalized;
-        return direction;
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        if(stateInfo.IsName(animationName) && stateInfo.normalizedTime < 1.0f) { return true; } // if the current state is that animation, and it's normalized play time is less than 1, it's in play
+        return false;
+    }
+
+    public Vector3 GetNormalizedMouseDirectionFromPlayer()
+    {
+        Vector3 direction = GameController.lookInput - GameController.playerPositionScreen;
+        return direction.normalized; 
     }
 
 
@@ -313,7 +321,6 @@ public class PlayerController : MonoBehaviour
         transform.Rotate(0.0f, 180.0f, 0.0f);
     }
 
-    //processes if the player should take damage, and if so, how much, then calculates for death. damageType Numbers: 0 is one hit damage, 1 is damage over time. 
     //Calculated direction of hit for knockback direction.
     public void Hit(Vector3 enemyPos, float knockbackMod)
     {

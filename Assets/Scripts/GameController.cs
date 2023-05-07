@@ -1,82 +1,176 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
+using System.Net.Http;
+//using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.Animations;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Interactions;
 
 public class GameController : MonoBehaviour
 {
     private DataManager dataManager;
-    [SerializeField]
-    private PlayerController PlayerController;
+
+    // Player Related
+    [SerializeField] private PlayerController playerController;
     private PlayerHealth playerHealth;
     private PlayerShield playerShield;
-    [SerializeField]
-    private PlayerSkills playerSkills;
-    [SerializeField]
-    private PlayerPrimaryWeapon playerPrimaryWeapon;
-    [SerializeField]
-    private PlayerSecondaryWeapon playerSecondaryWeapon;
-    [SerializeField]
-    private MusicController MusicController;
-    [SerializeField]
-    private UIController UIController;
-    private EnemyController EnemyController;
-    [SerializeField]
-    private CameraBehavior CameraBehavior;
-    [SerializeField]
-    private EnemyCreationForTesting enemySpawner;
+    [SerializeField] private PlayerSkills playerSkills;
+    [SerializeField] private PlayerPrimaryWeapon playerPrimaryWeapon;
+    [SerializeField] private PlayerSecondaryWeapon playerSecondaryWeapon;
+    [SerializeField] private UIController UIController;
 
+    // Interactable Objects In Scene
+    private Door_Script[] doors;
+    private DialogueTrigger[] dialogueTriggers;
+
+    // Other
+    [SerializeField] private CameraBehavior CameraBehavior;
+    [SerializeField] private EnemyCreationForTesting enemySpawner;
+    public Camera cameraToUse; 
+
+    // Trackers for states
     public string gameState;
     public bool isPaused;
-    public float xInput;
-    public float yInput;
-    public bool isGrounded;
+
     private bool pauseHelper;
-    public bool AttackButton;
-    public bool ShootButton;
-    public bool JumpButton;
-    public bool DashButton;
+
+    // simpler button state trackers
+    public bool InteractButton, JumpButton, DashButton, ShieldButton;
+    private bool pauseButtonDown;
+
+    // need to track more due to hold interaction
+    public bool AttackButtonDown, AttackButtonHeld, AttackButtonRelease;
+    public bool ShootButtonDown, ShootButtonHeld, ShootButtonRelease;
+
     public int AttackBuffer;
     public int ShootBuffer;
     public int JumpBuffer;
     public int DashBuffer;
 
-    private bool pauseButtonDown;
-    
+    // Stores analog information for other functions
+    public float xInput, yInput;
+    public Vector2 lookInput, lookInputScreen, lookInputWorld; // raw unprocessed input, relative to screen position, and relative to world position
+    public Vector2 playerPosition, playerPositionScreen, playerPositionWorld; // relative differences are used to get rotations via vectors
+
+    // New Input System Asset
+    public PlayerInput playerInput;
+    public PlayerControls playerControls;
+
+    // Gameplay Actions from InputSystemAsset
+    private PlayerControls.PlayerActions playerActions;
+    private InputAction move, look, interact, attack, fire, jump, dash, shield, changeWeaponRight, changeWeaponLeft, useHealthPack, currentWeaponAmmoAdd;
+
+    // UI Actions from Input SystemAsset
+    private InputAction pause;
+    private InputAction inventory;
+
+
 
     // Start is called before the first frame update
     void Start()
     {
-        AttackBuffer = 0;
-        ShootBuffer = 0;
-        JumpBuffer = 0;
-        DashBuffer = 0;
+        AttackBuffer = 0; ShootBuffer = 0; JumpBuffer = 0; DashBuffer = 0;
 
         dataManager = DataManager.Instance;
         playerSkills = new PlayerSkills();
         LoadPlayerSkills();
 
-        playerHealth = PlayerController.gameObject.GetComponent<PlayerHealth>();
-        playerShield = PlayerController.gameObject.GetComponentInChildren<PlayerShield>();
-        playerPrimaryWeapon = PlayerController.GetComponentInChildren<PlayerPrimaryWeapon>();
-        playerSecondaryWeapon = PlayerController.GetComponentInChildren<PlayerSecondaryWeapon>();
+        playerController = FindObjectOfType<PlayerController>();
+        playerHealth = playerController.gameObject.GetComponent<PlayerHealth>();
+        playerShield = playerController.gameObject.GetComponentInChildren<PlayerShield>();
+        playerPrimaryWeapon = playerController.GetComponentInChildren<PlayerPrimaryWeapon>();
+        playerSecondaryWeapon = playerController.GetComponentInChildren<PlayerSecondaryWeapon>();
+        doors = FindObjectsOfType<Door_Script>();
+        dialogueTriggers = FindObjectsOfType<DialogueTrigger>();
+        cameraToUse = FindObjectOfType<Camera>();
         playerSkills.UnlockAllSkills();
 
         //EventSystem.current.onSkillUnlock += UnlockSkill;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnEnable()
     {
-        /*if (DialogueManager.GetInstance().dialogueIsPlaying)
-        {
-            return;
-        }*/
+        // Make a reference to the version of the InputActionAsset
+        playerInput = FindObjectOfType<PlayerInput>();
+        playerControls = new PlayerControls();
 
-        CheckInput();
-        if (Input.GetKeyDown(KeyCode.M)) { SavePlayerSkills(); }
+        // Get References
+        playerActions = playerControls.Player;
+        move = playerActions.Move;
+        look = playerActions.Look;
+        interact = playerActions.Interact;
+        attack = playerActions.PrimaryWeapon;
+        fire = playerActions.SecondaryWeapon;
+        jump = playerActions.Jump;
+        shield = playerActions.Shield;
+        dash = playerActions.Dash;
+        changeWeaponRight = playerActions.ChangeSecondaryRight;
+        changeWeaponLeft = playerActions.ChangeSecondaryLeft;
+        currentWeaponAmmoAdd = playerActions.AmmoAdd;
+        useHealthPack = playerActions.UseHealthPack;
+        pause = playerControls.UI.Pause;
+        inventory = playerControls.UI.Inventory;
+
+        // Enable moves and subscribe to any additional button events necessary
+        move.Enable();
+        look.Enable();
+        interact.Enable();
+
+        // Both attack and fire have more complex button patterns e.g. "Slow Tap" (used for mechanics that require hold); hence, the need to subscribe to events
+        // Reference for when events are fired, based on which interaction they are: https://docs.unity.cn/Packages/com.unity.inputsystem@1.3/manual/Interactions.html
+        // We are using the 'Slow Tap' interaction to see when the player has started holding a key 'started' and released it 'performed'
+        // Otherwise, default button and value interactions are used
+
+        attack.Enable();
+        attack.performed += ctx => { CheckAttackInputEvents(ctx, "Performed"); };
+        attack.started += ctx => { CheckAttackInputEvents(ctx, "Started"); };
+        attack.canceled += ctx => { CheckAttackInputEvents(ctx, "Canceled"); };
+
+        fire.Enable();
+        fire.performed += ctx => { CheckFireInputEvents(ctx, "Performed"); };
+        fire.started += ctx => { CheckFireInputEvents(ctx, "Started"); };
+        fire.canceled += ctx => { CheckFireInputEvents(ctx, "Canceled"); };
+
+        jump.Enable(); 
+        shield.Enable();
+        dash.Enable();
+        changeWeaponRight.Enable();
+        changeWeaponLeft.Enable();
+        useHealthPack.Enable();
+        currentWeaponAmmoAdd.Enable();
+        pause.Enable();
+        inventory.Enable();
     }
+
+    private void OnDisable() 
+    {
+        move.Disable();
+        look.Disable();
+        interact.Disable();
+
+        attack.Disable();
+        attack.performed -= ctx => { CheckAttackInputEvents(ctx, "Performed"); };
+        attack.started -= ctx => { CheckAttackInputEvents(ctx, "Started"); };
+        attack.canceled -= ctx => { CheckAttackInputEvents(ctx, "Canceled"); };
+
+        fire.Disable();
+        fire.performed -= ctx => { CheckFireInputEvents(ctx, "Performed"); };
+        fire.started -= ctx => { CheckFireInputEvents(ctx, "Started"); };
+        fire.canceled -= ctx => { CheckFireInputEvents(ctx, "Canceled"); };
+        
+        jump.Disable(); 
+        shield.Disable();
+        dash.Disable();
+        changeWeaponRight.Disable();
+        changeWeaponLeft.Disable();
+        useHealthPack.Disable();
+        currentWeaponAmmoAdd.Disable();
+        pause.Disable();
+        inventory.Disable();
+    }
+
+    // Update is called once per frame
+    void Update() { CheckInput(); }
 
     private void UnlockSkill(PlayerSkills.SkillType skill) { playerSkills.UnlockSkill(skill); }
 
@@ -99,261 +193,239 @@ public class GameController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        PlayerController.CheckGround();
-        PlayerController.CheckWall();
+        playerController.CheckGround();
+        playerController.CheckWall();
         CalculateInputs();
-        if (!PlayerController.isDashing)
-        {
-            PlayerController.ApplyMovement();
-        }
+        if (!playerController.isDashing) { playerController.ApplyMovement(); }
     }
 
     public int GetHP() { return playerHealth.HP; }
 
-    public int GetMP() { return PlayerController.MP; }
-    public float GetSP() { return PlayerController.SP; }
+    public int GetMP() { return playerController.MP; }
+    public float GetSP() { return playerController.SP; }
 
-    public void CheckInput()
+    void GetMovementAndAnalogInputs()
     {
-        if ((Input.GetKeyDown(KeyCode.Escape)) && gameState != "Starting")
+        xInput = move.ReadValue<Vector2>().x;
+        yInput = move.ReadValue<Vector2>().y;
+        lookInput = look.ReadValue<Vector2>(); // used by Gamepad
+        lookInputScreen = cameraToUse.WorldToScreenPoint(lookInput); 
+        lookInputWorld = cameraToUse.ScreenToWorldPoint(lookInput);
+        playerPositionScreen = cameraToUse.WorldToScreenPoint(playerController.transform.position);
+        playerPositionWorld = cameraToUse.ScreenToWorldPoint(playerController.transform.position);
+        playerPosition = playerController.transform.position;
+    }
+
+
+    void CheckAttackInputEvents(InputAction.CallbackContext ctx, string check) // NOTE: THESE ARE EVENTS AND FIRE AS INITIALIZED IN OnEnable(), THEREFORE THEY ARE NOT IN CheckInput()
+    {
+        if ("Started" == check) { if (ctx.interaction is SlowTapInteraction) { AttackButtonHeld = true; } else { AttackButtonDown = true; } }
+        if ("Performed" == check) { if (ctx.interaction is SlowTapInteraction) { AttackButtonHeld = false; AttackButtonRelease = true; } }// weapon has fired after hold }
+        if ("Cancelled" == check) { AttackButtonHeld = false; AttackButtonRelease = true; }
+    }
+
+    void CheckFireInputEvents(InputAction.CallbackContext ctx, string check) // NOTE: THESE ARE EVENTS AND FIRE AS INITIALIZED IN OnEnable(), THEREFORE THEY ARE NOT IN CheckInput()
+    {
+        if ("Started" == check) { if (ctx.interaction is SlowTapInteraction) { ShootButtonHeld = true; } ShootButtonDown = true; }
+        if ("Performed" == check) { if (ctx.interaction is SlowTapInteraction) { ShootButtonHeld = false; ShootButtonRelease = true; } }// weapon has fired after hold }
+        if ("Cancelled" == check)  { ShootButtonHeld = false; ShootButtonRelease = true; }
+    }
+
+    public void CheckInput() // CALLED IN UPDATE TO GET INPUTS AND UPDATE BUTTONS FOR CalcInputs()
+    {
+        if (pause.triggered && gameState != "Starting")
         {
-            Debug.Log("esc");
+            FindObjectOfType<PauseMenuHandler_Mason>().TogglePauseUI();
             pauseHandler();
         }
         if (!isPaused)
         {
-            xInput = Input.GetAxisRaw("Horizontal");
-            yInput = Input.GetAxisRaw("Vertical");
-            //Debug.Log(xInput);
+            GetMovementAndAnalogInputs();
 
-            if (Input.GetButtonDown("Jump") || Input.GetKeyDown("up")) //|| Input.GetKeyDown(KeyCode.W))
+            if (interact.triggered) { InteractButton = true; }
+
+            if (jump.triggered) { JumpButton = true; }
+            if (jump.WasReleasedThisFrame()) { JumpButton = false; JumpBuffer = 0; }
+
+            if (attack.WasReleasedThisFrame()) // if attack is released
             {
-                JumpButton = true;
-            }
-            if (Input.GetButtonUp("Jump") || Input.GetKeyUp("up")) //|| Input.GetKeyDown(KeyCode.W))
-            {
-                JumpButton = false;
-                JumpBuffer = 0;
-            }
-            if (/*Input.GetButtonDown("Fire1") ||*/ Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.U)) // if attack is triggered
-            {
-                AttackButton = true;
-            }
-            if (/*Input.GetButton("Fire1") ||*/ Input.GetMouseButton(0) || Input.GetKeyDown(KeyCode.U)) // if attack is triggered
-            {
-                AttackButton = true;
-            }
-            if (/*Input.GetButtonUp("Fire1") ||*/ Input.GetMouseButtonUp(0) ||Input.GetKeyUp(KeyCode.U)) // if attack is released
-            {
-                AttackButton = false;
+                AttackButtonDown = false;
+                AttackButtonRelease = true;
                 AttackBuffer = 0;
             }
-            if (/*Input.GetButtonDown("Fire2") ||*/ Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.Y)) // if shoot is triggered
-            {
-                ShootButton = true;
-            }
-            if (/*Input.GetButtonUp("Fire2") ||*/ Input.GetMouseButtonUp(1) || Input.GetKeyUp(KeyCode.Y)) // if shoot is released
-            {
-                ShootButton = false;
-                ShootBuffer = 0;
-                EventSystem.current.WeaponStopTrigger();
-            }
-            if (/*Input.GetButtonDown("Dash") ||*/ Input.GetKeyDown(KeyCode.I) || Input.GetKeyDown(KeyCode.LeftShift)) // if dash is triggered
-            {
-                DashButton = true;
-            }
-            if (/*Input.GetButtonUp("Dash") || */ Input.GetKeyUp(KeyCode.I) || Input.GetKeyUp(KeyCode.LeftShift)) // if dash is released
+
+            if (dash.triggered) { DashButton = true; }
+            if (dash.WasReleasedThisFrame()) // if dash is released
             {
                 DashButton = false;
                 DashBuffer = 0;
             }
 
 
-            if ((Input.GetButtonDown("Jump") || Input.GetKeyDown("up")) && hasJump()) //|| Input.GetKeyDown(KeyCode.W))
-            {
-                PlayerController.Jump();
-            }
-            if (/*Input.GetKey("Fire2") || Input.GetKeyDown("Fire1") || */ Input.GetMouseButton(1) || Input.GetMouseButtonDown(0)) // if either attack or shoot is triggered
-            {
-                //Debug.Log("attack called");
-                if (Input.GetKey(KeyCode.W) || Input.GetKey("up"))
-                {
-                    if (Input.GetMouseButtonDown(0)) // melee attack if U
-                    { 
-                        playerPrimaryWeapon.Attack(0);
-                    } 
-                    if (/*Input.GetKey("Fire2") || */ Input.GetMouseButton(1)) { EventSystem.current.AmmoCheckTrigger(1); } // shoot if Y, same logic used in below branches
-                }
-                else if((Input.GetKey(KeyCode.S) || Input.GetKey("down")) && !isGrounded){
-                    if (Input.GetMouseButtonDown(0)) 
-                    {
-                        playerPrimaryWeapon.Attack(1);
-                    }
-                    if (/*Input.GetKey("Fire2") || */ Input.GetMouseButton(1)) { EventSystem.current.AmmoCheckTrigger(-1); }
-                }
-                else
-                {
-                    if (Input.GetMouseButtonDown(0)) 
-                    {
-                        playerPrimaryWeapon.Attack(2);
-                    }
-                    if (/*Input.GetKeyUp("Fire2") ||*/ Input.GetMouseButton(1)) { EventSystem.current.AmmoCheckTrigger(0); }
-                }
-            }
+            if (jump.triggered && hasJump()) { playerController.Jump(); }
 
-            if (/*Input.GetKeyUp("Fire2") || Input.GetKey("PrimaryWeapon") || */ Input.GetMouseButtonUp(1) || Input.GetMouseButtonUp(0)) // if either attack or shoot is released
-            {
-                //Debug.Log("attack called");
-                if (Input.GetKey(KeyCode.W) || Input.GetKey("up"))
-                {
-                    if (AttackButton == false) // melee attack if U
-                    {
-                        playerPrimaryWeapon.Release(0);
-                    }
-                    if (/* Input.GetKey("Fire2") ||*/ Input.GetMouseButton(1)) { EventSystem.current.AmmoCheckTrigger(1); } // shoot if Y, same logic used in below branches
-                }
-                else if ((Input.GetKey(KeyCode.S) || Input.GetKey("down")) && !isGrounded)
-                {
-                    if (AttackButton == false)
-                    {
-                        playerPrimaryWeapon.Release(1);
-                    }
-                    if (/*Input.GetKey("Fire2") ||*/ Input.GetMouseButton(1)) { EventSystem.current.AmmoCheckTrigger(-1); }
-                }
-                else
-                {
-                    if (AttackButton == false)
-                    {
-                        playerPrimaryWeapon.Release(2);
-                    }
-                    if (/*Input.GetKey("Fire2") ||*/ Input.GetMouseButton(1)) { EventSystem.current.AmmoCheckTrigger(0); }
-                }
-            }
-
-            if (/*Input.GetKeyUp("Fire2") ||*/ Input.GetMouseButtonUp(1)) { EventSystem.current.WeaponStopTrigger(); }
-            if (hasDash()) { if (/*Input.GetKeyDown("Shield") ||*/ Input.GetKeyDown(KeyCode.LeftShift)) { PlayerController.Dash(); } }
+            if (fire.WasReleasedThisFrame()) { EventSystem.current.WeaponStopTrigger(); }
 
             if (hasBlock())
             {
-                if (/* Input.GetKeyDown("Shield") || */ Input.GetKeyDown(KeyCode.F)) { playerShield.ShieldButtonDown(); }
-                if (/*Input.GetKey("Shield") || */ Input.GetKey(KeyCode.F)) { playerShield.ShieldButtonHeld(); }
-                if (/*Input.GetKeyUp("Shield") || */ Input.GetKeyUp(KeyCode.F)) { playerShield.ShieldButtonUp(); }
+                if (shield.triggered) { playerShield.ShieldButtonDown(); }
+                if (shield.ReadValue<float>() > 0f) { playerShield.ShieldButtonHeld(); }
+                if (shield.WasReleasedThisFrame()) { playerShield.ShieldButtonUp(); }
             }
 
+            // NOTE: Keyboard only commands are listed as they are primarily testing related; they don't exist in the controller input map
+
             // For Spawns
-            if (Input.GetKeyDown(KeyCode.Alpha1)) { enemySpawner.SpawnEnemy(0); };
-            if (Input.GetKeyDown(KeyCode.Alpha2)) { enemySpawner.SpawnEnemy(1); };
-            if (Input.GetKeyDown(KeyCode.Alpha3)) { enemySpawner.SpawnEnemy(2); };
-            if (Input.GetKeyDown(KeyCode.Alpha4)) { enemySpawner.SpawnEnemy(3); };
-            if (Input.GetKeyDown(KeyCode.Alpha5)) { enemySpawner.SpawnEnemy(4); };
-            if (Input.GetKeyDown(KeyCode.Alpha6)) { enemySpawner.SpawnEnemy(5); };
-            if (Input.GetKeyDown(KeyCode.Alpha7)) { enemySpawner.SpawnEnemy(6); };
+            if (Keyboard.current.digit1Key.wasPressedThisFrame) { enemySpawner.SpawnEnemy(0); };
+            if (Keyboard.current.digit2Key.wasPressedThisFrame) { enemySpawner.SpawnEnemy(1); };
+            if (Keyboard.current.digit3Key.wasPressedThisFrame) { enemySpawner.SpawnEnemy(2); };
+            if (Keyboard.current.digit4Key.wasPressedThisFrame) { enemySpawner.SpawnEnemy(3); };
+            if (Keyboard.current.digit5Key.wasPressedThisFrame) { enemySpawner.SpawnEnemy(4); };
+            if (Keyboard.current.digit6Key.wasPressedThisFrame) { enemySpawner.SpawnEnemy(5); };
+
+            // For Inventory
+            if (currentWeaponAmmoAdd.triggered) { EventSystem.current.WeaponAddAmmoTrigger(100); }
+            if (changeWeaponLeft.triggered) { EventSystem.current.WeaponChangeTrigger(-1); }
+            if (changeWeaponRight.triggered) { EventSystem.current.WeaponChangeTrigger(1); }
+            if (useHealthPack.triggered) { FindObjectOfType<PlayerData_UI_Mason>().UseHealthPack(); } // To-Do: move this function to a more apt script vs in a UI script
+
+            // For Inventory
+            if(inventory.triggered) { FindObjectOfType<Inventory_UI_Mason>().ToggleUI(); }
+
+            // Debug Console
+            if (Keyboard.current.backquoteKey.wasPressedThisFrame) { FindObjectOfType<DebugController_Mason>().ToggleDebugConsole(); }
+            if (Keyboard.current.enterKey.wasPressedThisFrame) { FindObjectOfType<DebugController_Mason>().EnterInput(); }
+            
 
         }
     }
     public void CalculateInputs()
     {
-        if (Input.GetKeyDown(KeyCode.F) && hasBlock()) { }
+        if (!isPaused)
+        {
+            CameraRelatedLogic();
+            InteractLogic();
+            JumpLogic();
+            DashLogic();
+            MeleeLogic();
+            ShootLogic();
+            MomentumLogic();
+            FlipLogic();
+        }
+    }
 
-        if (JumpButton && !(JumpBuffer > 5) && hasJump())
+    void CameraRelatedLogic()
+    {
+        // update functions that need camera data
+        playerSecondaryWeapon.HandleWeaponDirection(playerInput.currentControlScheme);
+        CameraBehavior.AdjustCameraDown();
+    }
+
+    void InteractLogic() 
+    { 
+        if (InteractButton) 
         {
-            PlayerController.Jump();
-            ++JumpBuffer;
-        }
-        if (DashButton && !(DashBuffer > 5) && hasDash())
+            InteractButton = false;
+            foreach (Door_Script door in doors) { if(door.playerDetected == true) { door.InteractWithPlayer(); } }
+            foreach (DialogueTrigger dialogue in dialogueTriggers) { dialogue.PlayerInitiatedDialogue(); }
+        } 
+    }
+
+    void JumpLogic() { if (JumpButton && !(JumpBuffer > 5) && hasJump()) { playerController.Jump(); ++JumpBuffer; } }
+
+    void DashLogic() { if (DashButton && !(DashBuffer > 5) && hasDash()) { playerController.Dash(); ++DashBuffer; } }
+
+    void MeleeLogic()
+    {
+        if (AttackButtonDown && !(AttackBuffer > 5))
         {
-            PlayerController.Dash();
-            ++DashBuffer;
-        }
-        if (AttackButton && !(AttackBuffer > 5))
-        {
-            //Debug.Log("attack called");
-            if (yInput > 0.2f)
-            {
-                playerPrimaryWeapon.Attack(0);
-            }
-            else if (yInput < -0.2f && !isGrounded)
-            {
-                playerPrimaryWeapon.Attack(1);
-            }
-            else
-            {
-                playerPrimaryWeapon.Attack(2);
-            }
+            if (yInput > 0.2f) { playerPrimaryWeapon.Attack(0); }
+            else if (yInput < -0.2f) { playerPrimaryWeapon.Attack(1); }
+            else { playerPrimaryWeapon.Attack(2); }
             ++AttackBuffer;
+            AttackButtonDown = false;
         }
-        if (ShootButton && !(ShootBuffer > 5))
+        if (AttackButtonHeld)
         {
-            //Debug.Log("attack called");
-            if (yInput > 0.2f)
-            {
-                EventSystem.current.AmmoCheckTrigger(1);  // shoot if Y, same logic used in below branches
-            }
-            else
-            {
-                EventSystem.current.AmmoCheckTrigger(0);
-            }
-            ++ShootBuffer;
+            if (yInput > 0.2f) { playerPrimaryWeapon.Attack(0); }
+            else if (yInput < -0.2f) { playerPrimaryWeapon.Attack(1); }
+            else { playerPrimaryWeapon.Attack(2); }
         }
-        if (xInput > 0 && PlayerController.ControlMomentum < 10)
+        if(AttackButtonRelease)
         {
-            if (PlayerController.ControlMomentum == 0)
-            {
-                PlayerController.ControlMomentum = 5;
-            }
-            else
-            {
-                PlayerController.ControlMomentum += 1;
-            }
+            if (yInput > 0.2f) { playerPrimaryWeapon.Release(0); }
+            else if (yInput < -0.2f) { playerPrimaryWeapon.Release(1); }
+            else { playerPrimaryWeapon.Release(2); }
+            AttackButtonRelease = false;
+            AttackButtonHeld = false;
+        }
+    }
 
+    void ShootLogic()
+    {
+        if (ShootButtonDown) 
+        { 
+            EventSystem.current.AmmoCheckTrigger();
+            playerSecondaryWeapon.HandleThrowing("Button Clicked", playerInput.currentControlScheme);
+            ShootButtonDown = false;
         }
-        else if (xInput < 0 && PlayerController.ControlMomentum > -10)
+        if (ShootButtonHeld)
         {
-            if (PlayerController.ControlMomentum == 0)
-            {
-                PlayerController.ControlMomentum = -5;
-            }
-            else
-            {
-                PlayerController.ControlMomentum -= 1;
-            }
+            EventSystem.current.AmmoCheckTrigger();
+            playerSecondaryWeapon.HandleThrowing("Button Held", playerInput.currentControlScheme);
+        }
+        else if (ShootButtonRelease)
+        {
+            playerSecondaryWeapon.HandleThrowing("Button Released", playerInput.currentControlScheme);
+            EventSystem.current.WeaponStopTrigger();
+            ShootButtonRelease = false;
+            ShootButtonHeld = false;
+        }
+    }
+
+    void MomentumLogic()
+    {
+        if (xInput > 0 && playerController.ControlMomentum < 10)
+        {
+            if (playerController.ControlMomentum == 0) { playerController.ControlMomentum = 5; }
+            else { playerController.ControlMomentum += 1; }
+        }
+
+        else if (xInput < 0 && playerController.ControlMomentum > -10)
+        {
+            if (playerController.ControlMomentum == 0) { playerController.ControlMomentum = -5; }
+            else { playerController.ControlMomentum -= 1; }
         }
         else if (xInput == 0)
         {
-            if (PlayerController.ControlMomentum > 0)
+            if (playerController.ControlMomentum > 0) { playerController.ControlMomentum -= 1; }
+            else if (playerController.ControlMomentum < 0) { playerController.ControlMomentum += 1; }
+        }
+
+        if (playerController.ControlMomentum > 10) { playerController.ControlMomentum -= 1; }
+        else if (xInput < 0 && playerController.ControlMomentum < -10) { playerController.ControlMomentum += 1; }
+    }
+
+    void FlipLogic()
+    {
+        if(playerInput.currentControlScheme == "Keyboard&Mouse")
+        {
+            if (xInput >= 1 && playerController.facingDirection == -1) { HandleFlipping(); }
+            else if (xInput <= -1 && playerController.facingDirection == 1) { HandleFlipping(); }
+            else if (playerSecondaryWeapon.WeaponIsPointedToTheRight() && playerController.facingDirection == -1) { if (xInput >= 0) { HandleFlipping(); } }
+            else if (!playerSecondaryWeapon.WeaponIsPointedToTheRight() && playerController.facingDirection == 1) { if (xInput <= 0) HandleFlipping(); }
+        }
+
+        else if (playerInput.currentControlScheme == "Gamepad")
+        {
+            if ((xInput >= 0.2 && xInput > 0) && playerController.facingDirection == -1) { HandleFlipping(); } // slight moving right and facing left? Flip
+            else if ((xInput <= -0.2 && xInput < 0) && playerController.facingDirection == 1) { HandleFlipping(); } // slight moving left and facing right? ...
+            else if (xInput == 0) // standing still
             {
-                PlayerController.ControlMomentum -= 1;
-            }
-            else if (PlayerController.ControlMomentum < 0)
-            {
-                PlayerController.ControlMomentum += 1;
+                if (lookInput.x > 0 && playerController.facingDirection == -1) { HandleFlipping(); } // looking right, but facing left? ...
+                else if (lookInput.x < 0 && playerController.facingDirection == 1) { HandleFlipping(); } // looking left, but facing right? ...
             }
         }
-        if (PlayerController.ControlMomentum > 10)
-        {
-            PlayerController.ControlMomentum -= 1;
-        }
-        else if (xInput < 0 && PlayerController.ControlMomentum < -10)
-        {
-            PlayerController.ControlMomentum += 1;
-        }
-        if (xInput >= 1 && PlayerController.facingDirection == -1)
-        {
-            HandleFlipping();
-        }
-        else if (xInput <= -1 && PlayerController.facingDirection == 1)
-        {
-            HandleFlipping();
-        }
-        else if (playerSecondaryWeapon.WeaponIsPointedToTheRight() && PlayerController.facingDirection == -1)
-        {
-            if (xInput >= 0) { HandleFlipping(); }
-        }
-        else if (!playerSecondaryWeapon.WeaponIsPointedToTheRight() && PlayerController.facingDirection == 1)
-        {
-            if (xInput <= 0) HandleFlipping();
-        }
-        PlayerController.isCharging = playerPrimaryWeapon.isCharging;
     }
 
 
@@ -362,43 +434,23 @@ public class GameController : MonoBehaviour
         if (!isPaused)
         {
             Time.timeScale = 0;
-            if (gameState == "starting")
-            {
-                pauseHelper = true;
-            }
-            else
-            {
-                pauseHelper = false;
-            }
+            if (gameState == "starting") { pauseHelper = true; }
+            else { pauseHelper = false; }
             isPaused = true;
         }
         else
         {
             Time.timeScale = 1;
             isPaused = false;
-            if (pauseHelper)
-            {
-                gameState = "starting";
-            }
-            else
-            {
-                gameState = "running";
-            }
+            if (pauseHelper) { gameState = "starting"; }
+            else { gameState = "running"; }
         }
 
     }
-    //public void passHit(string enemyname, int attackDamage, Vector3 playerPosition)
-    //{
-    //    //Debug.Log("flag2");
-    //    EnemyController = GameObject.Find(enemyname).GetComponent<EnemyController>();
-    //    EnemyController.Hit(attackDamage, playerPosition);
-    //    Debug.Log("passing hit to " + enemyname);
-
-    //}
 
     public void HandleFlipping()
     {
-        PlayerController.Flip();
+        playerController.Flip();
         playerSecondaryWeapon.Flip();
     }
 
