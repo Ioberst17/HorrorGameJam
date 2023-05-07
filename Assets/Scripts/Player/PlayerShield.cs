@@ -41,16 +41,13 @@ public class PlayerShield : Shield
 
     public void ShieldButtonDown()
     {
-        if (Input.GetKeyDown(KeyCode.F))
+        if (playerController.SP > shieldCost)
         {
-            if (playerController.SP > shieldCost)
-            {
-                playerController.SP -= shieldCost;
-                ShieldStatus("On"); shieldButtonDown = true;
-                if (parry != null) { parry.Execute(); }
-            }
-            else { FindObjectOfType<AudioManager>().PlaySFX("InsufficientStamina"); }
+            playerController.SP -= shieldCost;
+            ShieldStatus("On"); shieldButtonDown = true;
+            if (parry != null) { parry.Execute(); }
         }
+        else { FindObjectOfType<AudioManager>().PlaySFX("InsufficientStamina"); }
     }
 
     public void ShieldButtonHeld()

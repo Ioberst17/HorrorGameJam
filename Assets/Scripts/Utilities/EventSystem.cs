@@ -33,9 +33,9 @@ public class EventSystem : MonoBehaviour
     public void WeaponAddAmmoTrigger(int ammo) { if (onWeaponAddAmmoTrigger != null) { onWeaponAddAmmoTrigger(ammo); } }
 
 
-    public event Action <int> onAmmoCheckTrigger; // used to check for ammo BEFORE  weapon AmmoTrigger is called to fire
+    public event Action onAmmoCheckTrigger; // used to check for ammo BEFORE  weapon AmmoTrigger is called to fire
 
-    public void AmmoCheckTrigger(int fireDirection) { if (onAmmoCheckTrigger != null) { onAmmoCheckTrigger(fireDirection); } }
+    public void AmmoCheckTrigger() { if (onAmmoCheckTrigger != null) { onAmmoCheckTrigger(); } }
 
 
     public event Action <int, int, int, int> onWeaponFireTrigger; // used for weapon firing

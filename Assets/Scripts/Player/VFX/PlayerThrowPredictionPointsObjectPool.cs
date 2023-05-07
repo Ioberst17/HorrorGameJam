@@ -12,6 +12,8 @@ public class PlayerThrowPredictionPointsObjectPool : ObjectPool
     GameObject throwPoint;
     Transform checkPosition;
     Collider2D[] collisions;
+    GameController gameController;
+    PlayerController playerController;
 
     public override void Awake()
     {
@@ -20,6 +22,12 @@ public class PlayerThrowPredictionPointsObjectPool : ObjectPool
         for(int i = 0; i <= 5; i++) { GrowPool(); }
         
         layersToCheck = ~((1 << 0) | (1 << 1) | (1 << 2) | (1 << 4) | (1 << 5) | (1 << 6));
+    }
+
+    public void Start()
+    {
+        gameController = FindObjectOfType<GameController>();
+        playerController = FindObjectOfType<PlayerController>();
     }
 
     public void ShowTossTrajectory(Transform tossSpawnPoint, float? tossForce)
@@ -43,26 +51,20 @@ public class PlayerThrowPredictionPointsObjectPool : ObjectPool
             }
 
             counter++;
-
-            /*if (throwPoint.GetComponent<PlayerThrowPredictionPoints>().HasCollided() == true)
-            {   AddToPool(throwPoint); 
-                Debug.Log("hasCollided was read in PlayerThrow Object Pool"); 
-                break; 
-            }*/
-
-
         }
     }
 
     Vector2 CalcPointPositions(float time, Transform tossSpawnPoint, float? tossForce)
     {
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector3 transformPos = tossSpawnPoint.position;
-        mousePos.z = transformPos.z;
-        Vector3 bulletDir = (mousePos - transformPos).normalized;
+        if(gameController.playerInput.currentControlScheme == "Keyboard&Mouse")
+        {
+            Vector3 bulletDir = ((Vector3)gameController.lookInput - (Vector3)gameController.playerPositionScreen).normalized;
 
-        Vector2 currentPointPosition = (Vector2)tossSpawnPoint.transform.position + (Vector2)(time * tossForce * bulletDir) + (time * time) * 0.5f * Physics2D.gravity;
-        return currentPointPosition;
+            Vector2 currentPointPosition = (Vector2)tossSpawnPoint.transform.position + (Vector2)(time * tossForce * bulletDir) + (time * time) * 0.5f * Physics2D.gravity;
+            return currentPointPosition;
+        }
+
+        return (Vector2)tossSpawnPoint.transform.position /*+ (Vector2)(time * tossForce * bulletDir) + (time * time) * 0.5f * Physics2D.gravity*/;
     }
 
     public void ClearToss()

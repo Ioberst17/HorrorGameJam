@@ -84,17 +84,17 @@ public class GroundSlam : MonoBehaviour
         }
         
         playerController.SetVelocity(0, groundSlamSpeed);
-        return Detect();
+        return DetectHits();
     }
 
-    List<Collider2D> Detect()
+    List<Collider2D> DetectHits()
     {
-        DetectionSetup();
+        SetDetectionBoundaries();
         groundSlamHitList = Physics2D.OverlapAreaAll(bottomLeftCorner, upperRightCorner, groundSlamCollisionFilter.layerMask).ToList();
         return groundSlamHitList;
     }
 
-    void DetectionSetup()
+    void SetDetectionBoundaries()
     {
         detectionColliderCenter = spriteRenderer.gameObject.transform.position;
         detectionColliderHalfSize = new Vector2(spriteRenderer.bounds.size.x / 2f, spriteRenderer.bounds.size.y / 2f);
@@ -110,19 +110,13 @@ public class GroundSlam : MonoBehaviour
             foreach (Collider2D hit in groundSlamHits)
             {
                 if (hit.gameObject.layer == LayerMask.NameToLayer("Enemy") || hit.gameObject.layer == LayerMask.NameToLayer("BreakableEnviro"))
-                { OnHit(hit); Bounce(hit); damagableFlag = true; }
+                { ResetConditions(hit); Bounce(hit); damagableFlag = true; }
 
                 else if (hit.gameObject.layer == LayerMask.NameToLayer("Environment") || hit.gameObject.tag == "Boundary")
-                { OnHit(hit); nonDamagableFlag = true; }
+                { ResetConditions(hit); nonDamagableFlag = true; playerController.SetVelocity(); }
             }
         }
         return false;
-    }
-
-    bool OnHit(Collider2D hit)
-    {
-        ResetConditions(hit);
-        return true;
     }
 
     void HitDamagableSoundAndVFX()
@@ -133,7 +127,7 @@ public class GroundSlam : MonoBehaviour
     void HitNonDamagableSoundAndVFX()
     {
         FindObjectOfType<AudioManager>().PlaySFX("GroundSlam");
-        DetectionSetup();
+        SetDetectionBoundaries();
         Instantiate(Resources.Load("VFXPrefabs/DustCloud"), detectionColliderUpperCenter, Quaternion.identity);
     }
 
@@ -147,7 +141,7 @@ public class GroundSlam : MonoBehaviour
 
     void ResetConditions(Collider2D hit)
     {
-        groundSlamStop = true; playerPrimaryWeapon.isAttacking = false; isGroundSlam = false; ActivateDetection(false);
+        groundSlamStop = true; playerPrimaryWeapon.isAttacking = false; isGroundSlam = false; ActivateDetection(false); 
         Debug.Log("Hit gameObject named: " + hit.gameObject.name);
         Invoke("InvincibilityOff", .5f);
     }

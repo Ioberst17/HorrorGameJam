@@ -35,7 +35,7 @@ public class DataManager : MonoBehaviour
 
     void Update() 
     { 
-        if (Input.GetKeyDown(KeyCode.C)) { ClearData(); } 
+        //if (Input.GetKeyDown(KeyCode.C)) { ClearData(); } 
         if(currentSceneIndex != 0) { sessionData.timePlayed += Time.deltaTime; }
     }
 

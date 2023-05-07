@@ -5018,8 +5018,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 648145155}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.0864, y: -0.7072, z: 0}
-  m_LocalScale: {x: 1.0907402, y: 0.73438245, z: 1}
+  m_LocalPosition: {x: 0.0864, y: -0.4, z: 0}
+  m_LocalScale: {x: 1.0907402, y: 0.17221269, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1458881044374652415}
@@ -35829,6 +35829,7 @@ GameObject:
   - component: {fileID: 1303225426}
   - component: {fileID: 1303225427}
   - component: {fileID: 1458881044282191581}
+  - component: {fileID: 1303225429}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -35954,6 +35955,36 @@ MonoBehaviour:
   player: {fileID: 0}
   lucidity: {fileID: 0}
   lucidityImpact: 0
+--- !u!114 &1303225429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1458881045126449814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 0492db06ffef0c54ab6bdbaeaf999809, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Player
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &1458881045285035849
 GameObject:
   m_ObjectHideFlags: 0
@@ -36858,7 +36889,7 @@ MonoBehaviour:
   weaponSprite: {fileID: 0}
   ammoPrefabs: []
   projectileSpawnPoint: {fileID: 334070956}
-  ammoSpeed: 500
+  ammoSpeed: 1000
   fixedDistanceAmmo: {fileID: 0}
   currentWeaponID: 0
   currentWeapon:
@@ -36867,6 +36898,7 @@ MonoBehaviour:
     _name: 
     _description: 
     amount: 0
+    sprite: {fileID: 0}
     audioOnAcquisition: 
     tier: 0
     isSecondary: 0
@@ -36899,7 +36931,6 @@ MonoBehaviour:
   holdTimeNormalized: 0
   throwDistanceNormalized: 0
   inActiveThrow: 0
-  cameraToUse: {fileID: 0}
 --- !u!1001 &4493868288590584792
 PrefabInstance:
   m_ObjectHideFlags: 0

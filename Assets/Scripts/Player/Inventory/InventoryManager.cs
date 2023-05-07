@@ -55,22 +55,6 @@ public class InventoryManager : MonoBehaviour // INTENDED TO MANAGE ITEM ACTIVIT
         lucidity = player.GetComponentInChildren<Lucidity>();
         playerSecondaryWeapon = player.GetComponentInChildren<PlayerSecondaryWeapon>();
     }
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha0)) {EventSystem.current.WeaponAddAmmoTrigger(100);}
-
-        if (Input.GetKeyDown(KeyCode.Alpha8)) {EventSystem.current.WeaponChangeTrigger(-1);}
-
-        if (Input.GetKeyDown(KeyCode.Alpha9)){EventSystem.current.WeaponChangeTrigger(1);}
-
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            narrativeItemsManager.narrativeItems.Clear();
-            consumablesManager.consumables.Clear();
-            primaryWeaponsManager.weaponList.Clear();
-            secondaryWeaponsManager.weaponList.Clear();
-        }
-    }
 
     public void AddItem(PickupableItem item)
     {

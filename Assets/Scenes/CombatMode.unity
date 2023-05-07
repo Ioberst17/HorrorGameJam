@@ -184,8 +184,8 @@ GameObject:
   m_Component:
   - component: {fileID: 21223592}
   - component: {fileID: 21223591}
-  - component: {fileID: 21223593}
   - component: {fileID: 21223590}
+  - component: {fileID: 21223593}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -244,17 +244,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 21223589}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
+  m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_SendPointerHoverToParent: 1
-  m_HorizontalAxis: Horizontal
-  m_VerticalAxis: Vertical
-  m_SubmitButton: Submit
-  m_CancelButton: Cancel
-  m_InputActionsPerSecond: 10
-  m_RepeatDelay: 0.5
-  m_ForceModuleActive: 0
+  m_MoveRepeatDelay: 0.5
+  m_MoveRepeatRate: 0.1
+  m_XRTrackingOrigin: {fileID: 0}
+  m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_PointAction: {fileID: -1654692200621890270, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MoveAction: {fileID: -8784545083839296357, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_SubmitAction: {fileID: 392368643174621059, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_CancelAction: {fileID: 7727032971491509709, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_LeftClickAction: {fileID: 3001919216989983466, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MiddleClickAction: {fileID: -2185481485913320682, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_RightClickAction: {fileID: -4090225696740746782, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_ScrollWheelAction: {fileID: 6240969308177333660, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDevicePositionAction: {fileID: 6564999863303420839, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDeviceOrientationAction: {fileID: 7970375526676320489, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_DeselectOnBackgroundClick: 1
+  m_PointerBehavior: 0
 --- !u!1 &49111188
 GameObject:
   m_ObjectHideFlags: 0
@@ -1918,7 +1927,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1303225423}
   cameraFocus: {fileID: 1442235709}
-  GameController: {fileID: 641676304}
   Hleeway: 0
   Vleeway: 3
 --- !u!114 &341844926
@@ -2421,23 +2429,31 @@ MonoBehaviour:
     unlockedSkillsList: 
   playerPrimaryWeapon: {fileID: 0}
   playerSecondaryWeapon: {fileID: 0}
-  MusicController: {fileID: 0}
   UIController: {fileID: 0}
   CameraBehavior: {fileID: 341844925}
   enemySpawner: {fileID: 49111190}
+  cameraToUse: {fileID: 0}
   gameState: 
   isPaused: 0
-  xInput: 0
-  yInput: 0
-  isGrounded: 0
-  AttackButton: 0
-  ShootButton: 0
+  InteractButton: 0
   JumpButton: 0
   DashButton: 0
+  ShieldButton: 0
+  AttackButtonDown: 0
+  AttackButtonHeld: 0
+  AttackButtonRelease: 0
+  ShootButtonDown: 0
+  ShootButtonHeld: 0
+  ShootButtonRelease: 0
   AttackBuffer: 0
   ShootBuffer: 0
   JumpBuffer: 0
   DashBuffer: 0
+  xInput: 0
+  yInput: 0
+  mousePos: {x: 0, y: 0}
+  mousePosRelativeToScreen: {x: 0, y: 0}
+  playerPos: {x: 0, y: 0}
 --- !u!4 &641676305
 Transform:
   m_ObjectHideFlags: 0
@@ -7629,10 +7645,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1458881044663540982, guid: eb2664123c277934fb626507fe6ad021, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
+    - target: {fileID: 1303225429, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 341844923}
     - target: {fileID: 1458881045040599449, guid: eb2664123c277934fb626507fe6ad021, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -7689,14 +7705,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 6450055456109401609, guid: eb2664123c277934fb626507fe6ad021, type: 3}
-      propertyPath: ammoSpeed
-      value: 1000
-      objectReference: {fileID: 0}
-    - target: {fileID: 6450055456109401609, guid: eb2664123c277934fb626507fe6ad021, type: 3}
-      propertyPath: cameraToUse
-      value: 
-      objectReference: {fileID: 341844923}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eb2664123c277934fb626507fe6ad021, type: 3}
 --- !u!1001 &1927736784083236935

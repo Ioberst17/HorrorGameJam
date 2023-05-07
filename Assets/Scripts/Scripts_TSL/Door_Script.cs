@@ -16,22 +16,16 @@ public class Door_Script : MonoBehaviour
     {
         playerDetected = false;
     }
-    // Update is called once per frame
-    void Update()
-    {
-        if (playerDetected)
-        {
-            if (Input.GetKeyUp(KeyCode.R))
-            {
-                player.transform.position = posToGo.position;
-                playerDetected = false;
 
-                // call the objectiveUI and update it when specific doors are used
-                if (door.name == "Door_House1")
-                {
-                    objectiveUI.UpdateObjectiveUI(2); // This calls ObjectiveUI Update function and for now passes ID2 meaning "Kill all enemies in room"
-                }
-            }
+     public void InteractWithPlayer()
+    {
+        player.transform.position = posToGo.position;
+        playerDetected = false;
+
+        // call the objectiveUI and update it when specific doors are used
+        if (door.name == "Door_House1")
+        {
+            objectiveUI.UpdateObjectiveUI(2); // This calls ObjectiveUI Update function and for now passes ID2 meaning "Kill all enemies in room"
         }
     }
 

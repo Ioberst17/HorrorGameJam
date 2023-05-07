@@ -20,6 +20,7 @@ public class WeaponsManager : MonoBehaviour
     public int dataManagerActiveWeapon;
     public int currentWeaponID;
     public int currentWeaponIndex;
+    public bool changingIsBlocked;
 
     // Start is called before the first frame update
     public virtual void Start()
@@ -160,10 +161,13 @@ public class WeaponsManager : MonoBehaviour
 
     public void WeaponChanged(int weaponChange)
     {
-        int weaponLocation = GetCurrentWeaponInventoryIndex();
+        if (!changingIsBlocked) // checks for blockers, e.g. in an active throw
+        {
+            int weaponLocation = GetCurrentWeaponInventoryIndex();
 
-        if (weaponLocation == -1) { WeaponLocationUpdate(0, 0); } //set to first available weapon
-        else { if (weaponChange == 1 || weaponChange == -1) { IncrementInventoryWeapon(weaponChange, weaponLocation); } }
+            if (weaponLocation == -1) { WeaponLocationUpdate(0, 0); } //set to first available weapon
+            else { if (weaponChange == 1 || weaponChange == -1) { IncrementInventoryWeapon(weaponChange, weaponLocation); } }
+        }
     }
 
     public void WeaponLocationUpdate(int weaponChange, int weaponLocation)
