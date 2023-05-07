@@ -68,7 +68,7 @@ public class SecondaryWeaponsManager : WeaponsManager
         WeaponUIUpdate();
     }
 
-    private void CanWeaponBeFired(int fireDirection) // used as a check before firing a weapon and decrementing inventory
+    private void CanWeaponBeFired() // used as a check before firing a weapon and decrementing inventory
     {
         bool hasAmmo = weaponList[currentWeaponIndex].ammo > 0;
         bool doesNotExceedFireRate = Time.time > lastWeaponUseTime + weaponList[currentWeaponIndex].fireRate;

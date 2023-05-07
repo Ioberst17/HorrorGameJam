@@ -29,7 +29,7 @@ public class Ammo : MonoBehaviour
         {
             var enemyController = col.gameObject.GetComponent<EnemyController>();
             if (isExplosive) { ExplosionHandler(); }
-            else if (!isExplosive) { PassDamage(weaponID, weaponLevel, transform.position, statusModifier);}        
+            else if (!isExplosive) { PassDamage(weaponID, weaponLevel, transform.position, statusModifier, enemyController);}        
         }
 
 
@@ -51,7 +51,7 @@ public class Ammo : MonoBehaviour
         if(other.gameObject.GetComponent<EnemyController>() != null)
         {
             var enemyController = other.gameObject.GetComponent<EnemyController>();
-            EventSystem.current.AttackHitTrigger(weaponID, weaponLevel, GetComponentInParent<Transform>().position, statusModifier);
+            EventSystem.current.EnemyHitTrigger(weaponID, weaponLevel, GetComponentInParent<Transform>().position, statusModifier, enemyController);
         }
     }
 
@@ -62,9 +62,9 @@ public class Ammo : MonoBehaviour
         DisableInteractions();
     }
 
-    private void PassDamage(int weaponID, int weaponLevel, Vector3 position, string statusModifier)
+    private void PassDamage(int weaponID, int weaponLevel, Vector3 position, string statusModifier, EnemyController enemyController)
     {
-        EventSystem.current.AttackHitTrigger(weaponID, weaponLevel, transform.position, statusModifier);
+        EventSystem.current.EnemyHitTrigger(weaponID, weaponLevel, transform.position, statusModifier, enemyController);
         Instantiate(Resources.Load("VFXPrefabs/DamageImpact"), transform.position, Quaternion.identity);
         Destroy(gameObject);
     }

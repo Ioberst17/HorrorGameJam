@@ -31,7 +31,7 @@ public class PickupableItem : MonoBehaviour
             if (Other.gameObject.GetComponent<PlayerController>() != null)
             {
                 GetComponent<SpriteRenderer>().enabled = false;
-                if (!handleThroughDialogueTriggerAndManager) { EventSystem.current.ItemPickupTrigger(this); Destroy(this, .5f); }
+                if (!handleThroughDialogueTriggerAndManager) { EventSystem.current.ItemPickupTrigger(this); Destroy(this.gameObject, .5f); }
             }
         }
     }

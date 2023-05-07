@@ -6,6 +6,7 @@ public class OneWayPlatform : MonoBehaviour
 {
     private PlatformEffector2D effector;
     private OneWayPlatformPlayerDetection PlatformPlayerDetection;
+    private GameController gameController;
     public float waitTime;
     public bool PlayerInZone;
     // Start is called before the first frame update
@@ -13,6 +14,7 @@ public class OneWayPlatform : MonoBehaviour
     {
         effector = GetComponent<PlatformEffector2D>();
         PlatformPlayerDetection = GetComponentInChildren<OneWayPlatformPlayerDetection>();
+        gameController = FindObjectOfType<GameController>();
         PlayerInZone = false;
         effector.useColliderMask = false;
     }
@@ -20,11 +22,11 @@ public class OneWayPlatform : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (PlayerInZone && (Input.GetKeyUp(KeyCode.DownArrow) || Input.GetKeyUp(KeyCode.S)))
+        if (PlayerInZone && gameController.yInput > 0)
         {
             waitTime = 0.5f;
         }
-        if (PlayerInZone && (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S)))
+        if (PlayerInZone && gameController.yInput < 0)
         {
             if (waitTime <= 0)
             {
@@ -36,7 +38,7 @@ public class OneWayPlatform : MonoBehaviour
                 waitTime -= Time.deltaTime;
             }
         }
-        if (Input.GetKeyDown(KeyCode.UpArrow)|| Input.GetButtonDown("Jump") || Input.GetKeyDown("up"))
+        if (gameController.yInput > 0)
         {
             effector.useColliderMask = false;
         }

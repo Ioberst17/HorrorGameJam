@@ -4,9 +4,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerSecondaryWeapon : MonoBehaviour
 {
+    private GameController gameController;
+    private SecondaryWeaponsManager secondaryWeaponsManager;
     [SerializeField] private SpriteRenderer weaponSprite;
     private float weaponWidth;
     private float weaponHeight;
@@ -17,7 +20,7 @@ public class PlayerSecondaryWeapon : MonoBehaviour
     private float projectileSpawnOffset = 0f; // distance from weaponSprite and projectile generation
     private float projectileXOffset;
     private float projectileYOffset;
-    public int ammoSpeed = 500;
+    public int ammoSpeed;
     private int ammoGravity = 0;
 
     [Header("Weapon Settings")]
@@ -48,14 +51,15 @@ public class PlayerSecondaryWeapon : MonoBehaviour
 
 
     [Header("Weapon Rotation Settings")]
-    public Camera cameraToUse; //assign in inspector
     private GameObject player;
     private PlayerController playerController;
-    private Vector3 mousePos;
+    private Vector3 lookDirection;
     private Vector3 playerPos;
     private Vector3 throwMouseStartingPos;
     private Vector3 throwMouseFinishingPos;
+    float bufferZone, bufferZoneMax, bufferZoneMin;
     private float throwDistanceToPass;
+    [SerializeField] private float weaponDirection;
     private float rotationZ; //used for weapon direction
 
     //particle systems
@@ -67,12 +71,13 @@ public class PlayerSecondaryWeapon : MonoBehaviour
         EventSystem.current.onUpdateSecondaryWeaponTrigger += WeaponChanged;
         EventSystem.current.onWeaponFireTrigger += WeaponFired;
         EventSystem.current.onWeaponStopTrigger += WeaponStop;
+        gameController = FindObjectOfType<GameController>();
+        secondaryWeaponsManager = FindObjectOfType<SecondaryWeaponsManager>();
         player = GameObject.Find("Player");
         weaponDatabase = GameObject.Find("WeaponDatabase").GetComponent<WeaponDatabase>();
         weaponSprite = GameObject.Find("WeaponSprite").GetComponent<SpriteRenderer>();
         fixedDistanceAmmo = gameObject.transform.GetChild(0).gameObject.transform.Find("FixedDistanceAmmo").gameObject;
         playerController = transform.parent.GetComponent<PlayerController>();
-        cameraToUse = GameObject.Find("Main Camera").GetComponent<Camera>();
 
         // load ammo prefabs to a list
         ammoPrefabs = Resources.LoadAll<GameObject>("AmmoPrefabs").ToList();
@@ -83,30 +88,42 @@ public class PlayerSecondaryWeapon : MonoBehaviour
         StopFixedFire();
     }
 
-    // Update is called once per frame, used mainly for weapon direction
-    void Update()
-    {
-        HandleWeaponDirection();
-        HandleThrowing();
-    }
-
     public bool WeaponIsPointedToTheRight()
     {
         bool weaponIsPointedRight = false;
-        mousePos = Input.mousePosition;
-        playerPos = cameraToUse.WorldToScreenPoint(transform.position);
+        lookDirection = gameController.lookInput;
+        playerPos = gameController.playerPositionScreen;
 
-        if (mousePos.x > playerPos.x) { weaponIsPointedRight = true; }
-        
+        bufferZone = 0.5f; // a buffer used to prevent constant flipping if the character's mouse is next to the player
+        bufferZoneMin = playerPos.x - bufferZone;
+        bufferZoneMax = playerPos.x + bufferZone;
+
+        if (lookDirection.x > playerPos.x && lookDirection.x > bufferZoneMax) { weaponIsPointedRight = true; }
+        else if (lookDirection.x < playerPos.x && lookDirection.x < bufferZoneMin) { weaponIsPointedRight = false; }
+
         return weaponIsPointedRight;
     }
 
-    private void HandleWeaponDirection()
+    public void HandleWeaponDirection(string activeControlScheme)
     {
-        mousePos = cameraToUse.ScreenToWorldPoint(Input.mousePosition);
-        Vector3 rotation = mousePos - transform.position;
-        rotationZ = Mathf.Atan2(rotation.y, rotation.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, rotationZ);
+        if(activeControlScheme == "Gamepad")
+        {
+            weaponDirection = Mathf.Atan2(gameController.lookInput.y, gameController.lookInput.x) * Mathf.Rad2Deg;
+            if (gameController.xInput > 0.2) { transform.rotation = Quaternion.Euler(0f, 0f, 0f); } // if moving right more than slightly, point right
+            else if (gameController.xInput < -0.2) { transform.rotation = Quaternion.Euler(0f, 0f, 180f); } // if moving left more than slightly, point left
+            else if (gameController.xInput < 0.2 && gameController.xInput > -0.2) // if basically still
+            {
+                if (gameController.lookInput.x > 0 || gameController.lookInput.y > 0) { transform.rotation = Quaternion.Euler(0f, 0f, weaponDirection); } // if input, point in the direction of the input
+                else if (playerController.facingDirection == 1) { transform.rotation = Quaternion.Euler(0f, 0f, 0f); } // if still facing right, point right
+                else if (playerController.facingDirection == -1) { transform.rotation = Quaternion.Euler(0f, 0f, 180f); } // if still facing left, point left
+            }
+        }
+        else if(activeControlScheme == "Keyboard&Mouse") 
+        {
+            Vector2 rotation = (Vector2)gameController.lookInput - (Vector2)gameController.playerPositionScreen;
+            rotationZ = Mathf.Atan2(rotation.y, rotation.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(0, 0, rotationZ);
+        }
     }
 
 
@@ -130,25 +147,26 @@ public class PlayerSecondaryWeapon : MonoBehaviour
         shot.GetComponent<Rigidbody2D>().AddForce(projectileSpawnPoint.transform.right * ammoSpeed);
     }
 
-    private void Throw(int direction) { inActiveThrow = true; currentThrowDirection = direction; }
+    private void Throw(int direction) { inActiveThrow = true; secondaryWeaponsManager.changingIsBlocked = true; currentThrowDirection = direction; }
 
-    private void HandleThrowing()
+    public void HandleThrowing(string inputState, string currentControlScheme)
     {
-        if (Input.GetMouseButtonDown(1))
+        if (inputState == "Button Clicked")
         {
-            throwMouseStartingPos = cameraToUse.WorldToScreenPoint(transform.position); //throwMouseStartingPos = Input.mousePosition; //throwKeyHeldDownStart = Time.time;
+            if (currentControlScheme == "Keyboard&Mouse") { throwMouseStartingPos = gameController.playerPositionScreen; }
+            if (currentControlScheme == "Gamepad") { throwMouseStartingPos = gameController.playerPositionScreen; } //throwMouseStartingPos = Input.mousePosition; //throwKeyHeldDownStart = Time.time;
         }
-        if (Input.GetMouseButtonUp(1))
+        else if (inputState == "Button Released")
         {
             throwKeyReleased = Time.time;
             if (inActiveThrow) { ThrowWeapon(currentThrowDirection, currentThrowForce); }
         }
-        if (Input.GetMouseButton(1))
+        if (inputState == "Button Held")
         {
             if (inActiveThrow)
             {
-                throwMouseFinishingPos = Input.mousePosition;
-                throwDistanceToPass = Math.Abs(throwMouseFinishingPos.y - throwMouseStartingPos.y);
+                if (currentControlScheme == "Keyboard&Mouse") { throwMouseFinishingPos = gameController.lookInput; }
+                throwDistanceToPass = Vector2.Distance(throwMouseFinishingPos, throwMouseStartingPos);
                 currentThrowForce = CalcThrowForce(throwDistanceToPass);
             }
         }
@@ -158,7 +176,7 @@ public class PlayerSecondaryWeapon : MonoBehaviour
     {
         throwDistanceNormalized = Mathf.Clamp01(holdForce / maxThrowBand);
         float force = throwDistanceNormalized * maxThrowSpeed;
-        force += minThrowSpeed;
+        force += minThrowSpeed; 
         EventSystem.current.StartChargedAttackTrigger(throwDistanceNormalized, projectileSpawnPoint.transform, force);
         return force;
     }
@@ -177,10 +195,11 @@ public class PlayerSecondaryWeapon : MonoBehaviour
         else {toss.GetComponent<Rigidbody2D>().AddForce((projectileSpawnPoint.transform.right).normalized * throwSpeed, ForceMode2D.Impulse); }
 
         inActiveThrow = false;
+        secondaryWeaponsManager.changingIsBlocked = false;
         EventSystem.current.FinishChargedAttackTrigger();
     }
 
-    private void FixedDistanceFire() { if (Input.GetMouseButton(1)) { fixedDistanceAmmo.SetActive(true); ToggleFlamethrowerEffects(true); }}
+    private void FixedDistanceFire() { fixedDistanceAmmo.SetActive(true); ToggleFlamethrowerEffects(true); }
     private void StopFixedFire() { fixedDistanceAmmo.SetActive(false); ToggleFlamethrowerEffects(false); }
 
     private void ToggleFlamethrowerEffects(bool flamethrowerState) { FindObjectOfType<AudioManager>().LoopSFX("Flamethrower", flamethrowerState); }

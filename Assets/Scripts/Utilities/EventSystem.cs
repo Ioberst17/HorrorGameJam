@@ -12,13 +12,13 @@ public class EventSystem : MonoBehaviour
 
     // COMBAT-CALCULATIONS (WITH ENEMIES)
 
-    public event Action<int, Vector3, string> onEnemyEnviroDamage;
-    public void EnemyEnviroDamage(int damage, Vector3 position, string statusModifier)
-    { { if (onEnemyEnviroDamage != null) { onEnemyEnviroDamage(damage, position, statusModifier); } } }
+    public event Action<int, Vector3, string, EnemyController> onEnemyEnviroDamage;
+    public void EnemyEnviroDamage(int damage, Vector3 position, string statusModifier, EnemyController enemyController)
+    { { if (onEnemyEnviroDamage != null) { onEnemyEnviroDamage(damage, position, statusModifier, enemyController); } } }
 
-    public event Action<int, int, Vector3, string> onEnemyHitCollision;
-    public void AttackHitTrigger(int weaponID, int weaponLevel, Vector3 position, string statusModifier)
-    { { if (onEnemyHitCollision != null) { onEnemyHitCollision(weaponID, weaponLevel, position, statusModifier); } } }
+    public event Action<int, int, Vector3, string, EnemyController> onEnemyHitCollision;
+    public void EnemyHitTrigger(int weaponID, int weaponLevel, Vector3 position, string statusModifier, EnemyController enemyController)
+    { { if (onEnemyHitCollision != null) { onEnemyHitCollision(weaponID, weaponLevel, position, statusModifier, enemyController); } } }
 
     public event Action<int, int> onWaveFinished;
 
@@ -33,9 +33,9 @@ public class EventSystem : MonoBehaviour
     public void WeaponAddAmmoTrigger(int ammo) { if (onWeaponAddAmmoTrigger != null) { onWeaponAddAmmoTrigger(ammo); } }
 
 
-    public event Action <int> onAmmoCheckTrigger; // used to check for ammo BEFORE  weapon AmmoTrigger is called to fire
+    public event Action onAmmoCheckTrigger; // used to check for ammo BEFORE  weapon AmmoTrigger is called to fire
 
-    public void AmmoCheckTrigger(int fireDirection) { if (onAmmoCheckTrigger != null) { onAmmoCheckTrigger(fireDirection); } }
+    public void AmmoCheckTrigger() { if (onAmmoCheckTrigger != null) { onAmmoCheckTrigger(); } }
 
 
     public event Action <int, int, int, int> onWeaponFireTrigger; // used for weapon firing

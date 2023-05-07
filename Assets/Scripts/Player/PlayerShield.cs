@@ -22,30 +22,32 @@ public class PlayerShield : Shield
         playerHealth = GetComponentInParent<PlayerHealth>();
     }
 
-    public override void Update()
+    void Update()
     {
-        base.Update();
         if (playerController.SP < 0)
         {
             ShieldStatus("Off");
             shieldButtonDown = false;
             FindObjectOfType<AudioManager>().PlaySFX("InsufficientStamina");
         }
-        if(!shieldButtonDown) { ChangeSP(staminaRate / 2, Time.deltaTime); }
     }
+
+    private void FixedUpdate()
+    {
+        if (!shieldButtonDown) { ChangeSP(staminaRate / 2, Time.deltaTime); }
+    }
+
+
 
     public void ShieldButtonDown()
     {
-        if (Input.GetKeyDown(KeyCode.F))
+        if (playerController.SP > shieldCost)
         {
-            if (playerController.SP > shieldCost)
-            {
-                playerController.SP -= shieldCost;
-                ShieldStatus("On"); shieldButtonDown = true;
-                if (parry != null) { parry.Execute(); }
-            }
-            else { FindObjectOfType<AudioManager>().PlaySFX("InsufficientStamina"); }
+            playerController.SP -= shieldCost;
+            ShieldStatus("On"); shieldButtonDown = true;
+            if (parry != null) { parry.Execute(); }
         }
+        else { FindObjectOfType<AudioManager>().PlaySFX("InsufficientStamina"); }
     }
 
     public void ShieldButtonHeld()
@@ -62,8 +64,8 @@ public class PlayerShield : Shield
 
     public override void SpecificDamageChecks(Collider2D collision)
     {
-        if(collision.gameObject.tag == "EnemyAttack") { checkStatus = true; }
-        if (collision.gameObject.GetComponent<EnemyController>() != null && collision.gameObject.GetComponent<EnemyController>().isAttacking) { checkStatus = true; }
+        if(collision.gameObject.tag == "EnemyAttack") { checkStatus = true;}
+        else if (collision.gameObject.GetComponent<EnemyController>() != null && collision.gameObject.GetComponent<EnemyController>().isAttacking) { checkStatus = true;  }
         else if(collision.gameObject.GetComponent<EnemyProjectile>()) { checkStatus = true; }
         else if (collision.gameObject.GetComponent<Explode>() != null) { checkStatus = true; }
     }
@@ -72,13 +74,13 @@ public class PlayerShield : Shield
         if (gameObject.layer == LayerMask.NameToLayer("Player")) { shieldedObject = "Player"; }
         else { Debug.Log("Shield.cs is attached to an object that does not need it"); }
 
-        AddCollisionsToCheckFor(shieldedObject);
+        AddLayersToCheckOn(shieldedObject);
     }
 
-    public override void AddCollisionsToCheckFor(string shieldedObject)
+    public override void AddLayersToCheckOn(string shieldedObject)
     {
         if (shieldedObject == "Player") { layer1ToCheck = LayerMask.NameToLayer("Enemy"); layer2ToCheck = LayerMask.NameToLayer("Player Ammo"); }
-        base.AddCollisionsToCheckFor(shieldedObject);
+        base.AddLayersToCheckOn(shieldedObject);
     }
 
     EnemyController CheckForEnemyController(Collider2D collision)

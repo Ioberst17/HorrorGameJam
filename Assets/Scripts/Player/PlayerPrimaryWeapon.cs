@@ -89,7 +89,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
             {
                 isAttacking = true;
 
-                if (attackDirection == 1 && !playerController.isGrounded && !groundSlam.isGroundSlam) { groundSlam.Execute(); }
+                if (attackDirection == 1 && !playerController.IsGrounded && !groundSlam.IsGroundSlam) { groundSlam.Execute(); Debug.Log("Executing groundslam"); }
                 else
                 {
                     if (chargePunch != null) { chargePunch.Execute(); }
@@ -140,7 +140,6 @@ public class PlayerPrimaryWeapon : MonoBehaviour
         if (attackDown.activeSelf)
         {
             CheckForCollisions(ADPoint1.position, ADPoint2.position);
-            SetPlayerVelocityForDownSwing();
             //Debug.Log("Swinging");
             //animator.Play("PlayerAttackDown");
         }
@@ -150,11 +149,12 @@ public class PlayerPrimaryWeapon : MonoBehaviour
         hitListLength = Physics2D.OverlapArea(point1, point2, normalCollisionFilter, hitList);
         if (hitListLength > 0)
         {
+            if (attackDown.activeSelf) { SetPlayerVelocityForDownSwing(); }
             int i = 0;
             while (i < hitList.Count)
             {
                 Debug.LogFormat("has hit something. It's named {0}", hitList[i].gameObject.name);
-                if (hitList[i].GetComponent<IDamageable>() != null) 
+                if (hitList[i].GetComponent<IDamageable>() != null && hitList[i]) 
                 { hitList[i].GetComponent<IDamageable>().Hit(damageToPass, transform.position); }
                 i++;
             }

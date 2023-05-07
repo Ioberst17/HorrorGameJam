@@ -10,8 +10,6 @@ using UnityEngine.UI;
 
 public class PlayerData_UI_Mason : MonoBehaviour
 {
-    
-
     [SerializeField] private Image healthBar;
     [SerializeField] private Image mpBar;
     [SerializeField] private Image spBar;
@@ -87,15 +85,16 @@ public class PlayerData_UI_Mason : MonoBehaviour
             }
             
         }
-        
-        if (Input.GetKeyDown(KeyCode.H) && dataManager.sessionData.consumables[1].amount > 0 && gameController.GetHP() < 100)
+    }
+
+    public void UseHealthPack()
+    {
+        if (dataManager.sessionData.consumables[1].amount > 0 && gameController.GetHP() < 100)
         {
             playerHealth.AddHealth(10);
             dataManager.sessionData.consumables[1].amount = dataManager.sessionData.consumables[1].amount - 1;
             Debug.Log("Used health kit.\n");
         }
-
-        
     }
 
     public void UpdateAmmoUI(string updatedWeapon, int updatedAmmo)

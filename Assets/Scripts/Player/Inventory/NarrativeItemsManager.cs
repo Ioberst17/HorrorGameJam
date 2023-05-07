@@ -25,11 +25,6 @@ public class NarrativeItemsManager : MonoBehaviour
         Load();
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.J)) { AddItem(6); }
-    }
-
     private void Load()
     {
         if (dataManager.sessionData.narrativeItems == null) { narrativeItems = new List<NarrativeItems>(); }

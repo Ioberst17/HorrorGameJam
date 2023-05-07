@@ -8,37 +8,85 @@ public class UIPulse : MonoBehaviour
     public bool pulseTrigger;
     public bool continuousPulse;
     [SerializeField] private float sizeShift = 0.02f;
-    [SerializeField] private float stepCounter = 0.2f;
-    [SerializeField] private float pulseWaitTime = 0.05f;
+    [SerializeField] private float pulseSpeed = 1f;
+    private Vector3 originalScale; // the original scale of the object
+    private Vector3 targetScale;
+    private float pulseTime; // the current pulse time, in seconds
+    private bool isPulsing;
+
+    private IEnumerator pulseCoroutine;
 
     // Start is called before the first frame update
-    void Start() { pulseTrigger = false; }
+    void Start()
+    {
+        pulseTrigger = false;
+        originalScale = transform.localScale;
+        pulseTime = 0f;
+        isPulsing = false;
+
+        if (continuousPulse)
+        {
+            pulseCoroutine = Pulsing();
+            StartCoroutine(pulseCoroutine);
+        }
+    }
 
     // Update is called once per frame
-    void Update() { if (continuousPulse || pulseTrigger) { StartCoroutine("Pulsing"); } }
+    void Update()
+    {
+        if (pulseTrigger)
+        {
+            if (pulseCoroutine != null)
+            {
+                StopCoroutine(pulseCoroutine);
+                pulseCoroutine = null;
+            }
+
+            pulseCoroutine = Pulsing();
+            StartCoroutine(pulseCoroutine);
+            pulseTrigger = false;
+        }
+    }
 
     private IEnumerator Pulsing()
     {
-        pulseTrigger = false;
+        isPulsing = true;
 
-        for (float i = 0f; i < 1f; i += stepCounter) // grow
+        // grow
+        targetScale = originalScale + new Vector3(sizeShift, sizeShift, sizeShift);
+        pulseTime = 0f;
+        while (pulseTime < 1f)
         {
-            transform.localScale = new Vector3(
-                Mathf.Lerp(transform.localScale.x, transform.localScale.x + sizeShift, Mathf.SmoothStep(0f, 1f, i)),
-                Mathf.Lerp(transform.localScale.y, transform.localScale.y + sizeShift, Mathf.SmoothStep(0f, 1f, i)),
-                Mathf.Lerp(transform.localScale.z, transform.localScale.z + sizeShift, Mathf.SmoothStep(0f, 1f, i))
-                );
-        yield return new WaitForSeconds(pulseWaitTime);
+            pulseTime += Time.deltaTime * pulseSpeed;
+            transform.localScale = Vector3.Lerp(originalScale, targetScale, pulseTime);
+            yield return null;
         }
 
-        for (float i = 0f; i < 1f; i += stepCounter) // shrink
+        // shrink to normal
+        targetScale = originalScale;
+        pulseTime = 0f;
+        while (pulseTime < 1f)
         {
-            transform.localScale = new Vector3(
-                Mathf.Lerp(transform.localScale.x, transform.localScale.x - sizeShift, Mathf.SmoothStep(0f, 1f, i)),
-                Mathf.Lerp(transform.localScale.y, transform.localScale.y - sizeShift, Mathf.SmoothStep(0f, 1f, i)),
-                Mathf.Lerp(transform.localScale.z, transform.localScale.z - sizeShift, Mathf.SmoothStep(0f, 1f, i))
-                );
-            yield return new WaitForSeconds(pulseWaitTime);
+            pulseTime += Time.deltaTime * pulseSpeed;
+            transform.localScale = Vector3.Lerp(originalScale + new Vector3(sizeShift, sizeShift, sizeShift), targetScale, pulseTime);
+            yield return null;
+        }
+
+        transform.localScale = originalScale;
+
+        isPulsing = false;
+        if (continuousPulse)
+        {
+            pulseCoroutine = Pulsing();
+            StartCoroutine(pulseCoroutine);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (isPulsing && pulseCoroutine != null)
+        {
+            StopCoroutine(pulseCoroutine);
         }
     }
 }

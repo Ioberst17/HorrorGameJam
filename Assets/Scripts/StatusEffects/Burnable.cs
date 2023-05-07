@@ -20,7 +20,7 @@ public class Burnable : StatusEffect
 
     public override void Execute() { base.Execute(); }
 
-    public override void Update() { base.Update(); }
+    public override void FixedUpdate() { base.FixedUpdate(); }
 
 
 }

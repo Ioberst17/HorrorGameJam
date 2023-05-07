@@ -39,36 +39,55 @@ public class DebugController_Mason : MonoBehaviour
     [SerializeField] private DebugCommands_Mason debugCommands;
 
     // Update is called once per frame
-    void Update()
-    {
-        //check for the '`' key to be hit
-        if(Input.GetKeyDown(KeyCode.BackQuote))
-        {
-            if (gameIsPaused)
-            {
-                Resume();
-            }
-            else
-            {
-                Pause();
-            }
+    //void Update()
+    //{
+    //    //check for the '`' key to be hit
+    //    if(Input.GetKeyDown(KeyCode.BackQuote))
+    //    {
+    //        if (gameIsPaused)
+    //        {
+    //            Resume();
+    //        }
+    //        else
+    //        {
+    //            Pause();
+    //        }
 
-            showConsole = !showConsole; //if the player hits '`' turn console on/off.
-        }
+    //        showConsole = !showConsole; //if the player hits '`' turn console on/off.
+    //    }
 
-        if((Input.GetKeyUp(KeyCode.Return)) && (showConsole)) //check for the enter key when the console is up
-        {
-            HandleInput(); //if so run the handleinput function that runs through the commandlist and looks for a match to run its action.
+    //    if((Input.GetKeyUp(KeyCode.Return)) && (showConsole)) //check for the enter key when the console is up
+    //    {
+    //        HandleInput(); //if so run the handleinput function that runs through the commandlist and looks for a match to run its action.
 
-            input.ToLower();
+    //        input.ToLower();
 
-            if (input.Contains("restart"))
-            {
-                Resume();
-            }
+    //        if (input.Contains("restart"))
+    //        {
+    //            Resume();
+    //        }
             
-            input = ""; //reset input to empty
-        }
+    //        input = ""; //reset input to empty
+    //    }
+    //}
+
+    public void ToggleDebugConsole()
+    {
+        if (gameIsPaused) { Resume(); }
+        else { Pause(); }
+
+        showConsole = !showConsole; //if the player hits '`' turn console on/off.
+    }
+
+    public void EnterInput()
+    {
+        HandleInput(); //if so run the handleinput function that runs through the commandlist and looks for a match to run its action.
+
+        input.ToLower();
+
+        if (input.Contains("restart")) { Resume();}
+
+        input = ""; //reset input to empty
     }
 
 
