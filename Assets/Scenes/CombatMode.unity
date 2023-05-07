@@ -2424,7 +2424,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ac8403bce5b73149a9c2fceee79f573, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerController: {fileID: 919584575}
+  playerController: {fileID: 0}
   playerSkills:
     unlockedSkillsList: 
   playerPrimaryWeapon: {fileID: 0}
@@ -2451,9 +2451,13 @@ MonoBehaviour:
   DashBuffer: 0
   xInput: 0
   yInput: 0
-  mousePos: {x: 0, y: 0}
-  mousePosRelativeToScreen: {x: 0, y: 0}
-  playerPos: {x: 0, y: 0}
+  lookInput: {x: 0, y: 0}
+  lookInputScreen: {x: 0, y: 0}
+  lookInputWorld: {x: 0, y: 0}
+  playerPosition: {x: 0, y: 0}
+  playerPositionScreen: {x: 0, y: 0}
+  playerPositionWorld: {x: 0, y: 0}
+  playerInput: {fileID: 0}
 --- !u!4 &641676305
 Transform:
   m_ObjectHideFlags: 0
@@ -7645,10 +7649,34 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 710302208, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: m_Points.m_Paths.Array.data[0].Array.data[7].y
+      value: -1.053396
+      objectReference: {fileID: 0}
+    - target: {fileID: 1017427862, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: sizeShift
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1017427862, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: pulseWaitTime
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1017427862, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: continuousPulse
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1303225429, guid: eb2664123c277934fb626507fe6ad021, type: 3}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 341844923}
+    - target: {fileID: 1882227566, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: shieldCost
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1882227566, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: staminaRate
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1458881045040599449, guid: eb2664123c277934fb626507fe6ad021, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 

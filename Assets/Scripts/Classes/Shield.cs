@@ -47,17 +47,20 @@ public class Shield : MonoBehaviour
     {
         for (int i = 0; i < layersToCheck.Count; i++)
         {
-            if (collision.gameObject.layer == layersToCheck[i])
+            if (collision.gameObject.layer == layersToCheck[i]) // COLLISIONS WITH SHIELD ARE LAYER CHECKED, based AddCollisionsToCheck(), which can be overriden by child shields
             {
                 if (shieldOn)
                 {
                     checkStatus = false;
-                    SpecificDamageChecks(collision);
+                    
+                    // IF CHECKSTATUS IS TRUE, DAMAGE IS EVALUATED
+                    SpecificDamageChecks(collision); // an override for different types of child shields to use e.g. player or enemy specific checks
                     if (shieldedObject == "Player" && collision.gameObject.GetComponent<Explode>() != null) { checkStatus = true; }
                     else if (shieldedObject == "Enemy") { checkStatus = true; }
+
                     if (checkStatus == true)
                     {
-                        hitShield = ShieldZoneCollisionCheck(CheckCollisionAngle(collision));
+                        hitShield = ShieldZoneCollisionCheck(CheckCollisionAngle(collision)); // check angle
 
                         if(parry != null && parry.GetParryStatus() == true) { ReturnDamage(collision); } // parried
                         else
@@ -67,7 +70,7 @@ public class Shield : MonoBehaviour
                         }
                     }
                 }
-                else { HandleDamagePass(collision, 0, 0, "DamageImpact"); } // regular damage pass
+                else { HandleDamagePass(collision, 0, 0, "DamageImpact"); } // regular damage pass through to shielded object
             }
         }
     }
@@ -94,10 +97,10 @@ public class Shield : MonoBehaviour
         if(gameObject.layer == LayerMask.NameToLayer("Enemy")) { shieldedObject = "Enemy";  }
         else { Debug.Log("Shield.cs is attached to an object that does not need it"); }
 
-        AddCollisionsToCheckFor(shieldedObject);
+        AddLayersToCheckOn(shieldedObject);
     }
 
-    virtual public void AddCollisionsToCheckFor(string shieldedObject)
+    virtual public void AddLayersToCheckOn(string shieldedObject)
     {
         if (shieldedObject == "Enemy") { layer1ToCheck = LayerMask.NameToLayer("Player"); layer2ToCheck = LayerMask.NameToLayer("Ammo"); }
         layersToCheck = new List<int?> { layer1ToCheck, layer2ToCheck };
@@ -174,7 +177,7 @@ public class Shield : MonoBehaviour
         else { Debug.Log("ActivateShield function is misfiring in Shield.cs"); }   
     }
 
-    public virtual void PassThroughDamage(Collider2D collision, float damageMod, float knockbackMod) { }
+    public virtual void PassThroughDamage(Collider2D collision, float damageMod, float knockbackMod) { } // handled differently by child shields
 
     public virtual void ReturnDamage(Collider2D collision)
     {
