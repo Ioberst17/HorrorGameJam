@@ -10,8 +10,6 @@ using UnityEngine.UI;
 
 public class PlayerData_UI_Mason : MonoBehaviour
 {
-    
-
     [SerializeField] private Image healthBar;
     [SerializeField] private Image mpBar;
     [SerializeField] private Image spBar;

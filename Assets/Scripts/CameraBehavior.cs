@@ -30,7 +30,7 @@ public class CameraBehavior : MonoBehaviour
 
     public void AdjustCameraDown()
     {
-        if (gameController.yInput < 0 && playerController.isGrounded)
+        if (gameController.yInput < 0 && playerController.IsGrounded)
         {
             Holdcounter += 0.01f;
             if (Holdcounter > 1)

@@ -60,7 +60,7 @@ public class PlayerController : MonoBehaviour
     //used to calculate "control interta"
     public float ControlMomentum;
 
-    public bool isGrounded;
+    [SerializeField] private bool _isGrounded; public bool IsGrounded { get; set; }
     //private bool isOnSlope;
     private bool isJumping;
     public bool isDashing;
@@ -125,12 +125,12 @@ public class PlayerController : MonoBehaviour
     {
         if (rb.velocity.y == 0.0f)
         {
-            isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, whatIsGround);
+            _isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, whatIsGround);
             //Debug.Log("isgrounded " + rb.velocity.y);
         }
         else 
         {
-            isGrounded = false;
+            _isGrounded = false;
             if (!isJumping && !isCharging)
             {
                     animator.Play("PlayerFall");
@@ -151,7 +151,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (isGrounded && !isJumping)
+        if (_isGrounded && !isJumping)
         {
             canJump = true;
             canWallJump = true;
@@ -212,10 +212,10 @@ public class PlayerController : MonoBehaviour
     //called by the GameController
     public void ApplyMovement()
     {
-        if(groundSlam.isGroundSlam == true) { SetVelocity(0, rb.velocity.y); }
-        else if (!playerHealth.inHitStun && !isDashing && !isCharging)
+        if(groundSlam.IsGroundSlam == true) { SetVelocity(0, rb.velocity.y); }
+        if (!playerHealth.inHitStun && !isDashing && !isCharging)
         {
-            if (isGrounded && !isJumping) //if on ground
+            if (_isGrounded && !isJumping) //if on ground
             {
 
                 newVelocity.Set(movementSpeed * ControlMomentum/10, rb.velocity.y);
@@ -238,7 +238,7 @@ public class PlayerController : MonoBehaviour
                 }
 
             }
-            else if (!isGrounded) //If in air
+            else if (!_isGrounded) //If in air
             {
                 newVelocity.Set(movementSpeed * ControlMomentum/10, rb.velocity.y);
                 rb.velocity = newVelocity;
