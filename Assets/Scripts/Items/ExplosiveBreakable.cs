@@ -7,14 +7,14 @@ public class ExplosiveBreakable : Breakable
 {
     Explode explode;
     // Start is called before the first frame update
-    void Start()
+    new void Start()
     {
         base.Start();
         explode = GetComponent<Explode>();
     }
 
     // Update is called once per frame
-    void Update()
+    new void Update()
     {
         base.Update();
     }

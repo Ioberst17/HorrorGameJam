@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class Health : MonoBehaviour, IDamageable
 {
-    public int HP;
+    public int HP { get; set; }
     public int maxHealth;
     public void AddHealth(int healthToAdd)
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-
+using System.Runtime.CompilerServices;
 
 public class DebugController_Mason : MonoBehaviour
 {
@@ -66,10 +66,14 @@ public class DebugController_Mason : MonoBehaviour
     //        {
     //            Resume();
     //        }
-            
+
     //        input = ""; //reset input to empty
     //    }
     //}
+    private void Start()
+    {
+        
+    }
 
     public void ToggleDebugConsole()
     {
@@ -113,12 +117,12 @@ public class DebugController_Mason : MonoBehaviour
 
         MPBOOST = new DebugCommands_Mason("mpboost", "Adds 50 mp.", "mpboost", () =>
         {
-            playerController.MP += 50;
+            //playerController.MP += 50;
         });
 
         SPBOOST = new DebugCommands_Mason("spboost", "Adds 50 sp.", "spboost", () =>
         {
-            playerController.gainSP(50);
+            //playerController.gainSP(50);
         });
 
         SPAWN_ENEMY = new DebugCommands_Mason<int>("spawn_enemy", "Spawns an enemy based on its idNum.", "spawn_enemy <idNum>", (x) =>

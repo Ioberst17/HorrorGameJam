@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class PlayerShield : Shield
 {
-    private PlayerController playerController;
-    private PlayerHealth playerHealth;
+    private PlayerStamina playerStamina;
     private int parryDamage = 10;
     [SerializeField] private int shieldCost = 20;
     [SerializeField] float staminaRate = 50f;
@@ -18,13 +17,12 @@ public class PlayerShield : Shield
     new void Start()
     {
         base.Start();
-        playerController = GetComponentInParent<PlayerController>();
-        playerHealth = GetComponentInParent<PlayerHealth>();
+        playerStamina = SiblingComponentUtils.GetSiblingComponent<PlayerStamina>(this.gameObject);
     }
 
     void Update()
     {
-        if (playerController.SP < 0)
+        if (playerStamina.SP < 0)
         {
             ShieldStatus("Off");
             shieldButtonDown = false;
@@ -41,9 +39,9 @@ public class PlayerShield : Shield
 
     public void ShieldButtonDown()
     {
-        if (playerController.SP > shieldCost)
+        if (playerStamina.SP > shieldCost)
         {
-            playerController.SP -= shieldCost;
+            playerStamina.SP -= shieldCost;
             ShieldStatus("On"); shieldButtonDown = true;
             if (parry != null) { parry.Execute(); }
         }
@@ -52,7 +50,7 @@ public class PlayerShield : Shield
 
     public void ShieldButtonHeld()
     {
-        if(shieldButtonDown == true) { if (playerController.SP > 0) { ChangeSP(-staminaRate, Time.deltaTime); } }
+        if(shieldButtonDown == true) { if (playerStamina.SP > 0) { ChangeSP(-staminaRate, Time.deltaTime); } }
     }
 
     public void ShieldButtonUp()
@@ -166,9 +164,9 @@ public class PlayerShield : Shield
 
     public void ChangeSP(float rate, float deltaTime) 
     {
-        var spChecker = playerController.SP + rate * deltaTime;
-        if (spChecker > playerController.SP_MAX) { playerController.SP = playerController.SP_MAX; }
-        else { playerController.SP = spChecker; }
+        var spChecker = playerStamina.SP + rate * deltaTime;
+        if (spChecker > playerStamina.maxSP) { playerStamina.SP = playerStamina.maxSP; }
+        else { playerStamina.SP = spChecker; }
     }
 
 }

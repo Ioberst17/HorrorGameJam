@@ -23,9 +23,9 @@ public class DialogueTrigger : MonoBehaviour
 
     public void PlayerInitiatedDialogue()
     {
-        if (playerInRange && !DialogueManager.GetInstance().dialogueIsPlaying)
+        if (playerInRange && !DialogueManager.GetInstance().DialogueIsPlaying)
         {
-                DialogueManager.GetInstance().EnterDialogueMode(inkJSON, this.gameObject);
+            DialogueManager.GetInstance().EnterDialogueMode(inkJSON, this.gameObject);
         }
     }
 
@@ -60,7 +60,7 @@ public class DialogueTrigger : MonoBehaviour
     {
         if (collision.gameObject.GetComponent<PlayerController>() != null)
         {
-            if (instantReact && !DialogueManager.GetInstance().dialogueIsPlaying)
+            if (instantReact && !DialogueManager.GetInstance().DialogueIsPlaying)
             {
                 if (CheckIfNewWeaponExperience()) { DialogueManager.GetInstance().EnterDialogueMode(inkJSON, this.gameObject); }
             }
