@@ -50,7 +50,7 @@ public class PlayerData_UI_Mason : MonoBehaviour
     private void Start()
     {
         FinishTossForceDisplay();
-        healthChecker = gameController.GetHP();
+        healthChecker = gameController.GetHP(); // change this no longer does anything health is handled in different script.
         healthBar.fillAmount = health / 100f;
 
 
