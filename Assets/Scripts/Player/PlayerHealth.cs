@@ -42,14 +42,19 @@ public class PlayerHealth : Health
         else { spriteRenderer.enabled = true; }
     }
 
-    public void Hit(Vector3 enemyPos, int damageNumber, int damageType, float damageMod, float knockbackMod)
+    public void Hit(Vector3 enemyPos, int damageNumber, int damageType, float damageMod, float knockbackMod, bool hitInActiveShieldZone)
     {
-        if (!IsInvincible)
+        if (hitInActiveShieldZone && !IsInvincible)
         {
             TakeDamage(damageNumber, damageMod);
             playerController.Hit(enemyPos, knockbackMod);
         }
-        if (!IsInvincible && !shield.shieldOn) { StartCoroutine(hitStun()); }
+        else if (!IsInvincible)
+        {
+            TakeDamage(damageNumber, damageMod);
+            playerController.Hit(enemyPos, knockbackMod);
+            StartCoroutine(hitStun());
+        }
     }
 
     public void TakeDamage(int damageNumber, float damageMod) 

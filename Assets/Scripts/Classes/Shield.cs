@@ -1,6 +1,7 @@
 using Ink.Parsed;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Unity.Burst.CompilerServices;
 using UnityEngine;
 
@@ -9,7 +10,9 @@ using UnityEngine;
 public class Shield : MonoBehaviour
 {
     private SpriteRenderer spriteRenderer;
+    private Collider2D shieldCollider;
     public bool shieldOn;
+    public bool Invincibility { get; set; }
     public bool checkStatus;
     public string shieldedObject;
     public Parry parry;
@@ -18,13 +21,10 @@ public class Shield : MonoBehaviour
     [SerializeField] private string shieldDirectionRelativeToAttack;
     [SerializeField] private string shieldPositionRelativeToAttack;
     [SerializeField] private float collisionAngle;
-    [SerializeField] bool hitWithinActiveShieldZone;
+    public bool hitWithinActiveShieldZone;
 
-
-    public List<int?> layersToCheck;
-    [SerializeField] public int? layer1ToCheck;
-    [SerializeField] public int? layer2ToCheck;
-
+    public Collider2D[] attackingObjects = new Collider2D[10];
+    public ContactFilter2D attackerFilter;
 
     [SerializeField] public List<ShieldZone> shieldZones = new List<ShieldZone>();
     private ShieldZone hitShield;
@@ -34,56 +34,60 @@ public class Shield : MonoBehaviour
     // Start is called before the first frame update
     public void Start()
     {
-        EventSystem.current.onPlayerShieldHitTrigger += DamageHandler;
+        //EventSystem.current.onPlayerShieldHitTrigger += DamageHandler;
 
         TryGetComponent(out parry);
         spriteRenderer = GetComponent<SpriteRenderer>();
+        shieldCollider = GetComponent<Collider2D>();
         ShieldStatus("Off");
         CheckObjectType();
     }
 
-    private void OnTriggerEnter2D(Collider2D collision) { DamageHandler(collision);}
-
-    public void DamageHandler(Collider2D collision)
+    public void Update() 
     {
-        for (int i = 0; i < layersToCheck.Count; i++)
-        {
-            if (collision.gameObject.layer == layersToCheck[i]) // COLLISIONS WITH SHIELD ARE LAYER CHECKED, based AddCollisionsToCheck(), which can be overriden by child shields
-            {
-                if (shieldOn)
-                {
-                    checkStatus = false;
-                    
-                    // IF CHECKSTATUS IS TRUE, DAMAGE IS EVALUATED
-                    SpecificDamageChecks(collision); // an override for different types of child shields to use e.g. player or enemy specific checks
-                    
-                    // GENERIC DAMAGE CHECKS
-                    if (shieldedObject == "Player" && collision.gameObject.GetComponent<Explode>() != null) { checkStatus = true; }
-                    else if (shieldedObject == "Enemy") { checkStatus = true; }
+        attackingObjects = Physics2D.OverlapCircleAll(shieldCollider.bounds.center,
+                                                shieldCollider.bounds.extents.x,
+                                                attackerFilter.layerMask);
 
-                    // IF THERE IS A CONDITION WORTH CHECKING FOR, GO FURTHER
+        DamageHandler(attackingObjects);
+    }
+
+    public void DamageHandler(Collider2D[] overlaps)
+    {
+        if (overlaps != null)
+        {
+            foreach(Collider2D overlap in overlaps)
+            {
+                if(Invincibility == true) // e.g. if player is in hitStun or otherwise invincible, pass no dmg; this is set by child shields for there specific conditions
+                {
+                    HandleDamagePass(overlap, 0, 0, "BulletImpact");
+                }
+                else // check hit conditions
+                {
+                    checkStatus = CheckForRelevantDamageConditions(overlap);
+
+                    // If a type of overlap worth checking, continue
                     if (checkStatus == true)
                     {
-                        hitShield = ShieldZoneCollisionCheck(CheckCollisionAngle(collision)); // check angle
+                        collisionAngle = GetCollisionAngle(overlap); // get the collision angle
+                        hitShield = ShieldZoneCollisionCheck(collisionAngle); // check based on angle whether an active shieldzone is hit
 
-                        if(parry != null && parry.GetParryStatus() == true && hitWithinActiveShieldZone) { ReturnDamage(collision); } // parried
+                        if (parry != null && parry.GetParryStatus() == true && hitWithinActiveShieldZone) { ReturnDamage(overlap); } // parry conditions met
+                        else if(hitWithinActiveShieldZone) 
+                        {
+                            Debug.Log("Reduced damage"); HandleDamagePass(overlap, hitShield.damageAbsorption, hitShield.knockbackAbsorption, "BulletImpact"); // reduced dmg pass, if shieldzone is hit
+                        }
                         else
                         {
-                            if (hitShield != null) { HandleDamagePass(collision, hitShield.damageAbsorption, hitShield.knockbackAbsorption, "BulletImpact"); } // reduced dmg pass, if shield is hit
-                            else { HandleDamagePass(collision, 0, 0, "BulletImpact");} // regular damage pass
+                            Debug.Log("Regular damage"); HandleDamagePass(overlap, 0, 0, "DamageImpact"); } // regular damage pass
                         }
-                    }
                 }
-                else { HandleDamagePass(collision, 0, 0, "DamageImpact"); } // regular damage pass through to shielded object
+
+                // else { Debug.Log("Regular damage"); HandleDamagePass(overlap, 0, 0, "DamageImpact"); } // regular damage pass through to shielded object
             }
         }
-    }
-
-    public void DirectDamageHandler(GameObject self, int attackNum)
-    {
 
     }
-
     private void HandleDamagePass(Collider2D collision, float damageAbsorption, float knockbackAbsorption, string VFXToLoad)
     {
         VFXPath = "VFXPrefabs/" + VFXToLoad;
@@ -91,10 +95,25 @@ public class Shield : MonoBehaviour
         PassThroughDamage(collision, damageAbsorption, knockbackAbsorption);
     }
 
+    bool CheckForRelevantDamageConditions(Collider2D overlap)
+    {
+        // assume an overlap isn't worth lookin at
+        checkStatus = false;
+
+        // IF CHECKSTATUS IS TRUE, DAMAGE IS EVALUATED
+        SpecificDamageChecks(overlap); // an override for different types of child shields to use e.g. player or enemy specific checks
+
+        // GENERIC DAMAGE CHECKS
+        if (shieldedObject == "Player" && overlap.gameObject.GetComponent<Explode>() != null) { checkStatus = true; }
+        else if (shieldedObject == "Enemy") { checkStatus = true; }
+
+        return checkStatus;
+    }
+    
 
     virtual public void SpecificDamageChecks(Collider2D collision) { }
 
-    // START FUNCTIONS
+    // START FUNCTIONS TO UPDATE INERNAL VARIABLES ON WHAT OBJECT IS BEING SHIELDED
     virtual public void CheckObjectType()
     {
         //if(gameObject.layer == LayerMask.NameToLayer("Player")) { shieldedObject = "Player"; }
@@ -106,11 +125,10 @@ public class Shield : MonoBehaviour
 
     virtual public void AddLayersToCheckOn(string shieldedObject)
     {
-        if (shieldedObject == "Enemy") { layer1ToCheck = LayerMask.NameToLayer("Player"); layer2ToCheck = LayerMask.NameToLayer("Ammo"); }
-        layersToCheck = new List<int?> { layer1ToCheck, layer2ToCheck };
+        if (shieldedObject == "Enemy") { attackerFilter.SetLayerMask((1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Player Ammo"))); }
     }
 
-    // UPDATE FUNCTIONS - PRIMARILY USED FOR SHIELD DETECTION
+    // GENERIC + UPDATE FUNCTIONS - PRIMARILY USED FOR SHIELDZONE DETECTION
 
     private ShieldZone ShieldZoneCollisionCheck(float collisionAngle)
     {
@@ -118,28 +136,27 @@ public class Shield : MonoBehaviour
         {
             foreach (ShieldZone shield in shieldZones)
             {
-                if (collisionAngle > shield.minAngle && collisionAngle < shield.maxAngle)
+                if (collisionAngle > shield.minAngle && collisionAngle < shield.maxAngle && shieldOn)
                 {
                     hitWithinActiveShieldZone = true;
                     return shield;
                 }
                 else { hitWithinActiveShieldZone = false; }
             }
+            return null;
         }
         else { Debug.Log("Shield.cs is equipped to gameobject " + gameObject.name + "; however, no shield zones have been added in the inspector"); }
 
         return null;
     }
 
-    private float CheckCollisionAngle(Collider2D collision)
+    private float GetCollisionAngle(Collider2D collision)
     {
         shieldDirectionRelativeToAttack = CheckShieldDirection(gameObject.transform, collision.gameObject.transform);
         shieldPositionRelativeToAttack = CheckShieldPosition(gameObject.transform, collision.gameObject.transform);
         collisionAngle = AngleBetweenVectors(gameObject.transform.position, collision.gameObject.transform.position);
 
-        collisionAngle = AdjustAngleWithDirAndPosition(collisionAngle, shieldDirectionRelativeToAttack, shieldPositionRelativeToAttack);
-
-        return collisionAngle;
+        return AdjustAngleWithDirAndPosition(collisionAngle, shieldDirectionRelativeToAttack, shieldPositionRelativeToAttack);
     }
 
     private float AngleBetweenVectors(Vector2 vec1, Vector2 vec2)
@@ -185,13 +202,11 @@ public class Shield : MonoBehaviour
 
     public virtual void PassThroughDamage(Collider2D collision, float damageMod, float knockbackMod) { } // handled differently by child shields
 
-    public virtual void ReturnDamage(Collider2D collision)
-    {
-    }
+    public virtual void ReturnDamage(Collider2D collision) { } // parry, handled differently by chield shields
 
     private void OnDestroy()
     {
-        EventSystem.current.onPlayerShieldHitTrigger += DamageHandler;
+        //EventSystem.current.onPlayerShieldHitTrigger += DamageHandler;
     }
 
 }

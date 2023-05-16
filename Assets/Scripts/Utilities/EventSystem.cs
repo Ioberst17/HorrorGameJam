@@ -120,13 +120,13 @@ public class EventSystem : MonoBehaviour
 
     public void PlayerShieldHitTrigger(Collider2D attacker) { if(onPlayerShieldHitTrigger != null) { onPlayerShieldHitTrigger(attacker); } }
 
-    public event Action<Vector3, int, int, float, float> onPlayerHitCalcTrigger;
+    public event Action<Vector3, int, int, float, float, bool> onPlayerHitCalcTrigger;
 
-    public void PlayerHitCalcTrigger(Vector3 enemyPos, int damageNumber, int damageType, float damageMod, float knockbackMod) 
+    public void PlayerHitCalcTrigger(Vector3 attackerPosition, int damageNumber, int damageType, float damageMod, float knockbackMod, bool hitInActiveShieldZone) 
     { 
         if(onPlayerHitCalcTrigger != null) 
         { 
-            onPlayerHitCalcTrigger(enemyPos, damageNumber, damageType, damageMod, knockbackMod); 
+            onPlayerHitCalcTrigger(attackerPosition, damageNumber, damageType, damageMod, knockbackMod, hitInActiveShieldZone); 
         } 
     }
 

@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class PlayerShield : Shield
 {
+    // Outside references
     private PlayerStamina playerStamina;
+    private PlayerHealth playerHealth;
+
+    // internal variables and trackers
     private int parryDamage = 10;
     [SerializeField] private int shieldCost = 20;
     [SerializeField] float staminaRate = 50f;
@@ -18,10 +22,17 @@ public class PlayerShield : Shield
     {
         base.Start();
         playerStamina = SiblingComponentUtils.GetSiblingComponent<PlayerStamina>(this.gameObject);
+        playerHealth = GetComponentInParent<PlayerHealth>();
     }
 
-    void Update()
+    new void Update()
     {
+        // handle invincibility
+        if (playerHealth.IsInvincible) { Invincibility = true; }
+        else { Invincibility = false; }
+
+        base.Update();
+
         if (playerStamina.SP < 0)
         {
             ShieldStatus("Off");
@@ -77,7 +88,7 @@ public class PlayerShield : Shield
 
     public override void AddLayersToCheckOn(string shieldedObject)
     {
-        if (shieldedObject == "Player") { layer1ToCheck = LayerMask.NameToLayer("Enemy"); layer2ToCheck = LayerMask.NameToLayer("Player Ammo"); }
+        if (shieldedObject == "Player") { attackerFilter.SetLayerMask((1 << LayerMask.NameToLayer("Enemy") /*| 1 << LayerMask.NameToLayer("Player Ammo")*/)); }
         base.AddLayersToCheckOn(shieldedObject);
     }
 
@@ -119,7 +130,8 @@ public class PlayerShield : Shield
                   enemyDamageVal,
                   1,
                   damageMod,
-                  knockbackMod);
+                  knockbackMod,
+                  hitWithinActiveShieldZone);
             }
             else { Debug.Log("Couldn't find a damage value in the enemy controller of the attacking object that matches the enemyAttackNumber listed on the attacking object"); }
         }
@@ -130,7 +142,8 @@ public class PlayerShield : Shield
                               collision.gameObject.GetComponent<EnemyController>().dmgVal1,
                               1,
                               damageMod,
-                              knockbackMod);
+                              knockbackMod,
+                              hitWithinActiveShieldZone);
         }
         else if (collision.gameObject.GetComponent<EnemyProjectile>() != null)
         {
@@ -139,7 +152,8 @@ public class PlayerShield : Shield
                               collision.gameObject.GetComponent<EnemyProjectile>().damageValue,
                               1,
                               damageMod,
-                              knockbackMod);
+                              knockbackMod,
+                              hitWithinActiveShieldZone);
         }
         else if (collision.gameObject.GetComponent<Explode>() != null)
         {
@@ -148,7 +162,8 @@ public class PlayerShield : Shield
                               10,
                               1,
                               damageMod,
-                              knockbackMod);
+                              knockbackMod,
+                              hitWithinActiveShieldZone);
         }
     }
 
