@@ -1,81 +1,63 @@
+using JetBrains.Annotations;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Unity.Burst.CompilerServices;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
+using UnityEngine.Windows;
 
 public class PlayerController : MonoBehaviour
 {
     //varous different objects and values to be set
-    private Rigidbody2D rb;
+    public Rigidbody2D Rb { get; set; }
     private BoxCollider2D cc;
-    [SerializeField]
-    private GameController GameController;
-    [SerializeField]
-    private float movementSpeed;
-    [SerializeField]
-    private float numberOfJumps;
-    [SerializeField]
-    private float groundCheckRadius;
-    [SerializeField]
-    private float jumpForce;
-    [SerializeField]
-    private float slopeCheckDistance;
-    [SerializeField]
-    private float maxSlopeAngle;
-    [SerializeField]
-    private Transform groundCheck;
-    [SerializeField]
-    private Transform wallCheck;
-    [SerializeField]
-    private Transform cameraFocus;
-    [SerializeField]
-    private LayerMask whatIsGround;
-    [SerializeField]
-    private LayerMask whatIsEnemy;
+    [SerializeField] private GameController gameController;
+    [SerializeField] private float _movementSpeed; public float MovementSpeed { get { return _movementSpeed; } set { _movementSpeed = value; } }
+    [SerializeField] private float groundCheckRadius;
+    [SerializeField] private float slopeCheckDistance;
+    [SerializeField] private float maxSlopeAngle;
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private Transform wallCheck;
+    [SerializeField] private Transform cameraFocus;
+    [SerializeField] private LayerMask whatIsGround;
+    [SerializeField] private LayerMask whatIsEnemy;
 
     private Animator animator;
-    private PlayerParticleSystems visualEffects;
+    public PlayerParticleSystems visualEffects;
     private PlayerPrimaryWeapon playerPrimaryWeapon;
 
-    //all related to dash functionality and tracking. 
-    public bool canDash;
-    public float dashLength;
-    public float dashSpeed;
-    public Camera mainCam;
+    // other ability references
+    PlayerDash playerDash;
+    [SerializeField] PlayerJump playerJump;
 
     //To make the player temporarily unable to control themselves
 
     public bool isAttacking;
     private GroundSlam groundSlam;
+    private ChargePunch chargePunch;
 
-
-    //private float xInput;
-    public int facingDirection = 1;
+    public int FacingDirection { get; set; } = 1;
     private Vector2 oldVelocity;
-    private Vector2 newVelocity;
+    public Vector2 NewVelocity { get; set; }
     private Vector2 newForce;
 
     //used to calculate "control interta"
     public float ControlMomentum;
 
-    [SerializeField] private bool _isGrounded; public bool IsGrounded { get; set; }
+    [SerializeField] private bool _isGrounded; public bool IsGrounded { get { return _isGrounded; } set { _isGrounded = value; } }
     //private bool isOnSlope;
-    private bool isJumping;
-    public bool isDashing;
     //private bool canWalkOnSlope;
-    private bool canJump;
-    public bool isAgainstWall;
-    public bool canWallJump;
-    public int StartingMP;
-    public bool isCharging;
+    [SerializeField] private bool _isAgainstWall; public bool IsAgainstWall { get { return _isAgainstWall; } set { _isAgainstWall = value; } }
+    [SerializeField] private bool _canWallJump; public bool CanWallJump { get { return _canWallJump; } set { _canWallJump = value; } }
 
-    [SerializeField] private PlayerHealth playerHealth;
+
     //Health points, magic points, soul points (currency)
-    public int MP;
-    public float SP, SP_MAX;
-    [SerializeField] private bool hasShield;
+    [SerializeField] private PlayerHealth playerHealth;
+    [SerializeField] private PlayerStamina playerStamina;
+    [SerializeField] private PlayerMana playerMana;
 
     [SerializeField]
     private Transform StartingLocation;
@@ -95,142 +77,81 @@ public class PlayerController : MonoBehaviour
     {
         dataManager = DataManager.Instance;
 
-        rb = GetComponent<Rigidbody2D>();
+        Rb = GetComponent<Rigidbody2D>();
         cc = GetComponent<BoxCollider2D>();
+        gameController = FindObjectOfType<GameController>();
         playerPrimaryWeapon = FindObjectOfType<PlayerPrimaryWeapon>();
-        MP = StartingMP;
-        SP_MAX = 100;
-        SP = SP_MAX;
+        playerJump = GetComponentInChildren<PlayerJump>();
+        playerDash = GetComponentInChildren<PlayerDash>();
+        chargePunch = GetComponentInChildren<ChargePunch>();
+
+        MovementSpeed = 10;
         ControlMomentum = 0;
         animator = GetComponent<Animator>();
-        mainCam = GameObject.Find("Main Camera").GetComponent<Camera>();
         visualEffects = transform.Find("VisualEffects").gameObject.GetComponent<PlayerParticleSystems>();
-        canDash = true;
-        isDashing = false;
 
         if (GetComponent<PlayerHealth>() != null) { playerHealth = GetComponent<PlayerHealth>(); }
         else { Debug.Log("PlayerHealth.cs is being requested as a component of the same object as PlayerController.cs, but could not be found on the object"); }
         groundSlam = GetComponentInChildren<GroundSlam>();
     }
 
-    private void FixedUpdate()
+    private void FixedUpdate() // these dataManager points are used during save to have a last known location
     {
         dataManager.sessionData.lastKnownWorldLocationX = transform.position.x;
         dataManager.sessionData.lastKnownWorldLocationY = transform.position.y;
-        isCharging = playerPrimaryWeapon.isCharging;
     }
 
     //Does anything in the environment layer overlap with the circle while not on the way up
     public void CheckGround()
     {
-        if (rb.velocity.y == 0.0f)
+        if (Rb.velocity.y == 0.0f) // if y velocity is 0
         {
             _isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, whatIsGround);
-            //Debug.Log("isgrounded " + rb.velocity.y);
         }
         else 
         {
             _isGrounded = false;
-            if (!isJumping && !isCharging)
-            {
-                    animator.Play("PlayerFall");
-            }
-            //Debug.Log("isinair " + rb.velocity.y);
+            if (!playerJump.IsJumping && !chargePunch.IsCharging) { animator.Play("PlayerFall"); }
         }
 
-        if (rb.velocity.y <= 0.0f)
-        {
-            isJumping = false;
-        }
+        if (Rb.velocity.y <= 0.0f) { playerJump.IsJumping = false; }
         else
         {
-            isJumping = true;
-            if (!isCharging)
-            {
-                animator.Play("PlayerJump");
-            }
+            playerJump.IsJumping = true;
+            if (!chargePunch.IsCharging) { animator.Play("PlayerJump"); }
         }
 
-        if (_isGrounded && !isJumping)
+        if (_isGrounded && !playerJump.IsJumping)
         {
-            canJump = true;
-            canWallJump = true;
+            playerJump.CanJump = true;
+            _canWallJump = true;
 
-            if (!isDashing)
-            {
-                canDash = true;
-            }
+            if (!playerDash.IsDashing) { playerDash.CanDash = true; }
         }
     }
 
-    
-    //dash handling function
-    public void Dash()
+    public void CheckWall() { _isAgainstWall = Physics2D.OverlapCircle(wallCheck.position, groundCheckRadius, whatIsGround); }
+
+    //called by the GameController, Cutscenes (Cutscene.cs), and by PlayerController for idling
+    //'optional' parameters are used by cutscenes
+    public void ApplyMovement(Vector3? optionalCutsceneDestination = null, float optionalXAdjustment = 0f) 
     {
-        if (canDash && !DialogueManager.GetInstance().dialogueIsPlaying)
+        // if you have a target destination / cutscene, automate movement
+        if (optionalCutsceneDestination.HasValue) { CutsceneMovementHandler(optionalCutsceneDestination, optionalXAdjustment); }
+
+        if (!playerHealth.inHitStun && !playerDash.IsDashing && !chargePunch.IsCharging)
         {
-            canDash = false;
-            StartCoroutine(DashHandler());
-        }
-    }
-
-    public void CheckWall()
-    {
-        isAgainstWall = Physics2D.OverlapCircle(wallCheck.position, groundCheckRadius, whatIsGround);
-    }
-
-    //Jump handling function. Negates previous momentum on jump
-    public void Jump()
-    {
-        if (!isDashing && !DialogueManager.GetInstance().dialogueIsPlaying)
-        {
-            if (canJump)
+            if (_isGrounded && !playerJump.IsJumping) //if on ground
             {
-                canJump = false;
-                isJumping = true;
-                SetVelocity();
-                AddForce(0f, jumpForce);
-                animator.Play("PlayerJump");
-                PlayRandomJumpSound();
-            }
-            else if (isAgainstWall && canWallJump)
-            {
-                ControlMomentum = 20 * -facingDirection;
-                Flip();
-                canWallJump = false;
-                isJumping = true;
-                SetVelocity();
-                AddForce(jumpForce / 2 * -facingDirection, jumpForce);
-                PlayRandomJumpSound();
-                animator.Play("PlayerJump");
-                visualEffects.PlayEffect("MovementDust");
-            }
-        }
-        
-    }
-
-    //called by the GameController
-    public void ApplyMovement()
-    {
-        if(groundSlam.IsGroundSlam == true) { SetVelocity(0, rb.velocity.y); }
-        if (!playerHealth.inHitStun && !isDashing && !isCharging)
-        {
-            if (_isGrounded && !isJumping) //if on ground
-            {
-
-                newVelocity.Set(movementSpeed * ControlMomentum/10, rb.velocity.y);
-                rb.velocity = newVelocity;
-                if(!isAttacking && !isJumping)
+                SetVelocity(MovementSpeed * ControlMomentum/10, Rb.velocity.y);
+                
+                if(!isAttacking && !playerJump.IsJumping)
                 {
-                    if (rb.velocity.x == 0 || DialogueManager.GetInstance().dialogueIsPlaying)
+                    if (Rb.velocity.x == 0 || DialogueManager.GetInstance().DialogueIsPlaying) // if still
                     {
-                        SetVelocity();
-                        if(GameController.xInput == 0)
-                        {
-                            animator.Play("PlayerIdle"); 
-                        }
+                        IdlePlayer();
                     }
-                    else
+                    else // if moving
                     {
                         animator.Play("PlayerRun");
                         visualEffects.PlayEffect("MovementDust");
@@ -240,93 +161,80 @@ public class PlayerController : MonoBehaviour
             }
             else if (!_isGrounded) //If in air
             {
-                newVelocity.Set(movementSpeed * ControlMomentum/10, rb.velocity.y);
-                rb.velocity = newVelocity;
+                SetVelocity(MovementSpeed * ControlMomentum/10, Rb.velocity.y);
             }
         }
-        else if (isCharging)
+        else if (chargePunch.IsCharging)
         {
             if (CheckIfAnimationIsPlaying("PlayerBasicAttack")){ }
             else { animator.Play("PlayerCharge"); } 
         }
     }
 
-    bool CheckIfAnimationIsPlaying(string animationName) 
+    void CutsceneMovementHandler(Vector3? optionalCutsceneDestination = null, float optionalXAdjustment = 0f)
+    {
+        float targetWorldXPosition = optionalCutsceneDestination.Value.x - transform.position.x + optionalXAdjustment;
+        if (targetWorldXPosition > 0) { SetVelocity(); gameController.XInput = 1; } // if distance / destination is right, pause and then move right
+        else if (targetWorldXPosition < 0) { SetVelocity(); gameController.XInput = -1; } // else, do the same and move left
+    }
+
+    public bool MovePlayerToPosition(Vector3 pointToReach, float adjustmentInXDirection) // used by cutscenes to move a player to a point
+    {
+        ApplyMovement(pointToReach, adjustmentInXDirection);
+
+        // return false to break the while loop that is calling this function, if player has reached destination
+        // use ints, since player and position floats exactly overlapping is rare
+        if ((int)transform.position.x == (int)(pointToReach.x + adjustmentInXDirection)) 
+        {
+            IdlePlayer();
+            return false; 
+        } 
+        return true;
+    }
+
+    public void UpdateMomentum()
+    {
+        if (gameController.XInput > 0 && ControlMomentum < 10)
+        {
+            if (ControlMomentum == 0) { ControlMomentum = 5; }
+            else { ControlMomentum += 1; }
+        }
+
+        else if (gameController.XInput < 0 && ControlMomentum > -10)
+        {
+            if (ControlMomentum == 0) { ControlMomentum = -5; }
+            else { ControlMomentum -= 1; }
+        }
+        else if (gameController.XInput == 0)
+        {
+            if (ControlMomentum > 0) { ControlMomentum -= 1; }
+            else if (ControlMomentum < 0) { ControlMomentum += 1; }
+        }
+
+        if (ControlMomentum > 10) { ControlMomentum -= 1; }
+        else if (gameController.XInput < 0 && ControlMomentum < -10) { ControlMomentum += 1; }
+    }
+
+    public bool CheckIfAnimationIsPlaying(string animationName) 
     {
         AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
         if(stateInfo.IsName(animationName) && stateInfo.normalizedTime < 1.0f) { return true; } // if the current state is that animation, and it's normalized play time is less than 1, it's in play
         return false;
     }
 
-    public Vector3 GetNormalizedMouseDirectionFromPlayer()
-    {
-        Vector3 direction = GameController.lookInput - GameController.playerPositionScreen;
-        return direction.normalized; 
-    }
-
-
-    //This is the function that actually performs the dash
-    IEnumerator DashHandler()
-    {
-        isDashing = true;
-        rb.gravityScale = 0;
-        if (GameController.xInput == 0 & GameController.yInput == 0)
-        {
-            Vector3 direction = GetNormalizedMouseDirectionFromPlayer();
-            SetVelocity(direction.x * movementSpeed * 2, direction.y * movementSpeed * 2);
-            //newVelocity.Set(movementSpeed * 2 * facingDirection, 0);
-        }
-        else
-        {
-            float inputPositive = movementSpeed * 2;
-            float inputNegative = movementSpeed * -2;
-
-            if (GameController.xInput > 0 && GameController.yInput > 0) { newVelocity.Set(inputPositive, inputPositive);}
-            else if (GameController.xInput > 0 && GameController.yInput < 0) { newVelocity.Set(inputPositive, inputNegative); }
-            else if (GameController.xInput < 0 && GameController.yInput > 0) { newVelocity.Set(inputNegative, inputPositive); }
-            else if (GameController.xInput < 0 && GameController.yInput < 0) { newVelocity.Set(inputNegative, inputNegative); }
-            else if (GameController.xInput > 0) { newVelocity.Set(inputPositive, 0); }
-            else if (GameController.xInput < 0) { newVelocity.Set(inputNegative, 0); }
-            else if (GameController.yInput > 0) { newVelocity.Set(0, inputPositive); }
-            else if (GameController.yInput < 0) { newVelocity.Set(0, inputNegative); }
-
-            rb.velocity = newVelocity;
-        }
-        FindObjectOfType<AudioManager>().PlaySFX("Dash1");
-        //animator.Play("PlayerDash");
-        yield return DashAfterImageHandler();
-        isDashing = false;
-        rb.gravityScale = 3;
-        newVelocity.Set(0, 0);
-        rb.velocity = newVelocity;
-    }
-    // Handles generation of after images and dash length
-    IEnumerator DashAfterImageHandler()
-    {
-        var startTime = Time.time;
-        {
-            while(dashLength > Time.time - startTime)
-            {
-                PlayerAfterImageObjectPool.Instance.PlaceAfterImage(gameObject.transform);
-                yield return null;
-            }
-        }
-        yield return null;
-    }
-
     //flips the model
     public void Flip()
     {
-        facingDirection *= -1;
+        FacingDirection *= -1;
         transform.Rotate(0.0f, 180.0f, 0.0f);
     }
 
     //Calculated direction of hit for knockback direction.
     public void Hit(Vector3 enemyPos, float knockbackMod)
     {
-        if (!playerHealth.isInvincible)
+        if (!playerHealth.IsInvincible)
         {
-            float knockbackForce = jumpForce * (1 - knockbackMod);
+            float knockbackForce = playerJump.JumpForce * (1 - knockbackMod);
 
             if (enemyPos.x >= transform.position.x) { SetVelocity(-knockbackForce / 3, 0.0f); }
             else { SetVelocity(knockbackForce / 3, 0.0f); }
@@ -341,33 +249,30 @@ public class PlayerController : MonoBehaviour
         transform.position = StartingLocation.position;
     }
 
-    public void gainSP(int SPAmount) { SP += SPAmount; }
-
     public void SetPosition(DataManager.GameData gameData)
     {
         Debug.Log("Attempting to set position...");
         parentTransform.position = new Vector2(gameData.lastKnownWorldLocationX, gameData.lastKnownWorldLocationY);
     }
 
+    public void IdlePlayer(bool doRegardlessOfPlayerInput = false) // if this optional value is called with a true, animator will play idle 
+    {
+        SetVelocity();
+        if (doRegardlessOfPlayerInput || gameController.XInput == 0)  { animator.Play("PlayerIdle");  }
+    }
+
     public void SetVelocity() { SetVelocity(0, 0); }
 
     public void SetVelocity(float xVel, float yVel)
     {
-        newVelocity.Set(xVel, yVel);
-        rb.velocity = newVelocity;
+        NewVelocity = new Vector2(xVel, yVel);
+        Rb.velocity = NewVelocity;
     }
 
     public void AddForce(float xDirForce, float yDirForce)
     {
         newForce.Set(xDirForce, yDirForce);
-        rb.AddForce(newForce, ForceMode2D.Impulse);
-    }
-
-    private void PlayRandomJumpSound()
-    {
-        int jumpAssetChoice = Random.Range(1, 9);
-        string jumpAssetToUse = "Jump" + jumpAssetChoice.ToString();
-        FindObjectOfType<AudioManager>().PlaySFX(jumpAssetToUse);
+        Rb.AddForce(newForce, ForceMode2D.Impulse);
     }
 
     private void OnDestroy()

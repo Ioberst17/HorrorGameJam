@@ -46,7 +46,7 @@ public class Explode : MonoBehaviour
         var target = touchedObject.gameObject.GetComponent<IDamageable>();
 
         if (touchedObject.gameObject.layer == LayerMask.NameToLayer("Player"))
-        { touchedObject.gameObject.GetComponentInChildren<PlayerShield>().DamageHandler(gameObject.GetComponent<Collider2D>()); }
+        { /*touchedObject.gameObject.GetComponentInChildren<PlayerShield>().DamageHandler(gameObject.GetComponent<Collider2D>());*/ }
 
         else if (touchedObject.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         { touchedObject.gameObject.GetComponent<EnemyController>().TakeDamage(damageToGive); }

@@ -16,8 +16,8 @@ public class ChargePunch : MonoBehaviour
     [SerializeField] private float holdTimeNormalized;
     [SerializeField] int attackDirection;
 
-    [SerializeField] private float chargeTime;             // the current charge time
-    [SerializeField] public bool isCharging;                // whether the punch is currently being charged
+    [SerializeField] private float chargeTime; // the current charge time
+    public bool IsCharging { get; set; } // whether the punch is currently being charged
 
 
     [Header("VFX Related")]
@@ -57,13 +57,13 @@ public class ChargePunch : MonoBehaviour
         spriteGlow = visualEffects.GetComponentInParent<SpriteGlowEffect>();
     }
 
-    public void Execute() { isCharging = true; }
+    public void Execute() { IsCharging = true; }
 
-    public void Release(int attackDirection) { this.attackDirection = attackDirection; isCharging = false; ReleasePunch(); }
+    public void Release(int attackDirection) { this.attackDirection = attackDirection; IsCharging = false; ReleasePunch(); }
 
     void FixedUpdate()
     {
-        if (isCharging)
+        if (IsCharging)
         {
             chargeTime = chargeTime + (Time.deltaTime * chargeSpeed);
             CalcForce();
@@ -142,7 +142,7 @@ public class ChargePunch : MonoBehaviour
     void ReleasePunch()
     {
         playerPrimaryWeapon.damageToPass = playerPrimaryWeapon.minDamage + damageToPass;
-        isCharging = false;
+        IsCharging = false;
         chargeTime = 0;
         HandleFinishSound();
         ParticleSystemsOn(false); GlowOn(false);
