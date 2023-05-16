@@ -59,8 +59,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PlayerStamina playerStamina;
     [SerializeField] private PlayerMana playerMana;
 
-    [SerializeField] private bool hasShield;
-
     [SerializeField]
     private Transform StartingLocation;
     [SerializeField] private Transform parentTransform;
@@ -140,8 +138,6 @@ public class PlayerController : MonoBehaviour
     {
         // if you have a target destination / cutscene, automate movement
         if (optionalCutsceneDestination.HasValue) { CutsceneMovementHandler(optionalCutsceneDestination, optionalXAdjustment); }
-
-        if (groundSlam.IsGroundSlam == true) { SetVelocity(0, Rb.velocity.y); } // make sure a groundslam's velocity is maintained
 
         if (!playerHealth.inHitStun && !playerDash.IsDashing && !chargePunch.IsCharging)
         {
@@ -236,7 +232,7 @@ public class PlayerController : MonoBehaviour
     //Calculated direction of hit for knockback direction.
     public void Hit(Vector3 enemyPos, float knockbackMod)
     {
-        if (!playerHealth.isInvincible)
+        if (!playerHealth.IsInvincible)
         {
             float knockbackForce = playerJump.JumpForce * (1 - knockbackMod);
 

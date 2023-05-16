@@ -18,6 +18,7 @@ public class Shield : MonoBehaviour
     [SerializeField] private string shieldDirectionRelativeToAttack;
     [SerializeField] private string shieldPositionRelativeToAttack;
     [SerializeField] private float collisionAngle;
+    [SerializeField] bool hitWithinActiveShieldZone;
 
 
     public List<int?> layersToCheck;
@@ -55,17 +56,20 @@ public class Shield : MonoBehaviour
                     
                     // IF CHECKSTATUS IS TRUE, DAMAGE IS EVALUATED
                     SpecificDamageChecks(collision); // an override for different types of child shields to use e.g. player or enemy specific checks
+                    
+                    // GENERIC DAMAGE CHECKS
                     if (shieldedObject == "Player" && collision.gameObject.GetComponent<Explode>() != null) { checkStatus = true; }
                     else if (shieldedObject == "Enemy") { checkStatus = true; }
 
+                    // IF THERE IS A CONDITION WORTH CHECKING FOR, GO FURTHER
                     if (checkStatus == true)
                     {
                         hitShield = ShieldZoneCollisionCheck(CheckCollisionAngle(collision)); // check angle
 
-                        if(parry != null && parry.GetParryStatus() == true) { ReturnDamage(collision); } // parried
+                        if(parry != null && parry.GetParryStatus() == true && hitWithinActiveShieldZone) { ReturnDamage(collision); } // parried
                         else
                         {
-                            if (hitShield != null) { HandleDamagePass(collision, hitShield.damageAbsorption, hitShield.knockbackAbsorption, "BulletImpact"); } // reduced dmg pass
+                            if (hitShield != null) { HandleDamagePass(collision, hitShield.damageAbsorption, hitShield.knockbackAbsorption, "BulletImpact"); } // reduced dmg pass, if shield is hit
                             else { HandleDamagePass(collision, 0, 0, "BulletImpact");} // regular damage pass
                         }
                     }
@@ -106,7 +110,7 @@ public class Shield : MonoBehaviour
         layersToCheck = new List<int?> { layer1ToCheck, layer2ToCheck };
     }
 
-    // UPDATE FUNCTIONS
+    // UPDATE FUNCTIONS - PRIMARILY USED FOR SHIELD DETECTION
 
     private ShieldZone ShieldZoneCollisionCheck(float collisionAngle)
     {
@@ -116,8 +120,10 @@ public class Shield : MonoBehaviour
             {
                 if (collisionAngle > shield.minAngle && collisionAngle < shield.maxAngle)
                 {
+                    hitWithinActiveShieldZone = true;
                     return shield;
                 }
+                else { hitWithinActiveShieldZone = false; }
             }
         }
         else { Debug.Log("Shield.cs is equipped to gameobject " + gameObject.name + "; however, no shield zones have been added in the inspector"); }

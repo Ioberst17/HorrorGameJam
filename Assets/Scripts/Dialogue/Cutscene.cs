@@ -267,6 +267,7 @@ public class Cutscene : MonoBehaviour
         PlayCurrentActivity();
     }
 
+#if UNITY_EDITOR
     /// <summary>
     /// EDITOR CODE FOR EASE OF USE, STRICTLY GUI RELATED BELOW
     /// </summary>
@@ -395,4 +396,5 @@ public class Cutscene : MonoBehaviour
             serializedObject.ApplyModifiedProperties();
         }
     }
+#endif
 }

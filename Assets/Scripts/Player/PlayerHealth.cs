@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class PlayerHealth : Health
 {
-    public int StartingHP;
-    public bool isInvincible;
+    public bool IsInvincible { get; set; }
     public bool inHitStun;
     private float blinkFrequency = 30f; // higher, isfaster blinking for hit stun
     private SpriteRenderer spriteRenderer;
@@ -25,7 +24,7 @@ public class PlayerHealth : Health
         shield = GetComponentInChildren<Shield>();
         damageDisplay = GetComponentInChildren<UIHealthChangeDisplay>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        isInvincible = false;
+        IsInvincible = false;
         inHitStun = false;
         lucidityDamageModifier = 1;
     }
@@ -45,12 +44,12 @@ public class PlayerHealth : Health
 
     public void Hit(Vector3 enemyPos, int damageNumber, int damageType, float damageMod, float knockbackMod)
     {
-        if (!isInvincible)
+        if (!IsInvincible)
         {
             TakeDamage(damageNumber, damageMod);
             playerController.Hit(enemyPos, knockbackMod);
         }
-        if (!isInvincible && !shield.shieldOn) { StartCoroutine(hitStun()); }
+        if (!IsInvincible && !shield.shieldOn) { StartCoroutine(hitStun()); }
     }
 
     public void TakeDamage(int damageNumber, float damageMod) 
@@ -62,7 +61,7 @@ public class PlayerHealth : Health
 
     public void TakeDamage(int damageNumber) { TakeDamage(damageNumber, 0); }
 
-    public new void HPZero() { Debug.Log("Player Death"); HP = StartingHP; EventSystem.current.PlayerDeathTrigger(); }
+    public new void HPZero() { Debug.Log("Player Death"); HP = maxHealth; EventSystem.current.PlayerDeathTrigger(); }
 
     IEnumerator hitStun()
     {
@@ -76,10 +75,10 @@ public class PlayerHealth : Health
 
     public IEnumerator Invincibility(float length)
     {
-        isInvincible = true;
+        IsInvincible = true;
         //animator.Play("PlayerHit");
         yield return new WaitForSeconds(length); // waits a certain number of seconds
-        isInvincible = false;
+        IsInvincible = false;
     }
 
     private void OnDestroy()

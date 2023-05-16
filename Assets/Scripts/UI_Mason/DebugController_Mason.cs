@@ -107,7 +107,7 @@ public class DebugController_Mason : MonoBehaviour
 
         INVINCIBLE = new DebugCommands_Mason("invincible", "Player doesn't take damage.", "invincible", () =>
         {
-            playerHealth.isInvincible = true;
+            playerHealth.IsInvincible = true;
         });
 
         RESTART = new DebugCommands_Mason("restart", "Restarts the scene.", "restart", () =>

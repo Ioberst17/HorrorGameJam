@@ -54,7 +54,7 @@ public class PlayerData_UI_Mason : MonoBehaviour
         playerMana = playerController.GetComponentInChildren<PlayerMana>();
 
         healthChecker = playerHealth.HP;
-        healthBar.fillAmount = health / 100f;
+        healthBar.fillAmount = playerHealth.HP / 100f;
 
         //dataManager.sessionData.consumables[1].amount = dataManager.sessionData.consumables[1].amount + 2;
 

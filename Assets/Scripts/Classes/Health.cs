@@ -6,6 +6,12 @@ public abstract class Health : MonoBehaviour, IDamageable
 {
     public int HP { get; set; }
     public int maxHealth;
+
+    void Awake()
+    {
+        HP = maxHealth;
+    }
+
     public void AddHealth(int healthToAdd)
     {
         if ((HP += healthToAdd) < maxHealth) { HP += healthToAdd; }
