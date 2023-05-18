@@ -79,7 +79,7 @@ public class PlayerShield : Shield
 
     public override void AddLayersToCheckOn(string shieldedObject)
     {
-        if (shieldedObject == "Player") { layer1ToCheck = LayerMask.NameToLayer("Enemy"); layer2ToCheck = LayerMask.NameToLayer("Player Ammo"); }
+        if (shieldedObject == "Player") { layer1ToCheck = LayerMask.NameToLayer("EnemyAttack"); layer2ToCheck = LayerMask.NameToLayer("Player Ammo"); }
         base.AddLayersToCheckOn(shieldedObject);
     }
 

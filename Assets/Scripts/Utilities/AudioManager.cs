@@ -88,7 +88,11 @@ public class AudioManager : MonoBehaviour
 
     public void UpdateThemePitch(float pitch)
     {
-        currentTheme.source.pitch = pitch;
+        if(currentTheme != null)
+        {
+            currentTheme.source.pitch = pitch;
+        }
+        
     }
 
     private void CheckForError(Sound sound)
