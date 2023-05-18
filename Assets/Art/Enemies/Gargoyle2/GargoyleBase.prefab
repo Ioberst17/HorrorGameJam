@@ -107,9 +107,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3939883374720126478}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: GSlamP1
-  m_TagString: Untagged
+  m_TagString: EnemyAttack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -138,13 +138,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3939883374777757890}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Attacks
-  m_TagString: Untagged
+  m_TagString: EnemyAttack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3939883374777757890
 Transform:
   m_ObjectHideFlags: 0
@@ -173,7 +173,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3939883374885314763}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: FBp2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -204,7 +204,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3939883374894104763}
-  m_Layer: 8
+  m_Layer: 14
   m_Name: GroundSlam
   m_TagString: EnemyAttack
   m_Icon: {fileID: 0}
@@ -238,9 +238,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3939883375017413163}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: GSp1
-  m_TagString: Untagged
+  m_TagString: EnemyAttack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -269,7 +269,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3939883375038232288}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: ASp2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -300,7 +300,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3939883375290425779}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: FireBreath
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -337,7 +337,7 @@ GameObject:
   - component: {fileID: 3939883375295265036}
   - component: {fileID: 7041298519094199441}
   - component: {fileID: 2470782882228128220}
-  m_Layer: 8
+  m_Layer: 14
   m_Name: GroundSlamVisual
   m_TagString: EnemyAttack
   m_Icon: {fileID: 0}
@@ -462,7 +462,7 @@ GameObject:
   - component: {fileID: 3939883375756583709}
   - component: {fileID: 2000045030923562296}
   - component: {fileID: 8433693164747174008}
-  m_Layer: 8
+  m_Layer: 14
   m_Name: GSVisual
   m_TagString: EnemyAttack
   m_Icon: {fileID: 0}
@@ -664,6 +664,7 @@ GameObject:
   - component: {fileID: 3939883375913402950}
   - component: {fileID: 3939883375913402951}
   - component: {fileID: 3493906639205617001}
+  - component: {fileID: 285523429034046893}
   m_Layer: 8
   m_Name: Gargoyle
   m_TagString: Gargoyle
@@ -880,6 +881,8 @@ MonoBehaviour:
   mostRecentAttack: 0
   HP_MAX: 0
   HP: 0
+  isStunned: 0
+  blinkFrequency: 30
   invincibilityCount: 0
   invincibilitySet: 30
   isAttacking: 0
@@ -904,6 +907,85 @@ MonoBehaviour:
   HP_Max: 0
   healthSliderUI: {fileID: 0}
   healthSliderFill: {fileID: 0}
+--- !u!114 &285523429034046893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3939883375913402969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ComponentVersion: 1
+  m_LightType: 3
+  m_BlendStyleIndex: 0
+  m_FalloffIntensity: 0.714
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 1
+  m_LightVolumeIntensity: 1
+  m_LightVolumeIntensityEnabled: 0
+  m_ApplyToSortingLayers: 00000000
+  m_LightCookieSprite: {fileID: 0}
+  m_DeprecatedPointLightCookieSprite: {fileID: 0}
+  m_LightOrder: 0
+  m_AlphaBlendOnOverlap: 0
+  m_OverlapOperation: 0
+  m_NormalMapDistance: 3
+  m_NormalMapQuality: 2
+  m_UseNormalMap: 0
+  m_ShadowIntensityEnabled: 0
+  m_ShadowIntensity: 0.75
+  m_ShadowVolumeIntensityEnabled: 0
+  m_ShadowVolumeIntensity: 0.75
+  m_Vertices:
+  - position: {x: 0.9985302, y: 0.9985302, z: 0}
+    color: {r: 0.70710677, g: 0.70710677, b: 0, a: 0}
+    uv: {x: 0, y: 0}
+  - position: {x: 0.9985302, y: 0.9985302, z: 0}
+    color: {r: 0, g: 0, b: 0, a: 1}
+    uv: {x: 0, y: 0}
+  - position: {x: -0.9985302, y: 0.9985302, z: 0}
+    color: {r: -0.70710677, g: 0.70710677, b: 0, a: 0}
+    uv: {x: 0, y: 0}
+  - position: {x: -0.9985302, y: 0.9985302, z: 0}
+    color: {r: 0, g: 0, b: 0, a: 1}
+    uv: {x: 0, y: 0}
+  - position: {x: -0.99853003, y: -0.9985304, z: 0}
+    color: {r: -0.70710665, g: -0.7071069, b: 0, a: 0}
+    uv: {x: 0, y: 0}
+  - position: {x: -0.99853003, y: -0.9985304, z: 0}
+    color: {r: 0, g: 0, b: 0, a: 1}
+    uv: {x: 0, y: 0}
+  - position: {x: 0.99853003, y: -0.9985304, z: 0}
+    color: {r: 0.70710665, g: -0.7071069, b: 0, a: 0}
+    uv: {x: 0, y: 0}
+  - position: {x: 0.99853003, y: -0.9985304, z: 0}
+    color: {r: 0, g: 0, b: 0, a: 1}
+    uv: {x: 0, y: 0}
+  - position: {x: 0, y: 0, z: 0}
+    color: {r: 0, g: 0, b: 0, a: 1}
+    uv: {x: 0, y: 0}
+  m_Triangles: 030001000800020000000100030002000100050003000800040002000300050004000300070005000800060004000500070006000500010007000800000006000700010000000700
+  m_LocalBounds:
+    m_Center: {x: 0, y: -0.00000011920929, z: 0}
+    m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
+  m_PointLightInnerAngle: 360
+  m_PointLightOuterAngle: 360
+  m_PointLightInnerRadius: 0
+  m_PointLightOuterRadius: 1
+  m_ShapeLightParametricSides: 5
+  m_ShapeLightParametricAngleOffset: 0
+  m_ShapeLightParametricRadius: 1
+  m_ShapeLightFalloffSize: 0.5
+  m_ShapeLightFalloffOffset: {x: 0, y: 0}
+  m_ShapePath:
+  - {x: -0.5, y: -0.5, z: 0}
+  - {x: 0.5, y: -0.5, z: 0}
+  - {x: 0.5, y: 0.5, z: 0}
+  - {x: -0.5, y: 0.5, z: 0}
 --- !u!1 &3939883375918357426
 GameObject:
   m_ObjectHideFlags: 0
@@ -915,7 +997,7 @@ GameObject:
   - component: {fileID: 3939883375918357437}
   - component: {fileID: 3939883375918357436}
   - component: {fileID: 7624028092286342253}
-  m_Layer: 8
+  m_Layer: 14
   m_Name: ASVisual
   m_TagString: EnemyAttack
   m_Icon: {fileID: 0}
@@ -1024,9 +1106,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3939883376012176052}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: GSlamP2
-  m_TagString: Untagged
+  m_TagString: EnemyAttack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1055,7 +1137,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3939883376176913794}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: AirSwipe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1091,7 +1173,7 @@ GameObject:
   - component: {fileID: 3939883376252486151}
   - component: {fileID: 3939883376252486150}
   - component: {fileID: 6501771727438145830}
-  m_Layer: 8
+  m_Layer: 14
   m_Name: FBVisual
   m_TagString: EnemyAttack
   m_Icon: {fileID: 0}
@@ -1266,9 +1348,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3939883376422566904}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: GSp2
-  m_TagString: Untagged
+  m_TagString: EnemyAttack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1297,7 +1379,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3939883376461500360}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: ASp1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1328,13 +1410,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3939883376462527395}
-  m_Layer: 8
+  m_Layer: 14
   m_Name: GroundSwipe
   m_TagString: EnemyAttack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3939883376462527395
 Transform:
   m_ObjectHideFlags: 0
@@ -1393,7 +1475,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3939883376615692671}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: FBp1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
