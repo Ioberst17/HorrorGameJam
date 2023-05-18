@@ -73,7 +73,7 @@ public class EnemyController : MonoBehaviour, IDamageable
         CC2D = GetComponent<CapsuleCollider2D>();
         enemyHealth = GetComponent<EnemyHealth>();
         playerController = GameObject.Find("PlayerModel").GetComponent<PlayerController>();
-        playerLocation = GameObject.Find("PlayerModel").transform;
+        playerLocation = playerController.transform;
         weaponDatabase = GameObject.Find("WeaponDatabase").GetComponent<WeaponDatabase>();
         enemyDatabase = GameObject.Find("EnemyDatabase").GetComponent<EnemyDatabase>();
         animator = GetComponent<Animator>();
@@ -249,7 +249,6 @@ public class EnemyController : MonoBehaviour, IDamageable
         if(OnDeath != null) { OnDeath(this); }
         CC2D.enabled = false;
         spriteRenderer.enabled = false;
-        playerController.gainSP(SoulPointsDropped);
         string enemyDeathSound = gameObject.tag.ToString() + "Death"; // creates string that AudioManager recognizes; tag should match asset in AudioManager
         FindObjectOfType<AudioManager>().PlaySFX(enemyDeathSound);
         if(GetComponent<EnemyLoot>() != null) { GetComponent<EnemyLoot>().InstantiateLoot(transform.position);}

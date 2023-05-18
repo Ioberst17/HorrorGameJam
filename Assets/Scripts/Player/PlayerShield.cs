@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class PlayerShield : Shield
 {
-    private PlayerController playerController;
+    // Outside references
+    private PlayerStamina playerStamina;
     private PlayerHealth playerHealth;
+
+    // internal variables and trackers
     private int parryDamage = 10;
     [SerializeField] private int shieldCost = 20;
     [SerializeField] float staminaRate = 50f;
@@ -18,13 +21,19 @@ public class PlayerShield : Shield
     new void Start()
     {
         base.Start();
-        playerController = GetComponentInParent<PlayerController>();
+        playerStamina = SiblingComponentUtils.GetSiblingComponent<PlayerStamina>(this.gameObject);
         playerHealth = GetComponentInParent<PlayerHealth>();
     }
 
-    void Update()
+    new void Update()
     {
-        if (playerController.SP < 0)
+        // handle invincibility
+        if (playerHealth.IsInvincible) { Invincibility = true; }
+        else { Invincibility = false; }
+
+        base.Update();
+
+        if (playerStamina.SP < 0)
         {
             ShieldStatus("Off");
             shieldButtonDown = false;
@@ -41,9 +50,9 @@ public class PlayerShield : Shield
 
     public void ShieldButtonDown()
     {
-        if (playerController.SP > shieldCost)
+        if (playerStamina.SP > shieldCost)
         {
-            playerController.SP -= shieldCost;
+            playerStamina.SP -= shieldCost;
             ShieldStatus("On"); shieldButtonDown = true;
             if (parry != null) { parry.Execute(); }
         }
@@ -52,7 +61,7 @@ public class PlayerShield : Shield
 
     public void ShieldButtonHeld()
     {
-        if(shieldButtonDown == true) { if (playerController.SP > 0) { ChangeSP(-staminaRate, Time.deltaTime); } }
+        if(shieldButtonDown == true) { if (playerStamina.SP > 0) { ChangeSP(-staminaRate, Time.deltaTime); } }
     }
 
     public void ShieldButtonUp()
@@ -79,7 +88,10 @@ public class PlayerShield : Shield
 
     public override void AddLayersToCheckOn(string shieldedObject)
     {
-        if (shieldedObject == "Player") { layer1ToCheck = LayerMask.NameToLayer("EnemyAttack"); layer2ToCheck = LayerMask.NameToLayer("Player Ammo"); }
+        if (shieldedObject == "Player") { attackerFilter.SetLayerMask((1 << LayerMask.NameToLayer("Enemy") /*| 1 << LayerMask.NameToLayer("Player Ammo")*/)); }
+
+        //if (shieldedObject == "Player") { layer1ToCheck = LayerMask.NameToLayer("EnemyAttack"); layer2ToCheck = LayerMask.NameToLayer("Player Ammo"); }
+
         base.AddLayersToCheckOn(shieldedObject);
     }
 
@@ -121,7 +133,8 @@ public class PlayerShield : Shield
                   enemyDamageVal,
                   1,
                   damageMod,
-                  knockbackMod);
+                  knockbackMod,
+                  hitWithinActiveShieldZone);
             }
             else { Debug.Log("Couldn't find a damage value in the enemy controller of the attacking object that matches the enemyAttackNumber listed on the attacking object"); }
         }
@@ -132,7 +145,8 @@ public class PlayerShield : Shield
                               collision.gameObject.GetComponent<EnemyController>().dmgVal1,
                               1,
                               damageMod,
-                              knockbackMod);
+                              knockbackMod,
+                              hitWithinActiveShieldZone);
         }
         else if (collision.gameObject.GetComponent<EnemyProjectile>() != null)
         {
@@ -141,7 +155,8 @@ public class PlayerShield : Shield
                               collision.gameObject.GetComponent<EnemyProjectile>().damageValue,
                               1,
                               damageMod,
-                              knockbackMod);
+                              knockbackMod,
+                              hitWithinActiveShieldZone);
         }
         else if (collision.gameObject.GetComponent<Explode>() != null)
         {
@@ -150,7 +165,8 @@ public class PlayerShield : Shield
                               10,
                               1,
                               damageMod,
-                              knockbackMod);
+                              knockbackMod,
+                              hitWithinActiveShieldZone);
         }
     }
 
@@ -166,9 +182,9 @@ public class PlayerShield : Shield
 
     public void ChangeSP(float rate, float deltaTime) 
     {
-        var spChecker = playerController.SP + rate * deltaTime;
-        if (spChecker > playerController.SP_MAX) { playerController.SP = playerController.SP_MAX; }
-        else { playerController.SP = spChecker; }
+        var spChecker = playerStamina.SP + rate * deltaTime;
+        if (spChecker > playerStamina.maxSP) { playerStamina.SP = playerStamina.maxSP; }
+        else { playerStamina.SP = spChecker; }
     }
 
 }

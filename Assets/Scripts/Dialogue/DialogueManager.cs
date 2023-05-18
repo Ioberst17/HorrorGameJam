@@ -30,7 +30,7 @@ public class DialogueManager : MonoBehaviour
     private bool destroyDialogueTriggerObject;
     private GameObject dialogueTriggerObject;
 
-    public bool dialogueIsPlaying;
+    public bool DialogueIsPlaying { get; set; }
 
     public bool choicesDisplayed = false;
 
@@ -65,7 +65,7 @@ public class DialogueManager : MonoBehaviour
         }
         
         dataManager = DataManager.Instance;
-        dialogueIsPlaying = false;
+        DialogueIsPlaying = false;
         dialoguePanel.SetActive(false);
 
         //get all of the choices text
@@ -85,15 +85,9 @@ public class DialogueManager : MonoBehaviour
     private void Update()
     {
         //return right away if dialogue isn't playing
-        if (!dialogueIsPlaying)
+        if (!DialogueIsPlaying)
         {
             return;
-        }
-
-        //handle continuing to the next line in the dialogue when return/enter is pressed
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            ContinueStory();
         }
     }
 
@@ -104,7 +98,7 @@ public class DialogueManager : MonoBehaviour
         currentStory = new Ink.Runtime.Story(inkJSON.text);
         CheckIfSavePoint(triggerObject);
         CheckIfNewExperience(triggerObject);
-        dialogueIsPlaying = true;
+        DialogueIsPlaying = true;
         dialoguePanel.SetActive(true);
 
         ContinueStory();
@@ -127,20 +121,23 @@ public class DialogueManager : MonoBehaviour
 
     void CheckIfNewExperience(GameObject triggerObject)
     {
-        if (triggerObject.GetComponent<DialogueTrigger>().isNewExperience) 
+        if(triggerObject.GetComponent<DialogueTrigger>() != null)
         {
-            destroyDialogueTriggerObject = true; dialogueTriggerObject = triggerObject;
-            if(triggerObject.GetComponent<PickupableItem>().itemType == PickupableItem.ItemTypeOptions.Weapons)
+            if (triggerObject.GetComponent<DialogueTrigger>().isNewExperience)
             {
-                int weaponID = triggerObject.GetComponent<PickupableItem>().staticID;
-                currentStory.variablesState["weaponDescription"] = FindObjectOfType<WeaponDatabase>().ReturnItemFromID(weaponID).description;
+                destroyDialogueTriggerObject = true; dialogueTriggerObject = triggerObject;
+                if (triggerObject.GetComponent<PickupableItem>().itemType == PickupableItem.ItemTypeOptions.Weapons)
+                {
+                    int weaponID = triggerObject.GetComponent<PickupableItem>().staticID;
+                    currentStory.variablesState["weaponDescription"] = FindObjectOfType<WeaponDatabase>().ReturnItemFromID(weaponID).description;
+                }
             }
         }
     }
 
     public void ExitDialogueMode()
     {
-        dialogueIsPlaying = false;
+        DialogueIsPlaying = false;
         dialoguePanel.SetActive(false);
         dialogueText.text = "";
         if (destroyDialogueTriggerObject) { Destroy(dialogueTriggerObject); destroyDialogueTriggerObject = false; }

@@ -27,16 +27,14 @@ public class PlayerData_UI_Mason : MonoBehaviour
 
     public float healthChecker;
     public float health;
-    public float mp;
-    public float sp;
 
 
     [SerializeField] private DataManager dataManager;
-
-    [SerializeField] private GameController gameController;
-
+    GameController gameController;
     [SerializeField] private PlayerController playerController;
-    [SerializeField] private PlayerHealth playerHealth;
+    private PlayerHealth playerHealth;
+    private PlayerStamina playerStamina;
+    private PlayerMana playerMana;
 
     // Start is called before the first frame update
     void Awake()
@@ -50,10 +48,13 @@ public class PlayerData_UI_Mason : MonoBehaviour
     private void Start()
     {
         FinishTossForceDisplay();
-        healthChecker = gameController.GetHP();
-        healthBar.fillAmount = health / 100f;
+        gameController = FindObjectOfType<GameController>();
+        playerHealth = playerController.GetComponent<PlayerHealth>();
+        playerStamina = playerController.GetComponentInChildren<PlayerStamina>();
+        playerMana = playerController.GetComponentInChildren<PlayerMana>();
 
-
+        healthChecker = playerHealth.HP;
+        healthBar.fillAmount = playerHealth.HP / 100f;
 
         //dataManager.sessionData.consumables[1].amount = dataManager.sessionData.consumables[1].amount + 2;
 
@@ -64,18 +65,16 @@ public class PlayerData_UI_Mason : MonoBehaviour
 
     void Update()
     {
-        if(healthChecker >  gameController.GetHP() && healthChecker <= playerHealth.maxHealth) { display.ShowChange(healthChecker - gameController.GetHP(), "Negative"); }
-        else if (healthChecker < gameController.GetHP()) { display.ShowChange(gameController.GetHP() - healthChecker, "Positive"); }
+        if(healthChecker >  playerHealth.HP && healthChecker <= playerHealth.maxHealth) { display.ShowChange(healthChecker - playerHealth.HP, "Negative"); }
+        else if (healthChecker < playerHealth.HP) { display.ShowChange(playerHealth.HP - healthChecker, "Positive"); }
 
-        healthChecker = gameController.GetHP();
-        health = gameController.GetHP();
+        healthChecker = playerHealth.HP;
+        health = playerHealth.HP;
         healthBar.fillAmount = health / 100f; //can import the max health to make this better but as for right now the hp is 100
 
-        mp = gameController.GetMP();
-        mpBar.fillAmount = mp / 100f;
+        mpBar.fillAmount = playerMana.MP / 100f;
 
-        sp = gameController.GetSP();
-        spBar.fillAmount = sp / 100f;
+        spBar.fillAmount = playerStamina.SP / 100f;
         if(dataManager.sessionData.consumables.Count >= 2)
         {
             if (dataManager.sessionData.consumables[1].amount > 0)
@@ -89,7 +88,7 @@ public class PlayerData_UI_Mason : MonoBehaviour
 
     public void UseHealthPack()
     {
-        if (dataManager.sessionData.consumables[1].amount > 0 && gameController.GetHP() < 100)
+        if (dataManager.sessionData.consumables[1].amount > 0 && playerHealth.HP < 100)
         {
             playerHealth.AddHealth(10);
             dataManager.sessionData.consumables[1].amount = dataManager.sessionData.consumables[1].amount - 1;

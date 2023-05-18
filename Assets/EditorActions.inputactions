@@ -1,0 +1,34 @@
+{
+    "name": "EditorActions",
+    "maps": [
+        {
+            "name": "Editor",
+            "id": "fd93fac4-249a-448c-8098-918c38c0f82a",
+            "actions": [
+                {
+                    "name": "RightClick",
+                    "type": "Button",
+                    "id": "c7bf5700-ee38-4550-a820-f4261f0f468e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "0ce2296b-3dfc-4fa2-9445-2c0819548f68",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

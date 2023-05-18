@@ -22,11 +22,11 @@ public class OneWayPlatform : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (PlayerInZone && gameController.yInput > 0)
+        if (PlayerInZone && gameController.YInput > 0)
         {
             waitTime = 0.5f;
         }
-        if (PlayerInZone && gameController.yInput < 0)
+        if (PlayerInZone && gameController.YInput < 0)
         {
             if (waitTime <= 0)
             {
@@ -38,7 +38,7 @@ public class OneWayPlatform : MonoBehaviour
                 waitTime -= Time.deltaTime;
             }
         }
-        if (gameController.yInput > 0)
+        if (gameController.YInput > 0)
         {
             effector.useColliderMask = false;
         }

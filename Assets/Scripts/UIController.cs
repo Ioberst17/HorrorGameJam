@@ -5,29 +5,33 @@ using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
-    [SerializeField]
-    private GameController GameController;
-    [SerializeField]
-    private Text HPtext;
-    [SerializeField]
-    private Text MPtext;
-    [SerializeField]
-    private Text SPtext;
+    [SerializeField] private GameController GameController;
+    private PlayerController playerController;
+    private PlayerHealth playerHealth;
+    private PlayerStamina playerStamina;
+    private PlayerMana playerMana;
+
+    [SerializeField] private Text HPtext;
+    [SerializeField] private Text MPtext;
+    [SerializeField] private Text SPtext;
     public GameObject pauseMenu;
     public GameObject debugMenu;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        playerController = FindObjectOfType<PlayerController>();
+        playerHealth = playerController.GetComponent<PlayerHealth>();
+        playerStamina = playerController.GetComponentInChildren<PlayerStamina>();
+        playerMana = playerController.GetComponentInChildren<PlayerMana>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        HPtext.text = GameController.GetHP().ToString();
-        MPtext.text = GameController.GetMP().ToString();
-        SPtext.text = GameController.GetSP().ToString();
+        HPtext.text = playerHealth.HP.ToString();
+        MPtext.text = playerMana.MP.ToString();
+        SPtext.text = playerStamina.SP.ToString();
         if (GameController.isPaused)
         {
             pauseMenu.SetActive(true);

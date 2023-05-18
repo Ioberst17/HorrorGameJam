@@ -35,7 +35,6 @@ public class PlayerPrimaryWeapon : MonoBehaviour
     public int attackLagValue, attackLagTimer;
 
     [SerializeField] ContactFilter2D normalCollisionFilter;
-    public bool isCharging;
 
     //abilities
     GroundSlam groundSlam;
@@ -52,7 +51,6 @@ public class PlayerPrimaryWeapon : MonoBehaviour
         playerController.isAttacking = isAttacking;
         if (attackLagTimer > 0) { attackLagTimer -= 1; }
         AttackHelper();
-        isCharging = chargePunch.isCharging;
     }
 
     private void GetSupportingReferences()
@@ -62,7 +60,6 @@ public class PlayerPrimaryWeapon : MonoBehaviour
         chargePunch = GetComponent<ChargePunch>();
         playerController = GetComponentInParent<PlayerController>();
         animator = GetComponentInParent<Animator>();
-        isCharging = chargePunch.isCharging;
     }
     private void InitializeValues()
     {
@@ -83,7 +80,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
     public void Attack(int attackDirection)
     {
         //Debug.Log("attack called 2");
-        if (!isAttacking && !DialogueManager.GetInstance().dialogueIsPlaying)
+        if (!isAttacking && !DialogueManager.GetInstance().DialogueIsPlaying)
         {
             if(attackLagTimer == 0)
             {

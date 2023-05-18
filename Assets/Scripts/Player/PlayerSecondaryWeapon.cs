@@ -109,13 +109,13 @@ public class PlayerSecondaryWeapon : MonoBehaviour
         if(activeControlScheme == "Gamepad")
         {
             weaponDirection = Mathf.Atan2(gameController.lookInput.y, gameController.lookInput.x) * Mathf.Rad2Deg;
-            if (gameController.xInput > 0.2) { transform.rotation = Quaternion.Euler(0f, 0f, 0f); } // if moving right more than slightly, point right
-            else if (gameController.xInput < -0.2) { transform.rotation = Quaternion.Euler(0f, 0f, 180f); } // if moving left more than slightly, point left
-            else if (gameController.xInput < 0.2 && gameController.xInput > -0.2) // if basically still
+            if (gameController.XInput > 0.2) { transform.rotation = Quaternion.Euler(0f, 0f, 0f); } // if moving right more than slightly, point right
+            else if (gameController.XInput < -0.2) { transform.rotation = Quaternion.Euler(0f, 0f, 180f); } // if moving left more than slightly, point left
+            else if (gameController.XInput < 0.2 && gameController.XInput > -0.2) // if basically still
             {
                 if (gameController.lookInput.x > 0 || gameController.lookInput.y > 0) { transform.rotation = Quaternion.Euler(0f, 0f, weaponDirection); } // if input, point in the direction of the input
-                else if (playerController.facingDirection == 1) { transform.rotation = Quaternion.Euler(0f, 0f, 0f); } // if still facing right, point right
-                else if (playerController.facingDirection == -1) { transform.rotation = Quaternion.Euler(0f, 0f, 180f); } // if still facing left, point left
+                else if (playerController.FacingDirection == 1) { transform.rotation = Quaternion.Euler(0f, 0f, 0f); } // if still facing right, point right
+                else if (playerController.FacingDirection == -1) { transform.rotation = Quaternion.Euler(0f, 0f, 180f); } // if still facing left, point left
             }
         }
         else if(activeControlScheme == "Keyboard&Mouse") 
