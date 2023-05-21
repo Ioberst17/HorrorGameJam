@@ -6,6 +6,12 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class StatusEffect : MonoBehaviour
 {
+    // outside references
+    public SpriteRenderer spriteRenderer;
+    public Animator animator;
+    private ParticleSystem particles;
+    private AudioManager audioManager;
+
     // default values
     public float totalTimePassed = 0.0f;
     public float intervalToApply = 1.0f;
@@ -16,15 +22,15 @@ public class StatusEffect : MonoBehaviour
     public float effectDuration;
     public int damageToPass;
     public bool affectsMovement;
-    
-    public SpriteRenderer spriteRenderer;
-    public Animator animator;
-    private ParticleSystem particles;
+    public string nameOfSFXToPlay;
+    public bool loopSFX;
+
 
     public virtual void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+        audioManager = FindObjectOfType<AudioManager>();
 
         TryGetComponent(out particles);
         spriteRenderer.enabled = false;
@@ -36,27 +42,38 @@ public class StatusEffect : MonoBehaviour
     {
         if (applyStatusEffect)
         {
-            spriteRenderer.enabled = true;
-            if (particles != null) { particles.Play(); }
-            totalTimePassed += Time.deltaTime;
+            // player feedback reg. status effects
+            SFXHandler(true);
+            VFXHandler(true);
 
-            AffectMovement();
-            if (totalTimePassed - counterToApplyAffect >= intervalToApply)
-            {
-                TakeDamage(damageToPass);
-                counterToApplyAffect += intervalToApply;
-            }
+            // pass status effects
+            MovementHandler(true);
+            DamageHandler();
+
+            // update conditions
+            totalTimePassed += Time.deltaTime;
             if (totalTimePassed >= effectDuration) { Reset(); }
         }
     }
 
     // Status Impacts
 
-    public virtual void AffectMovement()
+    public virtual void MovementHandler(bool state)
     {
-        if (GetComponentInParent<EnemyController>() != null  && affectsMovement) 
-        { GetComponentInParent<EnemyController>().isStunned = true; }
-        //else if (gameObject.layer == LayerMask.NameToLayer("Player")) { // affect movement }
+        if (affectsMovement)
+        {
+            if (GetComponentInParent<EnemyController>() != null) { GetComponentInParent<EnemyController>().isStunned = state; }
+            //else if (gameObject.layer == LayerMask.NameToLayer("Player")) { // affect movement }
+        }
+    }
+
+    public virtual void DamageHandler()
+    {
+        if (totalTimePassed - counterToApplyAffect >= intervalToApply)
+        {
+            TakeDamage(damageToPass);
+            counterToApplyAffect += intervalToApply;
+        }
     }
 
     public virtual void TakeDamage(int damage)
@@ -65,12 +82,34 @@ public class StatusEffect : MonoBehaviour
         //else if (gameObject.layer == LayerMask.NameToLayer("Player")) { gameObject.GetComponent<PlayerHealth>().TakeDamage(damage); }
     }
 
+    public virtual void SFXHandler(bool state)
+    {
+        if(nameOfSFXToPlay != "")
+        {
+            if (state == true)
+            {
+                if (loopSFX) { audioManager.LoopSFX(nameOfSFXToPlay, loopSFX); }
+                else { audioManager.PlaySFX(nameOfSFXToPlay); }
+            }
+            else { if (loopSFX) { audioManager.LoopSFX(nameOfSFXToPlay, !loopSFX); } }
+        }
+    }
+
+    public virtual void VFXHandler(bool state)
+    {
+        if (state != true) { if (particles != null) { particles.Stop(); } }
+        else { if (particles != null) { particles.Play(); } }
+        spriteRenderer.enabled = state;
+    }
+
     public virtual void Reset()
     {
         applyStatusEffect = false;
+        VFXHandler(false);
+        SFXHandler(false);
+        MovementHandler(false);
+
         totalTimePassed = 0;
         counterToApplyAffect = 0;
-        spriteRenderer.enabled = false;
-        if(particles != null) { particles.Stop(); }
     }
 }

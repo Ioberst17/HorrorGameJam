@@ -30,7 +30,7 @@ public class Lucidity : MonoBehaviour
 
     void Update()
     {
-        if(gameController.gameState != "isPaused") { level -= lucidityReducationRate * narrativeItemRateChange; }
+        if(gameController.GameState != "isPaused") { level -= lucidityReducationRate * narrativeItemRateChange; }
         else { audioManager.UpdateThemePitch(1); }
 
         if(level > lucidity_MAX) { level = lucidity_MAX; }

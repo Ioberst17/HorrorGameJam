@@ -75,11 +75,11 @@ public class Shield : MonoBehaviour
                         if (parry != null && parry.GetParryStatus() == true && hitWithinActiveShieldZone) { ReturnDamage(overlap); } // parry conditions met
                         else if(hitWithinActiveShieldZone) 
                         {
-                            Debug.Log("Reduced damage"); HandleDamagePass(overlap, hitShield.damageAbsorption, hitShield.knockbackAbsorption, "BulletImpact"); // reduced dmg pass, if shieldzone is hit
+                            HandleDamagePass(overlap, hitShield.damageAbsorption, hitShield.knockbackAbsorption, "BulletImpact"); // reduced dmg pass, if shieldzone is hit
                         }
                         else
                         {
-                            Debug.Log("Regular damage"); HandleDamagePass(overlap, 0, 0, "DamageImpact"); } // regular damage pass
+                            HandleDamagePass(overlap, 0, 0, "DamageImpact"); } // regular damage pass
                         }
                 }
 

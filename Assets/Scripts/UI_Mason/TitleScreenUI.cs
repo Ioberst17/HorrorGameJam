@@ -11,6 +11,8 @@ public class TitleScreenUI : MonoBehaviour
     DataManager dataManager;
     AudioManager audioManager;
 
+    // buttons for navigation
+
     // play times to update
     TextMeshProUGUI file1PlayTime;
     TextMeshProUGUI file2PlayTime;
