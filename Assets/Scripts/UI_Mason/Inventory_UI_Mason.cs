@@ -26,7 +26,7 @@ public class Inventory_UI_Mason : MonoBehaviour
     public int currentConsumableSlotNum;
 
 
-    [SerializeField] private GameObject inventory;
+    [SerializeField] private GameObject _inventory; public GameObject Inventory{ get { return _inventory; } set { _inventory = value; } }
 
     [SerializeField] private GameObject infoPanel;
 
@@ -87,7 +87,7 @@ public class Inventory_UI_Mason : MonoBehaviour
     [SerializeField] private TextMeshProUGUI consumable_count_slot2;
 
 
-    public static bool inventoryOpen = false;
+    public bool InventoryOpen { get; set; }
 
     private static int ammo;
 
@@ -154,24 +154,17 @@ public class Inventory_UI_Mason : MonoBehaviour
 
     public void ToggleUI()
     {
-        if (inventoryOpen)
+        if (InventoryOpen)
         {
             CloseInventory();
             //Time.timeScale = 1.0f; // resumes time in game
-            if (gameController.isPaused)
-            {
-                gameController.pauseHandler();
-            }
-
+            //if (gameController.isPaused) { gameController.pauseHandler(); }
         }
         else
         {
             OpenInventory();
             //Time.timeScale = 0f; // pauses time game still a slight bug with the player being able to queue attacks and audio still playing when clicking around.
-            if (!gameController.isPaused)
-            {
-                gameController.pauseHandler();
-            }
+            //if (!gameController.isPaused) { gameController.pauseHandler(); }
         }
 
         for (int i = 0; i < dataManager.sessionData.primaryWeapons.Count; i++)
@@ -202,7 +195,7 @@ public class Inventory_UI_Mason : MonoBehaviour
 
     private void Update() 
     { 
-        if(!gameController.isPaused && inventoryOpen)
+        if(!gameController.IsPaused && InventoryOpen)
         {
             CloseInventory();
         }
@@ -211,14 +204,14 @@ public class Inventory_UI_Mason : MonoBehaviour
 
     public void OpenInventory()
     {
-        inventory.SetActive(true);
-        inventoryOpen = true;
+        Inventory.SetActive(true);
+        InventoryOpen = true;
     }
 
     public void CloseInventory()
     {
-        inventory.SetActive(false);
-        inventoryOpen = false;
+        Inventory.SetActive(false);
+        InventoryOpen = false;
     }
 
     public void OpenMeleeInventory() //switch ui to melee weapons.

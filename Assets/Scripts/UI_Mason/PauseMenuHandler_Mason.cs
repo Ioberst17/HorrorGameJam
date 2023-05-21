@@ -3,12 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class PauseMenuHandler_Mason : MonoBehaviour
 {
-
     public GameObject pauseMenu;
     public GameObject controlsMenu;
+
+    public Button pauseMenuFirstButton;
+    public Button controlsMenuFirstButton;
+
+    [SerializeField] private string currentControlScheme;
 
     [SerializeField]
     private GameObject quitButton;
@@ -18,12 +23,17 @@ public class PauseMenuHandler_Mason : MonoBehaviour
     {
         gameController = GameObject.Find("GameController").GetComponent<GameController>();
     }
-    private void LateUpdate()
+    private void Update()
     {
-        if (!gameController.isPaused && pauseMenu.activeSelf)
-        {
-            Debug.Log("Pause trigger");
-            Resume();
+        //if (!gameController.isPaused && pauseMenu.activeSelf)
+        //{
+        //    Debug.Log("Pause trigger");
+        //    Resume();
+        //}
+        if (gameController.CurrentControlScheme != currentControlScheme) 
+        { 
+            currentControlScheme = gameController.CurrentControlScheme; // prevents constant reassignment
+            OnControlsChanged();
         }
     }
 
@@ -36,13 +46,21 @@ public class PauseMenuHandler_Mason : MonoBehaviour
 
     public void TogglePauseUI()
     {
-        if (gameController.isPaused) { Resume(); }
+        if (gameController.IsPaused) { Resume(); }
         else { Pause(); }
+    }
+
+    void OnControlsChanged() // if player switches to Gamepad, select the first button
+    {
+        if (currentControlScheme == "Gamepad") { if (pauseMenu.activeSelf) { pauseMenuFirstButton.Select(); } }
+        if (currentControlScheme == "Gamepad") { if (controlsMenu.activeSelf) { controlsMenuFirstButton.Select(); } }
     }
 
     void Pause()
     {
         pauseMenu.SetActive(true);
+        currentControlScheme = gameController.CurrentControlScheme;
+        if (currentControlScheme == "Gamepad") { pauseMenuFirstButton.Select(); }
         quitButton.SetActive(false);
         //Time.timeScale = 0f;
     }
@@ -51,11 +69,15 @@ public class PauseMenuHandler_Mason : MonoBehaviour
     {
         pauseMenu.SetActive(false);
         controlsMenu.SetActive(true);
+        currentControlScheme = gameController.CurrentControlScheme;
+        if (currentControlScheme == "Gamepad") { controlsMenuFirstButton.Select(); }
     }
 
     public void LoadPauseMenu()
     {
         pauseMenu.SetActive(true);
+        currentControlScheme = gameController.CurrentControlScheme;
+        if (currentControlScheme == "Gamepad") { pauseMenuFirstButton.Select(); }
         controlsMenu.SetActive(false);
     }
 

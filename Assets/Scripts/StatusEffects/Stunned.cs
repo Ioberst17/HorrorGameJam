@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Stunned : StatusEffect
 {
-    // These variables control the damage and duration of the poison.
+    // These variables control the damage and duration of the effect
     private StatusEffectData statusData = new StatusEffectData();
 
     public override void Start()
@@ -12,7 +12,9 @@ public class Stunned : StatusEffect
         base.Start();
 
         effectDuration = statusData.stunnedDuration;
-        applyStatusEffect = true;
+        nameOfSFXToPlay = statusData.stunnedSFXName;
+        loopSFX = statusData.shouldLoopStunned;
+        affectsMovement = true;
     }
 
     public override void Execute() { base.Execute(); }

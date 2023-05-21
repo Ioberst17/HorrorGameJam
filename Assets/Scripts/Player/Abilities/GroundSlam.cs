@@ -11,7 +11,7 @@ public class GroundSlam : MonoBehaviour
     PlayerPrimaryWeapon playerPrimaryWeapon;
     PlayerHealth playerHealth;
     PlayerController playerController;
-    PlayerGroundSlamDetector playerGroundSlamDetector;
+    SpriteRenderer detectorSprite;
     [SerializeField] bool groundSlamStop = true;
     public enum TypeOfHit { Damagable, NonDamagable } // i.e. an enemy or breakable object vs the ground
     [SerializeField] private bool _isGroundSlam; public bool IsGroundSlam { get => _isGroundSlam; set => _isGroundSlam = value; }
@@ -35,9 +35,9 @@ public class GroundSlam : MonoBehaviour
         playerController = playerPrimaryWeapon.GetComponentInParent<PlayerController>();
 
         // used for nondamagable VFX on landing
-        playerGroundSlamDetector = GetComponentInChildren<PlayerGroundSlamDetector>();
-        detectionColliderCenter = playerGroundSlamDetector.SpriteRenderer.transform.position;
-        detectionColliderUpperCenter = detectionColliderCenter + new Vector2(0, playerGroundSlamDetector.SpriteRenderer.bounds.size.y / 2f);
+        detectorSprite = GetComponentInChildren<PlayerGroundSlamDetector>().GetComponent<SpriteRenderer>();
+        detectionColliderCenter = detectorSprite.transform.position;
+        detectionColliderUpperCenter = detectionColliderCenter + new Vector2(0, detectorSprite.bounds.size.y / 2f);
     }
 
     // Note: groundslam is finished / triggered off by the PlayerGroundSlamDetector, which handles checks for overlaps
@@ -75,8 +75,8 @@ public class GroundSlam : MonoBehaviour
     void HitNonDamagableSoundAndVFX()
     {
         FindObjectOfType<AudioManager>().PlaySFX("GroundSlam");
-        detectionColliderCenter = playerGroundSlamDetector.SpriteRenderer.transform.position;
-        detectionColliderUpperCenter = detectionColliderCenter + new Vector2(0, playerGroundSlamDetector.SpriteRenderer.bounds.size.y / 2f);
+        detectionColliderCenter = detectorSprite.transform.position;
+        detectionColliderUpperCenter = detectionColliderCenter + new Vector2(0, detectorSprite.bounds.size.y / 2f);
         Instantiate(Resources.Load("VFXPrefabs/DustCloud"), detectionColliderUpperCenter, Quaternion.identity);
     }
 

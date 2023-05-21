@@ -234,6 +234,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!playerHealth.IsInvincible)
         {
+            StartCoroutine(gameController.PlayHaptics());
             float knockbackForce = playerJump.JumpForce * (1 - knockbackMod);
 
             if (enemyPos.x >= transform.position.x) { SetVelocity(-knockbackForce / 3, 0.0f); }
