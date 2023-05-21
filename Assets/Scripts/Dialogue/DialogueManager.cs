@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
+using UnityEngine.InputSystem;
 using Ink.Runtime;
 using UnityEngine.EventSystems;
 using Ink.Parsed;
@@ -12,6 +14,7 @@ using static SiblingComponentUtils;
 public class DialogueManager : MonoBehaviour
 {
     public DataManager dataManager;
+    private GameController gameController;
 
     [Header("Dialogue UI")]
     [SerializeField] private GameObject dialoguePanel;
@@ -30,7 +33,7 @@ public class DialogueManager : MonoBehaviour
     private bool destroyDialogueTriggerObject;
     private GameObject dialogueTriggerObject;
 
-    public bool dialogueIsPlaying;
+    public bool DialogueIsPlaying { get; set; }
 
     public bool choicesDisplayed = false;
 
@@ -65,7 +68,8 @@ public class DialogueManager : MonoBehaviour
         }
         
         dataManager = DataManager.Instance;
-        dialogueIsPlaying = false;
+        gameController = FindObjectOfType<GameController>();
+        DialogueIsPlaying = false;
         dialoguePanel.SetActive(false);
 
         //get all of the choices text
@@ -85,15 +89,9 @@ public class DialogueManager : MonoBehaviour
     private void Update()
     {
         //return right away if dialogue isn't playing
-        if (!dialogueIsPlaying)
+        if (!DialogueIsPlaying)
         {
             return;
-        }
-
-        //handle continuing to the next line in the dialogue when return/enter is pressed
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            ContinueStory();
         }
     }
 
@@ -104,7 +102,7 @@ public class DialogueManager : MonoBehaviour
         currentStory = new Ink.Runtime.Story(inkJSON.text);
         CheckIfSavePoint(triggerObject);
         CheckIfNewExperience(triggerObject);
-        dialogueIsPlaying = true;
+        DialogueIsPlaying = true;
         dialoguePanel.SetActive(true);
 
         ContinueStory();
@@ -127,20 +125,30 @@ public class DialogueManager : MonoBehaviour
 
     void CheckIfNewExperience(GameObject triggerObject)
     {
-        if (triggerObject.GetComponent<DialogueTrigger>().isNewExperience) 
+        if(triggerObject.GetComponent<DialogueTrigger>() != null)
         {
-            destroyDialogueTriggerObject = true; dialogueTriggerObject = triggerObject;
-            if(triggerObject.GetComponent<PickupableItem>().itemType == PickupableItem.ItemTypeOptions.Weapons)
+            if (triggerObject.GetComponent<DialogueTrigger>().isNewExperience) // if it is a new experience
             {
-                int weaponID = triggerObject.GetComponent<PickupableItem>().staticID;
-                currentStory.variablesState["weaponDescription"] = FindObjectOfType<WeaponDatabase>().ReturnItemFromID(weaponID).description;
+                destroyDialogueTriggerObject = true; dialogueTriggerObject = triggerObject; // then store the object
+
+                if (triggerObject.GetComponent<PickupableItem>().itemType == PickupableItem.ItemTypeOptions.Weapons) // if it's a weapon
+                {
+                    int weaponID = triggerObject.GetComponent<PickupableItem>().staticID; // get the weapon ID
+                    currentStory.variablesState["weaponDescription"] = FindObjectOfType<WeaponDatabase>().ReturnItemFromID(weaponID).description; // and show the weapon description
+                }
+
+                else if (triggerObject.GetComponent<PickupableItem>().itemType == PickupableItem.ItemTypeOptions.NarrativeItems)
+                {
+                    int narrativeItemID = triggerObject.GetComponent<PickupableItem>().staticID; // get the item ID
+                    currentStory.variablesState["weaponDescription"] = FindObjectOfType<NarrativeItemsDatabase>().ReturnItemFromID(narrativeItemID).description; // and show the weapon description
+                }
             }
         }
     }
 
     public void ExitDialogueMode()
     {
-        dialogueIsPlaying = false;
+        DialogueIsPlaying = false;
         dialoguePanel.SetActive(false);
         dialogueText.text = "";
         if (destroyDialogueTriggerObject) { Destroy(dialogueTriggerObject); destroyDialogueTriggerObject = false; }
@@ -204,6 +212,9 @@ public class DialogueManager : MonoBehaviour
             //
             index++;
         }
+
+        // select the first choice if gamepad is the input method
+        if(gameController.CurrentControlScheme == "Gamepad") { choices[0].GetComponent<Button>().Select(); }
 
         //go through the remaining choices the UI supports and make sure they're hidden
         for(int i = index; i < choices.Length; i++)

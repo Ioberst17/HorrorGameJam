@@ -13,7 +13,7 @@ public class ObjectiveUI : MonoBehaviour
     //[SerializeField] private Image objectiveBulletpoint;
     [SerializeField] private TextMeshProUGUI objectiveTitle;
     [SerializeField] private TextMeshProUGUI objectiveText;
-    private int areaNum; // PLACEHOLDER we'll use the roomNum to dictate the objective for the room (ex. kill all enemies, find the door, kill boss, etc.)
+    public int AreaNum { get; set; } // PLACEHOLDER we'll use the roomNum to dictate the objective for the room (ex. kill all enemies, find the door, kill boss, etc.)
 
     //[SerializeField] public EnemySpawnManager enemySpawnManager;
 
@@ -24,8 +24,8 @@ public class ObjectiveUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        areaNum = 1; // using this var to test changing text
-        UpdateObjectiveUI(areaNum);
+        AreaNum = 1; // using this var to test changing text
+        UpdateObjectiveUI(AreaNum);
     }
 
     // Update is called once per frame

@@ -12,7 +12,41 @@ public class SceneHandler_Mason : MonoBehaviour
     public GameObject loadGameScreen;
     public GameObject controlsScreen;
     public GameObject optionsScreen;
-    
+
+    public Button mainMenuButton;
+    public Button loadMenuButton;
+    public Button controlsMenuButton;
+    public Button optionsScreenButton;
+
+    [SerializeField] private string currentControlScheme;
+
+    [SerializeField]
+    private GameObject quitButton;
+    public GameController gameController;
+
+    private void Start() { gameController = FindObjectOfType<GameController>(); }
+
+    private void Update() 
+    {
+        if (gameController.CurrentControlScheme != currentControlScheme)
+        {
+            currentControlScheme = gameController.CurrentControlScheme; // prevents constant reassignment
+            OnControlsChanged();
+        }
+    }
+
+    void OnControlsChanged() // if player switches to Gamepad, select the top button of a menu
+    {
+        if (currentControlScheme == "Gamepad") { if (mainMenuScreen.activeSelf) { mainMenuButton.Select(); } }
+        if (currentControlScheme == "Gamepad") { if (loadGameScreen.activeSelf) { loadMenuButton.Select(); } }
+        if (currentControlScheme == "Gamepad") { if (controlsScreen.activeSelf) { controlsMenuButton.Select(); } }
+        if (currentControlScheme == "Gamepad") { if (optionsScreen.activeSelf) { optionsScreenButton.Select(); } }
+    }
+
+    void OnMenuChanged()
+    {
+        OnControlsChanged();
+    }
 
     //open main scene
     public void StartGame()
@@ -39,6 +73,8 @@ public class SceneHandler_Mason : MonoBehaviour
 
         //set the controlscreen canvas to on
         controlsScreen.SetActive(true);
+
+        OnMenuChanged();
     }
 
     //closes controls menu
@@ -49,12 +85,14 @@ public class SceneHandler_Mason : MonoBehaviour
 
         //set the controlscreen canvas to off
         controlsScreen.SetActive(false);
+
+        OnMenuChanged();
     }
 
-    public void CloseLoadGameOptions() { mainMenuScreen.SetActive(true); loadGameScreen.SetActive(false); }
-    public void OpenLoadGameOptions() { mainMenuScreen.SetActive(false); loadGameScreen.SetActive(true); }    
-    public void CloseOptionsMenu() { mainMenuScreen.SetActive(true); optionsScreen.SetActive(false); }
-    public void OpenOptionsMenu() { mainMenuScreen.SetActive(false); optionsScreen.SetActive(true); }
+    public void CloseLoadGameOptions() { mainMenuScreen.SetActive(true); loadGameScreen.SetActive(false); OnMenuChanged(); }
+    public void OpenLoadGameOptions() { mainMenuScreen.SetActive(false); loadGameScreen.SetActive(true); OnMenuChanged(); }    
+    public void CloseOptionsMenu() { mainMenuScreen.SetActive(true); optionsScreen.SetActive(false); OnMenuChanged(); }
+    public void OpenOptionsMenu() { mainMenuScreen.SetActive(false); optionsScreen.SetActive(true); OnMenuChanged(); }
 }
 
 
