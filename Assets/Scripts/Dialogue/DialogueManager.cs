@@ -37,7 +37,7 @@ public class DialogueManager : MonoBehaviour
 
     public bool choicesDisplayed = false;
 
-    private static DialogueManager instance;
+    private static DialogueManager Instance { get; set; }
 
     private List<Ink.Runtime.Choice> currentChoices;
     [SerializeField] List<string> currentTags;
@@ -46,16 +46,16 @@ public class DialogueManager : MonoBehaviour
 
     private void Awake()
     {
-        if(instance != null)
+        if(Instance != null)
         {
             Debug.LogWarning("Found more than one Dialogue Manager in the scene");
         }
-        instance = this;
+        Instance = this;
     }
 
     public static DialogueManager GetInstance()
     {
-        return instance;
+        return Instance;
     }
 
 
@@ -84,22 +84,13 @@ public class DialogueManager : MonoBehaviour
         playerMorality = GameObject.Find("Morality").GetComponent<Morality>();
     }
 
+    //return right away if dialogue isn't playing
+    private void Update() { if (!DialogueIsPlaying) { return; } }
 
-
-    private void Update()
-    {
-        //return right away if dialogue isn't playing
-        if (!DialogueIsPlaying)
-        {
-            return;
-        }
-    }
-
-
-
-    public void EnterDialogueMode(TextAsset inkJSON, GameObject triggerObject)
+    public void EnterDialogueMode(TextAsset inkJSON, GameObject triggerObject, bool openAnInkStitch = false)
     {
         currentStory = new Ink.Runtime.Story(inkJSON.text);
+        if (openAnInkStitch) { currentStory.ChoosePathString("path/to/your/inkScript.json"); }
         CheckIfSavePoint(triggerObject);
         CheckIfNewExperience(triggerObject);
         DialogueIsPlaying = true;
@@ -148,6 +139,8 @@ public class DialogueManager : MonoBehaviour
 
     public void ExitDialogueMode()
     {
+        // if there is an issue with jumping do to jump / submit being the same button, turn this into an IEnumerator and have it wait for 0.2 seconds before continuing
+
         DialogueIsPlaying = false;
         dialoguePanel.SetActive(false);
         dialogueText.text = "";
@@ -195,10 +188,7 @@ public class DialogueManager : MonoBehaviour
             choicesText[index].text = choice.text;
             if(choice.tags != null)
             {
-                foreach (string tag in choice.tags)
-                {
-                    Debug.Log(("Choice at index " + index + " has a" + tag));
-                }
+                foreach (string tag in choice.tags) { Debug.Log(("Choice at index " + index + " has a" + tag)); }
             }
 
             if(choice.tags != null)

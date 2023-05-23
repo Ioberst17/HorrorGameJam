@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public static class ComponentFinder
@@ -44,4 +45,34 @@ public static class ComponentFinder
         // If no component is found in the target object or its parents or children, return false
         return false;
     }
+
+    // Search for a component by name and type
+    public static T GetComponentInChildrenByNameAndType<T>(string componentName, GameObject rootObject = null, bool includeInactive = false) where T : Component
+    {
+        if (string.IsNullOrEmpty(componentName))
+        {
+            throw new ArgumentNullException(nameof(componentName), "Component name cannot be null or empty.");
+        }
+
+        T[] components;
+        if (rootObject == null)
+        {
+            components = UnityEngine.Object.FindObjectsOfType<T>(); // gets a list of objects of the type you're looking for
+        }
+        else
+        {
+            components = rootObject.GetComponentsInChildren<T>(includeInactive);
+        }
+
+        foreach (T component in components)
+        {
+            if (component.name == componentName)
+            {
+                return component;
+            }
+        }
+
+        return null;
+    }
+
 }
