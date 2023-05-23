@@ -123,7 +123,7 @@ public class SpiderBehavior : MonoBehaviour
             }
             else if(!initialFall && isGrounded && !enemyController.isAttacking && (attackCooldown == 0) && (spiderCooldown == 0))
             {
-                SpiderAttackGround();
+                StartCoroutine(SpiderAttackGround());
             }
         }
         else
@@ -158,18 +158,17 @@ public class SpiderBehavior : MonoBehaviour
         enemyController.isAttacking = true;
         initialFall = true;
     }
-    private void SpiderAttackGround()
+    IEnumerator SpiderAttackGround()
     {
         Debug.Log("Spider Attack!");
         attackCooldown = attackSet;
-        enemyController.animator.Play("SpiderPounce");
         if (transform.position.x <= enemyController.playerLocation.position.x)
         {
-            if(enemyController.facingDirection == -1)
+            if (enemyController.facingDirection == -1)
             {
                 enemyController.Flip();
             }
-            
+
         }
         else
         {
@@ -179,9 +178,22 @@ public class SpiderBehavior : MonoBehaviour
             }
 
         }
-        newVelocity.Set(0.0f, 0.0f);
-        enemyController.rb.velocity = newVelocity;
-        enemyController.rb.AddForce(new Vector2(4.0f * enemyController.facingDirection, 3.0f), ForceMode2D.Impulse);
-        enemyController.isAttacking = true;
+        enemyController.animator.Play("SpiderCrouch");
+        yield return new WaitForSeconds(0.50f);
+        if (enemyController.damageInterupt)
+        {
+            isattacking = false;
+            enemyController.isAttacking = false;
+            enemyController.damageInterupt = false;
+        }
+        else
+        {
+            enemyController.animator.Play("SpiderPounce");
+            newVelocity.Set(0.0f, 0.0f);
+            enemyController.rb.velocity = newVelocity;
+            enemyController.rb.AddForce(new Vector2(5.0f * enemyController.facingDirection, 2.0f), ForceMode2D.Impulse);
+            enemyController.isAttacking = true;
+        }
+        yield return new WaitForSeconds(0.01f);
     }
 }

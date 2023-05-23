@@ -138,7 +138,7 @@ public class GargoyleBehavior : MonoBehaviour
         {
             --stateTimer;
         }
-        AttackHelper();
+        //AttackHelper();
         if (stateTimer == 0)
         {
             if (enemyController.playerLocation.position.x > transform.position.x && enemyController.facingDirection == 1)

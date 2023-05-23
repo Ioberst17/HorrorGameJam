@@ -14,15 +14,25 @@ public class PlayerDash : MonoBehaviour
     [SerializeField] private float _dashLength = 0.25f; public float DashLength { get { return _dashLength; } set { _dashLength = value; } }
 
     [SerializeField] private int _dashSpeed = 15; public int DashSpeed { get { return _dashSpeed; } set { _dashSpeed = value; } }
+    [SerializeField] private int dashCooldownNumber;
 
+    private int dashcooldown;
     private void Start()
     {
         gameController = FindObjectOfType<GameController>();
         controller = FindObjectOfType<PlayerController>();
         _canDash = true;
         _isDashing = false;
+        dashcooldown = 0;
     }
 
+    private void FixedUpdate()
+    {
+        if (dashcooldown > 0)
+        {
+            dashcooldown--;
+        }
+    }
     //dash handling function
     public void Execute()
     {
@@ -36,22 +46,28 @@ public class PlayerDash : MonoBehaviour
     //This is the function that actually performs the dash
     IEnumerator DashHandler()
     {
-        _isDashing = true;
-        controller.Rb.gravityScale = 0;
-        if (gameController.XInput == 0 & gameController.YInput == 0)
+        if(dashcooldown == 0)
         {
-            Vector3 direction = GetNormalizedLookDirection();
-            controller.SetVelocity(direction.x * controller.MovementSpeed * 2, direction.y * controller.MovementSpeed * 2);
-            //newVelocity.Set(movementSpeed * 2 * facingDirection, 0);
-        }
-        else { HandleMultiDirectionalDash(); }
+            _isDashing = true;
+            controller.Rb.gravityScale = 0;
+            if (gameController.XInput == 0 & gameController.YInput == 0)
+            {
+                Vector3 direction = GetNormalizedLookDirection();
+                controller.SetVelocity(direction.x * controller.MovementSpeed * 2, direction.y * controller.MovementSpeed * 2);
+                //newVelocity.Set(movementSpeed * 2 * facingDirection, 0);
+            }
+            else { HandleMultiDirectionalDash(); }
 
-        FindObjectOfType<AudioManager>().PlaySFX("Dash1");
-        //animator.Play("PlayerDash");
-        yield return DashAfterImageHandler();
-        _isDashing = false;
-        controller.Rb.gravityScale = 3;
-        controller.SetVelocity(0, 0);
+            FindObjectOfType<AudioManager>().PlaySFX("Dash1");
+            //animator.Play("PlayerDash");
+            yield return DashAfterImageHandler();
+            _isDashing = false;
+            controller.Rb.gravityScale = 3;
+            controller.SetVelocity(0, 0);
+            dashcooldown = dashCooldownNumber;
+            
+        }
+        
     }
     // Handles generation of after images and dash length
     IEnumerator DashAfterImageHandler()

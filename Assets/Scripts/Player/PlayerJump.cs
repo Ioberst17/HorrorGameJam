@@ -43,7 +43,7 @@ public class PlayerJump : MonoBehaviour
                 animator.Play("PlayerJump");
                 PlayRandomJumpSound();
             }
-            else if (controller.IsAgainstWall && controller.CanWallJump)
+            else if (controller.IsAgainstWall && controller.CanWallJump && !controller.IsGrounded)
             {
                 controller.ControlMomentum = 20 * -controller.FacingDirection;
                 controller.Flip();
