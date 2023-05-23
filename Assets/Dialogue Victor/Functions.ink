@@ -19,3 +19,5 @@ You enter the {LOCATION}
 ~moralityCHOICE = moralityCHOICE + newCHOICE
 === function changesheriffTALKS (newTALKS)
 ~sheriffTALKS = sheriffTALKS + newTALKS
+=== function changemotelTALKS (newTALKS)
+~motelTALKS = motelTALKS + newTALKS

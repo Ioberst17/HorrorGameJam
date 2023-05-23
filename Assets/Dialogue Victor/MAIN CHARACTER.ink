@@ -8,10 +8,11 @@ INCLUDE GKR townhall interior.ink
 INCLUDE Mechanic.ink
 INCLUDE Demon Intro.ink
 INCLUDE Demon Outside.ink
+INCLUDE Dreamworld Townsfolk.ink
+INCLUDE Tutorial_Intro.ink
+INCLUDE Motel.ink
 
-
-
-
+VAR motelTALKS = 0
 VAR moralityCHOICE = 1
 VAR moralitySCORE = 20
 VAR pronoun = 1
@@ -24,7 +25,7 @@ VAR firechiefTALKS = 0
 VAR LOCATION = 0
 VAR dungeonVISITS = 0
 
-->demmon_dungeon_check
+->motel_lobby
 ===Start_Game===
 CHOOSE YOUR PRONOUN:
 * [Male]
