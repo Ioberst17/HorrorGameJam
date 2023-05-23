@@ -52,9 +52,7 @@ public class PlayerDash : MonoBehaviour
             controller.Rb.gravityScale = 0;
             if (gameController.XInput == 0 & gameController.YInput == 0)
             {
-                Vector3 direction = GetNormalizedLookDirection();
-                controller.SetVelocity(direction.x * controller.MovementSpeed * 2, direction.y * controller.MovementSpeed * 2);
-                //newVelocity.Set(movementSpeed * 2 * facingDirection, 0);
+                controller.SetVelocity(controller.MovementSpeed * 2 * controller.FacingDirection, 0);
             }
             else { HandleMultiDirectionalDash(); }
 
@@ -85,17 +83,24 @@ public class PlayerDash : MonoBehaviour
 
     private void HandleMultiDirectionalDash() // used if no input is being used by the player
     {
-        float inputPositive = controller.MovementSpeed * 2;
-        float inputNegative = controller.MovementSpeed * -2;
+        if (gameController.PlayerInput.currentControlScheme == "Keyboard & Mouse")
+        {
+            float baseInput = controller.MovementSpeed * 2;
+            controller.SetVelocity(gameController.XInput * baseInput, gameController.YInput * baseInput);
 
-        if (gameController.XInput > 0 && gameController.YInput > 0) { controller.SetVelocity(inputPositive, inputPositive); }
-        else if (gameController.XInput > 0 && gameController.YInput < 0) { controller.SetVelocity(inputPositive, inputNegative); }
-        else if (gameController.XInput < 0 && gameController.YInput > 0) { controller.SetVelocity(inputNegative, inputPositive); }
-        else if (gameController.XInput < 0 && gameController.YInput < 0) { controller.SetVelocity(inputNegative, inputNegative); }
-        else if (gameController.XInput > 0) { controller.SetVelocity(inputPositive, 0); }
-        else if (gameController.XInput < 0) { controller.SetVelocity(inputNegative, 0); }
-        else if (gameController.YInput > 0) { controller.SetVelocity(0, inputPositive); }
-        else if (gameController.YInput < 0) { controller.SetVelocity(0, inputNegative); }
+            //if (gameController.XInput > 0 && gameController.YInput > 0) { controller.SetVelocity(gameController.XInput * baseInput, gameController.YInput* baseInput); }
+            //else if (gameController.XInput > 0 && gameController.YInput < 0) { controller.SetVelocity(gameController.XInput * baseInput, gameController.YInput * baseInput); }
+            //else if (gameController.XInput < 0 && gameController.YInput > 0) { controller.SetVelocity(gameController.XInput * baseInput, gameController.YInput * baseInput); }
+            //else if (gameController.XInput < 0 && gameController.YInput < 0) { controller.SetVelocity(gameController.XInput * baseInput, gameController.YInput * baseInput); }
+            //else if (gameController.XInput > 0) { controller.SetVelocity(gameController.XInput * baseInput, 0); }
+            //else if (gameController.XInput < 0) { controller.SetVelocity(gameController.XInput * baseInput, 0); }
+            //else if (gameController.YInput > 0) { controller.SetVelocity(0, gameController.YInput * baseInput); }
+            //else if (gameController.YInput < 0) { controller.SetVelocity(0, gameController.YInput * baseInput); }
+        }
+        else if (gameController.PlayerInput.currentControlScheme == "Gamepad")
+        {
+            controller.SetVelocity(gameController.XInput * controller.MovementSpeed * 2, gameController.YInput * controller.MovementSpeed * 2);
+        }
     }
 
     public Vector3 GetNormalizedLookDirection() // either mouse or right joystick information
