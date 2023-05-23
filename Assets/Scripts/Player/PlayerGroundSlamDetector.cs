@@ -52,7 +52,7 @@ public class PlayerGroundSlamDetector : MonoBehaviour // meant to handle hit det
         {
             Debug.Log("Damagable hits are not null");
             // if has rigidbody + a box collider
-            if (hit.gameObject.GetComponent<Rigidbody2D>() != null && hit is BoxCollider2D) 
+            if (hit.gameObject.GetComponent<Rigidbody2D>() != null) 
             {
                 Debug.Log("Hit something");
                 // if it has a isDamagable interface implemented 
