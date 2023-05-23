@@ -9,6 +9,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
 {
     public WeaponDatabase weaponDatabase;
     public PlayerController playerController;
+    private AudioManager audioManager;
     Animator animator;
 
     //these are all related to attack information
@@ -22,7 +23,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
 
     //These are all the objects used for physical hit detection
     [SerializeField]
-    private GameObject attackHori, attackUp, attackDown;
+    private GameObject attackHori, attackUp, attackDown, chargePunchSprite;
     [SerializeField]
     private Transform AHPoint1, AHPoint2, AUPoint1, AUPoint2, ADPoint1, ADPoint2;
     [SerializeField]
@@ -59,6 +60,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
         groundSlam = GetComponent<GroundSlam>();
         chargePunch = GetComponent<ChargePunch>();
         playerController = GetComponentInParent<PlayerController>();
+        audioManager = FindObjectOfType<AudioManager>();
         animator = GetComponentInParent<Animator>();
     }
     private void InitializeValues()
@@ -140,8 +142,9 @@ public class PlayerPrimaryWeapon : MonoBehaviour
             //Debug.Log("Swinging");
             //animator.Play("PlayerAttackDown");
         }
+        if (chargePunch.PunchSprite.gameObject.activeSelf) { CheckForCollisions(chargePunch.UpperRightCorner, chargePunch.BottomLeftCorner, true); }
     }
-    private void CheckForCollisions(Vector2 point1, Vector2 point2)
+    private void CheckForCollisions(Vector2 point1, Vector2 point2, bool isChargePunch = false)
     {
         hitListLength = Physics2D.OverlapArea(point1, point2, normalCollisionFilter, hitList);
         if (hitListLength > 0)
@@ -152,7 +155,14 @@ public class PlayerPrimaryWeapon : MonoBehaviour
             {
                 Debug.LogFormat("has hit something. It's named {0}", hitList[i].gameObject.name);
                 if (hitList[i].GetComponent<IDamageable>() != null && hitList[i]) 
-                { hitList[i].GetComponent<IDamageable>().Hit(damageToPass, transform.position); }
+                { hitList[i].GetComponent<IDamageable>().Hit(damageToPass, transform.position);
+                    if (isChargePunch)
+                    {
+                        CameraBehavior cameraBehavior = FindObjectOfType<CameraBehavior>();
+                        cameraBehavior.ShakeScreen(0.5f);
+                        audioManager.PlaySFX("ChargePunchHit");
+                    }
+                }
                 i++;
             }
         }

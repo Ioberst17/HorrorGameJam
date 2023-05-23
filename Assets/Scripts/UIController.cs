@@ -32,7 +32,7 @@ public class UIController : MonoBehaviour
         HPtext.text = playerHealth.HP.ToString();
         MPtext.text = playerMana.MP.ToString();
         SPtext.text = playerStamina.SP.ToString();
-        if (GameController.isPaused)
+        if (GameController.IsPaused)
         {
             pauseMenu.SetActive(true);
         }

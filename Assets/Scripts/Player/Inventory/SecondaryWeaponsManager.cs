@@ -5,6 +5,7 @@ using UnityEngine;
 public class SecondaryWeaponsManager : WeaponsManager
 {
     private float lastWeaponUseTime;
+    private ChargePunch chargePunch;
     // Start is called before the first frame update
     public override void Start()
     {
@@ -15,6 +16,7 @@ public class SecondaryWeaponsManager : WeaponsManager
 
         player = GameObject.Find("Player");
         playerSecondaryWeapon = player.GetComponentInChildren<PlayerSecondaryWeapon>();
+        chargePunch = player.GetComponentInChildren<ChargePunch>();
     }
 
     // Update is called once per frame
@@ -73,8 +75,9 @@ public class SecondaryWeaponsManager : WeaponsManager
         bool hasAmmo = weaponList[currentWeaponIndex].ammo > 0;
         bool doesNotExceedFireRate = Time.time > lastWeaponUseTime + weaponList[currentWeaponIndex].fireRate;
         bool canThrow = !playerSecondaryWeapon.inActiveThrow;
+        bool notChargePunching = !chargePunch.IsCharging;
 
-        if (hasAmmo && doesNotExceedFireRate && canThrow)
+        if (hasAmmo && doesNotExceedFireRate && canThrow && notChargePunching)
         {
             lastWeaponUseTime = Time.time;
 

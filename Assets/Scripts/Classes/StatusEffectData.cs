@@ -16,6 +16,8 @@ public class StatusEffectData
 
     // Stunned
     public int stunnedDuration = 3;
+    public string stunnedSFXName = "Stunned";
+    public bool shouldLoopStunned = true;
 
 
     public StatusEffectData()
