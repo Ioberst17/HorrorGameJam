@@ -351,7 +351,7 @@ public class GameController : MonoBehaviour
         } 
     }
 
-    void JumpLogic() { if (JumpButton && !(JumpBuffer > 5) && skills.hasJump()) { playerJump.Execute(); ++JumpBuffer; } }
+    void JumpLogic() { if (JumpButton && !(JumpBuffer > 5) && skills.hasJump()) { playerJump.Execute(); JumpBuffer = 6; } }
 
     void DashLogic() { if (DashButton && !(DashBuffer > 5) && skills.hasDash()) { playerDash.Execute(); ++DashBuffer; } }
 

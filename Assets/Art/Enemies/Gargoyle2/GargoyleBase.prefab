@@ -337,7 +337,7 @@ GameObject:
   - component: {fileID: 3939883375295265036}
   - component: {fileID: 7041298519094199441}
   - component: {fileID: 2470782882228128220}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: GroundSlamVisual
   m_TagString: EnemyAttack
   m_Icon: {fileID: 0}
@@ -462,7 +462,7 @@ GameObject:
   - component: {fileID: 3939883375756583709}
   - component: {fileID: 2000045030923562296}
   - component: {fileID: 8433693164747174008}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: GSVisual
   m_TagString: EnemyAttack
   m_Icon: {fileID: 0}
@@ -922,12 +922,12 @@ MonoBehaviour:
   m_ComponentVersion: 1
   m_LightType: 3
   m_BlendStyleIndex: 0
-  m_FalloffIntensity: 0.714
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_FalloffIntensity: 0.767
+  m_Color: {r: 0.754717, g: 0.28764686, b: 0.28764686, a: 1}
+  m_Intensity: 2
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
-  m_ApplyToSortingLayers: 00000000
+  m_ApplyToSortingLayers: 575c1b6b25b31515dde89b4ac90fee0600000000
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -974,8 +974,8 @@ MonoBehaviour:
     m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
-  m_PointLightInnerRadius: 0
-  m_PointLightOuterRadius: 1
+  m_PointLightInnerRadius: 1
+  m_PointLightOuterRadius: 5
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0
   m_ShapeLightParametricRadius: 1
@@ -997,7 +997,7 @@ GameObject:
   - component: {fileID: 3939883375918357437}
   - component: {fileID: 3939883375918357436}
   - component: {fileID: 7624028092286342253}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: ASVisual
   m_TagString: EnemyAttack
   m_Icon: {fileID: 0}
@@ -1173,7 +1173,7 @@ GameObject:
   - component: {fileID: 3939883376252486151}
   - component: {fileID: 3939883376252486150}
   - component: {fileID: 6501771727438145830}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: FBVisual
   m_TagString: EnemyAttack
   m_Icon: {fileID: 0}
