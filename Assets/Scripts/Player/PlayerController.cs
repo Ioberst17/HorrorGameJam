@@ -128,6 +128,10 @@ public class PlayerController : MonoBehaviour
 
             if (!playerDash.IsDashing) { playerDash.CanDash = true; }
         }
+        else if (!_isGrounded)
+        {
+            playerJump.CanJump = false;
+        }
     }
 
     public void CheckWall() { _isAgainstWall = Physics2D.OverlapCircle(wallCheck.position, groundCheckRadius, whatIsGround); }
