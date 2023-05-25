@@ -14,8 +14,8 @@ You sigh.
 YOU: At least I have somewhere to sleep.
 }
 - As you enter the room, the waft of must and dust comes over you. You cough and drag your bag over the dresser and put your clothes away.
-* Go to sleep. ->demmon_dungeon_check
-* Explore. ->
+* [Go to sleep.] ->demmon_dungeon_check
+* [Explore.] ->
 ->DONE
 
 =motel_lobby
@@ -30,31 +30,31 @@ YOU: Hey.
 She nods and goes back to scrolling on her phone.
 }
 -
-* Chat -> motel_loop
-* Explore ->DONE
+* [Chat.] -> motel_loop
+* [Explore.] ->DONE
 
 =motel_loop
 {motelTALKS > 0:
 {~What?| ... | Busy.| No hablo ingles.}
-+ Talk to her again. ->motel_loop
++ [Talk to her again.] ->motel_loop
 }
 MOLLY: What?
-* Ask about the town.
+* [Ask about the town.]
     YOU: What is there to know about Muldenberry?
     MOLLY: Not a lot. Small town, shit education, dial-up speeds, and a good amount of racism. It's a great time.
-    ** It can't be that bad.
+    ** [It can't be that bad.]
         MOLLY: Do I look like I'm having a good time? 
         YOU: Not really.
         MOLLY: Well there you go. If you don't need anything like a towel or something, I got other shit to do.
-        +++ Talk to her again.
+        +++ [Talk to her again.]
             ~changemotelTALKS (1)
             ----->motel_loop
-        *** Leave.
+        *** [Leave.]
         --->DONE
-    ** Sounds about right.
+    ** [Sounds about right.]
         MOLLY: Yup. Now if you don't need a towel or anything I got other shit to do.
-        +++ Talk to her again.
+        +++[ Talk to her again.]
         ~changemotelTALKS (1)
         ----> motel_loop
-       *** Leave. --->DONE
-*Nevermind. ->DONE
+       *** [Leave.] --->DONE
+*[Nevermind.] ->DONE

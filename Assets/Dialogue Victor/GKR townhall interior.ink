@@ -6,7 +6,7 @@ PERCIVAL: Here it is, city <>
 -2: girl.
 -3: kid.
 }
-* YOU: Wow. <>
+* [YOU: Wow.] <>
 {moralityCHOICE < 0: 
  What a shit hole.
  -else:
@@ -17,13 +17,13 @@ YOU: When was the last time anything was turned on here?
 PERCIVAL: Not since you were sucking on your--
 MAYOR: It has been quite some time. However, whatever you need to make us ready for a streaming festival, please let me know. 
 -
-* Clean the hall.
+* [Clean the hall.]
     YOU:<> {moralityCHOICE > 0: 
     First thing's first. Gotta make sure this place looks its best. So I'll get to work on cleaning up. ->DONE
     -else:
     This place is disgusting. So I guess we should start with that.->DONE
     }
-* Set up commercial wifi hotspot.
+* [Set up commercial wifi hotspot.]
     YOU: <>{moralityCHOICE > 0:
     Can't have a streaming festival without a hotspot, so I should get started there.
     -else:

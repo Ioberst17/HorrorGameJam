@@ -59,5 +59,5 @@ FIRE CHIEF: I said I'm fine. Now get out.
 - else:
 FIRE CHIEF: {~Get out.|Scram.|Don't push it.}
 }
-+ Ask again. ->firechief_post_dungeon_loop
-*Leave. ->DONE
++ [Ask again.] ->firechief_post_dungeon_loop
+*[Leave.] ->DONE

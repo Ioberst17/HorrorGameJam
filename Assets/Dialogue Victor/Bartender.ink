@@ -17,18 +17,18 @@ BARTENDER: {~Sorry, sugar. Not open today.| No can do.| Try a grocery store.|Clo
 =bartender
 BARTENDER: What can I get you?
 {moralityCHOICE > 0:
-*A Shirley Temple. -> good_drink
+* [A Shirley Temple.] -> good_drink
 - else:
-* Whiskey, with a beer back. -> bad_drink
+* [Whiskey, with a beer back]. -> bad_drink
 }
 =good_drink
 The bartender raises an eyebrow. 
 BARTENDER: Sure thing, sugar. 
 She pours the drink and adds a flag to the cherry. She winks at you.
 YOU: Thank you. 
-* Drink it all at once.
+* [Drink it all at once.]
     BARTENDER: Mighty thirsty. 
-* Take a sip.
+* [Take a sip.]
 - BARTENDER: You that kid the mayor hired?
 YOU: Yeah. I'm hoping I can do a good job. Percival doesn't like me though.
 BARTENDER: He don't like anybody.
@@ -40,34 +40,34 @@ BARTENDER: You're welcome. Need anything else, just holler.
 =bad_drink
 BARTENDER: Bold choice. 
 She sets a shot of whiskey down and slides a beer over from the tap.
-* Shoot both and pound it. 
+* [Shoot the shot and pound the beer in one drink.] 
     BARTENDER: 'nother beer, sugar?
-    **YOU: Hit me.
-    **YOU: No thanks.
-* Shoot the shot, sip the beer.
+    **[YOU: Hit me.]
+    **[YOU: No thanks.]
+* [Shoot the shot, sip the beer.]
 - BARTENDER: You that kid the mayor hired?
 YOU: Unfortunately.
 BARTENDER: Percival give you a hard time?
 YOU: He tried. 
 BARTENDER: Well you seem to have a thick enough skin. If you need anything else, just holler.
-*YOU: Will do. ->bartender_loop_bad
+*[YOU: Will do.] ->bartender_loop_bad
 
 =bartender_loop_good
-+ Order another Shirley Temple.{changebartenderTALKS (1)}
++ [Order another Shirley Temple.]{changebartenderTALKS (1)}
     {bartenderTALKS < 7: 
     BARTENDER: Comin' up. ->bartender_loop_good
     -else:
     BARTENDER: {~Quite a lot of sugar there, sugar.|Sure your teeth won't rot out?|If it's the cherry you want, how 'bout I just give you a hand} ->bartender_loop_good
     }
-*Leave
+*[Leave]
 ->DONE
 
 = bartender_loop_bad
-+  Order another beer.{changebartenderTALKS(1)}
++  [Order another beer.]{changebartenderTALKS(1)}
     {bartenderTALKS < 7:
     BARTENDER: Comin up. ->bartender_loop_bad
     -else:
     BARTENDER: {~I think you've had enough.| That's one too many.| You're done, sugar.} -> bartender_loop_bad
     }
-* Leave.
+* [Leave.]
 ->DONE

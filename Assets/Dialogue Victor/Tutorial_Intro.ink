@@ -26,25 +26,32 @@ YOU: Shut up.
 }
 ->DONE
 
-=tutorial_MELEE_pickup
+=tutorial_MELEE
 //OBJ: Kill useing jump and melee.
 DEMON: See that dog ... thing?
 YOU: A Hellhound?
 DEMON: You can't say that. It's offensive for non-demons to use that term.
 {moralityCHOICE > 0:
 YOU: Oh, I'm sorry. I didn't mean to off—
-DENMON: I'm just kidding! Yes. A Hellhound. Well you're going to fight it. First you need something to hit it with. See if you can find a good bashing tool.
+DENMON: I'm just kidding! Yes. A Hellhound. Well you're going to fight it. 
 -else: 
 YOU: I didn't know demons were SJWs.
-DEMON: Hah! Good one. I was just trying to joke you see? We're not very funny. In any case, you're going to fight it. First, you need something to hit it with. See if there's anything lying around.
+DEMON: Hah! Good one. I was just trying to joke you see? We're not very funny. In any case, you're going to fight it.
 }
+-
+YOU: With what?
+DEMON: Your fists of course! Go ahead, punch its ugly nose.
 ->DONE
 
-=tutorial_MELEE_hit
+=tutorial_CHARGED_MELEE_hit
 DEMON: Okay, now that you have your weapon, run up to it and smash its face in!
 ->DONE
 
-=tutorial_MELEE_hit_SUCCESS
+=tutorial_MELEE_HIT_success
+DEMON: Satisfying right? But c'mon. I bet you want to do something cooler. Like...a magic punch! So concentrate, and put all that latent heroism within you into your fist and then just ... let it fly!
+->DONE
+
+=tutorial_CHARGED_MELEE_hit_SUCCESS
 DEMON: Great job! See how it's bleeding and dead? We like that. Now on to the next area!
 ->DONE
 

@@ -11,6 +11,8 @@ INCLUDE Demon Outside.ink
 INCLUDE Dreamworld Townsfolk.ink
 INCLUDE Tutorial_Intro.ink
 INCLUDE Motel.ink
+INCLUDE Demon Barks.ink
+
 
 VAR motelTALKS = 0
 VAR moralityCHOICE = 1
@@ -46,7 +48,7 @@ The phone rings.
    PLAYER: Hi mom.
    MOM: Found a job yet?
    PLAYER: No, not yet. 
-   MOM:Well then I've got good news.
+   MOM: Well then I've got good news.
    PLAYER: Hit me.
    MOM: Remember that little town, Muldenberry we stopped at on our way to visit your grandfather?
     **[Yes]
