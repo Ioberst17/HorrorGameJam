@@ -301,8 +301,8 @@ Shader "Cartoon FX/Remaster/Particle Ubershader"
 
 				CGPROGRAM
 
-				#pragma vertex vertex_program
-				#pragma fragment fragment_program
+				//#pragma vertex vertex_program // custom edit
+				//#pragma fragment fragment_program // custom edit
 
 				#pragma shader_feature_local _ _CFXR_SINGLE_CHANNEL
 				#pragma shader_feature_local _ _CFXR_DISSOLVE
@@ -326,7 +326,7 @@ Shader "Cartoon FX/Remaster/Particle Ubershader"
 
 				#define CFXR_UPR
 				#define PASS_SHADOW_CASTER
-				#define CFXR_UBERSHADER
+				//#define CFXR_UBERSHADER // custom edit
 				#include "CFXR_PASSES.cginc"
 
 				ENDCG
