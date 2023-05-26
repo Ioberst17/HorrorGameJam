@@ -24,9 +24,9 @@ public class Explode : MonoBehaviour
         Destroy(gameObject, 1f);
     }
 
-    public void AmmoExplosion(float radius, float pushForce, int weaponID, int weaponLevel)
+    public void AmmoExplosion(float radius, float pushForce, string weaponName, int weaponID, int weaponLevel)
     {
-        AddExplosionEffects();
+        AddExplosionEffects(weaponName);
         foreach (Collider2D touchedObject in GetObjectsInExplosionRadius(radius))
         {
             PushObject(touchedObject, radius, pushForce);
@@ -71,9 +71,16 @@ public class Explode : MonoBehaviour
 
     
 
-    private void AddExplosionEffects()
+    private void AddExplosionEffects(string weaponName = "")
     {
-        Instantiate(Resources.Load("VFXPrefabs/Explosion"), transform.position, Quaternion.identity);
+        if(weaponName == "Fireworks") // customize later if other VFX are added
+        {
+            Instantiate(Resources.Load("VFXPrefabs/" + weaponName), transform.position, Quaternion.identity);
+        }
+        else
+        {
+            Instantiate(Resources.Load("VFXPrefabs/Explosion"), transform.position, Quaternion.identity);
+        }
         FindObjectOfType<AudioManager>().PlaySFX("WeaponExplosion");
     }
 

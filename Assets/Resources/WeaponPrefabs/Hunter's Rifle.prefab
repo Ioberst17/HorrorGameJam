@@ -15,8 +15,8 @@ GameObject:
   - component: {fileID: 7877598881239153126}
   - component: {fileID: 7877598881239153125}
   - component: {fileID: 7877598881239153127}
-  - component: {fileID: 7877598881239153129}
   - component: {fileID: 7877598881239153128}
+  - component: {fileID: 3828215695439951683}
   m_Layer: 10
   m_Name: Hunter's Rifle
   m_TagString: Untagged
@@ -185,28 +185,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   visualCue: {fileID: 7877598881239153120}
-  inkJSON: {fileID: 4900000, guid: dc505f5ac1a528142a7725186d7d2d5d, type: 3}
+  inkJSON: {fileID: 4900000, guid: e398c814ab6affa4aa897f68a9804a95, type: 3}
   instantReact: 1
   isNewExperience: 0
   destroyObjectAfterUse: 1
---- !u!114 &7877598881239153129
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7877598881239153120}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8f6d3c6e4250e84192f5b34ce9e71bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  glowColor: {r: 1, g: 1, b: 1, a: 1}
-  glowBrightness: 2
-  outlineWidth: 0
-  alphaThreshold: 0.01
-  drawOutside: 1
-  enableInstancing: 0
 --- !u!114 &7877598881239153128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -219,7 +201,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c98978a51d039244bc3c4524c21f9ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spriteGlow: {fileID: 7877598881239153129}
+  spriteGlow: {fileID: 3828215695439951683}
   glowFrequency: 5
   glowAmplitude: 5
   outlineFrequency: 5
@@ -230,3 +212,21 @@ MonoBehaviour:
   outlineMidpoint: 0
   glowDuration: 1
   glowLoop: 1
+--- !u!114 &3828215695439951683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7877598881239153120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65f6bc8e1b301f1438ef8a97a84e0784, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  glowColor: {r: 1, g: 1, b: 1, a: 1}
+  glowBrightness: 2
+  outlineWidth: 1
+  alphaThreshold: 0.01
+  drawOutside: 1
+  enableInstancing: 0

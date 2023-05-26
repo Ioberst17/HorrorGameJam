@@ -163,7 +163,7 @@ public class PlayerSecondaryWeapon : MonoBehaviour
     {
         if (inputState == "Button Clicked")
         {
-            if (currentControlScheme == "Keyboard&Mouse") { throwMouseStartingPos = gameController.playerPositionScreen; }
+            if (currentControlScheme == "Keyboard and Mouse") { throwMouseStartingPos = gameController.playerPositionScreen; }
             if (currentControlScheme == "Gamepad") { throwMouseStartingPos = gameController.playerPositionScreen; } //throwMouseStartingPos = Input.mousePosition; //throwKeyHeldDownStart = Time.time;
         }
         else if (inputState == "Button Released")
@@ -175,7 +175,7 @@ public class PlayerSecondaryWeapon : MonoBehaviour
         {
             if (inActiveThrow)
             {
-                if (currentControlScheme == "Keyboard&Mouse") { throwMouseFinishingPos = gameController.lookInput; }
+                if (currentControlScheme == "Keyboard and Mouse") { throwMouseFinishingPos = gameController.lookInput; }
                 throwDistanceToPass = Vector2.Distance(throwMouseFinishingPos, throwMouseStartingPos);
                 currentThrowForce = CalcThrowForce(throwDistanceToPass);
             }
