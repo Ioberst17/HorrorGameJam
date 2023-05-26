@@ -7,6 +7,9 @@ public class PlayerDash : MonoBehaviour
     // references to other objects
     private GameController gameController;
     [SerializeField] private PlayerController controller;
+    // vfx references
+    private GameObject visualEffects;
+    [SerializeField] ParticleSystem dashParticles;
 
     // internal properties
     [SerializeField] private bool _canDash; public bool CanDash { get { return _canDash; } set { _canDash = value; } }
@@ -16,11 +19,14 @@ public class PlayerDash : MonoBehaviour
     [SerializeField] private int _dashSpeed = 15; public int DashSpeed { get { return _dashSpeed; } set { _dashSpeed = value; } }
     [SerializeField] private int dashCooldownNumber;
 
+
     private int dashcooldown;
     private void Start()
     {
         gameController = FindObjectOfType<GameController>();
         controller = FindObjectOfType<PlayerController>();
+        visualEffects = transform.GetSibling("VisualEffects").gameObject;
+        dashParticles = ComponentFinder.GetComponentInChildrenByNameAndType<ParticleSystem>("DashParticleEffect", visualEffects, true);
         _canDash = true;
         _isDashing = false;
         dashcooldown = 0;
@@ -50,13 +56,13 @@ public class PlayerDash : MonoBehaviour
         {
             _isDashing = true;
             controller.Rb.gravityScale = 0;
+            FindObjectOfType<AudioManager>().PlaySFX("Dash1");
+            dashParticles.Play();
             if (gameController.XInput == 0 & gameController.YInput == 0)
             {
                 controller.SetVelocity(controller.MovementSpeed * 2 * controller.FacingDirection, 0);
             }
             else { HandleMultiDirectionalDash(); }
-
-            FindObjectOfType<AudioManager>().PlaySFX("Dash1");
             //animator.Play("PlayerDash");
             yield return DashAfterImageHandler();
             _isDashing = false;

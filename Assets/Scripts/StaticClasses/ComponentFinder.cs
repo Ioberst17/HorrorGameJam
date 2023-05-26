@@ -1,8 +1,10 @@
 using System;
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 
 public static class ComponentFinder
 {
+    // returns all components in hierarchy that are of the type and a given name
     public static T FindComponent<T>(string name) where T : Component
     {
         T[] components = Resources.FindObjectsOfTypeAll<T>();
@@ -19,6 +21,7 @@ public static class ComponentFinder
         return null;
     }
 
+    // returns a component if it exists in an object's hierrarchy (self, parents, children); give it a reference as a starting point
     public static bool CheckForComponentInObjectHierarchy<T>(GameObject targetObject) where T : class
     {
         // Check if the target object itself has the specified component
@@ -74,5 +77,4 @@ public static class ComponentFinder
 
         return null;
     }
-
 }

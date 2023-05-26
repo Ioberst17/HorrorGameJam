@@ -10,6 +10,7 @@ public class InventoryManager : MonoBehaviour // INTENDED TO MANAGE ITEM ACTIVIT
     private GameObject utilities;
     private GameObject player;
     private ConsumablesDatabase consumablesDatabase;
+    [SerializeField] private PlayerVisualEffectsController playerVisualEffectsController;
     private PlayerSecondaryWeapon playerSecondaryWeapon;
     private PlayerHealth playerHealth;
     private Lucidity lucidity;
@@ -28,7 +29,6 @@ public class InventoryManager : MonoBehaviour // INTENDED TO MANAGE ITEM ACTIVIT
         InitializeUtilities();
         InitializePlayerReferences();
 
-
         //items
         EventSystem.current.onItemPickupTrigger += AddItem;
     }
@@ -43,6 +43,7 @@ public class InventoryManager : MonoBehaviour // INTENDED TO MANAGE ITEM ACTIVIT
     {
         player = GameObject.Find("Player");
         // Player 'Inventory items'
+        playerVisualEffectsController = player.GetComponentInChildren<PlayerVisualEffectsController>();
         narrativeItemsManager = GetComponent<NarrativeItemsManager>();
         consumablesManager = GetComponent<ConsumablesManager>();
         primaryWeaponsManager = GetComponent<PrimaryWeaponsManager>();
@@ -95,22 +96,24 @@ public class InventoryManager : MonoBehaviour // INTENDED TO MANAGE ITEM ACTIVIT
             {
                 if (consumablesDB[i].itemType == "Ammo")
                 {
-                    if(secondaryWeaponsManager.GetCurrentWeaponName() == consumablesDB[i].name) { secondaryWeaponsManager.AddAmmo(amount); }
+                    if(secondaryWeaponsManager.GetCurrentWeaponName() == consumablesDB[i].name) { secondaryWeaponsManager.AddAmmo(amount); playerVisualEffectsController.PlayParticleSystem("ItemPickup"); }
                     else
                     {
                         secondaryWeaponsManager.AddAmmo(consumablesDB[i].name, amount);
+                        playerVisualEffectsController.PlayParticleSystem("ItemPickup");
                         // TO-DO: Placeholder for event firing background inventory UI update (i.e. if ammo is for non-current weapon)
                     }
                     isAmmo = true;  
                 }
                 if (consumablesDB[i].itemType == "Instant Use")
-                {
-                    if(consumablesDB[i].name == "Heart") { playerHealth.AddHealth(10 * amount); }
-                    else if(consumablesDB[i].name == "Hourglass") { lucidity.Increase("Hourglass"); }
+                { // could be switched back to =
+                    if(consumablesDB[i].name.Contains("Heart")) { playerHealth.AddHealth(10 * amount); playerVisualEffectsController.PlayParticleSystem("HeartPickup"); }
+                    else if(consumablesDB[i].name.Contains("Hourglass")) { lucidity.Increase("Hourglass"); playerVisualEffectsController.PlayParticleSystem("ItemPickup"); }
                     else { Debug.LogFormat("Consumable is of type Instant Use, but it's name ({0}) does not match any in the Consumable DB", consumablesDB[i].name); }
 
                     isInstantUse = true;
                 }
+                if(consumablesDB[i].name.Contains("Currency")) { playerVisualEffectsController.PlayParticleSystem("ItemPickup"); }
 
                 FindObjectOfType<AudioManager>().PlaySFX(consumablesDB[i].audioOnPickup);
             }

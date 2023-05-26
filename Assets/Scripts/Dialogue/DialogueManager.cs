@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using Ink.Runtime;
 using UnityEngine.EventSystems;
@@ -15,6 +16,9 @@ public class DialogueManager : MonoBehaviour
 {
     public DataManager dataManager;
     private GameController gameController;
+    private DialogueItemDisplay DialogueItemDisplay { get; set; }
+    [SerializeField] private WeaponDatabase weaponDatabase;
+    private NarrativeItemsDatabase narrativeItemsDatabase;
 
     [Header("Dialogue UI")]
     [SerializeField] private GameObject dialoguePanel;
@@ -68,7 +72,7 @@ public class DialogueManager : MonoBehaviour
         }
         
         dataManager = DataManager.Instance;
-        gameController = FindObjectOfType<GameController>();
+        
         DialogueIsPlaying = false;
         dialoguePanel.SetActive(false);
 
@@ -82,6 +86,18 @@ public class DialogueManager : MonoBehaviour
         }
 
         playerMorality = GameObject.Find("Morality").GetComponent<Morality>();
+    }
+
+    private void OnEnable() { SceneManager.sceneLoaded += OnSceneLoad; }
+
+    private void OnDisable() { SceneManager.sceneLoaded -= OnSceneLoad; }
+
+    void OnSceneLoad(Scene scene, LoadSceneMode loadScene) // get references to objects in the new scene
+    {
+        gameController = FindObjectOfType<GameController>();
+        weaponDatabase = FindObjectOfType<WeaponDatabase>();
+        narrativeItemsDatabase = FindObjectOfType<NarrativeItemsDatabase>();
+        DialogueItemDisplay = FindObjectOfType<DialogueItemDisplay>();
     }
 
     //return right away if dialogue isn't playing
@@ -111,6 +127,7 @@ public class DialogueManager : MonoBehaviour
 
             currentStory.BindExternalFunction("PlaySaveSound", () => FindObjectOfType<AudioManager>().PlaySFX("ItemPickup")); // PLACEHOLDER, Swap later for more apt sounds
             currentStory.BindExternalFunction("PlaySaveVFX", () => triggerObject.GetSiblingComponent<SpriteGlowSupport>().PlayGlow());
+            currentStory.BindExternalFunction("PlaySaveVFX2", () => FindObjectOfType<PlayerVisualEffectsController>().PlayParticleSystem("PlayerSave"));
         }
     }
 
@@ -125,17 +142,20 @@ public class DialogueManager : MonoBehaviour
                 if (triggerObject.GetComponent<PickupableItem>().itemType == PickupableItem.ItemTypeOptions.Weapons) // if it's a weapon
                 {
                     int weaponID = triggerObject.GetComponent<PickupableItem>().staticID; // get the weapon ID
-                    currentStory.variablesState["weaponDescription"] = FindObjectOfType<WeaponDatabase>().ReturnItemFromID(weaponID).description; // and show the weapon description
+                    currentStory.variablesState["itemDescription"] = weaponDatabase.ReturnItemFromID(weaponID).description; // and show the weapon description
+                    DialogueItemDisplay.Display(true, weaponDatabase.ReturnItemFromID(weaponID).sprite, weaponDatabase.ReturnItemFromID(weaponID).name );
                 }
 
                 else if (triggerObject.GetComponent<PickupableItem>().itemType == PickupableItem.ItemTypeOptions.NarrativeItems)
                 {
                     int narrativeItemID = triggerObject.GetComponent<PickupableItem>().staticID; // get the item ID
-                    currentStory.variablesState["weaponDescription"] = FindObjectOfType<NarrativeItemsDatabase>().ReturnItemFromID(narrativeItemID).description; // and show the weapon description
+                    currentStory.variablesState["itemDescription"] = narrativeItemsDatabase.ReturnItemFromID(narrativeItemID).description; // and show the weapon description
+                    DialogueItemDisplay.Display(true, narrativeItemsDatabase.ReturnItemFromID(narrativeItemID).sprite, narrativeItemsDatabase.ReturnItemFromID(narrativeItemID).name);
                 }
             }
         }
     }
+
 
     public void ExitDialogueMode()
     {
@@ -144,6 +164,7 @@ public class DialogueManager : MonoBehaviour
         DialogueIsPlaying = false;
         dialoguePanel.SetActive(false);
         dialogueText.text = "";
+        DialogueItemDisplay.Display(false, null, "");
         if (destroyDialogueTriggerObject) { Destroy(dialogueTriggerObject); destroyDialogueTriggerObject = false; }
     }
 

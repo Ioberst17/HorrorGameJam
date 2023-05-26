@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask whatIsEnemy;
 
     private Animator animator;
-    public PlayerParticleSystems visualEffects;
+    public PlayerVisualEffectsController visualEffects;
     private PlayerPrimaryWeapon playerPrimaryWeapon;
 
     // other ability references
@@ -88,7 +88,7 @@ public class PlayerController : MonoBehaviour
         MovementSpeed = 10;
         ControlMomentum = 0;
         animator = GetComponent<Animator>();
-        visualEffects = transform.Find("VisualEffects").gameObject.GetComponent<PlayerParticleSystems>();
+        visualEffects = GetComponentInChildren<PlayerVisualEffectsController>();
 
         if (GetComponent<PlayerHealth>() != null) { playerHealth = GetComponent<PlayerHealth>(); }
         else { Debug.Log("PlayerHealth.cs is being requested as a component of the same object as PlayerController.cs, but could not be found on the object"); }
@@ -158,7 +158,7 @@ public class PlayerController : MonoBehaviour
                     else // if moving
                     {
                         animator.Play("PlayerRun");
-                        visualEffects.PlayEffect("MovementDust");
+                        visualEffects.PlayParticleSystem("MovementDust");
                     }
                 }
 
