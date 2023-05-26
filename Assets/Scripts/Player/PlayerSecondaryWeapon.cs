@@ -8,8 +8,11 @@ using UnityEngine.InputSystem;
 
 public class PlayerSecondaryWeapon : MonoBehaviour
 {
+    // EXTERNAL REFERENCES
     private GameController gameController;
     private SecondaryWeaponsManager secondaryWeaponsManager;
+    private GameObject utilities;
+
     [SerializeField] private SpriteRenderer weaponSprite;
     private float weaponWidth;
     private float weaponHeight;
@@ -68,16 +71,23 @@ public class PlayerSecondaryWeapon : MonoBehaviour
 
     void Start()
     {
+        // subscribe to events
         EventSystem.current.onUpdateSecondaryWeaponTrigger += WeaponChanged;
         EventSystem.current.onWeaponFireTrigger += WeaponFired;
         EventSystem.current.onWeaponStopTrigger += WeaponStop;
+
+        // get object and component references
         gameController = FindObjectOfType<GameController>();
-        secondaryWeaponsManager = FindObjectOfType<SecondaryWeaponsManager>();
+
         player = GameObject.Find("Player");
-        weaponDatabase = GameObject.Find("WeaponDatabase").GetComponent<WeaponDatabase>();
+        secondaryWeaponsManager = player.GetComponent<SecondaryWeaponsManager>();
+        playerController = transform.parent.GetComponent<PlayerController>();
         weaponSprite = GameObject.Find("WeaponSprite").GetComponent<SpriteRenderer>();
         fixedDistanceAmmo = gameObject.transform.GetChild(0).gameObject.transform.Find("FixedDistanceAmmo").gameObject;
-        playerController = transform.parent.GetComponent<PlayerController>();
+
+        utilities = GameObject.Find("Utilities");
+        weaponDatabase = utilities.GetComponentInChildren<WeaponDatabase>();
+
 
         // load ammo prefabs to a list
         ammoPrefabs = Resources.LoadAll<GameObject>("AmmoPrefabs").ToList();
@@ -118,7 +128,7 @@ public class PlayerSecondaryWeapon : MonoBehaviour
                 else if (playerController.FacingDirection == -1) { transform.rotation = Quaternion.Euler(0f, 0f, 180f); } // if still facing left, point left
             }
         }
-        else if(activeControlScheme == "Keyboard&Mouse") 
+        else if(activeControlScheme == "Keyboard and Mouse") 
         {
             Vector2 rotation = (Vector2)gameController.lookInput - (Vector2)gameController.playerPositionScreen;
             rotationZ = Mathf.Atan2(rotation.y, rotation.x) * Mathf.Rad2Deg;

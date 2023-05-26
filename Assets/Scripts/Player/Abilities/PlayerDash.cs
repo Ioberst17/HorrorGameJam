@@ -14,15 +14,25 @@ public class PlayerDash : MonoBehaviour
     [SerializeField] private float _dashLength = 0.25f; public float DashLength { get { return _dashLength; } set { _dashLength = value; } }
 
     [SerializeField] private int _dashSpeed = 15; public int DashSpeed { get { return _dashSpeed; } set { _dashSpeed = value; } }
+    [SerializeField] private int dashCooldownNumber;
 
+    private int dashcooldown;
     private void Start()
     {
         gameController = FindObjectOfType<GameController>();
         controller = FindObjectOfType<PlayerController>();
         _canDash = true;
         _isDashing = false;
+        dashcooldown = 0;
     }
 
+    private void FixedUpdate()
+    {
+        if (dashcooldown > 0)
+        {
+            dashcooldown--;
+        }
+    }
     //dash handling function
     public void Execute()
     {
@@ -36,22 +46,26 @@ public class PlayerDash : MonoBehaviour
     //This is the function that actually performs the dash
     IEnumerator DashHandler()
     {
-        _isDashing = true;
-        controller.Rb.gravityScale = 0;
-        if (gameController.XInput == 0 & gameController.YInput == 0)
+        if(dashcooldown == 0)
         {
-            Vector3 direction = GetNormalizedLookDirection();
-            controller.SetVelocity(direction.x * controller.MovementSpeed * 2, direction.y * controller.MovementSpeed * 2);
-            //newVelocity.Set(movementSpeed * 2 * facingDirection, 0);
-        }
-        else { HandleMultiDirectionalDash(); }
+            _isDashing = true;
+            controller.Rb.gravityScale = 0;
+            if (gameController.XInput == 0 & gameController.YInput == 0)
+            {
+                controller.SetVelocity(controller.MovementSpeed * 2 * controller.FacingDirection, 0);
+            }
+            else { HandleMultiDirectionalDash(); }
 
-        FindObjectOfType<AudioManager>().PlaySFX("Dash1");
-        //animator.Play("PlayerDash");
-        yield return DashAfterImageHandler();
-        _isDashing = false;
-        controller.Rb.gravityScale = 3;
-        controller.SetVelocity(0, 0);
+            FindObjectOfType<AudioManager>().PlaySFX("Dash1");
+            //animator.Play("PlayerDash");
+            yield return DashAfterImageHandler();
+            _isDashing = false;
+            controller.Rb.gravityScale = 3;
+            controller.SetVelocity(0, 0);
+            dashcooldown = dashCooldownNumber;
+            
+        }
+        
     }
     // Handles generation of after images and dash length
     IEnumerator DashAfterImageHandler()
@@ -69,17 +83,24 @@ public class PlayerDash : MonoBehaviour
 
     private void HandleMultiDirectionalDash() // used if no input is being used by the player
     {
-        float inputPositive = controller.MovementSpeed * 2;
-        float inputNegative = controller.MovementSpeed * -2;
+        if (gameController.PlayerInput.currentControlScheme == "Keyboard & Mouse")
+        {
+            float baseInput = controller.MovementSpeed * 2;
+            controller.SetVelocity(gameController.XInput * baseInput, gameController.YInput * baseInput);
 
-        if (gameController.XInput > 0 && gameController.YInput > 0) { controller.SetVelocity(inputPositive, inputPositive); }
-        else if (gameController.XInput > 0 && gameController.YInput < 0) { controller.SetVelocity(inputPositive, inputNegative); }
-        else if (gameController.XInput < 0 && gameController.YInput > 0) { controller.SetVelocity(inputNegative, inputPositive); }
-        else if (gameController.XInput < 0 && gameController.YInput < 0) { controller.SetVelocity(inputNegative, inputNegative); }
-        else if (gameController.XInput > 0) { controller.SetVelocity(inputPositive, 0); }
-        else if (gameController.XInput < 0) { controller.SetVelocity(inputNegative, 0); }
-        else if (gameController.YInput > 0) { controller.SetVelocity(0, inputPositive); }
-        else if (gameController.YInput < 0) { controller.SetVelocity(0, inputNegative); }
+            //if (gameController.XInput > 0 && gameController.YInput > 0) { controller.SetVelocity(gameController.XInput * baseInput, gameController.YInput* baseInput); }
+            //else if (gameController.XInput > 0 && gameController.YInput < 0) { controller.SetVelocity(gameController.XInput * baseInput, gameController.YInput * baseInput); }
+            //else if (gameController.XInput < 0 && gameController.YInput > 0) { controller.SetVelocity(gameController.XInput * baseInput, gameController.YInput * baseInput); }
+            //else if (gameController.XInput < 0 && gameController.YInput < 0) { controller.SetVelocity(gameController.XInput * baseInput, gameController.YInput * baseInput); }
+            //else if (gameController.XInput > 0) { controller.SetVelocity(gameController.XInput * baseInput, 0); }
+            //else if (gameController.XInput < 0) { controller.SetVelocity(gameController.XInput * baseInput, 0); }
+            //else if (gameController.YInput > 0) { controller.SetVelocity(0, gameController.YInput * baseInput); }
+            //else if (gameController.YInput < 0) { controller.SetVelocity(0, gameController.YInput * baseInput); }
+        }
+        else if (gameController.PlayerInput.currentControlScheme == "Gamepad")
+        {
+            controller.SetVelocity(gameController.XInput * controller.MovementSpeed * 2, gameController.YInput * controller.MovementSpeed * 2);
+        }
     }
 
     public Vector3 GetNormalizedLookDirection() // either mouse or right joystick information

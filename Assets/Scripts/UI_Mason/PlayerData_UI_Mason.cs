@@ -47,6 +47,7 @@ public class PlayerData_UI_Mason : MonoBehaviour
 
     private void Start()
     {
+
         FinishTossForceDisplay();
         gameController = FindObjectOfType<GameController>();
         playerHealth = playerController.GetComponent<PlayerHealth>();

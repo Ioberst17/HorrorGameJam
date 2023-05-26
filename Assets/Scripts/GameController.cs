@@ -32,7 +32,7 @@ public class GameController : MonoBehaviour
 
     // Other
     private CameraBehavior CameraBehavior;
-    private EnemyCreationForTesting enemySpawner;
+    [SerializeField] private EnemyCreationForTesting enemySpawner;
     private Camera cameraToUse;
 
     // INTERNAL TO GAMECONTROLLER
@@ -89,6 +89,7 @@ public class GameController : MonoBehaviour
             pauseMenu = FindObjectOfType<PauseMenuHandler_Mason>();
             dialogueManager = FindObjectOfType<DialogueManager>();
             doors = FindObjectsOfType<Door_Script>();
+            enemySpawner = FindObjectOfType<EnemyCreationForTesting>();
             dialogueTriggers = FindObjectsOfType<DialogueTrigger>();
             cameraToUse = FindObjectOfType<Camera>();
             CameraBehavior = FindObjectOfType<CameraBehavior>();
@@ -351,7 +352,7 @@ public class GameController : MonoBehaviour
         } 
     }
 
-    void JumpLogic() { if (JumpButton && !(JumpBuffer > 5) && skills.hasJump()) { playerJump.Execute(); ++JumpBuffer; } }
+    void JumpLogic() { if (JumpButton && !(JumpBuffer > 5) && skills.hasJump()) { playerJump.Execute(); JumpBuffer = 6; } }
 
     void DashLogic() { if (DashButton && !(DashBuffer > 5) && skills.hasDash()) { playerDash.Execute(); ++DashBuffer; } }
 
