@@ -6,6 +6,7 @@ EXTERNAL GetSpecificFilePlayTime(int)
 
 EXTERNAL PlaySaveSound()
 EXTERNAL PlaySaveVFX()
+EXTERNAL PlaySaveVFX2()
 
 ->Start
 
@@ -15,7 +16,7 @@ Hey, kid - wanna save your game?
 * [Nevermind] -> END
 
 == CheckSaveGame ==
-{SeeIfFileHasBeenSavedBefore(): {SaveCurrent()} {PlaySaveSound()} {PlaySaveVFX()} -> END |-> SaveGameOptions }
+{SeeIfFileHasBeenSavedBefore(): {SaveCurrent()} {PlaySaveSound()} {PlaySaveVFX()} {PlaySaveVFX2()} -> END |-> SaveGameOptions }
 
 
 == SaveGameOptions ==
@@ -28,18 +29,21 @@ Looks like you haven't saved on this journey before. Pick a card, any card.
 ~SaveNew(1)
 ~PlaySaveSound()
 ~PlaySaveVFX()
+~PlaySaveVFX2()
 -> END
 
 == SaveFile2 ==
 ~SaveNew(2)
 ~PlaySaveSound()
 ~PlaySaveVFX()
+~PlaySaveVFX2()
 -> END
 
 == SaveCurrentGame ==
 ~SaveCurrent()
 ~PlaySaveSound()
 ~PlaySaveVFX()
+~PlaySaveVFX2()
 -> END
 
 == ERROR_SaveGame ==
@@ -73,4 +77,7 @@ An error occurred while saving the game. Please try again.
 ~ return 1
 
 === function PlaySaveVFX() ===
+~ return 1
+
+=== function PlaySaveVFX2() ===
 ~ return 1

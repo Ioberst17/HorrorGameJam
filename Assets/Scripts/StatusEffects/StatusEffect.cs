@@ -9,7 +9,8 @@ public class StatusEffect : MonoBehaviour
     // outside references
     public SpriteRenderer spriteRenderer;
     public Animator animator;
-    private ParticleSystem particles;
+    private List<ParticleSystem> particles = new List<ParticleSystem>();
+    private ParticleSystem componentParticleSystem;
     private AudioManager audioManager;
 
     // default values
@@ -17,6 +18,9 @@ public class StatusEffect : MonoBehaviour
     public float intervalToApply = 1.0f;
     public float counterToApplyAffect = 0;
     public bool applyStatusEffect;
+    public float vfxDelay; // used for particle system loop delays to set a minimum
+    public float vfxDelayTimer; // tracks time to measure against delay
+    public bool vfxTrigger;
 
     // should be filled in the child Status Effect
     public float effectDuration;
@@ -32,8 +36,15 @@ public class StatusEffect : MonoBehaviour
         animator = GetComponent<Animator>();
         audioManager = FindObjectOfType<AudioManager>();
 
-        TryGetComponent(out particles);
-        spriteRenderer.enabled = false;
+        // get any component particle system
+        TryGetComponent(out componentParticleSystem);
+        if (componentParticleSystem != null) { particles.Add(componentParticleSystem); }
+
+        // get any child particle system
+        ParticleSystem[] childParticleSystems = GetComponentsInChildren<ParticleSystem>();
+        if (childParticleSystems != null) { foreach (ParticleSystem ps in childParticleSystems) { particles.Add(ps); } }
+
+        VFXHandler(false);
     }
 
     public virtual void Execute() { applyStatusEffect = true; }
@@ -97,8 +108,24 @@ public class StatusEffect : MonoBehaviour
 
     public virtual void VFXHandler(bool state)
     {
-        if (state != true) { if (particles != null) { particles.Stop(); } }
-        else { if (particles != null) { particles.Play(); } }
+        if (state != true) // basically turn off
+        {
+            if (particles != null) 
+            {
+                foreach(ParticleSystem ps in particles) { ps.Stop(); }
+                vfxDelayTimer = 0;
+                vfxTrigger = false;
+            } 
+        }
+        else // start up VFX
+        {
+            vfxDelayTimer = Time.deltaTime;
+            if (particles != null && (vfxDelayTimer > vfxDelay || vfxTrigger == false))
+            { 
+                foreach (ParticleSystem ps in particles)  { ps.Play();  }
+                vfxTrigger = true;
+            } 
+        }
         spriteRenderer.enabled = state;
     }
 

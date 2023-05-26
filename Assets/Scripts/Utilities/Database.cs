@@ -59,8 +59,8 @@ public class Database<T> : MonoBehaviour where T : IDatabaseItem, IShoppable
 
     public virtual void CreateDatabase(string[] data)
     {
-        UpdateColumnData(data);
-        UpdateRowNum(data);
+        UpdateColumnData(data); // get column names, which will be used in database creation
+        UpdateRowNum(data); // get row numbers to know number of entries to make
 
         length = data.Length;
         this.data.entries = new T[numOfDataRows];

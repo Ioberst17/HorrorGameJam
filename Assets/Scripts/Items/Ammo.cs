@@ -57,7 +57,7 @@ public class Ammo : MonoBehaviour
 
     private void ExplosionHandler()
     {
-        if (GetComponent<Explode>() != null) { GetComponent<Explode>().AmmoExplosion(2f, 10f, weaponID, weaponLevel) ; }
+        if (GetComponent<Explode>() != null) { GetComponent<Explode>().AmmoExplosion(2f, 10f, weaponName, weaponID, weaponLevel) ; }
         else { Debug.Log("Trying to call Explode function, but does not have Explode.cs script attached"); }
         DisableInteractions();
     }

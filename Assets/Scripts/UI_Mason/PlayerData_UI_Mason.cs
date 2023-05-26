@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -47,7 +48,11 @@ public class PlayerData_UI_Mason : MonoBehaviour
 
     private void Start()
     {
+<<<<<<< HEAD
+        dataManager = DataManager.Instance;
+=======
 
+>>>>>>> main
         FinishTossForceDisplay();
         gameController = FindObjectOfType<GameController>();
         playerHealth = playerController.GetComponent<PlayerHealth>();
@@ -89,11 +94,14 @@ public class PlayerData_UI_Mason : MonoBehaviour
 
     public void UseHealthPack()
     {
-        if (dataManager.sessionData.consumables[1].amount > 0 && playerHealth.HP < 100)
+        if(dataManager.sessionData.consumables != null && 1 < dataManager.sessionData.consumables.Count && dataManager.sessionData.consumables[1] != null)
         {
-            playerHealth.AddHealth(10);
-            dataManager.sessionData.consumables[1].amount = dataManager.sessionData.consumables[1].amount - 1;
-            Debug.Log("Used health kit.\n");
+            if (dataManager.sessionData.consumables[1].amount > 0 && playerHealth.HP < 100)
+            {
+                playerHealth.AddHealth(10);
+                dataManager.sessionData.consumables[1].amount = dataManager.sessionData.consumables[1].amount - 1;
+                Debug.Log("Used health kit.\n");
+            }
         }
     }
 
