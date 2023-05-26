@@ -55,7 +55,7 @@ public class PlayerJump : MonoBehaviour
                 // VFX/SFX
                 PlayRandomJumpSound();
                 animator.Play("PlayerJump");
-                controller.visualEffects.PlayEffect("MovementDust");
+                controller.visualEffects.PlayParticleSystem("MovementDust");
             }
         }
     }

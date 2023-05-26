@@ -9,6 +9,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
 {
     public WeaponDatabase weaponDatabase;
     public PlayerController playerController;
+    private GameController gameController;
     private AudioManager audioManager;
     Animator animator;
 
@@ -62,6 +63,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
         playerController = GetComponentInParent<PlayerController>();
         audioManager = FindObjectOfType<AudioManager>();
         animator = GetComponentInParent<Animator>();
+        gameController = FindObjectOfType<GameController>();
     }
     private void InitializeValues()
     {
@@ -161,6 +163,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
                         CameraBehavior cameraBehavior = FindObjectOfType<CameraBehavior>();
                         cameraBehavior.ShakeScreen(0.5f);
                         audioManager.PlaySFX("ChargePunchHit");
+                        StartCoroutine(gameController.PlayHaptics());
                     }
                 }
                 i++;

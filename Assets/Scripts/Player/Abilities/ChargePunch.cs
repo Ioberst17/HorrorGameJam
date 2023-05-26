@@ -1,14 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static SiblingComponentUtils;
-using SpriteGlow;
 using UnityEngine.UI;
+using Unity.VisualScripting;
+//using UnityEditor.Experimental.GraphView;
+using System.Linq;
 
 [RequireComponent(typeof(PlayerPrimaryWeapon))]
 public class ChargePunch : MonoBehaviour
 {
     // external references
+    GameController gameController;
+    CameraBehavior cameraBehavior;
     PlayerPrimaryWeapon playerPrimaryWeapon;
     AudioManager audioManager;
 
@@ -34,17 +37,32 @@ public class ChargePunch : MonoBehaviour
     // particle system related
     private GameObject visualEffects;
     private GameObject particleParent;
+    [SerializeField] List<ParticleSystem> particleSystems = new List<ParticleSystem>();
     ParticleSystem partSystem1, partSystem2, partSystem3, partSystem4, partSystem5;
-    ParticleSystem[] particleSystems;
     bool particleTrigger;
+
+    // delayed one time trigger particles
+    ParticleSystem initialBuildParticleBlast;
+    string initialBuildParticleBlastObjectName = "ChargePunchInitialBlast";
+    ParticleSystem chargePunchElectricityInitial;
+    string chargePunchElectricityInitialObjectName = "ChargePunchInitialElectricity";
+    ParticleSystem chargePunchElectricityInitial2;
+    string chargePunchElectricityInitial2ObjectName = "ChargePunchInitialElectricity2";
+    ParticleSystem chargePunchElectricityFinal;
+    string chargePunchElectricityFinalObjectName = "ChargePunchFinalElectricity";   
+    ParticleSystem chargePunchFireSpiral;
+    string chargePunchFireSpiralObjectName = "ChargePunchFireSpiral";
+
+
+    [SerializeField] float chargePunchElectricityStagger; // used to match electricity start and SFX loop
 
     // player glow related
     [SerializeField] private SpriteGlowEffect spriteGlow; private bool glowTrigger;
-    float glowFrequency = 5, glowAmplitude = 5;
+    float glowFrequency = 5, glowAmplitude = 4;
     float outlineFrequency = 2, outlineAmplitude = 2;
     [SerializeField] int glowVal;
     [SerializeField] int outlineVal;
-    int glowMidPoint = 5, outlineMidpoint = 5;
+    int glowMidPoint = 6, outlineMidpoint = 5;
     
     // charge punch sprite related
     public SpriteRenderer PunchSprite { get; set; }
@@ -56,14 +74,6 @@ public class ChargePunch : MonoBehaviour
     private Vector2 originalLocalPosition;
     private float fadeDuration = 0.5f;
 
-
-    //// charge punch sprite animation related
-    //[SerializeField] Animator animator;
-    //private string animationName = "ChargePunchAnimation";
-    //[SerializeField] private bool playAnimation = false;
-    //[SerializeField] private bool animationPlayed = false;
-    //Vector3 animationPosition;
-
     //SFX Related
     private bool falconSFXFlag;
     private bool falconSFXPlaying;
@@ -74,6 +84,7 @@ public class ChargePunch : MonoBehaviour
     private void Start()
     {
         playerPrimaryWeapon = GetComponent<PlayerPrimaryWeapon>();
+        gameController = FindObjectOfType<GameController>();
         LoadVFXReferences();
         audioManager = FindObjectOfType<AudioManager>();
         Sound punch1Sound = audioManager.GetSFX("ChargePunch1");
@@ -83,20 +94,39 @@ public class ChargePunch : MonoBehaviour
 
     void LoadVFXReferences()
     {
-        // Particles
+        // PARTICLES
         visualEffects = transform.GetSibling("VisualEffects").gameObject;
+
+        // load in particles from PunchWindParticles
         particleParent = visualEffects.transform.Find("PunchWindParticles").gameObject;
-        particleSystems = particleParent.GetComponentsInChildren<ParticleSystem>();
-        // Glow
+        ParticleSystem[] childParticleSystems = particleParent.GetComponentsInChildren<ParticleSystem>();
+        foreach (ParticleSystem ps in childParticleSystems) { particleSystems.Add(ps); }
+
+        // add charge punch electricity + initial build particles
+        chargePunchElectricityInitial = ComponentFinder.GetComponentInChildrenByNameAndType<ParticleSystem>(chargePunchElectricityInitialObjectName, visualEffects, true);
+        chargePunchElectricityInitial2 = ComponentFinder.GetComponentInChildrenByNameAndType<ParticleSystem>(chargePunchElectricityInitial2ObjectName, visualEffects, true);
+        chargePunchElectricityFinal = ComponentFinder.GetComponentInChildrenByNameAndType<ParticleSystem>(chargePunchElectricityFinalObjectName, visualEffects, true);
+        initialBuildParticleBlast = ComponentFinder.GetComponentInChildrenByNameAndType<ParticleSystem>(initialBuildParticleBlastObjectName, visualEffects, true);
+        chargePunchFireSpiral = ComponentFinder.GetComponentInChildrenByNameAndType<ParticleSystem>(chargePunchFireSpiralObjectName, visualEffects, true);
+        
+        particleSystems.Add(chargePunchElectricityInitial);
+        particleSystems.Add(chargePunchElectricityInitial2);
+        particleSystems.Add(chargePunchElectricityFinal);
+        particleSystems.Add(initialBuildParticleBlast);
+        particleSystems.Add(chargePunchFireSpiral);
+
+        // screen shake related to build particles blast
+        cameraBehavior = FindObjectOfType<CameraBehavior>();
+
+        // GLOW
         spriteGlow = visualEffects.GetComponentInParent<SpriteGlowEffect>();
-        // Sprite
+        
+        // SPRITE-RELATED
         PunchSprite = ComponentFinder.GetComponentInChildrenByNameAndType<SpriteRenderer>("ChargePunchSprite", gameObject, true);
         PunchSprite.gameObject.SetActive(true);
         originalColor = PunchSprite.color;
         originalLocalPosition = PunchSprite.transform.localPosition;
         PunchSprite.gameObject.SetActive(false);
-        // Animation
-        //animator = ComponentFinder.GetComponentInChildrenByNameAndType<Animator>(animationName, visualEffects, true);
     }
 
     public void Execute() 
@@ -105,14 +135,14 @@ public class ChargePunch : MonoBehaviour
         // sprite renderer
         PunchSprite.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
         PunchSprite.transform.localPosition += new Vector3(offsetAmount, 0.0f, 0.0f);
-        // animation
-        //animationPlayed = false;
     }
 
-    public void Release(int attackDirection) { this.attackDirection = attackDirection; IsCharging = false; ReleasePunch(); /*animator.SetTrigger("ChargePunchRelease"); playAnimation = true;*/ } // punch is released by LateUpdate(), so animation can finish playing
+    public void Release(int attackDirection) { this.attackDirection = attackDirection; IsCharging = false; ReleasePunch();  } 
 
     void FixedUpdate()
     {
+        if (!IsCharging) { chargePunchElectricityInitial.Stop(); chargePunchElectricityFinal.Stop(); chargePunchFireSpiral.Stop(); } // run to ensure a stop
+
         if (IsCharging)
         {
             chargeTime = chargeTime + (Time.deltaTime * chargeSpeed);
@@ -124,11 +154,6 @@ public class ChargePunch : MonoBehaviour
 
         }
         if (falconSFXPlaying) { sfxPlayTime += Time.deltaTime; }
-    }
-
-    private void LateUpdate() // handles animation playing
-    {
-        //ReleasePunchAnimation();
     }
 
     private void CalcForce()
@@ -207,10 +232,6 @@ public class ChargePunch : MonoBehaviour
     {
         if(chargeTime > minChargeTime) { StartCoroutine(FadeInFadeOutSprite()); } // only call if hit a minimum threshold
         else { ResetColorAndPosition(); }
-        
-        //playAnimation = false; 
-        //animationPlayed = false;
-        // Get the upper right and bottom left corners of the punch sprite in world coordinates
     }
 
     private IEnumerator FadeInFadeOutSprite()
@@ -252,8 +273,52 @@ public class ChargePunch : MonoBehaviour
 
     void ParticleSystemsOn(bool status)
     {
-        if (status == true) { foreach (ParticleSystem ps in particleSystems) { ps.Play(); } particleTrigger = true; }
+        if (status == true)
+        {
+            foreach (ParticleSystem ps in particleSystems)
+            {
+                // first wave of effects after start
+                if (ps.name == chargePunchElectricityInitialObjectName || 
+                    ps.name == chargePunchElectricityInitial2ObjectName || 
+                    ps.name == initialBuildParticleBlastObjectName) 
+                {
+                    // specific to chargePunchElectricity and backing SFX track, stagger the start of electricity to match SFX backing track
+                    // also used by initial build particle blast
+                    Invoke("TriggerOneTimeBuildFX", minChargeTime + chargePunchElectricityStagger);
+                }
+                // second wave of effects
+                else if(ps.name == chargePunchElectricityFinalObjectName || ps.name == chargePunchFireSpiralObjectName)
+                {
+                    Invoke("TriggerFinalBuildFX", maxChargeTime);
+                }
+                // else it should play at start
+                else { ps.Play();  }
+                particleTrigger = true;
+            }
+        }
         else { foreach (ParticleSystem ps in particleSystems) { ps.Stop(); } particleTrigger = false; }
+    }
+
+    void TriggerOneTimeBuildFX() 
+    {
+        if (IsCharging) // make sure still charging before loading in, otherwise player may execute punch and these will fire after the fact
+        {
+            particleSystems.FirstOrDefault(ps => ps == chargePunchElectricityInitial).Play();
+            particleSystems.FirstOrDefault(ps => ps == chargePunchElectricityInitial2).Play();
+            particleSystems.FirstOrDefault(ps => ps == initialBuildParticleBlast).Play();
+
+            cameraBehavior.ShakeScreen(0.5f);
+            StartCoroutine(gameController.PlayHaptics());
+        }
+    }
+
+    void TriggerFinalBuildFX()
+    {
+        if (IsCharging) 
+        { 
+            particleSystems.FirstOrDefault(ps => ps == chargePunchElectricityFinal).Play(); 
+            particleSystems.FirstOrDefault(ps => ps == chargePunchFireSpiral).Play(); 
+        }
     }
 
     void GlowOn(bool status)
@@ -261,22 +326,6 @@ public class ChargePunch : MonoBehaviour
         if (status == true) { glowTrigger = true; }
         else { glowTrigger = false; spriteGlow.GlowBrightness = 0; spriteGlow.OutlineWidth = 0; }
     }
-
-    //void ReleasePunchAnimation() // ensure animation is played before releasing punch
-    //{
-    //    if (playAnimation && !animationPlayed) // checks to see if animation has started playing, but hasn't finished
-    //    {
-    //        if (!animator.GetCurrentAnimatorStateInfo(0).IsName(animationName)) // checks if animation finished
-    //        {
-    //            // Set the punch sprite position to the animation's final position
-    //            punchSprite.transform.localPosition = animationPosition;
-
-    //            animationPlayed = true;
-
-    //            ReleasePunch();
-    //        }
-    //    }
-    //}
 
     void ReleasePunch()
     {
@@ -286,7 +335,7 @@ public class ChargePunch : MonoBehaviour
         StartCoroutine(playerPrimaryWeapon.AttackActiveFrames(attackDirection));
         HandleFinishSound();
         HandleFinishVFX();
-        ParticleSystemsOn(false); GlowOn(false); chargeTime = 0;
+        ParticleSystemsOn(false); GlowOn(false); chargeTime = 0; holdTimeNormalized = 0;
         //Instantiate(punchEffect, transform.position, Quaternion.identity);
         EventSystem.current.FinishChargedAttackTrigger();
     }

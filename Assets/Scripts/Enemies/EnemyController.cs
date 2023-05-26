@@ -227,6 +227,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     public void HPZero()
     {
+        Instantiate(Resources.Load("VFXPrefabs/EnemyDeath"), transform.position, Quaternion.identity);
         Debug.Log(name + " is dead!");
         isDead = true;
         if(OnDeath != null) { OnDeath(this); }
