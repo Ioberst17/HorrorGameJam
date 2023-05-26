@@ -172,9 +172,9 @@ public class Inventory_UI_Mason : MonoBehaviour
         consumableCount.Add(consumable_count_slot1);
         consumableCount.Add(consumable_count_slot2);
 
-        //adding in a narrative and consumable item for testing
-        narrativeItemsManager.AddItem(1);
-        consumablesManager.AddNewItemToInv(1, 1);
+        ////adding in a narrative and consumable item for testing
+        //narrativeItemsManager.AddItem(1);
+        //consumablesManager.AddNewItemToInv(1, 1);
 
 
 
