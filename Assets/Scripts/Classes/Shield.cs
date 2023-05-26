@@ -30,6 +30,8 @@ public class Shield : MonoBehaviour
     private ShieldZone hitShield;
     // particle system for lock hitting
 
+    private int effectcooldown2 = 0;
+
 
     // Start is called before the first frame update
     public void Start()
@@ -50,8 +52,15 @@ public class Shield : MonoBehaviour
                                                 attackerFilter.layerMask);
 
         DamageHandler(attackingObjects);
+        
     }
-
+    public void FixedUpdate()
+    {
+        if (effectcooldown2 > 0)
+        {
+            effectcooldown2--;
+        }
+    }
     public void DamageHandler(Collider2D[] overlaps)
     {
         if (overlaps != null)
@@ -90,8 +99,13 @@ public class Shield : MonoBehaviour
     }
     private void HandleDamagePass(Collider2D collision, float damageAbsorption, float knockbackAbsorption, string VFXToLoad)
     {
-        VFXPath = "VFXPrefabs/" + VFXToLoad;
-        Instantiate(Resources.Load(VFXPath), collision.transform.position, Quaternion.identity);
+        if (effectcooldown2 == 0)
+        {
+            VFXPath = "VFXPrefabs/" + VFXToLoad;
+            Instantiate(Resources.Load(VFXPath), collision.transform.position, Quaternion.identity);
+            effectcooldown2 = 30;
+        }
+        
         PassThroughDamage(collision, damageAbsorption, knockbackAbsorption);
     }
 
