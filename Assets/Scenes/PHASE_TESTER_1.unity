@@ -1061,7 +1061,7 @@ PrefabInstance:
     - target: {fileID: 2469649887479580450, guid: 4a7449f0e42aea84ca85c7f87cb16027, type: 3}
       propertyPath: gameController
       value: 
-      objectReference: {fileID: 870795871}
+      objectReference: {fileID: 0}
     - target: {fileID: 2469649887479580450, guid: 4a7449f0e42aea84ca85c7f87cb16027, type: 3}
       propertyPath: weaponDatabase
       value: 
@@ -19451,6 +19451,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1256687749, guid: 21071c1d7a2c7534e87a5d077fe4f2fd, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1256687749, guid: 21071c1d7a2c7534e87a5d077fe4f2fd, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1256687749, guid: 21071c1d7a2c7534e87a5d077fe4f2fd, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4771185929085781959, guid: 21071c1d7a2c7534e87a5d077fe4f2fd, type: 3}
       propertyPath: m_SortingOrder
       value: 2
