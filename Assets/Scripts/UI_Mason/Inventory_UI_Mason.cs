@@ -9,8 +9,11 @@ public class Inventory_UI_Mason : MonoBehaviour
 {
     public GameController gameController;
     public DataManager dataManager;
-
+    public NarrativeItemsManager narrativeItemsManager;
+    public ConsumablesManager consumablesManager;
     public PlayerData_UI_Mason playerDataUI;
+    public WeaponDatabase weaponDatabase;
+
 
     [SerializeField]
     public InventoryManager inventoryManager;
@@ -21,7 +24,7 @@ public class Inventory_UI_Mason : MonoBehaviour
     public int weaponLevelNum;
 
 
-    public int currentPrimarySlotNum;
+    public int currentNarrativeSlotNum;
     public int currentSecondarySlotNum;
     public int currentConsumableSlotNum;
 
@@ -30,25 +33,44 @@ public class Inventory_UI_Mason : MonoBehaviour
 
     [SerializeField] private GameObject infoPanel;
 
-    [SerializeField] private GameObject exitButton;
+    [SerializeField] private Button weaponSideButton;
+    [SerializeField] private Button consumableSideButton;
+    [SerializeField] private Button narrativeSideButton;
 
-    [SerializeField] private TextMeshProUGUI weaponName;
-    [SerializeField] private TextMeshProUGUI weaponDamage;
-    [SerializeField] private TextMeshProUGUI weaponAmmo;
-    [SerializeField] private TextMeshProUGUI description;
-    [SerializeField] private TextMeshProUGUI damageText;
-    [SerializeField] private TextMeshProUGUI ammoText;
-
+    [SerializeField] private GameObject equipButton;
+    [SerializeField] private GameObject useButton;
     [SerializeField] private GameObject xButtonInfo;
 
-    [SerializeField] private GameObject melee_Inventory;
+    [SerializeField] private TextMeshProUGUI description;
+    [SerializeField] private TextMeshProUGUI weaponName;
+
+    [SerializeField] private TextMeshProUGUI effectText;
+    [SerializeField] private TextMeshProUGUI effectAmount;
+    [SerializeField] private TextMeshProUGUI amountText;
+    [SerializeField] private TextMeshProUGUI amount;
+    
+
+    /*[SerializeField] private TextMeshProUGUI weaponDamage;
+    [SerializeField] private TextMeshProUGUI weaponAmmo;
+    [SerializeField] private TextMeshProUGUI healingamount;
+    [SerializeField] private TextMeshProUGUI amount;
+    [SerializeField] private TextMeshProUGUI lucidityAmount;
+    [SerializeField] private TextMeshProUGUI damageText;
+    [SerializeField] private TextMeshProUGUI ammoText;
+    [SerializeField] private TextMeshProUGUI healingText;
+    [SerializeField] private TextMeshProUGUI amountText;
+    [SerializeField] private TextMeshProUGUI lucidityText;*/
+
+
+
+    [SerializeField] private GameObject narrative_Inventory;
     [SerializeField] private GameObject ranged_Inventory;
     [SerializeField] private GameObject consumables_Inventory;
 
 
     [SerializeField] private Image inventoryImage;
 
-    private List<GameObject> meleeSlots = new List<GameObject>();
+    private List<GameObject> narrativeSlots = new List<GameObject>();
     private List<GameObject> rangedSlots = new List<GameObject>();
     private List<GameObject> consumableSlots = new List<GameObject>();
     private List<TextMeshProUGUI> rangedAmmoNumbers = new List<TextMeshProUGUI>();
@@ -56,11 +78,14 @@ public class Inventory_UI_Mason : MonoBehaviour
 
 
 
-    [SerializeField] private GameObject melee_Slot1;
-    [SerializeField] private GameObject melee_Slot2;
-    [SerializeField] private GameObject melee_Slot3;
-    [SerializeField] private GameObject melee_Slot4;
-    [SerializeField] private GameObject melee_Slot5;
+    [SerializeField] private GameObject narrative_Slot1;
+    [SerializeField] private GameObject narrative_Slot2;
+    [SerializeField] private GameObject narrative_Slot3;
+    [SerializeField] private GameObject narrative_Slot4;
+    [SerializeField] private GameObject narrative_Slot5;
+    [SerializeField] private GameObject narrative_Slot6;
+    [SerializeField] private GameObject narrative_Slot7;
+    [SerializeField] private GameObject narrative_Slot8;
 
     [SerializeField] private GameObject ranged_Slot1;
     [SerializeField] private TextMeshProUGUI r_Ammo1;
@@ -97,18 +122,35 @@ public class Inventory_UI_Mason : MonoBehaviour
     {
         gameController = GameObject.Find("GameController").GetComponent<GameController>();
         // initialize the textmeshpro vars to false.
-        weaponDamage.enabled = false;
+        /*weaponDamage.enabled = false;
         weaponAmmo.enabled = false;
+        healingamount.enabled = false;
+        amount.enabled = false;
+        lucidityAmount.enabled = false;
         description.enabled = false;
         damageText.enabled = false;
         ammoText.enabled = false;
+        healingText.enabled = false;
+        amountText.enabled = false;
+        lucidityText.enabled = false;*/
+
+        effectText.enabled = false;
+        effectAmount.enabled = false;
+        amountText.enabled = false;
+        amount.enabled = false;
+
+        useButton.SetActive(false);
+        equipButton.SetActive(false);
 
         // manually fill lists 
-        meleeSlots.Add(melee_Slot1);
-        meleeSlots.Add(melee_Slot2);
-        meleeSlots.Add(melee_Slot3);
-        meleeSlots.Add(melee_Slot4);
-        meleeSlots.Add(melee_Slot5);
+        narrativeSlots.Add(narrative_Slot1);
+        narrativeSlots.Add(narrative_Slot2);
+        narrativeSlots.Add(narrative_Slot3);
+        narrativeSlots.Add(narrative_Slot4);
+        narrativeSlots.Add(narrative_Slot5);
+        narrativeSlots.Add(narrative_Slot6);
+        narrativeSlots.Add(narrative_Slot7);
+        narrativeSlots.Add(narrative_Slot8);
 
         rangedSlots.Add(ranged_Slot1);
         rangedSlots.Add(ranged_Slot2);
@@ -130,10 +172,15 @@ public class Inventory_UI_Mason : MonoBehaviour
         consumableCount.Add(consumable_count_slot1);
         consumableCount.Add(consumable_count_slot2);
 
+        //adding in a narrative and consumable item for testing
+        narrativeItemsManager.AddItem(1);
+        consumablesManager.AddNewItemToInv(1, 1);
 
-        for (int i = 0; i < meleeSlots.Count; i++)
+
+
+        for (int i = 0; i < narrativeSlots.Count; i++)
         {
-            meleeSlots[i].SetActive(false); // hide unused melee weapon slots
+            narrativeSlots[i].SetActive(false); // hide unused melee weapon slots
 
             //Debug.Log("melee slots hidden.\n");
         }
@@ -167,9 +214,9 @@ public class Inventory_UI_Mason : MonoBehaviour
             //if (!gameController.isPaused) { gameController.pauseHandler(); }
         }
 
-        for (int i = 0; i < dataManager.sessionData.primaryWeapons.Count; i++)
+        for (int i = 0; i < dataManager.sessionData.narrativeItems.Count; i++)
         {
-            meleeSlots[i].SetActive(true); //turn on inventory slots for melee weapons the player has in their inventory.
+            narrativeSlots[i].SetActive(true); //turn on inventory slots for melee weapons the player has in their inventory.
 
             //Debug.Log("weapon=" + dataManager.sessionData.primaryWeapons[i].id + " /n");
         }
@@ -216,21 +263,21 @@ public class Inventory_UI_Mason : MonoBehaviour
 
     public void OpenMeleeInventory() //switch ui to melee weapons.
     {
-        melee_Inventory.SetActive(true);
+        narrative_Inventory.SetActive(true);
         ranged_Inventory.SetActive(false);
         consumables_Inventory.SetActive(false);
     }
 
     public void OpenRangedInventory() //switch ui to ranged weapons
     {
-        melee_Inventory.SetActive(false);
+        narrative_Inventory.SetActive(false);
         ranged_Inventory.SetActive(true);
         consumables_Inventory.SetActive(false);
     }
 
     public void OpenConsumablesInventory() //switch ui to consumable panel and items.
     {
-        melee_Inventory.SetActive(false);
+        narrative_Inventory.SetActive(false);
         ranged_Inventory.SetActive(false);
         consumables_Inventory.SetActive(true);
     }
@@ -239,52 +286,75 @@ public class Inventory_UI_Mason : MonoBehaviour
     public void OpenInfoPanelMelee(int slotNum) //opens the melee weapon panel in the inventory and turns on the text fields and fills them with the info of the current selected weapon.
     {
         infoPanel.SetActive(true);
-        weaponDamage.enabled = true;
-        damageText.enabled = true;
 
-        currentPrimarySlotNum = slotNum;
+        useButton.SetActive(false);
+        equipButton.SetActive(false);
 
-        weaponIDNum = dataManager.sessionData.primaryWeapons[slotNum].id;
-        nameOfWeapon = dataManager.sessionData.primaryWeapons[slotNum].name;
-        weaponName.text = dataManager.sessionData.primaryWeapons[slotNum].name;
-        weaponDamage.text = dataManager.sessionData.primaryWeapons[slotNum].level.ToString();
+        DisableSideButtons();
+
+        effectText.enabled = true;
+        effectText.text = "Lucidity:";
+        effectAmount.enabled = true;
+
+        description.enabled = true;
+
+        currentNarrativeSlotNum = slotNum;
+
+        weaponIDNum = dataManager.sessionData.narrativeItems[slotNum].id;
+        weaponName.text = dataManager.sessionData.narrativeItems[slotNum].name;
+        effectAmount.text = dataManager.sessionData.narrativeItems[slotNum].amount.ToString();
+        description.text = dataManager.sessionData.narrativeItems[slotNum].description;
     }
+
     public void OpenInfoPanelRanged(int slotNum) //opens the ranged weapon panel in the inventory and turns on the text fields and fills them with the info of the current selected weapon.
     {
         infoPanel.SetActive(true);
-        weaponDamage.enabled = true;
-        damageText.enabled = true;
-        ammoText.enabled = true;
-        weaponAmmo.enabled = true;
+
+        useButton.SetActive(false);
+        equipButton.SetActive(true);
+
+        DisableSideButtons();
+
+        effectText.enabled = true;
+        effectText.text = "Damage:";
+        effectAmount.enabled = true;
+        amountText.enabled = true;
+        amountText.text = "Ammo:";
+        amount.enabled = true;
+
+        description.enabled = true;
 
         currentSecondarySlotNum = slotNum;
 
         weaponName.text = dataManager.sessionData.secondaryWeapons[slotNum].name;
-        weaponDamage.text = dataManager.sessionData.secondaryWeapons[slotNum].level.ToString();
-        weaponAmmo.text = dataManager.sessionData.secondaryWeapons[slotNum].ammo.ToString();
+        effectAmount.text = weaponDatabase.ReturnItemFromID(slotNum).level1Damage.ToString();
+        amount.text = dataManager.sessionData.secondaryWeapons[slotNum].ammo.ToString();
+        description.text = dataManager.sessionData.secondaryWeapons[slotNum].description;
     }
     public void OpenInfoPanelConsumable(int slotNum) //opens the consumable panel in the inventory and turns on the text fields and fills them with the info of the current selected item.
     {
         infoPanel.SetActive(true);
+
+        useButton.SetActive(true);
+        equipButton.SetActive(false);
+
+        DisableSideButtons();
+
+        effectText.enabled = true;
+        effectText.text = "Healing";
+        //effectAmount.enabled = true;
+        amountText.enabled = true;
+        amountText.text = "Amount:";
+        amount.enabled = true;
+
         description.enabled = true;
-        ammoText.enabled = true;
-        weaponAmmo.enabled = true;
 
         currentConsumableSlotNum = slotNum;
 
         weaponName.text = dataManager.sessionData.consumables[slotNum].itemName;
-        weaponAmmo.text = dataManager.sessionData.consumables[slotNum].amount.ToString();
+        amount.text = dataManager.sessionData.consumables[slotNum].amount.ToString();
+        //healingamount.text = dataManager.sessionData.consumables[slotNum].amount.ToString();
         description.text = dataManager.sessionData.consumables[slotNum].description;
-    }
-
-    public void CloseInfoPanel() //just close the info panel. assigned to the equip button.
-    {
-        infoPanel.SetActive(false);
-        weaponDamage.enabled = false;
-        damageText.enabled = false;
-        ammoText.enabled = false;
-        weaponAmmo.enabled = false;
-        description.enabled = false;
     }
 
     public void EquipWeapon()
@@ -292,9 +362,9 @@ public class Inventory_UI_Mason : MonoBehaviour
         //Debug.Log("Current primary weapon: " + dataManager.sessionData.activePrimaryWeapon.name);
 
         //change the active primary in the datamanger script to the primary weapon that is selected in the inventory
-        dataManager.sessionData.activePrimaryWeapon = dataManager.sessionData.secondaryWeapons[currentPrimarySlotNum].id;
+        dataManager.sessionData.activePrimaryWeapon = dataManager.sessionData.secondaryWeapons[currentNarrativeSlotNum].id;
 
-        Debug.Log("New primary weapon: " + dataManager.sessionData.primaryWeapons[currentPrimarySlotNum].name);
+        Debug.Log("New primary weapon: " + dataManager.sessionData.primaryWeapons[currentNarrativeSlotNum].name);
 
         //change the active secondary in the datamanger script to the secondary weapon that is selected in the inventory
         dataManager.sessionData.activeSecondaryWeapon = dataManager.sessionData.secondaryWeapons[currentSecondarySlotNum].id;
@@ -303,7 +373,47 @@ public class Inventory_UI_Mason : MonoBehaviour
         inventoryManager.primaryWeaponsManager.LoadActiveWeapon();
         inventoryManager.secondaryWeaponsManager.LoadActiveWeapon();
 
-        infoPanel.SetActive(false); // turn off info panel
+        CloseInfoPanel();
+    }
+
+    public void UseItem()
+    {
+        //playerDataUI.UseHealthPack();
+
+
+
+        CloseInfoPanel();
+    }
+
+    public void CloseInfoPanel() 
+    {
+        infoPanel.SetActive(false);
+        useButton.SetActive(false);
+        equipButton.SetActive(false);
+
+        EnableSideButtons();
+
+        effectText.enabled = false;
+        effectAmount.enabled = false;
+        amountText.enabled = false;
+        amount.enabled = false;
+        description.enabled = false;
+    }
+
+    
+
+    private void DisableSideButtons()
+    {
+        narrativeSideButton.interactable = false;
+        weaponSideButton.interactable = false;
+        consumableSideButton.interactable = false;
+    }
+
+    private void EnableSideButtons()
+    {
+        narrativeSideButton.interactable = true;
+        weaponSideButton.interactable = true;
+        consumableSideButton.interactable = true;
     }
 
 }
