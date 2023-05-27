@@ -10,13 +10,15 @@ public class PauseMenuHandler_Mason : MonoBehaviour
     public GameObject pauseMenu;
     public GameObject controlsMenu;
 
-    public Button pauseMenuFirstButton;
-    public Button controlsMenuFirstButton;
+    public Button resumeButton;
+    public Button controlsButton;
+    public Button settingsButton;
+    public Button mainmenuButton;
+    public Button quitButton;
 
     [SerializeField] private string currentControlScheme;
 
     [SerializeField]
-    private GameObject quitButton;
     public GameController gameController;
 
     private void Start()
@@ -52,16 +54,16 @@ public class PauseMenuHandler_Mason : MonoBehaviour
 
     void OnControlsChanged() // if player switches to Gamepad, select the first button
     {
-        if (currentControlScheme == "Gamepad") { if (pauseMenu.activeSelf) { pauseMenuFirstButton.Select(); } }
-        if (currentControlScheme == "Gamepad") { if (controlsMenu.activeSelf) { controlsMenuFirstButton.Select(); } }
+        if (currentControlScheme == "Gamepad") { if (pauseMenu.activeSelf) { resumeButton.Select(); } }
+        if (currentControlScheme == "Gamepad") { if (controlsMenu.activeSelf) { controlsButton.Select(); } }
     }
 
     void Pause()
     {
         pauseMenu.SetActive(true);
         currentControlScheme = gameController.CurrentControlScheme;
-        if (currentControlScheme == "Gamepad") { pauseMenuFirstButton.Select(); }
-        quitButton.SetActive(false);
+        if (currentControlScheme == "Gamepad") { resumeButton.Select(); }
+        //quitButton.SetActive(false);
         //Time.timeScale = 0f;
     }
 
@@ -70,14 +72,14 @@ public class PauseMenuHandler_Mason : MonoBehaviour
         pauseMenu.SetActive(false);
         controlsMenu.SetActive(true);
         currentControlScheme = gameController.CurrentControlScheme;
-        if (currentControlScheme == "Gamepad") { controlsMenuFirstButton.Select(); }
+        if (currentControlScheme == "Gamepad") { controlsButton.Select(); }
     }
 
     public void LoadPauseMenu()
     {
         pauseMenu.SetActive(true);
         currentControlScheme = gameController.CurrentControlScheme;
-        if (currentControlScheme == "Gamepad") { pauseMenuFirstButton.Select(); }
+        if (currentControlScheme == "Gamepad") { resumeButton.Select(); }
         controlsMenu.SetActive(false);
     }
 
