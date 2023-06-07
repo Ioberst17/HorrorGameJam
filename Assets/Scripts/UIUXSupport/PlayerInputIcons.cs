@@ -42,7 +42,7 @@ using UnityEngine.InputSystem;
         protected void Start()
         {
             playerInput = FindObjectOfType<PlayerInput>();
-            pauseMenuUI = GameObject.Find("PauseMenuUI");
+            pauseMenuUI = GameObject.Find("PauseMenu");
             controlsMenu = ComponentFinder.GetComponentInChildrenByNameAndType<Image>("ControlsMenu", pauseMenuUI, true).gameObject;
 
             // Hook into all updateBindingUIEvents on all RebindActionUI components in our hierarchy.

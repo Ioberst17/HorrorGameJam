@@ -31,7 +31,7 @@ public class InGameInputIcon : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>(); // sprite to change
 
         // makes finding references faster later
-        pauseMenuUI = GameObject.Find("PauseMenuUI");
+        pauseMenuUI = GameObject.Find("PauseMenu");
         controlsMenu = ComponentFinder.GetComponentInChildrenByNameAndType<Image>("ControlsMenu", pauseMenuUI, true).gameObject;
     }
 
@@ -85,7 +85,7 @@ public class InGameInputIcon : MonoBehaviour
             bindingIndex = actionToBindTo.actionReference.action.GetBindingIndex(group: playerInput.currentControlScheme);
             (string displayString, string deviceLayoutName, string controlPath) = actionToBindTo.GetDisplayStringInfo(bindingIndex);
             spriteRenderer.sprite = playerInputIcons.UpdateStaticIconImages(actionToBindTo, deviceLayoutName, controlPath);
-            spriteRenderer.transform.localScale = new Vector3(1, 1, 1);
+            spriteRenderer.transform.localScale = new Vector3(.85f, .85f, 1);
         }
     }
 }

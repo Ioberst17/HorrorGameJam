@@ -294,7 +294,7 @@ public class RebindActionUI : MonoBehaviour
         var bindingIndex = action.bindings.IndexOf(x => x.id.ToString() == bindingId); // get the index of the current ID
         int bindingIndexForCompositeParts = bindingIndex + optionalCompositeCounter;
 
-        if (optionalCompositeCounter != 0) { bindingIndexForCompositeParts = bindingIndex + optionalCompositeCounter; }
+        if (optionalCompositeCounter != 0 && bindingIndex + optionalCompositeCounter > action.bindings.Count) { bindingIndexForCompositeParts = bindingIndex + optionalCompositeCounter; }
 
         bool bindingIsComposite = action.bindings[bindingIndex].isComposite; // refers to the head
         bool bindingIsCompositePart = action.bindings[bindingIndexForCompositeParts].isPartOfComposite; // refers to a composite part
