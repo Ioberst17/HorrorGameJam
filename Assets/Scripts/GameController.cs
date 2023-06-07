@@ -32,7 +32,7 @@ public class GameController : MonoBehaviour
 
     // Other
     private CameraBehavior CameraBehavior;
-    [SerializeField] private EnemyCreationForTesting enemySpawner;
+    private EnemyCreationForTesting enemySpawner;
     private Camera cameraToUse;
 
     // INTERNAL TO GAMECONTROLLER
