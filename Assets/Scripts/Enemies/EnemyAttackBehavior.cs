@@ -20,7 +20,7 @@ public class EnemyAttackBehavior : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collider)
     {
-        //enemyController.OnTriggerEnter2DHelper(collider);
+        enemyController.OnTriggerEnter2DHelper(collider);
     }
 }
 

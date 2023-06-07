@@ -34,7 +34,7 @@ public class BloodGolemProjectile : EnemyProjectile
         //Debug.Log("I See something " + collider.name);
         if (collider.gameObject.layer == LayerMask.NameToLayer("Player")){
             //Debug.Log("I See player " + collider.name);
-            //enemyController.OnTriggerEnter2DHelper(collider);
+            enemyController.OnTriggerEnter2DHelper(collider);
             BGController.BloodBallReset();
             Destroy(gameObject);
         }

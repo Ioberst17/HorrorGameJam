@@ -33,9 +33,9 @@ public class Inventory_UI_Mason : MonoBehaviour
 
     [SerializeField] private GameObject infoPanel;
 
-    [SerializeField] private Button weaponTab;
-    [SerializeField] private Button consumableTab;
-    [SerializeField] private Button narrativeTab;
+    [SerializeField] private Button weaponSideButton;
+    [SerializeField] private Button consumableSideButton;
+    [SerializeField] private Button narrativeSideButton;
 
     [SerializeField] private GameObject equipButton;
     [SerializeField] private GameObject useButton;
@@ -43,16 +43,32 @@ public class Inventory_UI_Mason : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI description;
     [SerializeField] private TextMeshProUGUI weaponName;
-    [SerializeField] private TextMeshProUGUI equippedText;
 
     [SerializeField] private TextMeshProUGUI effectText;
     [SerializeField] private TextMeshProUGUI effectAmount;
     [SerializeField] private TextMeshProUGUI amountText;
     [SerializeField] private TextMeshProUGUI amount;
+    
+
+    /*[SerializeField] private TextMeshProUGUI weaponDamage;
+    [SerializeField] private TextMeshProUGUI weaponAmmo;
+    [SerializeField] private TextMeshProUGUI healingamount;
+    [SerializeField] private TextMeshProUGUI amount;
+    [SerializeField] private TextMeshProUGUI lucidityAmount;
+    [SerializeField] private TextMeshProUGUI damageText;
+    [SerializeField] private TextMeshProUGUI ammoText;
+    [SerializeField] private TextMeshProUGUI healingText;
+    [SerializeField] private TextMeshProUGUI amountText;
+    [SerializeField] private TextMeshProUGUI lucidityText;*/
+
+
 
     [SerializeField] private GameObject narrative_Inventory;
     [SerializeField] private GameObject ranged_Inventory;
     [SerializeField] private GameObject consumables_Inventory;
+
+
+    [SerializeField] private Image inventoryImage;
 
     private List<GameObject> narrativeSlots = new List<GameObject>();
     private List<GameObject> rangedSlots = new List<GameObject>();
@@ -105,20 +121,26 @@ public class Inventory_UI_Mason : MonoBehaviour
     void Start()
     {
         gameController = GameObject.Find("GameController").GetComponent<GameController>();
+        // initialize the textmeshpro vars to false.
+        /*weaponDamage.enabled = false;
+        weaponAmmo.enabled = false;
+        healingamount.enabled = false;
+        amount.enabled = false;
+        lucidityAmount.enabled = false;
+        description.enabled = false;
+        damageText.enabled = false;
+        ammoText.enabled = false;
+        healingText.enabled = false;
+        amountText.enabled = false;
+        lucidityText.enabled = false;*/
 
         effectText.enabled = false;
         effectAmount.enabled = false;
         amountText.enabled = false;
         amount.enabled = false;
 
-        equippedText.enabled = false;
-
         useButton.SetActive(false);
         equipButton.SetActive(false);
-
-        weaponTab.interactable = true;
-        consumableTab.interactable = true;
-        narrativeTab.interactable = true;
 
         // manually fill lists 
         narrativeSlots.Add(narrative_Slot1);
@@ -224,9 +246,6 @@ public class Inventory_UI_Mason : MonoBehaviour
         {
             CloseInventory();
         }
-
-        //Debug.Log("current weapon id is: " + dataManager.sessionData.secondaryWeapons[dataManager.sessionData.activeSecondaryWeapon].id.ToString() + "\n");
-
     }
 
 
@@ -234,10 +253,6 @@ public class Inventory_UI_Mason : MonoBehaviour
     {
         Inventory.SetActive(true);
         InventoryOpen = true;
-
-        OpenInfoPanelWeapon(dataManager.sessionData.secondaryWeapons[dataManager.sessionData.activeSecondaryWeapon].id);
-
-        //EnableSideButtons();
     }
 
     public void CloseInventory()
@@ -246,9 +261,8 @@ public class Inventory_UI_Mason : MonoBehaviour
         InventoryOpen = false;
     }
 
-    public void OpenNarrativeItemInventory() //switch ui to melee weapons.
+    public void OpenMeleeInventory() //switch ui to melee weapons.
     {
-        Debug.Log("Weapons Button Pressed!!!\n");
         narrative_Inventory.SetActive(true);
         ranged_Inventory.SetActive(false);
         consumables_Inventory.SetActive(false);
@@ -269,14 +283,14 @@ public class Inventory_UI_Mason : MonoBehaviour
     }
 
 
-    public void OpenInfoPanelNarrativeItem(int slotNum) //opens the narrative item panel in the inventory and turns on the text fields and fills them with the info of the current selected weapon.
+    public void OpenInfoPanelMelee(int slotNum) //opens the melee weapon panel in the inventory and turns on the text fields and fills them with the info of the current selected weapon.
     {
         infoPanel.SetActive(true);
 
         useButton.SetActive(false);
         equipButton.SetActive(false);
 
-        //DisableSideButtons();
+        DisableSideButtons();
 
         effectText.enabled = true;
         effectText.text = "Lucidity:";
@@ -292,14 +306,14 @@ public class Inventory_UI_Mason : MonoBehaviour
         description.text = dataManager.sessionData.narrativeItems[slotNum].description;
     }
 
-    public void OpenInfoPanelWeapon(int slotNum) //opens the ranged weapon panel in the inventory and turns on the text fields and fills them with the info of the current selected weapon.
+    public void OpenInfoPanelRanged(int slotNum) //opens the ranged weapon panel in the inventory and turns on the text fields and fills them with the info of the current selected weapon.
     {
         infoPanel.SetActive(true);
 
         useButton.SetActive(false);
         equipButton.SetActive(true);
 
-        //DisableSideButtons();
+        DisableSideButtons();
 
         effectText.enabled = true;
         effectText.text = "Damage:";
@@ -316,14 +330,6 @@ public class Inventory_UI_Mason : MonoBehaviour
         effectAmount.text = weaponDatabase.ReturnItemFromID(slotNum).level1Damage.ToString();
         amount.text = dataManager.sessionData.secondaryWeapons[slotNum].ammo.ToString();
         description.text = dataManager.sessionData.secondaryWeapons[slotNum].description;
-
-
-        if(dataManager.sessionData.secondaryWeapons[slotNum].id == dataManager.sessionData.secondaryWeapons[dataManager.sessionData.activeSecondaryWeapon].id){
-            equippedText.enabled = true;
-            Debug.Log("slotNum id: " + dataManager.sessionData.secondaryWeapons[slotNum].id.ToString() + "\nactive weapon id: " + dataManager.sessionData.secondaryWeapons[dataManager.sessionData.activeSecondaryWeapon].id.ToString() + "\n");
-        }
-        else { equippedText.enabled = false;  }
-
     }
     public void OpenInfoPanelConsumable(int slotNum) //opens the consumable panel in the inventory and turns on the text fields and fills them with the info of the current selected item.
     {
@@ -332,7 +338,7 @@ public class Inventory_UI_Mason : MonoBehaviour
         useButton.SetActive(true);
         equipButton.SetActive(false);
 
-        //DisableSideButtons();
+        DisableSideButtons();
 
         effectText.enabled = true;
         effectText.text = "Healing";
@@ -367,9 +373,7 @@ public class Inventory_UI_Mason : MonoBehaviour
         inventoryManager.primaryWeaponsManager.LoadActiveWeapon();
         inventoryManager.secondaryWeaponsManager.LoadActiveWeapon();
 
-        //OpenInfoPanelRanged(dataManager.sessionData.secondaryWeapons[dataManager.activeSceondayWeapon].id);
-
-        //CloseInfoPanel();
+        CloseInfoPanel();
     }
 
     public void UseItem()
@@ -387,7 +391,7 @@ public class Inventory_UI_Mason : MonoBehaviour
         useButton.SetActive(false);
         equipButton.SetActive(false);
 
-        //EnableSideButtons();
+        EnableSideButtons();
 
         effectText.enabled = false;
         effectAmount.enabled = false;
@@ -400,16 +404,16 @@ public class Inventory_UI_Mason : MonoBehaviour
 
     private void DisableSideButtons()
     {
-        narrativeTab.interactable = false;
-        weaponTab.interactable = false;
-        consumableTab.interactable = false;
+        narrativeSideButton.interactable = false;
+        weaponSideButton.interactable = false;
+        consumableSideButton.interactable = false;
     }
 
     private void EnableSideButtons()
     {
-        narrativeTab.interactable = true;
-        weaponTab.interactable = true;
-        consumableTab.interactable = true;
+        narrativeSideButton.interactable = true;
+        weaponSideButton.interactable = true;
+        consumableSideButton.interactable = true;
     }
 
 }

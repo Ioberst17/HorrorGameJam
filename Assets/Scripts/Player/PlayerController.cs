@@ -85,7 +85,7 @@ public class PlayerController : MonoBehaviour
         playerDash = GetComponentInChildren<PlayerDash>();
         chargePunch = GetComponentInChildren<ChargePunch>();
 
-        
+        MovementSpeed = 10;
         ControlMomentum = 0;
         animator = GetComponent<Animator>();
         visualEffects = GetComponentInChildren<PlayerVisualEffectsController>();

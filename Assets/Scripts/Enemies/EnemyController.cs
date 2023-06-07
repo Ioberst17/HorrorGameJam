@@ -86,6 +86,23 @@ public class EnemyController : MonoBehaviour, IDamageable
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
     }
 
+    //this is what actually deals the damage
+    public void OnTriggerEnter2DHelper(Collider2D collider)
+    {
+        if (!isDead)
+        {
+            if (playerInZone)
+            {
+                if (collider.gameObject.layer
+                == LayerMask.NameToLayer("Player") && isAttacking)
+                {
+                    //playerController.takeDamage(transform.position, damageValue, 1);
+                    rb.AddForce(new Vector2(knockbackForce * -facingDirection, 0.0f), ForceMode2D.Impulse);
+                }
+            }
+        }
+
+    }
 
    // Start is called before the first frame update
     void Start()

@@ -17,14 +17,12 @@ public class PlayerShield : Shield
     private EnemyController currentAttacker;
     [SerializeField] private int enemyAttackNumber;
     private int enemyDamageVal;
-    private int effectcooldown;
 
     new void Start()
     {
         base.Start();
         playerStamina = SiblingComponentUtils.GetSiblingComponent<PlayerStamina>(this.gameObject);
         playerHealth = GetComponentInParent<PlayerHealth>();
-        effectcooldown = 0;
     }
 
     new void Update()
@@ -46,10 +44,6 @@ public class PlayerShield : Shield
     private void FixedUpdate()
     {
         if (!shieldButtonDown) { ChangeSP(staminaRate / 2, Time.deltaTime); }
-        if(effectcooldown > 0)
-        {
-            effectcooldown--;
-        }
     }
 
 
@@ -179,12 +173,7 @@ public class PlayerShield : Shield
     public override void ReturnDamage(Collider2D collision)
     {
         FindObjectOfType<AudioManager>().PlaySFX("Parry");
-        if(effectcooldown == 0)
-        {
-            Instantiate(Resources.Load("VFXPrefabs/BulletImpact"), collision.transform.position, Quaternion.identity); // TO-DO: Swap out with a more appropriate impact
-            effectcooldown = 30;
-        }
-        
+        Instantiate(Resources.Load("VFXPrefabs/BulletImpact"), collision.transform.position, Quaternion.identity); // TO-DO: Swap out with a more appropriate impact
         if (collision.gameObject.GetComponent<IDamageable>() != null)
         { 
             collision.gameObject.GetComponent<IDamageable>().Hit(collision.gameObject.GetComponent<EnemyController>().dmgVal1, transform.position); 
