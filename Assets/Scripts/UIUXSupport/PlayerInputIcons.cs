@@ -23,14 +23,14 @@ using UnityEngine.InputSystem;
         private PlayerInput playerInput;
 
         // External References to Change
-        GameObject controlsMenu;
+        [SerializeField] GameObject controlsMenu;
 
         // Internal Variables for Tracking
         string currentControlScheme;
         [SerializeField] bool workingOnAComposite;
         [SerializeField] int compositeIndex;
 
-        [SerializeField] GameObject pauseMenuUI;
+        [SerializeField] GameObject TopLevelMenuObjectInHierarchy;
         [SerializeField] Transform nonCompositeIcon;
         [SerializeField] Transform compositeIcon;
         [SerializeField] ActionBindingIconComposite[] compositeIconArray = new ActionBindingIconComposite[4]; // assumes there are 4 objects in a composite - stored under a iconCompositeParent
@@ -42,11 +42,14 @@ using UnityEngine.InputSystem;
         protected void Start()
         {
             playerInput = FindObjectOfType<PlayerInput>();
-            pauseMenuUI = GameObject.Find("PauseMenu");
-            controlsMenu = ComponentFinder.GetComponentInChildrenByNameAndType<Image>("ControlsMenu", pauseMenuUI, true).gameObject;
+            TopLevelMenuObjectInHierarchy = GameObject.Find("PauseMenu"); // for gameplay-related 
+            if(TopLevelMenuObjectInHierarchy == null) { TopLevelMenuObjectInHierarchy = GameObject.Find("MainMenuCanvas"); } // for title screen related
+            
+            if(null != ComponentFinder.GetComponentInChildrenByNameAndType<Image>("ControlsMenu", TopLevelMenuObjectInHierarchy, true, true).gameObject) 
+            { controlsMenu = ComponentFinder.GetComponentInChildrenByNameAndType<Image>("ControlsMenu", TopLevelMenuObjectInHierarchy, true, true).gameObject; }
 
-            // Hook into all updateBindingUIEvents on all RebindActionUI components in our hierarchy.
-            var rebindUIComponents = controlsMenu.GetComponentsInChildren<RebindActionUI>();
+        // Hook into all updateBindingUIEvents on all RebindActionUI components in our hierarchy.
+        var rebindUIComponents = controlsMenu.GetComponentsInChildren<RebindActionUI>();
             foreach (var component in rebindUIComponents)
             {
                 component.updateBindingUIEvent.AddListener(OnUpdateBindingDisplay);
