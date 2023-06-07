@@ -112,6 +112,10 @@ public class SpiderBehavior : MonoBehaviour
         {
             enemyController.patrolID = 2;
         }
+        if((attackCooldown == 0) && (spiderCooldown == 0))
+        {
+
+        }
         if (enemyController.playerInZone)
         {
             if (OnCeiling)
@@ -121,12 +125,12 @@ public class SpiderBehavior : MonoBehaviour
                 spriteRenderer.flipY = false;
                 enemyController.rb.gravityScale = 1;
             }
-            else if(!initialFall && isGrounded && !enemyController.isAttacking && (attackCooldown == 0) && (spiderCooldown == 0))
+            else if(!initialFall && isGrounded && !enemyController.isAttacking)
             {
                 StartCoroutine(SpiderAttackGround());
             }
         }
-        else
+        else if (!enemyController.isAttacking)
         {
             SpiderPatrolFloor();
         }
@@ -191,7 +195,7 @@ public class SpiderBehavior : MonoBehaviour
             enemyController.animator.Play("SpiderPounce");
             newVelocity.Set(0.0f, 0.0f);
             enemyController.rb.velocity = newVelocity;
-            enemyController.rb.AddForce(new Vector2(5.0f * enemyController.facingDirection, 2.0f), ForceMode2D.Impulse);
+            enemyController.rb.AddForce(new Vector2(4.0f * enemyController.facingDirection, 1.0f), ForceMode2D.Impulse);
             enemyController.isAttacking = true;
         }
         yield return new WaitForSeconds(0.01f);

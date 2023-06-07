@@ -11,17 +11,15 @@ public class PauseMenuHandler_Mason : MonoBehaviour
     public GameObject pauseMenu;
     public GameObject controlsMenu;
 
-    // pause menu buttons
     public Button resumeButton;
     public Button controlsButton;
-
-    // controls menu buttons
-    public Button topControlMenuButton;
+    public Button settingsButton;
+    public Button mainmenuButton;
+    public Button quitButton;
 
     [SerializeField] private string currentControlScheme;
 
     [SerializeField]
-    private GameObject quitButton;
     public GameController gameController;
 
     private void Start()
@@ -67,7 +65,7 @@ public class PauseMenuHandler_Mason : MonoBehaviour
         pauseMenu.SetActive(true);
         currentControlScheme = gameController.CurrentControlScheme;
         if (currentControlScheme == "Gamepad") { resumeButton.Select(); }
-        quitButton.SetActive(false);
+        //quitButton.SetActive(false);
         //Time.timeScale = 0f;
     }
 
@@ -76,7 +74,7 @@ public class PauseMenuHandler_Mason : MonoBehaviour
         pauseMenu.SetActive(false);
         controlsMenu.SetActive(true);
         currentControlScheme = gameController.CurrentControlScheme;
-        if (currentControlScheme == "Gamepad") { topControlMenuButton.Select(); }
+        if (currentControlScheme == "Gamepad") { controlsButton.Select(); }
     }
 
     public void CloseControlsAndOpenPauseMenu()
