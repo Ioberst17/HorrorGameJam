@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cainos.LucidEditor;
-using UnityEditor.SceneManagement;
+// using UnityEditor.SceneManagement;
 using UnityEditor;
 
 namespace Cainos.PixelArtPlatformer_Dungeon
@@ -43,7 +43,7 @@ namespace Cainos.PixelArtPlatformer_Dungeon
                 if (Application.isPlaying == false)
                 {
                     EditorUtility.SetDirty(this);
-                    EditorSceneManager.MarkSceneDirty(gameObject.scene);
+                    // EditorSceneManager.MarkSceneDirty(gameObject.scene);
                 }
                 #endif
 
