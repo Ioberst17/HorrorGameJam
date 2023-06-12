@@ -33,9 +33,18 @@ public class PlayerData_UI_Mason : MonoBehaviour
     [SerializeField] private DataManager dataManager;
     GameController gameController;
     [SerializeField] private PlayerController playerController;
+    [SerializeField] private PlayerDash playerDash;
+
+    private int dashCoolDownTime;
+    [SerializeField] private Image dashCircle;
+    [SerializeField] private Image dashImage;
+    [SerializeField] private Image dashBackground;
+
+
     private PlayerHealth playerHealth;
     private PlayerStamina playerStamina;
     private PlayerMana playerMana;
+
 
     // Start is called before the first frame update
     void Awake()
@@ -56,6 +65,11 @@ public class PlayerData_UI_Mason : MonoBehaviour
         playerHealth = playerController.GetComponent<PlayerHealth>();
         playerStamina = playerController.GetComponentInChildren<PlayerStamina>();
         playerMana = playerController.GetComponentInChildren<PlayerMana>();
+
+        dashCoolDownTime = playerDash.dashcooldown;
+        dashCircle.enabled = false;
+        dashImage.enabled = false;
+        dashBackground.enabled = false;
 
         healthChecker = playerHealth.HP;
         healthBar.fillAmount = playerHealth.HP / 100f;
@@ -79,7 +93,10 @@ public class PlayerData_UI_Mason : MonoBehaviour
         mpBar.fillAmount = playerMana.MP / 100f;
 
         spBar.fillAmount = playerStamina.SP / 100f;
-        if(dataManager.sessionData.consumables.Count >= 2)
+
+        
+
+        if (dataManager.sessionData.consumables.Count >= 2)
         {
             if (dataManager.sessionData.consumables[1].amount > 0)
             {
@@ -88,6 +105,16 @@ public class PlayerData_UI_Mason : MonoBehaviour
             }
             
         }
+
+
+        dashCoolDownTime = playerDash.dashcooldown;
+        dashCircle.fillAmount = dashCoolDownTime / 40f;
+
+        if (dashCoolDownTime > 0) 
+        {
+            TurnOnDashUI();
+        } 
+        else { TurnOffDashUI(); }
     }
 
     public void UseHealthPack()
@@ -142,6 +169,17 @@ public class PlayerData_UI_Mason : MonoBehaviour
     }
 
 
-
+    public void TurnOnDashUI()
+    {
+        dashImage.enabled = true;
+        dashCircle.enabled = true;
+        dashBackground.enabled = true;
+    }
+    public void TurnOffDashUI()
+    {
+        dashImage.enabled = false;
+        dashCircle.enabled = false;
+        dashBackground.enabled = false;
+    }
 
 }

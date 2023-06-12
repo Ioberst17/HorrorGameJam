@@ -182,12 +182,19 @@ public class Inventory_UI_Mason : MonoBehaviour
         if (InventoryOpen)
         {
             CloseInventory();
+            //Debug.Log("exiting inventory!\n");
             //Time.timeScale = 1.0f; // resumes time in game
             //if (gameController.isPaused) { gameController.pauseHandler(); }
         }
         else
         {
+
+            //Debug.Log("Before OpenInventory inside ToggleUI\n");
+
             OpenInventory();
+
+            
+
             //Time.timeScale = 0f; // pauses time game still a slight bug with the player being able to queue attacks and audio still playing when clicking around.
             //if (!gameController.isPaused) { gameController.pauseHandler(); }
         }
@@ -235,7 +242,11 @@ public class Inventory_UI_Mason : MonoBehaviour
         Inventory.SetActive(true);
         InventoryOpen = true;
 
+        //Debug.Log("open inventory Active Weapon ID: " + dataManager.sessionData.secondaryWeapons[dataManager.sessionData.activeSecondaryWeapon].id.ToString() + "\n");
+
         OpenInfoPanelWeapon(dataManager.sessionData.secondaryWeapons[dataManager.sessionData.activeSecondaryWeapon].id);
+
+        //Debug.Log("Active Weapon ID: " + dataManager.sessionData.secondaryWeapons[dataManager.sessionData.activeSecondaryWeapon].id.ToString() + "\n");
 
         //EnableSideButtons();
     }
@@ -310,7 +321,20 @@ public class Inventory_UI_Mason : MonoBehaviour
 
         description.enabled = true;
 
+        Debug.Log("SlotNum: " + slotNum + "\n");
+        //Debug.Log(": " + slotNum + "\n");
+
         currentSecondarySlotNum = slotNum;
+
+
+        /*for (int i = 0; i < dataManager.sessionData.secondaryWeapons.Count; i++)
+        {
+            Debug.Log("secondayWeapons[" + i.ToString() + "] id: " + dataManager.sessionData.secondaryWeapons[i].id.ToString() + "\n");
+        }*/
+
+
+
+        //Debug.Log("seondaryWeapons list from datamanager:\n" + dataManager.sessionData.secondaryWeapons.ToString());
 
         weaponName.text = dataManager.sessionData.secondaryWeapons[slotNum].name;
         effectAmount.text = weaponDatabase.ReturnItemFromID(slotNum).level1Damage.ToString();
@@ -318,9 +342,10 @@ public class Inventory_UI_Mason : MonoBehaviour
         description.text = dataManager.sessionData.secondaryWeapons[slotNum].description;
 
 
-        if(dataManager.sessionData.secondaryWeapons[slotNum].id == dataManager.sessionData.secondaryWeapons[dataManager.sessionData.activeSecondaryWeapon].id){
+        if(slotNum == dataManager.sessionData.secondaryWeapons[dataManager.sessionData.activeSecondaryWeapon].id)
+        {
             equippedText.enabled = true;
-            Debug.Log("slotNum id: " + dataManager.sessionData.secondaryWeapons[slotNum].id.ToString() + "\nactive weapon id: " + dataManager.sessionData.secondaryWeapons[dataManager.sessionData.activeSecondaryWeapon].id.ToString() + "\n");
+            Debug.Log("slotNum: " + dataManager.sessionData.secondaryWeapons[slotNum].id.ToString() + "\nactive weapon id: " + dataManager.sessionData.secondaryWeapons[dataManager.sessionData.activeSecondaryWeapon].id.ToString() + "\n");
         }
         else { equippedText.enabled = false;  }
 
@@ -353,23 +378,17 @@ public class Inventory_UI_Mason : MonoBehaviour
 
     public void EquipWeapon()
     {
-        //Debug.Log("Current primary weapon: " + dataManager.sessionData.activePrimaryWeapon.name);
-
-        //change the active primary in the datamanger script to the primary weapon that is selected in the inventory
-        dataManager.sessionData.activePrimaryWeapon = dataManager.sessionData.secondaryWeapons[currentNarrativeSlotNum].id;
-
-        Debug.Log("New primary weapon: " + dataManager.sessionData.primaryWeapons[currentNarrativeSlotNum].name);
-
+        //Debug.Log("secondaryWeapons[currentSecondarySlotNum].id: " + dataManager.sessionData.secondaryWeapons[currentSecondarySlotNum].id + "\n");
         //change the active secondary in the datamanger script to the secondary weapon that is selected in the inventory
         dataManager.sessionData.activeSecondaryWeapon = dataManager.sessionData.secondaryWeapons[currentSecondarySlotNum].id;
 
         //run the loadcurrentweapons function from the inventorymanager script to load the newly selected weapons.
-        inventoryManager.primaryWeaponsManager.LoadActiveWeapon();
         inventoryManager.secondaryWeaponsManager.LoadActiveWeapon();
 
-        //OpenInfoPanelRanged(dataManager.sessionData.secondaryWeapons[dataManager.activeSceondayWeapon].id);
 
-        //CloseInfoPanel();
+
+        //Debug.Log("New Weapon ID: " + dataManager.sessionData.activeSecondaryWeapon + "\n");
+
     }
 
     public void UseItem()

@@ -66,7 +66,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private string _currentControlScheme; public string CurrentControlScheme { get { return _currentControlScheme; } set { _currentControlScheme = value; } }
 
     // Player 'Gameplay' Actions from InputSystemAsset
-    private InputAction move, look, interact, attack, fire, jump, dash, shield, changeWeaponRight, changeWeaponLeft, healthKit, currentWeaponAmmoAdd;
+    public InputAction move, look, interact, attack, fire, jump, dash, shield, changeWeaponRight, changeWeaponLeft, healthKit, currentWeaponAmmoAdd;
 
     // UI Actions from InputSystemAsset
     private InputAction pause, inventory, submit, cancel;

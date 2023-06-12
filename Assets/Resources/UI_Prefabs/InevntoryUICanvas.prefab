@@ -37,8 +37,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 148, y: 0}
-  m_SizeDelta: {x: 20, y: 625}
+  m_AnchoredPosition: {x: 224, y: 0}
+  m_SizeDelta: {x: 20, y: 950}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260257024549212
 CanvasRenderer:
@@ -167,8 +167,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -261}
-  m_SizeDelta: {x: 0, y: 60}
+  m_AnchoredPosition: {x: 0, y: -423}
+  m_SizeDelta: {x: 0, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260257115762028
 CanvasRenderer:
@@ -251,19 +251,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 875260257115762031}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 875260258206832728}
-        m_TargetAssemblyTypeName: Inventory_UI_Mason, Assembly-CSharp
-        m_MethodName: EquipWeapon
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &875260257115762025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -361,8 +349,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 148, y: 0}
-  m_SizeDelta: {x: 20, y: 625}
+  m_AnchoredPosition: {x: 224, y: 0}
+  m_SizeDelta: {x: 20, y: 950}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260257144705772
 CanvasRenderer:
@@ -709,9 +697,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 875260258206832728}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Inventory_UI_Mason, Assembly-CSharp
-        m_MethodName: OpenInfoPanelNarrativeItem
+        m_MethodName: OpenInfoPanelRanged
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -798,8 +786,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 148, y: 0}
-  m_SizeDelta: {x: 20, y: 625}
+  m_AnchoredPosition: {x: 224, y: 0}
+  m_SizeDelta: {x: 20, y: 950}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260257178957871
 CanvasRenderer:
@@ -883,7 +871,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 875260258430576468}
   m_Direction: 2
   m_Value: 0.5
-  m_Size: 0.4494382
+  m_Size: 0.6741573
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1000,8 +988,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.128, y: 0.5}
   m_AnchorMax: {x: 0.128, y: 0.5}
-  m_AnchoredPosition: {x: -440, y: -32.548}
-  m_SizeDelta: {x: 300, y: 625}
+  m_AnchoredPosition: {x: -676.83405, y: -32.548}
+  m_SizeDelta: {x: 448.11, y: 950}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260257230594081
 CanvasRenderer:
@@ -1272,8 +1260,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 796.2423, y: -52}
-  m_SizeDelta: {x: 240.4846, y: 60}
+  m_AnchoredPosition: {x: 1230, y: -60}
+  m_SizeDelta: {x: 300, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260257276051783
 CanvasRenderer:
@@ -1330,7 +1318,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 37.5
+  m_fontSize: 46.85
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1413,7 +1401,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 450, y: -45}
+  m_AnchoredPosition: {x: 650, y: -45}
   m_SizeDelta: {x: 0, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260257293600324
@@ -1497,19 +1485,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 875260257293600327}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 875260258206832728}
-        m_TargetAssemblyTypeName: Inventory_UI_Mason, Assembly-CSharp
-        m_MethodName: OpenMeleeInventory
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &875260257293600321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1611,7 +1587,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -450, y: -45}
+  m_AnchoredPosition: {x: -650, y: -45}
   m_SizeDelta: {x: 0, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260257296514625
@@ -1695,19 +1671,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 875260257296514624}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 875260258206832728}
-        m_TargetAssemblyTypeName: Inventory_UI_Mason, Assembly-CSharp
-        m_MethodName: OpenRangedInventory
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &875260257296514626
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1891,9 +1855,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 875260258206832728}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Inventory_UI_Mason, Assembly-CSharp
-        m_MethodName: OpenInfoPanelNarrativeItem
+        m_MethodName: OpenInfoPanelRanged
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2201,9 +2165,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 875260258206832728}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Inventory_UI_Mason, Assembly-CSharp
-        m_MethodName: OpenInfoPanelNarrativeItem
+        m_MethodName: OpenInfoPanelRanged
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2386,8 +2350,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.128, y: 0.5}
   m_AnchorMax: {x: 0.128, y: 0.5}
-  m_AnchoredPosition: {x: -440, y: -32.548}
-  m_SizeDelta: {x: 300, y: 625}
+  m_AnchoredPosition: {x: -676.83405, y: -32.548}
+  m_SizeDelta: {x: 448.11, y: 950}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260257467671932
 CanvasRenderer:
@@ -2597,8 +2561,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 475.47174, y: -382.57712}
-  m_SizeDelta: {x: 850.8169, y: 271.1542}
+  m_AnchoredPosition: {x: 695.0633, y: -583}
+  m_SizeDelta: {x: 1290, y: 540}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260257525664852
 CanvasRenderer:
@@ -2655,8 +2619,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 32
-  m_fontSizeBase: 32
+  m_fontSize: 46.85
+  m_fontSizeBase: 46.85
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2820,9 +2784,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 875260258206832728}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Inventory_UI_Mason, Assembly-CSharp
-        m_MethodName: OpenInfoPanelNarrativeItem
+        m_MethodName: OpenInfoPanelRanged
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2909,8 +2873,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 250, y: 600}
+  m_AnchoredPosition: {x: 0.75, y: 0}
+  m_SizeDelta: {x: 423.5, y: 900}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260257625026226
 CanvasRenderer:
@@ -3004,7 +2968,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 5, y: -45}
+  m_AnchoredPosition: {x: 0, y: -45}
   m_SizeDelta: {x: 0, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260257641218699
@@ -3088,19 +3052,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 875260257641218698}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 875260258206832728}
-        m_TargetAssemblyTypeName: Inventory_UI_Mason, Assembly-CSharp
-        m_MethodName: OpenConsumablesInventory
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &875260257641218708
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3196,8 +3148,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 182.5, y: 0}
-  m_SizeDelta: {x: 200, y: 60}
+  m_AnchoredPosition: {x: 205, y: 0}
+  m_SizeDelta: {x: 200, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260257686128326
 CanvasRenderer:
@@ -3254,7 +3206,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 37.5
+  m_fontSize: 46.85
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -3420,9 +3372,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 875260258206832728}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Inventory_UI_Mason, Assembly-CSharp
-        m_MethodName: OpenInfoPanelWeapon
+        m_MethodName: OpenInfoPanelRanged
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3507,8 +3459,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 350, y: -53.84326}
-  m_SizeDelta: {x: 600, y: 60}
+  m_AnchoredPosition: {x: 350, y: -60}
+  m_SizeDelta: {x: 600, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260257694524255
 CanvasRenderer:
@@ -3565,7 +3517,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 37.5
+  m_fontSize: 46.85
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -3785,8 +3737,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 160, y: -40}
-  m_SizeDelta: {x: 950, y: 625}
+  m_AnchoredPosition: {x: 209.94067, y: -32.54895}
+  m_SizeDelta: {x: 1400, y: 950}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260257784840345
 CanvasRenderer:
@@ -3861,8 +3813,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 180, y: 0}
-  m_SizeDelta: {x: 200, y: 60}
+  m_AnchoredPosition: {x: 241, y: 0}
+  m_SizeDelta: {x: 200, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260257789772938
 CanvasRenderer:
@@ -3919,7 +3871,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 37.5
+  m_fontSize: 46.85
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -4220,9 +4172,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 875260258206832728}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Inventory_UI_Mason, Assembly-CSharp
-        m_MethodName: OpenInfoPanelWeapon
+        m_MethodName: OpenInfoPanelRanged
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4309,8 +4261,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 250, y: 600}
+  m_AnchoredPosition: {x: 0.75, y: 0}
+  m_SizeDelta: {x: 423.5, y: 900}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260257810971120
 CanvasRenderer:
@@ -4756,8 +4708,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.128, y: 0.5}
   m_AnchorMax: {x: 0.128, y: 0.5}
-  m_AnchoredPosition: {x: -440, y: -32.548}
-  m_SizeDelta: {x: 300, y: 625}
+  m_AnchoredPosition: {x: -676.83405, y: -32.548}
+  m_SizeDelta: {x: 448.11, y: 950}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260257979362063
 CanvasRenderer:
@@ -5190,14 +5142,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 875260258206832728}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Inventory_UI_Mason, Assembly-CSharp
-        m_MethodName: OpenNarrativeItemInventory
-        m_Mode: 1
+        m_MethodName: OpenInfoPanelRanged
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 6
+          m_IntArgument: 5
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -5413,8 +5365,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 202, y: -130}
-  m_SizeDelta: {x: 300, y: 60}
+  m_AnchoredPosition: {x: 202, y: -157}
+  m_SizeDelta: {x: 300, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260258103609117
 CanvasRenderer:
@@ -5444,7 +5396,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Damage:'
+  m_text: 'Effect:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 769993c254d06cf43ad371e26743d664, type: 2}
   m_sharedMaterial: {fileID: -4494585585246109742, guid: 769993c254d06cf43ad371e26743d664, type: 2}
@@ -5471,7 +5423,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 37.5
+  m_fontSize: 46.85
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -5799,8 +5751,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 202, y: -203}
-  m_SizeDelta: {x: 300, y: 60}
+  m_AnchoredPosition: {x: 202, y: -250}
+  m_SizeDelta: {x: 300, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260258191459861
 CanvasRenderer:
@@ -5857,7 +5809,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 37.5
+  m_fontSize: 46.85
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -6122,9 +6074,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 875260258206832728}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Inventory_UI_Mason, Assembly-CSharp
-        m_MethodName: OpenInfoPanelWeapon
+        m_MethodName: OpenInfoPanelRanged
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6297,14 +6249,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 875260258206832728}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Inventory_UI_Mason, Assembly-CSharp
-        m_MethodName: OpenNarrativeItemInventory
-        m_Mode: 1
+        m_MethodName: OpenInfoPanelRanged
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 7
+          m_IntArgument: 5
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -6628,9 +6580,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 875260258206832728}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Inventory_UI_Mason, Assembly-CSharp
-        m_MethodName: OpenInfoPanelNarrativeItem
+        m_MethodName: OpenInfoPanelRanged
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6693,7 +6645,7 @@ GameObject:
   - component: {fileID: 875260258342695592}
   - component: {fileID: 875260258342695595}
   m_Layer: 5
-  m_Name: InventoryUICanvas
+  m_Name: InevntoryUICanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6956,8 +6908,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 343, y: -261}
-  m_SizeDelta: {x: 0, y: 60}
+  m_AnchoredPosition: {x: 0, y: -343}
+  m_SizeDelta: {x: 0, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260258389554405
 CanvasRenderer:
@@ -7436,9 +7388,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 875260258206832728}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Inventory_UI_Mason, Assembly-CSharp
-        m_MethodName: OpenInfoPanelWeapon
+        m_MethodName: OpenInfoPanelRanged
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7526,8 +7478,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 275, y: 625}
+  m_AnchoredPosition: {x: -13, y: 0}
+  m_SizeDelta: {x: 425, y: 950}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260258535912613
 CanvasRenderer:
@@ -7635,8 +7587,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 275, y: 625}
+  m_AnchoredPosition: {x: -13, y: 0}
+  m_SizeDelta: {x: 425, y: 950}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260258553121264
 CanvasRenderer:
@@ -7830,9 +7782,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 875260258206832728}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Inventory_UI_Mason, Assembly-CSharp
-        m_MethodName: OpenInfoPanelConsumable
+        m_MethodName: OpenInfoPanelRanged
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8043,9 +7995,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 875260258206832728}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Inventory_UI_Mason, Assembly-CSharp
-        m_MethodName: OpenInfoPanelWeapon
+        m_MethodName: OpenInfoPanelRanged
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8375,9 +8327,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 875260258206832728}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Inventory_UI_Mason, Assembly-CSharp
-        m_MethodName: OpenInfoPanelConsumable
+        m_MethodName: OpenInfoPanelRanged
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8551,9 +8503,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 875260258206832728}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Inventory_UI_Mason, Assembly-CSharp
-        m_MethodName: OpenInfoPanelWeapon
+        m_MethodName: OpenInfoPanelRanged
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8735,7 +8687,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 37.5
+  m_fontSize: 46.85
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -8815,8 +8767,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 275, y: 625}
+  m_AnchoredPosition: {x: -13, y: 0}
+  m_SizeDelta: {x: 425, y: 950}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260258845139164
 CanvasRenderer:
@@ -8916,15 +8868,14 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5738665930753266189}
   - {fileID: 875260258887184947}
   m_Father: {fileID: 875260258342695598}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1300, y: 750}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260258858938067
 CanvasRenderer:
@@ -9000,12 +8951,12 @@ RectTransform:
   - {fileID: 875260258820134262}
   - {fileID: 875260257784840347}
   m_Father: {fileID: 875260258858938077}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1300, y: 750}
+  m_AnchoredPosition: {x: -0.000061035, y: 0}
+  m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260258887184945
 CanvasRenderer:
@@ -9265,9 +9216,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 875260258206832728}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Inventory_UI_Mason, Assembly-CSharp
-        m_MethodName: OpenInfoPanelNarrativeItem
+        m_MethodName: OpenInfoPanelRanged
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9410,7 +9361,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 37.5
+  m_fontSize: 46.85
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -9489,8 +9440,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 250, y: 600}
+  m_AnchoredPosition: {x: 0.75, y: 0}
+  m_SizeDelta: {x: 423.5, y: 900}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260259068410996
 CanvasRenderer:
@@ -9543,79 +9494,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ShowMaskGraphic: 0
---- !u!1 &1622461173345935454
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5738665930753266189}
-  - component: {fileID: 7494650193648906986}
-  - component: {fileID: 6737865419473500769}
-  m_Layer: 5
-  m_Name: Panel
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &5738665930753266189
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1622461173345935454}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 875260258858938077}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 620, y: 330}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &7494650193648906986
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1622461173345935454}
-  m_CullTransparentMesh: 1
---- !u!114 &6737865419473500769
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1622461173345935454}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.392}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
