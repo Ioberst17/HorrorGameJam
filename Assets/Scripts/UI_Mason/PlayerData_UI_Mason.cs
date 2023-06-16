@@ -12,8 +12,8 @@ using UnityEngine.UI;
 public class PlayerData_UI_Mason : MonoBehaviour
 {
     [SerializeField] private Image healthBar;
-    //[SerializeField] private Image mpBar;
-    //[SerializeField] private Image spBar;
+    [SerializeField] private Image mpBar;
+    [SerializeField] private Image spBar;
     [SerializeField] private TextMeshProUGUI weaponName;
     [SerializeField] private TextMeshProUGUI weaponAmmo;
     [SerializeField] private TextMeshProUGUI consumableAmount;
@@ -34,8 +34,8 @@ public class PlayerData_UI_Mason : MonoBehaviour
     GameController gameController;
     [SerializeField] private PlayerController playerController;
     private PlayerHealth playerHealth;
-    //private PlayerStamina playerStamina;
-    //private PlayerMana playerMana;
+    private PlayerStamina playerStamina;
+    private PlayerMana playerMana;
 
     [SerializeField] private PlayerDash playerDash;
 
@@ -44,7 +44,6 @@ public class PlayerData_UI_Mason : MonoBehaviour
     [SerializeField] private Image dashImage;
     [SerializeField] private Image dashBackground;
 
-    private int dashTimerInverse;
 
     // Start is called before the first frame update
     void Awake()
@@ -63,18 +62,16 @@ public class PlayerData_UI_Mason : MonoBehaviour
         FinishTossForceDisplay();
         gameController = FindObjectOfType<GameController>();
         playerHealth = playerController.GetComponent<PlayerHealth>();
-        //playerStamina = playerController.GetComponentInChildren<PlayerStamina>();
-        //playerMana = playerController.GetComponentInChildren<PlayerMana>();
+        playerStamina = playerController.GetComponentInChildren<PlayerStamina>();
+        playerMana = playerController.GetComponentInChildren<PlayerMana>();
 
         healthChecker = playerHealth.HP;
         healthBar.fillAmount = playerHealth.HP / 100f;
 
         dashCoolDownTime = playerDash.dashcooldown;
-        /*dashCircle.enabled = false;
+        dashCircle.enabled = false;
         dashImage.enabled = false;
-        dashBackground.enabled = false;*/
-
-        TurnOnDashUI();
+        dashBackground.enabled = false;
 
 
         //dataManager.sessionData.consumables[1].amount = dataManager.sessionData.consumables[1].amount + 2;
@@ -93,9 +90,9 @@ public class PlayerData_UI_Mason : MonoBehaviour
         health = playerHealth.HP;
         healthBar.fillAmount = health / 100f; //can import the max health to make this better but as for right now the hp is 100
 
-       // mpBar.fillAmount = playerMana.MP / 100f;
+        mpBar.fillAmount = playerMana.MP / 100f;
 
-        //spBar.fillAmount = playerStamina.SP / 100f;
+        spBar.fillAmount = playerStamina.SP / 100f;
         if(dataManager.sessionData.consumables.Count >= 2)
         {
             if (dataManager.sessionData.consumables[1].amount > 0)
@@ -106,17 +103,15 @@ public class PlayerData_UI_Mason : MonoBehaviour
             
         }
 
-        dashTimerInverse = 40 - playerDash.dashcooldown;
 
+        dashCoolDownTime = playerDash.dashcooldown;
+        dashCircle.fillAmount = dashCoolDownTime / 40f;
 
-        //dashCoolDownTime = playerDash.dashcooldown;
-        dashCircle.fillAmount = dashTimerInverse / 40f;
-
-        /*if (dashCoolDownTime > 0)
+        if (dashCoolDownTime > 0)
         {
             TurnOnDashUI();
         }
-        else { TurnOffDashUI(); }*/
+        else { TurnOffDashUI(); }
 
     }
 
