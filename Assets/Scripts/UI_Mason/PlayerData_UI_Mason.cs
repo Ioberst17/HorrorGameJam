@@ -37,14 +37,6 @@ public class PlayerData_UI_Mason : MonoBehaviour
     private PlayerStamina playerStamina;
     private PlayerMana playerMana;
 
-    [SerializeField] private PlayerDash playerDash;
-
-    private int dashCoolDownTime;
-    [SerializeField] private Image dashCircle;
-    [SerializeField] private Image dashImage;
-    [SerializeField] private Image dashBackground;
-
-
     // Start is called before the first frame update
     void Awake()
     {
@@ -67,12 +59,6 @@ public class PlayerData_UI_Mason : MonoBehaviour
 
         healthChecker = playerHealth.HP;
         healthBar.fillAmount = playerHealth.HP / 100f;
-
-        dashCoolDownTime = playerDash.dashcooldown;
-        dashCircle.enabled = false;
-        dashImage.enabled = false;
-        dashBackground.enabled = false;
-
 
         //dataManager.sessionData.consumables[1].amount = dataManager.sessionData.consumables[1].amount + 2;
 
@@ -102,17 +88,6 @@ public class PlayerData_UI_Mason : MonoBehaviour
             }
             
         }
-
-
-        dashCoolDownTime = playerDash.dashcooldown;
-        dashCircle.fillAmount = dashCoolDownTime / 40f;
-
-        if (dashCoolDownTime > 0)
-        {
-            TurnOnDashUI();
-        }
-        else { TurnOffDashUI(); }
-
     }
 
     public void UseHealthPack()
@@ -167,17 +142,6 @@ public class PlayerData_UI_Mason : MonoBehaviour
     }
 
 
-    public void TurnOnDashUI()
-    {
-        dashImage.enabled = true;
-        dashCircle.enabled = true;
-        dashBackground.enabled = true;
-    }
-    public void TurnOffDashUI()
-    {
-        dashImage.enabled = false;
-        dashCircle.enabled = false;
-        dashBackground.enabled = false;
-    }
+
 
 }
