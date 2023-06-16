@@ -18,7 +18,7 @@ public class PlayerAfterImage : MonoBehaviour
     private Transform player;
 
     private SpriteRenderer spriteRenderer;
-    private SpriteRenderer playerSpriteRender;
+    private PlayerAnimator playerAnimator;
 
     private Color color;
 
@@ -30,14 +30,14 @@ public class PlayerAfterImage : MonoBehaviour
         }
     }
 
-    void OnEnable()
+    void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        playerSpriteRender = player.GetComponent<SpriteRenderer>();
+        playerAnimator = player.GetComponentInChildren<PlayerAnimator>();
 
         alpha = alphaSet;
-        spriteRenderer.sprite = playerSpriteRender.sprite;
+        spriteRenderer.sprite = playerAnimator.ReturnPlayerImage();
         ImagePlacement = player.position;
         timeActivated = Time.time;
     }

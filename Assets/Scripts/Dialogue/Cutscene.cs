@@ -16,6 +16,7 @@ public class Cutscene : MonoBehaviour
     // outside references
     private GameController gameController;
     private PlayerController playerController;
+    private PlayerAnimator playerAnimator;
     private DialogueManager dialogueManager;
     private ScreenFade screenFade;
     private ObjectiveUI objectiveUI;
@@ -69,6 +70,7 @@ public class Cutscene : MonoBehaviour
     {
         gameController = FindObjectOfType<GameController>();
         playerController = FindObjectOfType<PlayerController>();
+        playerAnimator = FindObjectOfType<PlayerAnimator>();
         dialogueManager = FindObjectOfType<DialogueManager>();
         GetComponent<BoxCollider2D>().isTrigger = true;
         screenFade = FindObjectOfType<ScreenFade>();
@@ -244,7 +246,7 @@ public class Cutscene : MonoBehaviour
     {
         // while any of these are not true
         while (!gameController.PlayerInputIdle() ||  // check if XInput and YInput are 0
-                    !playerController.CheckIfAnimationIsPlaying("PlayerIdle") || // Check if player idle animation is playing
+                    !playerAnimator.CheckIfAnimationIsPlaying("PlayerIdle") || // Check if player idle animation is playing
                                     playerController.Rb.velocity.x != 0)  // check if X motion is 0
         { gameController.ResetPlayerMotionAndInput(); yield return null; } // attempt to reset motion
     }

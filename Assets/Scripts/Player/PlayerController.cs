@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask whatIsGround;
     [SerializeField] private LayerMask whatIsEnemy;
 
-    private Animator animator;
+    private PlayerAnimator animator;
     public PlayerVisualEffectsController visualEffects;
     private PlayerPrimaryWeapon playerPrimaryWeapon;
 
@@ -87,7 +87,7 @@ public class PlayerController : MonoBehaviour
 
         
         ControlMomentum = 0;
-        animator = GetComponent<Animator>();
+        animator = GetComponentInChildren<PlayerAnimator>(true);
         visualEffects = GetComponentInChildren<PlayerVisualEffectsController>();
 
         if (GetComponent<PlayerHealth>() != null) { playerHealth = GetComponent<PlayerHealth>(); }
@@ -170,7 +170,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (chargePunch.IsCharging)
         {
-            if (CheckIfAnimationIsPlaying("PlayerBasicAttack")){ }
+            if (animator.CheckIfAnimationIsPlaying("PlayerBasicAttack")){ }
             else { animator.Play("PlayerCharge"); } 
         }
     }
@@ -217,13 +217,6 @@ public class PlayerController : MonoBehaviour
 
         if (ControlMomentum > 10) { ControlMomentum -= 1; }
         else if (gameController.XInput < 0 && ControlMomentum < -10) { ControlMomentum += 1; }
-    }
-
-    public bool CheckIfAnimationIsPlaying(string animationName) 
-    {
-        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        if(stateInfo.IsName(animationName) && stateInfo.normalizedTime < 1.0f) { return true; } // if the current state is that animation, and it's normalized play time is less than 1, it's in play
-        return false;
     }
 
     //flips the model

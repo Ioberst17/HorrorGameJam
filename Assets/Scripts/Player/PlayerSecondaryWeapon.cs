@@ -12,7 +12,7 @@ public class PlayerSecondaryWeapon : MonoBehaviour
     private GameController gameController;
     private SecondaryWeaponsManager secondaryWeaponsManager;
     private GameObject utilities;
-
+    private PlayerAnimator animator;
     [SerializeField] private SpriteRenderer weaponSprite;
     private float weaponWidth;
     private float weaponHeight;
@@ -80,6 +80,7 @@ public class PlayerSecondaryWeapon : MonoBehaviour
         gameController = FindObjectOfType<GameController>();
 
         player = GameObject.Find("Player");
+        animator = ComponentFinder.GetComponentInChildrenByNameAndType<PlayerAnimator>("Animator", player, true);
         secondaryWeaponsManager = player.GetComponent<SecondaryWeaponsManager>();
         playerController = transform.parent.GetComponent<PlayerController>();
         weaponSprite = GameObject.Find("WeaponSprite").GetComponent<SpriteRenderer>();
@@ -151,6 +152,7 @@ public class PlayerSecondaryWeapon : MonoBehaviour
     {
         GameObject shot = Instantiate(ammoPrefabs[currentAmmoIndex], projectileSpawnPoint.position, projectileSpawnPoint.transform.rotation);
         FindObjectOfType<AudioManager>().PlaySFX("WeaponFire");
+        animator.PlayCoroutine("PlayerShoot", PlayerAnimator.PlayerPart.RightArm);
 
         shot.GetComponent<Rigidbody2D>().gravityScale = ammoGravity;
 
@@ -213,14 +215,6 @@ public class PlayerSecondaryWeapon : MonoBehaviour
     private void StopFixedFire() { fixedDistanceAmmo.SetActive(false); ToggleFlamethrowerEffects(false); }
 
     private void ToggleFlamethrowerEffects(bool flamethrowerState) { FindObjectOfType<AudioManager>().LoopSFX("Flamethrower", flamethrowerState); }
-
-    public void Flip() // used in game controller to flip projectile spawnpoint when player changes direction; should only be called if using horizontal / vertical direction only firing
-    {
-            gameObject.transform.localScale = new Vector3(
-                transform.localScale.x,
-                transform.localScale.y * -1,
-                transform.localScale.z);
-    }
 
     private void WeaponChanged(int weaponID, string weaponName, int weaponLevel)
     {

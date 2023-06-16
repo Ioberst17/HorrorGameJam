@@ -14,6 +14,8 @@ public class GameController : MonoBehaviour
     // REFERENCES TO IN-SCENE OBJECTS
     // Player Related
     private PlayerController playerController;
+    private RightArmAnimator rightArmAnimator;
+    private PlayerAnimator playerAnimator;
     private PlayerHealth playerHealth;
     private PlayerShield playerShield;
     private PlayerDash playerDash;
@@ -78,6 +80,8 @@ public class GameController : MonoBehaviour
         if(SceneManager.GetActiveScene().buildIndex != 0) // if not title screen
         {
             playerController = FindObjectOfType<PlayerController>();
+            rightArmAnimator = FindObjectOfType<RightArmAnimator>();
+            playerAnimator = FindObjectOfType<PlayerAnimator>();
             playerHealth = playerController.gameObject.GetComponent<PlayerHealth>();
             playerShield = playerController.gameObject.GetComponentInChildren<PlayerShield>();
             playerDash = playerController.gameObject.GetComponentInChildren<PlayerDash>();
@@ -477,7 +481,7 @@ public class GameController : MonoBehaviour
 
     public void TriggerInteractButton() { InteractButton = true; } // used by cutscenes 
 
-    public void HandleFlipping() { playerController.Flip(); playerSecondaryWeapon.Flip(); }
+    public void HandleFlipping() { playerController.Flip(); PhysicsExtensions.Flip(playerSecondaryWeapon.gameObject); }
 
     //private void OnDestroy() { ControlsUI.OnRebindingComplete -= HandleRebindingComplete; }
 }

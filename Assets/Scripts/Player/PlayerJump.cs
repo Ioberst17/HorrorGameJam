@@ -9,7 +9,7 @@ public class PlayerJump : MonoBehaviour
     private GameController gameController;
     private PlayerController controller;
     private PlayerDash dash;
-    private Animator animator;
+    private PlayerAnimator animator;
     private PlayerParticleSystems visualEffects;
 
     // internal properties
@@ -23,8 +23,8 @@ public class PlayerJump : MonoBehaviour
     {
         gameController = FindObjectOfType<GameController>();
         controller = FindObjectOfType<PlayerController>();
-        animator = controller.gameObject.GetComponent<Animator>();
-        dash = controller.GetComponentInChildren<PlayerDash>();
+        animator = ComponentFinder.GetComponentInChildrenByNameAndType<PlayerAnimator>("Animator", transform.parent.gameObject);
+        dash = ComponentFinder.GetComponentInChildrenByNameAndType<PlayerDash>("Dash", transform.parent.gameObject);
         visualEffects = controller.transform.Find("VisualEffects").gameObject.GetComponent<PlayerParticleSystems>();
     }
 
