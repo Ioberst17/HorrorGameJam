@@ -9,6 +9,7 @@ public class WeaponsManager : MonoBehaviour
     public DataManager dataManager;
     public GameObject utilities;
     public GameObject player;
+    public PlayerAnimator animator;
     public WeaponDatabase weaponDatabase;
     public WeaponDatabase.DB weaponData;
     public PlayerSecondaryWeapon playerSecondaryWeapon;
@@ -16,11 +17,21 @@ public class WeaponsManager : MonoBehaviour
     [SerializeField]
     public List<PlayerWeapons> weaponList = new List<PlayerWeapons>();
     public List<PlayerWeapons> dataManagerWeaponList = new List<PlayerWeapons>();
+    public Weapons currentWeapon;
     public int activeWeapon;
     public int dataManagerActiveWeapon;
-    public int currentWeaponID;
+    private int _currentWeaponID;
+    public int currentWeaponID
+    {
+        get { return _currentWeaponID; }
+        set 
+        { 
+            _currentWeaponID = value;
+            currentWeapon = weaponDatabase.ReturnItemFromID(_currentWeaponID); // set the current weapon, whenever the ID changes
+        }
+    }
     public int currentWeaponIndex;
-    public bool changingIsBlocked;
+    public bool ChangingIsBlocked { get; set; }
 
     // Start is called before the first frame update
     public virtual void Start()
@@ -32,13 +43,14 @@ public class WeaponsManager : MonoBehaviour
         utilities = GameObject.Find("Utilities");
         weaponDatabase = utilities.GetComponentInChildren<WeaponDatabase>();
         weaponData = weaponDatabase.data;
+        animator = GetComponentInChildren<PlayerAnimator>(); 
         InitializeDataManagerReferences();
         Load();
 
         AddWeaponsForTesting();
     }
 
-    void AddWeaponsForTesting() { for (int i = 0; i < weaponData.entries.Length; i++) { if (i != 3) { AddWeapon(weaponData.entries[i]); } } }
+    void AddWeaponsForTesting() { for (int i = 0; i < weaponData.entries.Length; i++) { AddWeapon(weaponData.entries[i]); } }
 
     void InitializeDataManagerReferences()
     {
@@ -161,7 +173,7 @@ public class WeaponsManager : MonoBehaviour
 
     public void WeaponChanged(int weaponChange)
     {
-        if (!changingIsBlocked) // checks for blockers, e.g. in an active throw
+        if (!ChangingIsBlocked) // checks for blockers, e.g. in an active throw
         {
             int weaponLocation = GetCurrentWeaponInventoryIndex();
 

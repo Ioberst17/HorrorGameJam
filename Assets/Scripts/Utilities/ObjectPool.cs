@@ -7,7 +7,7 @@ public class ObjectPool : MonoBehaviour
     [SerializeField]
     public GameObject prefabToUse;
 
-    private Queue<GameObject> availablePrefabs = new Queue<GameObject>();
+    protected Queue<GameObject> availablePrefabs = new Queue<GameObject>();
 
 
     public virtual void Awake()

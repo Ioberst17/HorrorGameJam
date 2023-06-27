@@ -9,6 +9,7 @@ public class PlayerDash : MonoBehaviour
     [SerializeField] private PlayerController controller;
     // vfx references
     private GameObject visualEffects;
+    private PlayerAnimator animator;
     [SerializeField] ParticleSystem dashParticles;
 
     // internal properties
@@ -25,6 +26,7 @@ public class PlayerDash : MonoBehaviour
     {
         gameController = FindObjectOfType<GameController>();
         controller = FindObjectOfType<PlayerController>();
+        animator = ComponentFinder.GetComponentInChildrenByNameAndType<PlayerAnimator>("Animator", transform.parent.gameObject);
         visualEffects = transform.GetSibling("VisualEffects").gameObject;
         dashParticles = ComponentFinder.GetComponentInChildrenByNameAndType<ParticleSystem>("DashParticleEffect", visualEffects, true);
         _canDash = true;
@@ -63,7 +65,7 @@ public class PlayerDash : MonoBehaviour
                 controller.SetVelocity(controller.MovementSpeed * 2 * controller.FacingDirection, 0);
             }
             else { HandleMultiDirectionalDash(); }
-            //animator.Play("PlayerDash");
+            animator.Play("PlayerDash", PlayerAnimator.PlayerPart.All, true, true, true, false);
             yield return DashAfterImageHandler();
             _isDashing = false;
             controller.Rb.gravityScale = 3;

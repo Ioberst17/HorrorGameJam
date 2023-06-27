@@ -59,12 +59,6 @@ public class PlayerData_UI_Mason : MonoBehaviour
 
         healthChecker = playerHealth.HP;
         healthBar.fillAmount = playerHealth.HP / 100f;
-
-        //dataManager.sessionData.consumables[1].amount = dataManager.sessionData.consumables[1].amount + 2;
-
-        /*throwPredictionPoints = new GameObject[numberOfThrowPoints];
-
-        for(int i = 0; i < numberOfThrowPoints; i++) { throwPredictionPoints[i] = Instantiate(throwPredictionPoint, transform.position, Quaternion.identity); }*/
     }
 
     void Update()
@@ -128,9 +122,6 @@ public class PlayerData_UI_Mason : MonoBehaviour
         ThrowForceUI.GetComponent<CanvasGroup>().alpha = 0;
         ThrowForceFill.GetComponent<Image>().fillAmount = 0;
         PlayerThrowPredictionPointsObjectPool.Instance.ClearToss();
-        /*
-        if(throwPredictionPoints != null)
-        { for (int i = 0; i < throwPredictionPoints.Length; i++) { TossPredictionVisibility(false, throwPredictionPoints[i]); } }*/
     }
 
     private void OnDestroy()

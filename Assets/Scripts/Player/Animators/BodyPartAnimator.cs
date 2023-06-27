@@ -6,37 +6,52 @@ using UnityEngine;
 
 public class BodyPartAnimator : MonoBehaviour
 {
+    [Header("Common Variables Across All Body Part Animators")]
     [SerializeField] public Animator animator;
+
+    // used for overriding animations
+    public RuntimeAnimatorController runtimeAnimator;
+    public AnimatorOverrideController animatorOverrideController;
+    public AnimationClipOverrides clipOverrides;
+    public string specificFilePathToAnimations;
+
+    // information about animations
     private AnimatorStateInfo stateInfo;
+    private AnimatorClipInfo clipInfo;
+    [SerializeField] private AnimationProperties currentPriorityAnimationState; // list of animations and their priority levels
+    [SerializeField] string currentPriorityAnimationClipName; // keeps track of current priority animation being played
 
-    public List<string> priorityAnimationStates; // animation state names
-    public List<int> priorityAnimationHashes; // hashes are needed because Unity animator stores states as hashes, so these need to be converted from strings
-
-    virtual public void Start()
+    [Serializable]
+    public class AnimationProperties
     {
-        animator = GetComponentInChildren<Animator>();
-        TurnPriorityStateNamesIntoHashes();
+        [SerializeField] public string animationName; // the animation state name, not the animation clip name
+        [SerializeField] public int priorityLevel; // an animation with higher priority will not be played if a higher priority animation is playing
+        [SerializeField] public int animationHash; // hashes are needed because Unity animator stores animation states as hashes, so these need to be converted from the strings that are their names
+
+        public AnimationProperties(string animationName, int priorityLevel)
+        {
+            this.animationName = animationName;
+            this.priorityLevel = priorityLevel;
+            this.animationHash = Animator.StringToHash(animationName);
+        }
     }
 
-    virtual public void TurnPriorityStateNamesIntoHashes() // needed because Unity's animator does not store animator states as strings, but rather as hashes (ints)
-    {
-        foreach (string clipName in priorityAnimationStates) 
-        {
-            priorityAnimationHashes.Add(Animator.StringToHash(clipName));
-        }
+    public SimpleSerializableDictionary<string, AnimationProperties> priorityAnimationStates = new SimpleSerializableDictionary<string, AnimationProperties>(); // animation state names
+
+    virtual public void Start() 
+    { 
+        animator = GetComponentInChildren<Animator>();
     }
 
     virtual public void Play(string animationName)
     {
-        
-        if (PriorityAnimationIsPlaying()) // if a priority animation is running, do nothing
+        if (CheckIfNewAnimationCanPlay(animationName)) // if a priority animation is running, do nothing
         {
-            // do nothing
-            Debug.Log("Did not play while priority animation is running");
+            animator.Play(animationName); 
         }
         else
         {
-            animator.Play(animationName);
+            Debug.Log("Did not play while priority animation is running named: " + currentPriorityAnimationClipName);
         }
     }
 
@@ -56,14 +71,44 @@ public class BodyPartAnimator : MonoBehaviour
         }
     }
 
-    private bool PriorityAnimationIsPlaying()
+    // checks if the input string name for the animation has greater priority than the currently playing animation
+    private bool CheckIfNewAnimationCanPlay(string newAnimation)
     {
-        stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        foreach (int animationStateHash in priorityAnimationHashes)
+
+        if (CheckCurrentAnimationState()) // if there is a current animation with priority
         {
-            if (stateInfo.shortNameHash == animationStateHash) // compare animation hash "an int" against the 'hash'  of the string input
-            { return true; }
+            // keep evaluating
         }
+        else { return true; } // otherwise, new animation should play 
+
+        if (priorityAnimationStates.ContainsKey(newAnimation)) // if the new animation also has priority
+        {
+            // check to see if it has a higher priority level or whether the current animation has ended
+            clipInfo = animator.GetCurrentAnimatorClipInfo(0)[0];
+            if (priorityAnimationStates[newAnimation].priorityLevel > currentPriorityAnimationState.priorityLevel || stateInfo.normalizedTime >= 1f) { Debug.Log("Existing animation can play"); return true; } // if so, then it can play
+            else return false;
+        }
+        else { return false; } // else the existing animation takes priority
+    }
+
+    // gets the current animation states and updates currentAnimationState with its value
+    bool CheckCurrentAnimationState()
+    {
+        stateInfo = animator.GetCurrentAnimatorStateInfo(0); // currently playing animation
+
+        foreach (string animation in priorityAnimationStates.GetKeys()) 
+        {
+            if (stateInfo.IsName(animation)) // if a match exists
+            {
+                currentPriorityAnimationClipName = animation;
+                if(stateInfo.normalizedTime < 1f) // and the clip hasn't finished
+                {
+                    currentPriorityAnimationState = priorityAnimationStates[animation];
+                    return true;
+                }
+            }
+        }
+        currentPriorityAnimationState = null;
         return false;
     }
 
@@ -73,4 +118,33 @@ public class BodyPartAnimator : MonoBehaviour
         if (stateInfo.IsName(animationName) && stateInfo.normalizedTime < 1.0f) { return true; } // if the current state is that animation, and it's normalized play time is less than 1, it's in play
         return false;
     }
+
+    virtual public void AssignNewAnimations(string objectName)
+    {
+        string animatorOverridePath = specificFilePathToAnimations + objectName;
+        var animatorOverrideController = Resources.Load<AnimatorOverrideController>(animatorOverridePath);
+        if (animatorOverrideController != null)
+        {
+            animator.runtimeAnimatorController = Resources.Load<AnimatorOverrideController>(animatorOverridePath) as RuntimeAnimatorController;
+        }
+        else { Debug.LogError("No animator override found at " + animatorOverridePath); } // The prefab was not found
+    }
+
+    // used for any animator overrides done by child classes
+    public class AnimationClipOverrides : List<KeyValuePair<AnimationClip, AnimationClip>>
+    {
+        public AnimationClipOverrides(int capacity) : base(capacity) { }
+
+        public AnimationClip this[string name]
+        {
+            get { return this.Find(x => x.Key.name.Equals(name)).Value; }
+            set
+            {
+                int index = this.FindIndex(x => x.Key.name.Equals(name));
+                if (index != -1)
+                    this[index] = new KeyValuePair<AnimationClip, AnimationClip>(this[index].Key, value);
+            }
+        }
+    }
+
 }

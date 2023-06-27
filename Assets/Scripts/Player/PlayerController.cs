@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Unity.Burst.CompilerServices;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
@@ -38,6 +39,7 @@ public class PlayerController : MonoBehaviour
     public bool isAttacking;
     private GroundSlam groundSlam;
     private ChargePunch chargePunch;
+    private PlayerSecondaryWeaponThrowHandler playerSecondaryWeaponThrowHandler;
 
     public int FacingDirection { get; set; } = 1;
     private Vector2 oldVelocity;
@@ -93,6 +95,7 @@ public class PlayerController : MonoBehaviour
         if (GetComponent<PlayerHealth>() != null) { playerHealth = GetComponent<PlayerHealth>(); }
         else { Debug.Log("PlayerHealth.cs is being requested as a component of the same object as PlayerController.cs, but could not be found on the object"); }
         groundSlam = GetComponentInChildren<GroundSlam>();
+        playerSecondaryWeaponThrowHandler = GetComponentInChildren<PlayerSecondaryWeaponThrowHandler>();
     }
 
     private void FixedUpdate() // these dataManager points are used during save to have a last known location
@@ -143,7 +146,7 @@ public class PlayerController : MonoBehaviour
         // if you have a target destination / cutscene, automate movement
         if (optionalCutsceneDestination.HasValue) { CutsceneMovementHandler(optionalCutsceneDestination, optionalXAdjustment); }
 
-        if (!playerHealth.inHitStun && !playerDash.IsDashing && !chargePunch.IsCharging)
+        if (!playerHealth.inHitStun && !playerDash.IsDashing && !chargePunch.IsCharging && !playerSecondaryWeaponThrowHandler.inActiveThrow)
         {
             if (_isGrounded && !playerJump.IsJumping) //if on ground
             {
@@ -168,10 +171,14 @@ public class PlayerController : MonoBehaviour
                 SetVelocity(MovementSpeed * ControlMomentum/10, Rb.velocity.y);
             }
         }
-        else if (chargePunch.IsCharging)
+        else if (chargePunch.IsCharging) 
         {
             if (animator.CheckIfAnimationIsPlaying("PlayerBasicAttack")){ }
             else { animator.Play("PlayerCharge"); } 
+        }
+        else if (playerSecondaryWeaponThrowHandler.inActiveThrow)
+        {
+            animator.Play("PlayerCharge");
         }
     }
 

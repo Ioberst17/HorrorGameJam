@@ -1,0 +1,10 @@
+High-Level Commentary:
+
+All scripts ultimately inherit from BodyPartAnimator, which stores basic functions e.g.
+- BodyPartAnimator -> PlayerAnimator
+- BodyPartAnimator -> BaseAnimator
+- BodyPartAnimator -> ... -> RightArmAnimator
+
+ArmWeaponAnimatorCommonFunctionality stores common functions for both arms and weapon animator e.g. shoot functionality and is the parent for scripts like RightArmAnimator
+
+PlayerAnimator serves as an 'access point' for all other scripts to call various body part animations e.g. if PlayerPunch needed to call an animation, it would do so by using PlayerAnimator functions

@@ -56,7 +56,7 @@ public class PlayerThrowPredictionPointsObjectPool : ObjectPool
 
     Vector2 CalcPointPositions(float time, Transform tossSpawnPoint, float? tossForce)
     {
-        if(gameController.PlayerInput.currentControlScheme == "Keyboard&Mouse")
+        if(gameController.PlayerInput.currentControlScheme == "Keyboard and Mouse")
         {
             Vector3 bulletDir = ((Vector3)gameController.lookInput - (Vector3)gameController.playerPositionScreen).normalized;
 

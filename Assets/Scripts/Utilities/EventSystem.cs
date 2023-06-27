@@ -38,16 +38,24 @@ public class EventSystem : MonoBehaviour
     public void AmmoCheckTrigger() { if (onAmmoCheckTrigger != null) { onAmmoCheckTrigger(); } }
 
 
-    public event Action <int, int, int, int> onWeaponFireTrigger; // used for weapon firing
-    public void WeaponFireTrigger(int weaponID, int weaponLevel, int ammoChange, int currentAmmoLevel)
+    public event Action <int, int, int, int> onPlayerShotInformation; // used for calling an animation
+    public void CacheShotInformation(int weaponID, int weaponLevel, int ammoChange, int currentAmmoLevel)
     {
-        if (onWeaponFireTrigger != null)
+        if (onPlayerShotInformation != null)
         {
-            onWeaponFireTrigger(weaponID, weaponLevel, ammoChange, currentAmmoLevel);
+            onPlayerShotInformation(weaponID, weaponLevel, ammoChange, currentAmmoLevel);
         }
     }
 
-    
+    public event Action<int, int, int, int> onWeaponFire; // used for weapon firing
+    public void ReleaseAmmo (int weaponID, int weaponLevel, int ammoChange, int currentAmmoLevel)
+    {
+        if (onWeaponFire != null)
+        {
+            onWeaponFire(weaponID, weaponLevel, ammoChange, currentAmmoLevel);
+        }
+    }
+
     public event Action onWeaponStopTrigger;
 
     public void WeaponStopTrigger() { if(onWeaponStopTrigger != null) { onWeaponStopTrigger(); } }

@@ -1,18 +1,25 @@
+using JetBrains.Annotations;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using UnityEditor.Rendering;
 using UnityEngine;
 using static ComponentFinder;
 using static PlayerAnimator;
 
 public class PlayerAnimator : BodyPartAnimator 
 {
-    [SerializeField] private Transform body, rightArm, leftArm;
-    [SerializeField] private Animator baseAnimator, rightArmAnimator, leftArmAnimator;
+    [SerializeField] private Transform body, rightArm, leftArm, weapon;
+    [SerializeField] private Animator baseAnimator, rightArmAnimator, leftArmAnimator, weaponAnimator;
+    [SerializeField] private float maxIdleNormalizedTime, baseIdleNormalizedTime, rightArmIdleNormalizedTime, leftArmIdleNormalizedTime, weaponIdleNormalizedTime;
     [SerializeField] private BaseAnimator baseAnimatorScript;
     [SerializeField] private RightArmAnimator rightArmScript;
     [SerializeField] private LeftArmAnimator leftArmScript;
-    public enum PlayerPart { All, Body, RightArm, LeftArm }
+    [SerializeField] private WeaponAnimator weaponAnimScript;
+    public enum PlayerPart { All, Body, RightArm, LeftArm, Weapon }
+
+    public float synchronizationThreshold = 0.05f; // the threshold of difference needed before idle animations need to be synced
 
     [System.Serializable]
     public class AnimatorAndScript<T> where T : BodyPartAnimator
@@ -29,7 +36,7 @@ public class PlayerAnimator : BodyPartAnimator
     }
 
     // dictionary that maps a enum to a relevant animator and a script (for calling more specific animations)
-    [SerializeField] private SerializableDictionary<PlayerPart, AnimatorAndScript<BodyPartAnimator>> EnumToAnimatorMap = new SerializableDictionary<PlayerPart, AnimatorAndScript<BodyPartAnimator>>();
+    [SerializeField] private SimpleSerializableDictionary<PlayerPart, AnimatorAndScript<BodyPartAnimator>> EnumToAnimatorMap = new SimpleSerializableDictionary<PlayerPart, AnimatorAndScript<BodyPartAnimator>>();
 
     [SerializeField] private SpriteRenderer[] spriteRenderers;
 
@@ -39,7 +46,7 @@ public class PlayerAnimator : BodyPartAnimator
         body = GetComponentInChildrenByNameAndType<Transform>("Base", gameObject);
         baseAnimator = GetComponentInChildrenByNameAndType<Animator>("SpriteAndAnimations", body.gameObject);
         baseAnimatorScript = GetComponentInChildrenByNameAndType<BaseAnimator>("SpriteAndAnimations", body.gameObject);
-        EnumToAnimatorMap.Add(PlayerPart.Body, new AnimatorAndScript<BodyPartAnimator>(baseAnimator, null)); // update null with middle line
+        EnumToAnimatorMap.Add(PlayerPart.Body, new AnimatorAndScript<BodyPartAnimator>(baseAnimator, baseAnimatorScript)); 
 
         rightArm = GetComponentInChildrenByNameAndType<Transform>("RightArm", gameObject);
         rightArmAnimator = GetComponentInChildrenByNameAndType<Animator>("SpriteAndAnimations", rightArm.gameObject);
@@ -49,28 +56,57 @@ public class PlayerAnimator : BodyPartAnimator
         leftArm = GetComponentInChildrenByNameAndType<Transform>("LeftArm", gameObject);
         leftArmAnimator = GetComponentInChildrenByNameAndType<Animator>("SpriteAndAnimations", leftArm.gameObject);
         leftArmScript = GetComponentInChildrenByNameAndType<LeftArmAnimator>("SpriteAndAnimations", leftArm.gameObject);
-        EnumToAnimatorMap.Add(PlayerPart.LeftArm, new AnimatorAndScript<BodyPartAnimator>(leftArmAnimator, null)); // update null with middle line
+        EnumToAnimatorMap.Add(PlayerPart.LeftArm, new AnimatorAndScript<BodyPartAnimator>(leftArmAnimator, leftArmScript));         
+        
+        weapon = GetComponentInChildrenByNameAndType<Transform>("Weapon", gameObject);
+        weaponAnimator = GetComponentInChildrenByNameAndType<Animator>("SpriteAndAnimations", weapon.gameObject);
+        weaponAnimScript = GetComponentInChildrenByNameAndType<WeaponAnimator>("SpriteAndAnimations", weapon.gameObject);
+        EnumToAnimatorMap.Add(PlayerPart.Weapon, new AnimatorAndScript<BodyPartAnimator>(weaponAnimator, weaponAnimScript)); 
 
         spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
     }
 
+    void Update()
+    {
+        CheckIfIdleAnimationIsSynced();
+    }
+
     // play an animation
-    public void Play(string animationName, PlayerPart playerPart = PlayerPart.All)
+    public void Play(string animationName, PlayerPart playerPart = PlayerPart.All,
+        bool playBase = true, bool playRightArm = true, bool playLeftArm = true, bool playWeapon = true) // optional: used to exclude by turning to false
     {
         if (playerPart == PlayerPart.All)
         {
-            baseAnimatorScript.Play(animationName);
-            rightArmScript.Play(animationName);
-            leftArmScript.Play(animationName);
+            if (playBase) { baseAnimatorScript.Play(animationName); }
+            if (playRightArm) { rightArmScript.Play(animationName); }
+            if (playLeftArm) { leftArmScript.Play(animationName); }
+            if (playWeapon) { weaponAnimScript.Play(animationName);  }
         }
         else 
         { 
-            EnumToAnimatorMap.TryGetValue(playerPart, out AnimatorAndScript<BodyPartAnimator> animatorAndScript);
-            animatorAndScript.anim.Play(animationName);
+            EnumToAnimatorMap[playerPart].anim.Play(animationName);
+        }
+    }    
+    
+    public void PlayFunction(string animationName, PlayerPart playerPartPassedIn = PlayerPart.All)
+    {
+        if (playerPartPassedIn == PlayerPart.All)
+        {
+            foreach (PlayerPart playerPart in Enum.GetValues(typeof(PlayerPart)))
+            {
+                if(playerPart != PlayerPart.All)
+                {
+                    EnumToAnimatorMap[playerPart].script.Invoke(animationName, 0);
+                }
+            }
+        }
+        else 
+        {
+            EnumToAnimatorMap[playerPartPassedIn].script.Invoke(animationName, 0);
         }
     }
 
-    // play a coroutine that triggers a series of animations
+    // play a coroutine that triggers a sequence of animations
     virtual public void PlayCoroutine(string animationName, PlayerPart playerPart = PlayerPart.All)
     {
         if (playerPart == PlayerPart.All)
@@ -78,11 +114,11 @@ public class PlayerAnimator : BodyPartAnimator
             baseAnimator.Play(animationName);
             rightArmAnimator.Play(animationName);
             leftArmAnimator.Play(animationName);
+            weaponAnimator.Play(animationName);
         }
         else
         {
-            EnumToAnimatorMap.TryGetValue(playerPart, out AnimatorAndScript<BodyPartAnimator> animatorAndScript);
-            animatorAndScript.script.PlayCoroutine(animationName);
+            EnumToAnimatorMap[playerPart].script.PlayCoroutine(animationName);
         }
     }
 
@@ -96,123 +132,45 @@ public class PlayerAnimator : BodyPartAnimator
         }
         else
         {
-            EnumToAnimatorMap.TryGetValue(playerPart, out AnimatorAndScript<BodyPartAnimator> animatorAndScript);
-            return CheckAnimationState(animationName, animatorAndScript.anim);
+            return CheckAnimationState(animationName, EnumToAnimatorMap[playerPart].anim);
         }
     }
 
     public void SpriteEnabled(bool state)
     {
-        foreach(SpriteRenderer sprite in spriteRenderers)
+        foreach(SpriteRenderer sprite in spriteRenderers) { sprite.enabled = state; }
+    }
+
+    void CheckIfIdleAnimationIsSynced()
+    {
+        //if idle animations are playing
+        if (IsIdleAnimationPlaying())
         {
-            sprite.enabled = state;
+            baseIdleNormalizedTime = baseAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+            rightArmIdleNormalizedTime = rightArmAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+            leftArmIdleNormalizedTime = leftArmAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+            weaponIdleNormalizedTime = weaponAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+
+            if (Mathf.Abs(baseIdleNormalizedTime - rightArmIdleNormalizedTime) > synchronizationThreshold ||
+                Mathf.Abs(baseIdleNormalizedTime - leftArmIdleNormalizedTime) > synchronizationThreshold ||
+                Mathf.Abs(rightArmIdleNormalizedTime - leftArmIdleNormalizedTime) > synchronizationThreshold)
+            {
+                maxIdleNormalizedTime = Mathf.Max(baseIdleNormalizedTime, rightArmIdleNormalizedTime, leftArmIdleNormalizedTime);
+
+                baseAnimator.Play("PlayerIdle", 0, maxIdleNormalizedTime);
+                rightArmAnimator.Play("PlayerIdle", 0, maxIdleNormalizedTime);
+                leftArmAnimator.Play("PlayerIdle", 0, maxIdleNormalizedTime);
+                weaponAnimator.Play("PlayerIdle", 0, maxIdleNormalizedTime);
+            }
         }
     }
 
-    //called by GameController to flip child objects when player should turn
-    public void Flip()
+    // check if idle animation is playing in all animators
+    private bool IsIdleAnimationPlaying()
     {
-        foreach(PlayerPart part in EnumToAnimatorMap.Keys)
-        {
-            EnumToAnimatorMap.TryGetValue(part, out AnimatorAndScript<BodyPartAnimator> animatorAndScript);
-            PhysicsExtensions.Flip(animatorAndScript.anim.gameObject);
-        }
+        return baseAnimator.GetCurrentAnimatorStateInfo(0).IsName("PlayerIdle") &&
+               rightArmAnimator.GetCurrentAnimatorStateInfo(0).IsName("PlayerIdle") &&
+               leftArmAnimator.GetCurrentAnimatorStateInfo(0).IsName("PlayerIdle") &&
+               weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("PlayerIdle");
     }
-
-    public Sprite ReturnPlayerImage() { return CombineSprites(spriteRenderers); }
-
-    // RETURNS A SPRITE THAT IS A COMPOSITE OF THE PLAYER'S CHILD SPRITES
-    private Sprite CombineSprites(SpriteRenderer[] spriteRenderers)
-    {
-        // Calculate the combined bounds
-        Bounds combinedBounds = CalculateCombinedBounds(spriteRenderers);
-
-        // Create a new GameObject to hold the combined sprite
-        GameObject combinedObject = new GameObject("CombinedSprite");
-        SpriteRenderer combinedRenderer = combinedObject.AddComponent<SpriteRenderer>();
-
-        // Set the combined sprite's position and sorting order to match the first sprite
-        combinedObject.transform.position = spriteRenderers[0].transform.position;
-        combinedRenderer.sortingOrder = spriteRenderers[0].sortingOrder;
-
-        // Set the combined sprite's size to match the combined bounds
-        combinedRenderer.size = combinedBounds.size;
-
-        // Create a texture to hold the combined pixels
-        float pixelDensity = spriteRenderers[0].sprite.pixelsPerUnit;
-        Texture2D combinedTexture = new Texture2D(
-            Mathf.RoundToInt(combinedBounds.size.x * pixelDensity),
-            Mathf.RoundToInt(combinedBounds.size.y * pixelDensity)
-        );
-
-
-        // Draw all the sprites onto the combined texture
-        for (int i = 0; i < spriteRenderers.Length; i++)
-        {
-            SpriteRenderer spriteRenderer = spriteRenderers[i];
-            Vector2 spritePosition = GetSpritePosition(spriteRenderer, combinedBounds);
-
-            DrawSpriteOntoTexture(spriteRenderer.sprite, spritePosition, combinedTexture);
-        }
-
-        // Set the sprite for the combined renderer using the combined texture
-        combinedRenderer.sprite = Sprite.Create(combinedTexture, new Rect(0, 0, combinedBounds.size.x, combinedBounds.size.y), Vector2.one * 0.5f);
-
-        // Return the combined sprite
-        return combinedRenderer.sprite;
-    }
-
-    // used by CombineSprites to combine bounds of individual sprites
-    private Bounds CalculateCombinedBounds(SpriteRenderer[] spriteRenderers)
-    {
-        Bounds combinedBounds = new Bounds();
-
-        foreach (SpriteRenderer spriteRenderer in spriteRenderers)
-        {
-            Sprite sprite = spriteRenderer.sprite;
-            Bounds spriteBounds = new Bounds(spriteRenderer.transform.position, Vector3.zero);
-            spriteBounds.Encapsulate(spriteRenderer.bounds.min);
-            spriteBounds.Encapsulate(spriteRenderer.bounds.max);
-
-            combinedBounds.Encapsulate(spriteBounds);
-        }
-
-        return combinedBounds;
-    }
-
-
-    private Vector2 GetSpritePosition(SpriteRenderer spriteRenderer, Bounds combinedBounds)
-    {
-        return spriteRenderer.transform.position - combinedBounds.min;
-    }
-
-    private void DrawSpriteOntoTexture(Sprite sprite, Vector2 position, Texture2D texture)
-    {
-        int startX = Mathf.RoundToInt(position.x);
-        int startY = Mathf.RoundToInt(position.y);
-        int width = Mathf.RoundToInt(sprite.textureRect.width);
-        int height = Mathf.RoundToInt(sprite.textureRect.height);
-
-        Debug.Log("Sprite Rect: " + sprite.textureRect);
-        Debug.Log("StartX: " + startX + ", StartY: " + startY);
-        Debug.Log("Width: " + width + ", Height: " + height);
-
-        Color[] spritePixels = sprite.texture.GetPixels(Mathf.RoundToInt(sprite.textureRect.min.x), Mathf.RoundToInt(sprite.textureRect.min.y), width, height);
-        Color[] texturePixels = texture.GetPixels(startX, startY, width, height);
-
-        for (int i = 0; i < spritePixels.Length; i++)
-        {
-            // Combine the sprite pixels with the texture pixels using alpha blending
-            Color spritePixel = spritePixels[i];
-            Color texturePixel = texturePixels[i];
-            Color combinedPixel = Color.Lerp(texturePixel, spritePixel, spritePixel.a);
-            texturePixels[i] = combinedPixel;
-        }
-
-        texture.SetPixels(startX, startY, width, height, texturePixels);
-        texture.Apply();
-    }
-
-
-
 }

@@ -7,12 +7,7 @@ public class BaseAnimator : BodyPartAnimator
     // Start is called before the first frame update
     override public void Start()
     {
+        priorityAnimationStates["PlayerLand"] = new AnimationProperties("PlayerLand", 2);
         base.Start();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

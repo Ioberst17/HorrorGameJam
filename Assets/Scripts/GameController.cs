@@ -342,7 +342,6 @@ public class GameController : MonoBehaviour
     void CameraRelatedLogic()
     {
         // update functions that need camera data
-        playerSecondaryWeapon.HandleWeaponDirection(CurrentControlScheme);
         CameraBehavior.AdjustCameraDown();
     }
 
@@ -389,8 +388,8 @@ public class GameController : MonoBehaviour
     {
         if (ShootButtonDown) 
         { 
-            EventSystem.current.AmmoCheckTrigger();
-            playerSecondaryWeapon.HandleThrowing("Button Clicked", CurrentControlScheme);
+            EventSystem.current.AmmoCheckTrigger(); // used for shooting, in SecondaryWeaponManager
+            playerSecondaryWeapon.HandleThrowing("Button Clicked", CurrentControlScheme); // used for throwing
             ShootButtonDown = false;
         }
         if (ShootButtonHeld)
@@ -481,7 +480,5 @@ public class GameController : MonoBehaviour
 
     public void TriggerInteractButton() { InteractButton = true; } // used by cutscenes 
 
-    public void HandleFlipping() { playerController.Flip(); PhysicsExtensions.Flip(playerSecondaryWeapon.gameObject); }
-
-    //private void OnDestroy() { ControlsUI.OnRebindingComplete -= HandleRebindingComplete; }
+    public void HandleFlipping() { playerController.Flip(); PhysicsExtensions.FlipYScaleAxis(playerSecondaryWeapon.gameObject); }
 }

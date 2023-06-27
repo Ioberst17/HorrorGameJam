@@ -37,7 +37,7 @@ public class PlayerAfterImage : MonoBehaviour
         playerAnimator = player.GetComponentInChildren<PlayerAnimator>();
 
         alpha = alphaSet;
-        spriteRenderer.sprite = playerAnimator.ReturnPlayerImage();
+        
         ImagePlacement = player.position;
         timeActivated = Time.time;
     }
