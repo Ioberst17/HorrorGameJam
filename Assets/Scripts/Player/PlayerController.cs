@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Unity.Burst.CompilerServices;
-using UnityEditor.Experimental.GraphView;
+//using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
@@ -53,6 +53,7 @@ public class PlayerController : MonoBehaviour
     //private bool isOnSlope;
     //private bool canWalkOnSlope;
     [SerializeField] private bool _isAgainstWall; public bool IsAgainstWall { get { return _isAgainstWall; } set { _isAgainstWall = value; } }
+    [SerializeField] private bool _isWallHanging; public bool IsWallHanging { get { return _isWallHanging; } set { _isWallHanging = value; } }
     [SerializeField] private bool _canWallJump; public bool CanWallJump { get { return _canWallJump; } set { _canWallJump = value; } }
 
 
@@ -135,6 +136,9 @@ public class PlayerController : MonoBehaviour
         {
             playerJump.CanJump = false;
         }
+
+        if(_isAgainstWall && !_isGrounded) { animator.Play("PlayerWallLand"); _isWallHanging = true; }
+        else { _isWallHanging = false; }
     }
 
     public void CheckWall() { _isAgainstWall = Physics2D.OverlapCircle(wallCheck.position, groundCheckRadius, whatIsGround); }

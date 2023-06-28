@@ -32,12 +32,6 @@ public class EventSystem : MonoBehaviour
     public event Action<int> onWeaponAddAmmoTrigger; // used to add ammo
     public void WeaponAddAmmoTrigger(int ammo) { if (onWeaponAddAmmoTrigger != null) { onWeaponAddAmmoTrigger(ammo); } }
 
-
-    public event Action onAmmoCheckTrigger; // used to check for ammo BEFORE  weapon AmmoTrigger is called to fire
-
-    public void AmmoCheckTrigger() { if (onAmmoCheckTrigger != null) { onAmmoCheckTrigger(); } }
-
-
     public event Action <int, int, int, int> onPlayerShotInformation; // used for calling an animation
     public void CacheShotInformation(int weaponID, int weaponLevel, int ammoChange, int currentAmmoLevel)
     {

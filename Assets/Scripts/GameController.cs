@@ -13,8 +13,8 @@ public class GameController : MonoBehaviour
 {
     // REFERENCES TO IN-SCENE OBJECTS
     // Player Related
+    private SecondaryWeaponsManager secondaryWeaponsManager;
     private PlayerController playerController;
-    private RightArmAnimator rightArmAnimator;
     private PlayerAnimator playerAnimator;
     private PlayerHealth playerHealth;
     private PlayerShield playerShield;
@@ -79,13 +79,13 @@ public class GameController : MonoBehaviour
     {
         if(SceneManager.GetActiveScene().buildIndex != 0) // if not title screen
         {
-            playerController = FindObjectOfType<PlayerController>();
-            rightArmAnimator = FindObjectOfType<RightArmAnimator>();
-            playerAnimator = FindObjectOfType<PlayerAnimator>();
-            playerHealth = playerController.gameObject.GetComponent<PlayerHealth>();
-            playerShield = playerController.gameObject.GetComponentInChildren<PlayerShield>();
-            playerDash = playerController.gameObject.GetComponentInChildren<PlayerDash>();
-            playerJump = playerController.gameObject.GetComponentInChildren<PlayerJump>();
+            secondaryWeaponsManager = FindObjectOfType<SecondaryWeaponsManager>();
+            playerController = secondaryWeaponsManager.GetComponentInChildren<PlayerController>();
+            playerAnimator = playerController.GetComponentInChildren<PlayerAnimator>();
+            playerHealth = playerController.GetComponent<PlayerHealth>();
+            playerShield = playerController.GetComponentInChildren<PlayerShield>();
+            playerDash = playerController.GetComponentInChildren<PlayerDash>();
+            playerJump = playerController.GetComponentInChildren<PlayerJump>();
             playerPrimaryWeapon = playerController.GetComponentInChildren<PlayerPrimaryWeapon>();
             playerSecondaryWeapon = playerController.GetComponentInChildren<PlayerSecondaryWeapon>();
             skills = playerController.GetComponentInChildren<PlayerSkillsManager>();
@@ -387,14 +387,14 @@ public class GameController : MonoBehaviour
     void ShootLogic()
     {
         if (ShootButtonDown) 
-        { 
-            EventSystem.current.AmmoCheckTrigger(); // used for shooting, in SecondaryWeaponManager
+        {
+            secondaryWeaponsManager.CanWeaponBeFired(); // used for shooting, in SecondaryWeaponManager
             playerSecondaryWeapon.HandleThrowing("Button Clicked", CurrentControlScheme); // used for throwing
             ShootButtonDown = false;
         }
         if (ShootButtonHeld)
         {
-            EventSystem.current.AmmoCheckTrigger();
+            secondaryWeaponsManager.CanWeaponBeFired();
             playerSecondaryWeapon.HandleThrowing("Button Held", CurrentControlScheme);
         }
         else if (ShootButtonRelease)

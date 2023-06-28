@@ -5,16 +5,17 @@ using UnityEngine;
 public class SecondaryWeaponsManager : WeaponsManager
 {
     private float lastWeaponUseTime;
+    private PlayerController playerController;
     private ChargePunch chargePunch;
     // Start is called before the first frame update
     public override void Start()
     {
         base.Start();
         EventSystem.current.onWeaponAddAmmoTrigger += AddAmmo;
-        EventSystem.current.onAmmoCheckTrigger += CanWeaponBeFired;
         EventSystem.current.onPlayerShotInformation += WeaponFired;
 
         player = GameObject.Find("Player");
+        playerController = player.GetComponentInChildren <PlayerController>();
         playerSecondaryWeapon = player.GetComponentInChildren<PlayerSecondaryWeapon>();
         chargePunch = player.GetComponentInChildren<ChargePunch>();
     }
@@ -64,14 +65,15 @@ public class SecondaryWeaponsManager : WeaponsManager
         WeaponUIUpdate();
     }
 
-    private void CanWeaponBeFired() // used as a check before firing a weapon and decrementing inventory
+    public void CanWeaponBeFired() // used as a check before firing a weapon and decrementing inventory
     {
         bool hasAmmo = weaponList[currentWeaponIndex].ammo > 0;
         bool doesNotExceedFireRate = Time.time > lastWeaponUseTime + weaponList[currentWeaponIndex].fireRate;
         bool canThrow = !playerSecondaryWeapon.throwHandler.inActiveThrow;
         bool notChargePunching = !chargePunch.IsCharging;
+        bool isNotWallHanging = !playerController.IsWallHanging; 
 
-        if (hasAmmo && doesNotExceedFireRate && canThrow && notChargePunching)
+        if (hasAmmo && doesNotExceedFireRate && canThrow && notChargePunching && isNotWallHanging)
         {
             lastWeaponUseTime = Time.time;
 
@@ -101,7 +103,6 @@ public class SecondaryWeaponsManager : WeaponsManager
     {
         base.OnDestroy();
         EventSystem.current.onWeaponAddAmmoTrigger -= AddAmmo;
-        EventSystem.current.onAmmoCheckTrigger -= CanWeaponBeFired;
         EventSystem.current.onPlayerShotInformation -= WeaponFired;
     }
 
