@@ -66,6 +66,12 @@ public class PlayerAfterImageObjectPool : ObjectPool
             if(playerController.FacingDirection == -1) { instance.transform.rotation = Quaternion.Euler(0, -180, 0); } // if facing left, do this
             else { instance.transform.rotation = Quaternion.Euler(0, 0, 0); } // if facing right, do this
 
+            // set time so update function on playerafterimage can properly decide to return
+            instance.GetComponent<PlayerAfterImage>().timeActivated = Time.time;
+
+            // set image alpha
+            instance.GetComponent<PlayerAfterImage>().SetAlpha(1);
+
             instance.SetActive(true);
         }
 
