@@ -21,7 +21,9 @@ public class PlayerDash : MonoBehaviour
     [SerializeField] private int dashCooldownNumber;
 
 
-    private int dashcooldown;
+    public int dashcooldown;
+
+
     private void Start()
     {
         gameController = FindObjectOfType<GameController>();
