@@ -7,8 +7,7 @@ public class PlayerHealth : Health
     public bool IsInvincible { get; set; }
     public bool inHitStun;
     private float blinkFrequency = 30f; // higher, isfaster blinking for hit stun
-    private SpriteRenderer spriteRenderer;
-    public Animator animator;
+    private PlayerAnimator animator;
     public PlayerController playerController;
     private Shield shield;
     [SerializeField] private UIHealthChangeDisplay damageDisplay;
@@ -19,11 +18,10 @@ public class PlayerHealth : Health
     private void Start() 
     { 
         EventSystem.current.onPlayerHitCalcTrigger += Hit;
-        animator = GetComponent<Animator>();
         playerController = GetComponent<PlayerController>(); 
         shield = GetComponentInChildren<Shield>();
         damageDisplay = GetComponentInChildren<UIHealthChangeDisplay>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = ComponentFinder.GetComponentInChildrenByNameAndType<PlayerAnimator>("Animator", this.gameObject, true);
         IsInvincible = false;
         inHitStun = false;
         lucidityDamageModifier = 1;
@@ -37,9 +35,9 @@ public class PlayerHealth : Health
             // calculate the blink time based on frequency
             float blinkTime = Mathf.Sin(Time.time * blinkFrequency);
             // set the sprite renderer to be visible if blink time is positive, otherwise invisible
-            spriteRenderer.enabled = (blinkTime > 0f);
+            animator.SpriteEnabled(blinkTime > 0f);
         }
-        else { spriteRenderer.enabled = true; }
+        else { animator.SpriteEnabled(true); }
     }
 
     public void Hit(Vector3 enemyPos, int damageNumber, int damageType, float damageMod, float knockbackMod, bool hitInActiveShieldZone)

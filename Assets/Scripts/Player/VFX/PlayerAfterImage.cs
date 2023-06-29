@@ -4,23 +4,18 @@ using UnityEngine;
 
 public class PlayerAfterImage : MonoBehaviour
 {
-    [SerializeField]
-    private float activeTime = 0.1f;
-    private float timeActivated;
-    private float alpha;
-    [SerializeField]
-    private float alphaSet = 0.5f;
-    private float alphaMultiplier = 0.85f; // the smaller this number is, the faster the after images fade
+    [SerializeField] private float activeTime = 0.3f;
+    [SerializeField] public float timeActivated;
+    [SerializeField] private float alpha;
+    [SerializeField] private float alphaSet = 0.5f;
+    [SerializeField] private float alphaMultiplier = 0.85f; // the smaller this number is, the faster the after images fade
 
-    [SerializeField]
-    private Vector3 ImagePlacement;
-    [SerializeField]
-    private Transform player;
+    [SerializeField] public Vector3 ImagePlacement;
 
     private SpriteRenderer spriteRenderer;
-    private SpriteRenderer playerSpriteRender;
+    private PlayerAnimator playerAnimator;
 
-    private Color color;
+    [SerializeField] private Color color;
 
     public void LateUpdate()
     {
@@ -30,27 +25,34 @@ public class PlayerAfterImage : MonoBehaviour
         }
     }
 
-    void OnEnable()
+    void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        player = GameObject.FindGameObjectWithTag("Player").transform;
-        playerSpriteRender = player.GetComponent<SpriteRenderer>();
+        //player = GameObject.FindGameObjectWithTag("Player").transform;
+        //playerAnimator = player.GetComponentInChildren<PlayerAnimator>();
 
         alpha = alphaSet;
-        spriteRenderer.sprite = playerSpriteRender.sprite;
-        ImagePlacement = player.position;
+        
         timeActivated = Time.time;
     }
 
     private void Update()
     {
-        alpha = alphaMultiplier;
-        color = new Color(1f, 1f, 1f, alpha);
-        spriteRenderer.color = color;
+        if (gameObject.activeSelf)
+        {
+            SetAlpha(alpha * alphaMultiplier);
+        }
     }
 
     private void FixedUpdate()
     {
         if (Time.time >= (timeActivated + activeTime)) { PlayerAfterImageObjectPool.Instance.AddToPool(gameObject); }
+    }
+
+    public void SetAlpha(float alphaToApply)
+    {
+        alpha = alphaToApply;
+        color = new Color(1f, 1f, 1f, alpha);
+        if (spriteRenderer != null) { spriteRenderer.color = color; }
     }
 }

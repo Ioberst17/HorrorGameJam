@@ -1,0 +1,163 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6889762118898002146
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6889762118898002149}
+  - component: {fileID: 6889762118898002148}
+  m_Layer: 0
+  m_Name: PlayerInputIcons
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6889762118898002149
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6889762118898002146}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6889762118898002148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6889762118898002146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04c7d35d35cf23044bc29b1ba3907e5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keyboardandmouse:
+    A_Key_Dark: {fileID: 21300000, guid: 546a98f2dddcd214cad7afffa0770d56, type: 3}
+    B_Key_Dark: {fileID: 21300000, guid: 511d53542296d5b4087861a57d6598b4, type: 3}
+    C_Key_Dark: {fileID: 21300000, guid: b732ae894bc1b284f9c895944bcf1730, type: 3}
+    D_Key_Dark: {fileID: 21300000, guid: b09a6f4391ddb074abc59ea36d3ca211, type: 3}
+    E_Key_Dark: {fileID: 21300000, guid: d8f628a718d16c44480ef8d3d28f94c2, type: 3}
+    F_Key_Dark: {fileID: 21300000, guid: 1bb1aae00be1a0545a3f0256a351e813, type: 3}
+    G_Key_Dark: {fileID: 21300000, guid: 942502ea259b9d9429e644b431e435e9, type: 3}
+    H_Key_Dark: {fileID: 21300000, guid: f13c1102676d5d94eae9ec11eb559ef5, type: 3}
+    I_Key_Dark: {fileID: 21300000, guid: 117e2bdb751a2f644b16f9851a80847d, type: 3}
+    J_Key_Dark: {fileID: 21300000, guid: aaca550c20506f94c9a8052d93e3e860, type: 3}
+    K_Key_Dark: {fileID: 21300000, guid: a41748a80dc5c114982e394b0a3083ea, type: 3}
+    L_Key_Dark: {fileID: 21300000, guid: 27a1061f11f160b46b0d1b5ae91b0ae9, type: 3}
+    M_Key_Dark: {fileID: 21300000, guid: b56de6fff887085458c3ebc64b7479a5, type: 3}
+    N_Key_Dark: {fileID: 21300000, guid: 01f135fa5a254c640962cb096c48c168, type: 3}
+    O_Key_Dark: {fileID: 21300000, guid: 31b2fb42626b16b48a73e189c9d3f387, type: 3}
+    P_Key_Dark: {fileID: 21300000, guid: 82eda03985850b445ba5ee83741c91b8, type: 3}
+    Q_Key_Dark: {fileID: 21300000, guid: 19e1cae53ea6abc4d914512962f73f97, type: 3}
+    R_Key_Dark: {fileID: 21300000, guid: 57787971ec19e6c4288aaaedcd4bd7bb, type: 3}
+    S_Key_Dark: {fileID: 21300000, guid: 3be52308642a31142a26fd89816d562b, type: 3}
+    T_Key_Dark: {fileID: 21300000, guid: 26f058722a68586429d711081b30b76d, type: 3}
+    U_Key_Dark: {fileID: 21300000, guid: 985d4827c1d7d094a8f7d43816c2d959, type: 3}
+    V_Key_Dark: {fileID: 21300000, guid: 789086bbe8f1ec447b48dd4e07b5f6c9, type: 3}
+    W_Key_Dark: {fileID: 21300000, guid: 66c7684b64e96a54c96f12136d93cc72, type: 3}
+    X_Key_Dark: {fileID: 21300000, guid: 79cb2d3164120c64a9d69f639dcf31e4, type: 3}
+    Y_Key_Dark: {fileID: 21300000, guid: a98f0de5563e8d44e9de9afefc2614e9, type: 3}
+    Z_Key_Dark: {fileID: 21300000, guid: 684ad3a73ae092b489228fc13a0653e4, type: 3}
+    WASD: {fileID: 0}
+    Num0_Key_Dark: {fileID: 21300000, guid: ab691bd1fabf3694ca9eb9a337ab644b, type: 3}
+    Num1_Key_Dark: {fileID: 21300000, guid: 37ffd13c70227d9468f06a27b81d42ea, type: 3}
+    Num2_Key_Dark: {fileID: 21300000, guid: ba244c543a973434183ef0e5ed65c2ac, type: 3}
+    Num3_Key_Dark: {fileID: 21300000, guid: 3332389233a3a7f47a4015e014763454, type: 3}
+    Num4_Key_Dark: {fileID: 21300000, guid: cc190b08bac7cab478e1907201e51fc1, type: 3}
+    Num5_Key_Dark: {fileID: 21300000, guid: 20973aa162e0c7d4495076b648b17890, type: 3}
+    Num6_Key_Dark: {fileID: 21300000, guid: c5f45b780e77b50419da15c09eb79e3f, type: 3}
+    Num7_Key_Dark: {fileID: 21300000, guid: 86c43675dee69834da215c7bc7ca4e98, type: 3}
+    Num8_Key_Dark: {fileID: 21300000, guid: 54d85b32e8558e648ba2aee34f7adda4, type: 3}
+    Num9_Key_Dark: {fileID: 21300000, guid: 4c810876008caad439c6039ae4302fca, type: 3}
+    Esc_Key_Dark: {fileID: 21300000, guid: 9ba93574601c2a3458a0376da37bf93f, type: 3}
+    Space_Key_Dark: {fileID: 21300000, guid: 42c86ab3eea41c2478f9ee1b6efab849, type: 3}
+    Slash_Key_Dark: {fileID: 21300000, guid: 86bb7f9e341af8442ac8902763e2ba2f, type: 3}
+    Tab_Key_Dark: {fileID: 21300000, guid: 1da4600063f45cb4ea903e3ca3d84b45, type: 3}
+    Backslash_Key_Dark: {fileID: 0}
+    Tilda_Key_Dark: {fileID: 21300000, guid: c3bb78a574e7c364b8c791256682498d, type: 3}
+    Backspace_Key_Dark: {fileID: 21300000, guid: 965295bb1a6f93f40818d5329de64e13, type: 3}
+    Caps_Lock_Key_Dark: {fileID: 21300000, guid: 390661a08ebc74e49b000658b95afd9e, type: 3}
+    Shift_Key_Dark: {fileID: 21300000, guid: 51b87842d9f1f9b4991f4a6cba114008, type: 3}
+    Right_Shift_Key_Dark: {fileID: 21300000, guid: 019a2a1e0eada4e45b609390200f83e6, type: 3}
+    Left_Shift_Key_Dark: {fileID: 21300000, guid: 51b87842d9f1f9b4991f4a6cba114008, type: 3}
+    Ctrl_Key_Dark: {fileID: 21300000, guid: 90e6e8bc5d631854188a76119c3b6f75, type: 3}
+    Right_Ctrl_Key_Dark: {fileID: 21300000, guid: 90e6e8bc5d631854188a76119c3b6f75, type: 3}
+    Left_Ctrl_Key_Dark: {fileID: 21300000, guid: 90e6e8bc5d631854188a76119c3b6f75, type: 3}
+    Alt_Key_Dark: {fileID: 21300000, guid: a7ecbb66b9f12024f94c26e79a8338c8, type: 3}
+    Left_Alt_Key_Dark: {fileID: 21300000, guid: a7ecbb66b9f12024f94c26e79a8338c8, type: 3}
+    Right_Alt_Key_Dark: {fileID: 21300000, guid: a7ecbb66b9f12024f94c26e79a8338c8, type: 3}
+    Mark_Left_Key: {fileID: 21300000, guid: c8556c5ab2736554cb94fcc48a7f39d2, type: 3}
+    Mark_Right_Key: {fileID: 21300000, guid: 47d19d2a93138764fae5b46abe1cf06d, type: 3}
+    Minus_Key_Dark: {fileID: 21300000, guid: 6b42bd6f683f3e445a13ee6e63044c9d, type: 3}
+    Plus_Key_Dark: {fileID: 21300000, guid: 1c99399ae60b9d8479ee3c1c2f836825, type: 3}
+    Colon_Key_Dark: {fileID: 0}
+    Semicolon_Key_Dark: {fileID: 21300000, guid: 03c848f56d1fb74418111888ccd68616, type: 3}
+    Question_Key_Dark: {fileID: 21300000, guid: f8a288aa10796094ab2e0ce508055aaa, type: 3}
+    Up_Arrow_Dark: {fileID: 21300000, guid: 51e15db186242834dbbdf8b546b05f21, type: 3}
+    Down_Arrow_Dark: {fileID: 21300000, guid: cfd9293b5abc09440bcdd7ae070e6983, type: 3}
+    Left_Arrow_Dark: {fileID: 21300000, guid: 7fe75fbf7e07a95499651e3234ab8cc9, type: 3}
+    Right_Arrow_Dark: {fileID: 21300000, guid: 82ae2425bce6bd24291ab656310f363b, type: 3}
+    Mouse_Left_Key_Dark: {fileID: 21300000, guid: dd475a0703892f64d9aa9b3d773837cc, type: 3}
+    Mouse_Right_Key_Dark: {fileID: 21300000, guid: 2d5028693d0f5c04a865d68eea28d596, type: 3}
+  xbox:
+    buttonSouth: {fileID: 21300000, guid: f609c9b3b1675f947a865ec558b5ad90, type: 3}
+    buttonNorth: {fileID: 21300000, guid: 17fd7d74524d4cc4ea612a100880d012, type: 3}
+    buttonEast: {fileID: 21300000, guid: cde7469096582e04897fae80dfc34fbe, type: 3}
+    buttonWest: {fileID: 21300000, guid: d08c52c09554ca8418a86627f4bd14e1, type: 3}
+    startButton: {fileID: 21300000, guid: 5c1e24bea89729e4a8ed25e26a432f84, type: 3}
+    selectButton: {fileID: 21300000, guid: 4273c283a5e145a468dc60af5dcb46e7, type: 3}
+    leftTrigger: {fileID: 21300000, guid: d29819659aa175a459d7c519a30d70aa, type: 3}
+    rightTrigger: {fileID: 21300000, guid: 0ae60af4bd5e539409acc10ec4300105, type: 3}
+    leftShoulder: {fileID: 21300000, guid: 672696fcd6aec9d4c84945fa59765f64, type: 3}
+    rightShoulder: {fileID: 21300000, guid: ed60ff0de79971e468ae179e077d66ca, type: 3}
+    dpad: {fileID: 0}
+    dpadUp: {fileID: 21300000, guid: 4cc6aa9aa8107734da22c80d289cff98, type: 3}
+    dpadDown: {fileID: 21300000, guid: d544feb63b186dd45b32d12cfc6762bf, type: 3}
+    dpadLeft: {fileID: 21300000, guid: 44d8f279ef345c442ae875caa0c26731, type: 3}
+    dpadRight: {fileID: 21300000, guid: cfa9b832ea5877745a96e61e8ffaeca2, type: 3}
+    leftStick: {fileID: 21300000, guid: 139b83464b859cd429d0370dc816028c, type: 3}
+    rightStick: {fileID: 21300000, guid: 9c61f7c9d0b7b8b4f9d2350b73289e23, type: 3}
+    leftStickPress: {fileID: 21300000, guid: 139b83464b859cd429d0370dc816028c, type: 3}
+    rightStickPress: {fileID: 21300000, guid: 9c61f7c9d0b7b8b4f9d2350b73289e23, type: 3}
+  ps4:
+    buttonSouth: {fileID: 21300000, guid: 2da2d15ce082e12448ac493c55a33f0f, type: 3}
+    buttonNorth: {fileID: 21300000, guid: 47b0c8cbcd450124abdb1b62fb7f5806, type: 3}
+    buttonEast: {fileID: 21300000, guid: 428de70370df69d45bd4c0025b7ba36e, type: 3}
+    buttonWest: {fileID: 21300000, guid: c7f381483fb41f14e935b2d6d9fec62f, type: 3}
+    startButton: {fileID: 0}
+    selectButton: {fileID: 0}
+    leftTrigger: {fileID: 21300000, guid: f920addac480add4c99e64df920b61a3, type: 3}
+    rightTrigger: {fileID: 21300000, guid: 87dce22414624c74d90f8bfc4bf3582f, type: 3}
+    leftShoulder: {fileID: 21300000, guid: 7eaab648006558044a9680311037b8f9, type: 3}
+    rightShoulder: {fileID: 21300000, guid: 22b97dfa5af0d1947a62312c31e633e5, type: 3}
+    dpad: {fileID: 21300000, guid: bff5253ebc5a14f43b4bd8aa1d207855, type: 3}
+    dpadUp: {fileID: 21300000, guid: f375a935d0c38f84d94844236012f26c, type: 3}
+    dpadDown: {fileID: 21300000, guid: 5fc2490d4f2941f4ca46f33e329cf3d7, type: 3}
+    dpadLeft: {fileID: 21300000, guid: 4cb9b89846007d142a4a78a190c2d6fe, type: 3}
+    dpadRight: {fileID: 21300000, guid: be71706bc979d5240bf156bfdfee0ae6, type: 3}
+    leftStick: {fileID: 21300000, guid: 7e177675a5fc16248b6e164ef7a7f2a6, type: 3}
+    rightStick: {fileID: 21300000, guid: 04f2711270cd5b64099d2ca2f99529de, type: 3}
+    leftStickPress: {fileID: 21300000, guid: 7e177675a5fc16248b6e164ef7a7f2a6, type: 3}
+    rightStickPress: {fileID: 21300000, guid: 04f2711270cd5b64099d2ca2f99529de, type: 3}
+  workingOnAComposite: 0
+  compositeIndex: 0
+  pauseMenuUI: {fileID: 0}
+  nonCompositeIcon: {fileID: 0}
+  compositeIcon: {fileID: 0}
+  compositeIconArray: []
+  iconCompositeParent: {fileID: 0}
+  compositeImageGameObjectName: 
+  iconToChange: {fileID: 0}

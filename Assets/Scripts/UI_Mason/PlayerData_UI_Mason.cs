@@ -63,6 +63,7 @@ public class PlayerData_UI_Mason : MonoBehaviour
         FinishTossForceDisplay();
         gameController = FindObjectOfType<GameController>();
         playerHealth = playerController.GetComponent<PlayerHealth>();
+        playerDash = playerController.GetComponentInChildren<PlayerDash>();
         //playerStamina = playerController.GetComponentInChildren<PlayerStamina>();
         //playerMana = playerController.GetComponentInChildren<PlayerMana>();
 
@@ -158,9 +159,6 @@ public class PlayerData_UI_Mason : MonoBehaviour
         ThrowForceUI.GetComponent<CanvasGroup>().alpha = 0;
         ThrowForceFill.GetComponent<Image>().fillAmount = 0;
         PlayerThrowPredictionPointsObjectPool.Instance.ClearToss();
-        /*
-        if(throwPredictionPoints != null)
-        { for (int i = 0; i < throwPredictionPoints.Length; i++) { TossPredictionVisibility(false, throwPredictionPoints[i]); } }*/
     }
 
     private void OnDestroy()

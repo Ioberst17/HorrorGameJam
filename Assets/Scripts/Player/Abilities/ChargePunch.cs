@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Unity.VisualScripting;
 //using UnityEditor.Experimental.GraphView;
 using System.Linq;
+using static ComponentFinder;
 
 [RequireComponent(typeof(PlayerPrimaryWeapon))]
 public class ChargePunch : MonoBehaviour
@@ -103,11 +104,11 @@ public class ChargePunch : MonoBehaviour
         foreach (ParticleSystem ps in childParticleSystems) { particleSystems.Add(ps); }
 
         // add charge punch electricity + initial build particles
-        chargePunchElectricityInitial = ComponentFinder.GetComponentInChildrenByNameAndType<ParticleSystem>(chargePunchElectricityInitialObjectName, visualEffects, true);
-        chargePunchElectricityInitial2 = ComponentFinder.GetComponentInChildrenByNameAndType<ParticleSystem>(chargePunchElectricityInitial2ObjectName, visualEffects, true);
-        chargePunchElectricityFinal = ComponentFinder.GetComponentInChildrenByNameAndType<ParticleSystem>(chargePunchElectricityFinalObjectName, visualEffects, true);
-        initialBuildParticleBlast = ComponentFinder.GetComponentInChildrenByNameAndType<ParticleSystem>(initialBuildParticleBlastObjectName, visualEffects, true);
-        chargePunchFireSpiral = ComponentFinder.GetComponentInChildrenByNameAndType<ParticleSystem>(chargePunchFireSpiralObjectName, visualEffects, true);
+        chargePunchElectricityInitial = GetComponentInChildrenByNameAndType<ParticleSystem>(chargePunchElectricityInitialObjectName, visualEffects, true);
+        chargePunchElectricityInitial2 = GetComponentInChildrenByNameAndType<ParticleSystem>(chargePunchElectricityInitial2ObjectName, visualEffects, true);
+        chargePunchElectricityFinal = GetComponentInChildrenByNameAndType<ParticleSystem>(chargePunchElectricityFinalObjectName, visualEffects, true);
+        initialBuildParticleBlast = GetComponentInChildrenByNameAndType<ParticleSystem>(initialBuildParticleBlastObjectName, visualEffects, true);
+        chargePunchFireSpiral = GetComponentInChildrenByNameAndType<ParticleSystem>(chargePunchFireSpiralObjectName, visualEffects, true);
         
         particleSystems.Add(chargePunchElectricityInitial);
         particleSystems.Add(chargePunchElectricityInitial2);
@@ -119,10 +120,11 @@ public class ChargePunch : MonoBehaviour
         cameraBehavior = FindObjectOfType<CameraBehavior>();
 
         // GLOW
-        spriteGlow = visualEffects.GetComponentInParent<SpriteGlowEffect>();
-        
+        var spriteGlowParent = GetComponentInChildrenByNameAndType<Transform>("Base", transform.parent.gameObject);
+        spriteGlow = GetComponentInChildrenByNameAndType<SpriteGlowEffect>("SpriteAndAnimations", spriteGlowParent.gameObject);
+
         // SPRITE-RELATED
-        PunchSprite = ComponentFinder.GetComponentInChildrenByNameAndType<SpriteRenderer>("ChargePunchSprite", gameObject, true);
+        PunchSprite = GetComponentInChildrenByNameAndType<SpriteRenderer>("ChargePunchSprite", gameObject, true);
         PunchSprite.gameObject.SetActive(true);
         originalColor = PunchSprite.color;
         originalLocalPosition = PunchSprite.transform.localPosition;

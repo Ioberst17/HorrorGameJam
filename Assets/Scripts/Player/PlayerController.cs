@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Unity.Burst.CompilerServices;
+//using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
@@ -25,7 +26,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask whatIsGround;
     [SerializeField] private LayerMask whatIsEnemy;
 
-    private Animator animator;
+    private PlayerAnimator animator;
     public PlayerVisualEffectsController visualEffects;
     private PlayerPrimaryWeapon playerPrimaryWeapon;
 
@@ -38,6 +39,7 @@ public class PlayerController : MonoBehaviour
     public bool isAttacking;
     private GroundSlam groundSlam;
     private ChargePunch chargePunch;
+    private PlayerSecondaryWeaponThrowHandler playerSecondaryWeaponThrowHandler;
 
     public int FacingDirection { get; set; } = 1;
     private Vector2 oldVelocity;
@@ -51,6 +53,7 @@ public class PlayerController : MonoBehaviour
     //private bool isOnSlope;
     //private bool canWalkOnSlope;
     [SerializeField] private bool _isAgainstWall; public bool IsAgainstWall { get { return _isAgainstWall; } set { _isAgainstWall = value; } }
+    [SerializeField] private bool _isWallHanging; public bool IsWallHanging { get { return _isWallHanging; } set { _isWallHanging = value; } }
     [SerializeField] private bool _canWallJump; public bool CanWallJump { get { return _canWallJump; } set { _canWallJump = value; } }
 
 
@@ -87,12 +90,13 @@ public class PlayerController : MonoBehaviour
 
         
         ControlMomentum = 0;
-        animator = GetComponent<Animator>();
+        animator = GetComponentInChildren<PlayerAnimator>(true);
         visualEffects = GetComponentInChildren<PlayerVisualEffectsController>();
 
         if (GetComponent<PlayerHealth>() != null) { playerHealth = GetComponent<PlayerHealth>(); }
         else { Debug.Log("PlayerHealth.cs is being requested as a component of the same object as PlayerController.cs, but could not be found on the object"); }
         groundSlam = GetComponentInChildren<GroundSlam>();
+        playerSecondaryWeaponThrowHandler = GetComponentInChildren<PlayerSecondaryWeaponThrowHandler>();
     }
 
     private void FixedUpdate() // these dataManager points are used during save to have a last known location
@@ -132,6 +136,9 @@ public class PlayerController : MonoBehaviour
         {
             playerJump.CanJump = false;
         }
+
+        if(_isAgainstWall && !_isGrounded) { animator.Play("PlayerWallLand"); _isWallHanging = true; }
+        else { _isWallHanging = false; }
     }
 
     public void CheckWall() { _isAgainstWall = Physics2D.OverlapCircle(wallCheck.position, groundCheckRadius, whatIsGround); }
@@ -143,7 +150,7 @@ public class PlayerController : MonoBehaviour
         // if you have a target destination / cutscene, automate movement
         if (optionalCutsceneDestination.HasValue) { CutsceneMovementHandler(optionalCutsceneDestination, optionalXAdjustment); }
 
-        if (!playerHealth.inHitStun && !playerDash.IsDashing && !chargePunch.IsCharging)
+        if (!playerHealth.inHitStun && !playerDash.IsDashing && !chargePunch.IsCharging && !playerSecondaryWeaponThrowHandler.inActiveThrow)
         {
             if (_isGrounded && !playerJump.IsJumping) //if on ground
             {
@@ -168,10 +175,14 @@ public class PlayerController : MonoBehaviour
                 SetVelocity(MovementSpeed * ControlMomentum/10, Rb.velocity.y);
             }
         }
-        else if (chargePunch.IsCharging)
+        else if (chargePunch.IsCharging) 
         {
-            if (CheckIfAnimationIsPlaying("PlayerBasicAttack")){ }
+            if (animator.CheckIfAnimationIsPlaying("PlayerBasicAttack")){ }
             else { animator.Play("PlayerCharge"); } 
+        }
+        else if (playerSecondaryWeaponThrowHandler.inActiveThrow)
+        {
+            animator.Play("PlayerCharge");
         }
     }
 
@@ -217,13 +228,6 @@ public class PlayerController : MonoBehaviour
 
         if (ControlMomentum > 10) { ControlMomentum -= 1; }
         else if (gameController.XInput < 0 && ControlMomentum < -10) { ControlMomentum += 1; }
-    }
-
-    public bool CheckIfAnimationIsPlaying(string animationName) 
-    {
-        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        if(stateInfo.IsName(animationName) && stateInfo.normalizedTime < 1.0f) { return true; } // if the current state is that animation, and it's normalized play time is less than 1, it's in play
-        return false;
     }
 
     //flips the model

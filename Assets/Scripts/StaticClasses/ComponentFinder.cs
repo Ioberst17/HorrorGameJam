@@ -50,7 +50,7 @@ public static class ComponentFinder
     }
 
     // Search for a component by name and type
-    public static T GetComponentInChildrenByNameAndType<T>(string componentName, GameObject rootObject = null, bool includeInactive = false) where T : Component
+    public static T GetComponentInChildrenByNameAndType<T>(string componentName, GameObject rootObject = null, bool includeInactive = false, bool componentNameCanBeJustAPartOfGameObjectName = false) where T : Component
     {
         if (string.IsNullOrEmpty(componentName))
         {
@@ -60,21 +60,37 @@ public static class ComponentFinder
         T[] components;
         if (rootObject == null)
         {
-            components = UnityEngine.Object.FindObjectsOfType<T>(); // gets a list of objects of the type you're looking for
+            components = UnityEngine.Object.FindObjectsOfType<T>(); // gets a list of objects of the type you're looking for from the entire hierarchy
         }
         else
         {
             components = rootObject.GetComponentsInChildren<T>(includeInactive);
         }
 
-        foreach (T component in components)
+        if (componentNameCanBeJustAPartOfGameObjectName) // do a 'contains' search 
         {
-            if (component.name == componentName)
+            foreach (T component in components)
             {
-                return component;
+                if (component.name.Contains(componentName))
+                {
+                    return component;
+                }
             }
+
+            return null;
+        }
+        else // do an exact match
+        {
+            foreach (T component in components)
+            {
+                if (component.name == componentName)
+                {
+                    return component;
+                }
+            }
+
+            return null;
         }
 
-        return null;
     }
 }

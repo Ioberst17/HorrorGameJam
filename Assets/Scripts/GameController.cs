@@ -13,7 +13,9 @@ public class GameController : MonoBehaviour
 {
     // REFERENCES TO IN-SCENE OBJECTS
     // Player Related
+    private SecondaryWeaponsManager secondaryWeaponsManager;
     private PlayerController playerController;
+    private PlayerAnimator playerAnimator;
     private PlayerHealth playerHealth;
     private PlayerShield playerShield;
     private PlayerDash playerDash;
@@ -32,7 +34,7 @@ public class GameController : MonoBehaviour
 
     // Other
     private CameraBehavior CameraBehavior;
-    [SerializeField] private EnemyCreationForTesting enemySpawner;
+    private EnemyCreationForTesting enemySpawner;
     private Camera cameraToUse;
 
     // INTERNAL TO GAMECONTROLLER
@@ -77,11 +79,13 @@ public class GameController : MonoBehaviour
     {
         if(SceneManager.GetActiveScene().buildIndex != 0) // if not title screen
         {
-            playerController = FindObjectOfType<PlayerController>();
-            playerHealth = playerController.gameObject.GetComponent<PlayerHealth>();
-            playerShield = playerController.gameObject.GetComponentInChildren<PlayerShield>();
-            playerDash = playerController.gameObject.GetComponentInChildren<PlayerDash>();
-            playerJump = playerController.gameObject.GetComponentInChildren<PlayerJump>();
+            secondaryWeaponsManager = FindObjectOfType<SecondaryWeaponsManager>();
+            playerController = secondaryWeaponsManager.GetComponentInChildren<PlayerController>();
+            playerAnimator = playerController.GetComponentInChildren<PlayerAnimator>();
+            playerHealth = playerController.GetComponent<PlayerHealth>();
+            playerShield = playerController.GetComponentInChildren<PlayerShield>();
+            playerDash = playerController.GetComponentInChildren<PlayerDash>();
+            playerJump = playerController.GetComponentInChildren<PlayerJump>();
             playerPrimaryWeapon = playerController.GetComponentInChildren<PlayerPrimaryWeapon>();
             playerSecondaryWeapon = playerController.GetComponentInChildren<PlayerSecondaryWeapon>();
             skills = playerController.GetComponentInChildren<PlayerSkillsManager>();
@@ -338,7 +342,6 @@ public class GameController : MonoBehaviour
     void CameraRelatedLogic()
     {
         // update functions that need camera data
-        playerSecondaryWeapon.HandleWeaponDirection(CurrentControlScheme);
         CameraBehavior.AdjustCameraDown();
     }
 
@@ -384,14 +387,14 @@ public class GameController : MonoBehaviour
     void ShootLogic()
     {
         if (ShootButtonDown) 
-        { 
-            EventSystem.current.AmmoCheckTrigger();
-            playerSecondaryWeapon.HandleThrowing("Button Clicked", CurrentControlScheme);
+        {
+            secondaryWeaponsManager.CanWeaponBeFired(); // used for shooting, in SecondaryWeaponManager
+            playerSecondaryWeapon.HandleThrowing("Button Clicked", CurrentControlScheme); // used for throwing
             ShootButtonDown = false;
         }
         if (ShootButtonHeld)
         {
-            EventSystem.current.AmmoCheckTrigger();
+            secondaryWeaponsManager.CanWeaponBeFired();
             playerSecondaryWeapon.HandleThrowing("Button Held", CurrentControlScheme);
         }
         else if (ShootButtonRelease)
@@ -477,7 +480,5 @@ public class GameController : MonoBehaviour
 
     public void TriggerInteractButton() { InteractButton = true; } // used by cutscenes 
 
-    public void HandleFlipping() { playerController.Flip(); playerSecondaryWeapon.Flip(); }
-
-    //private void OnDestroy() { ControlsUI.OnRebindingComplete -= HandleRebindingComplete; }
+    public void HandleFlipping() { playerController.Flip(); PhysicsExtensions.FlipYScaleAxis(playerSecondaryWeapon.gameObject); }
 }

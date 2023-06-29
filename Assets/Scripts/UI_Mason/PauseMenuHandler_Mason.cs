@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
+using UnityEditor;
 
 public class PauseMenuHandler_Mason : MonoBehaviour
 {
@@ -24,6 +25,7 @@ public class PauseMenuHandler_Mason : MonoBehaviour
     private void Start()
     {
         gameController = GameObject.Find("GameController").GetComponent<GameController>();
+        resumeButton.onClick.AddListener(() => gameController.PauseHandler("Pause")); 
     }
     private void Update()
     {
@@ -75,11 +77,11 @@ public class PauseMenuHandler_Mason : MonoBehaviour
         if (currentControlScheme == "Gamepad") { controlsButton.Select(); }
     }
 
-    public void LoadPauseMenu()
+    public void CloseControlsAndOpenPauseMenu()
     {
         pauseMenu.SetActive(true);
         currentControlScheme = gameController.CurrentControlScheme;
-        if (currentControlScheme == "Gamepad") { resumeButton.Select(); }
+        if (currentControlScheme == "Gamepad") { controlsButton.Select(); }
         controlsMenu.SetActive(false);
     }
 

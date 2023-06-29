@@ -20,7 +20,7 @@ public class Weapons : IDatabaseItem, IShoppable
 
     // Unique Information
     public int tier;
-    public bool isSecondary, isShot, isThrown, isFixedDistance;
+    public bool isSecondary, isOneHanded, isTwoHanded, isShot, isThrown, isFixedDistance;
     public string statusModifier;
     public bool isKinetic, isElemental, isHeavy; // note: isHeavy is not for a weight attribute, but a weapon type attribute (kinetic, elemental, heavy)
     public string weight;
@@ -29,6 +29,7 @@ public class Weapons : IDatabaseItem, IShoppable
     public int level3Damage;
     public int level;
     public bool isLightSource;
+    public float firePointXPosition, firePointYPosition;
     public float fireRate;
     public int ammoLimit;
 
@@ -44,7 +45,11 @@ public class Weapons : IDatabaseItem, IShoppable
 
     }
 
-    public Weapons(int id, string classType, string name,  string description, int amount, Sprite sprite, string audioOnAcquisition, int tier, bool isSecondary, bool isShot, bool isThrown, bool isFixedDistance, string statusModifier, bool isKinetic, bool isElemental, bool isHeavy, string weight, int level1Damage, int level2Damage, int level3Damage, int level, bool isLightSource, float fireRate, int ammoLimit, bool isPurchasable, int cost, int shopAmountPerPurchase, int shopStock)
+    public Weapons(int id, string classType, string name,  string description, int amount, Sprite sprite, string audioOnAcquisition, int tier, 
+        bool isSecondary, bool isOneHanded, bool isTwoHanded, bool isShot, bool isThrown, bool isFixedDistance, 
+            string statusModifier, bool isKinetic, bool isElemental, bool isHeavy, string weight, 
+            int level1Damage, int level2Damage, int level3Damage, int level, bool isLightSource, float firePointXPosition, float firePointYPosition, float fireRate, int ammoLimit,
+            bool isPurchasable, int cost, int shopAmountPerPurchase, int shopStock)
     {
         this.id = id;
         this.classType = classType;
@@ -56,6 +61,8 @@ public class Weapons : IDatabaseItem, IShoppable
         this.audioOnAcquisition = audioOnAcquisition;
         this.tier = tier;
         this.isSecondary = isSecondary;
+        this.isOneHanded = isOneHanded;
+        this.isTwoHanded = isTwoHanded;
         this.isShot = isShot;
         this.isThrown = isThrown;
         this.isFixedDistance = isFixedDistance;
@@ -69,6 +76,8 @@ public class Weapons : IDatabaseItem, IShoppable
         this.level3Damage = level3Damage;
         this.level = level;
         this.isLightSource = isLightSource;
+        this.firePointXPosition = firePointXPosition;
+        this.firePointYPosition = firePointYPosition;
         this.fireRate = fireRate;
         this.ammoLimit = ammoLimit;
         this.isPurchasable = isPurchasable;
@@ -91,7 +100,9 @@ public class Weapons : IDatabaseItem, IShoppable
     // Unique Information
      this.tier = input.tier;
      this.isSecondary = input.isSecondary;
-     this.isShot = input.isShot;
+    this.isOneHanded = input.isOneHanded;
+    this.isTwoHanded = input.isTwoHanded;
+    this.isShot = input.isShot;
      this.isThrown = input.isThrown;
      this.isFixedDistance = input.isFixedDistance;
      this.statusModifier = input.statusModifier;

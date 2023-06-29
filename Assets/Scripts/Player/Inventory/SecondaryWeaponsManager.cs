@@ -5,24 +5,19 @@ using UnityEngine;
 public class SecondaryWeaponsManager : WeaponsManager
 {
     private float lastWeaponUseTime;
+    private PlayerController playerController;
     private ChargePunch chargePunch;
     // Start is called before the first frame update
     public override void Start()
     {
         base.Start();
         EventSystem.current.onWeaponAddAmmoTrigger += AddAmmo;
-        EventSystem.current.onAmmoCheckTrigger += CanWeaponBeFired;
-        EventSystem.current.onWeaponFireTrigger += WeaponFired;
+        EventSystem.current.onPlayerShotInformation += WeaponFired;
 
         player = GameObject.Find("Player");
+        playerController = player.GetComponentInChildren <PlayerController>();
         playerSecondaryWeapon = player.GetComponentInChildren<PlayerSecondaryWeapon>();
         chargePunch = player.GetComponentInChildren<ChargePunch>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public override void WeaponUIUpdate()
@@ -70,22 +65,37 @@ public class SecondaryWeaponsManager : WeaponsManager
         WeaponUIUpdate();
     }
 
-    private void CanWeaponBeFired() // used as a check before firing a weapon and decrementing inventory
+    public void CanWeaponBeFired() // used as a check before firing a weapon and decrementing inventory
     {
         bool hasAmmo = weaponList[currentWeaponIndex].ammo > 0;
         bool doesNotExceedFireRate = Time.time > lastWeaponUseTime + weaponList[currentWeaponIndex].fireRate;
-        bool canThrow = !playerSecondaryWeapon.inActiveThrow;
+        bool canThrow = !playerSecondaryWeapon.throwHandler.inActiveThrow;
         bool notChargePunching = !chargePunch.IsCharging;
+        bool isNotWallHanging = !playerController.IsWallHanging; 
 
-        if (hasAmmo && doesNotExceedFireRate && canThrow && notChargePunching)
+        if (hasAmmo && doesNotExceedFireRate && canThrow && notChargePunching && isNotWallHanging)
         {
             lastWeaponUseTime = Time.time;
 
-            EventSystem.current.WeaponFireTrigger(
-                currentWeaponID,
-                weaponList[currentWeaponIndex].level,
-                -1,
-                weaponList[currentWeaponIndex].ammo); // send the weapon fire 
+            // this info will be cached in weaponAnimator, and it will call fire using this info when the weapon has reached the physical firing point in an animation
+            EventSystem.current.CacheShotInformation(
+            currentWeaponID,
+            weaponList[currentWeaponIndex].level,
+            -1,
+            weaponList[currentWeaponIndex].ammo);
+
+            if (currentWeapon.isFixedDistance) // used by flamethrowers and other 'continous fire' weapons
+            {
+                animator.PlayFunction("PlayerShootContinuous", PlayerAnimator.PlayerPart.RightArm);
+                animator.PlayFunction("PlayerShootContinuous", PlayerAnimator.PlayerPart.LeftArm);
+                animator.PlayFunction("PlayerShootContinuous", PlayerAnimator.PlayerPart.Weapon); 
+            }
+            else if(currentWeapon.isShot) // discrete shot weapons
+            {
+                animator.PlayFunction("PlayerShoot", PlayerAnimator.PlayerPart.RightArm);
+                animator.PlayFunction("PlayerShoot", PlayerAnimator.PlayerPart.LeftArm);
+                animator.PlayFunction("PlayerShoot", PlayerAnimator.PlayerPart.Weapon); // this will make the actual call of when to release ammo
+            }
         }
         else if (!hasAmmo) { EventSystem.current.WeaponStopTrigger(); }
     }
@@ -93,8 +103,7 @@ public class SecondaryWeaponsManager : WeaponsManager
     {
         base.OnDestroy();
         EventSystem.current.onWeaponAddAmmoTrigger -= AddAmmo;
-        EventSystem.current.onAmmoCheckTrigger -= CanWeaponBeFired;
-        EventSystem.current.onWeaponFireTrigger -= WeaponFired;
+        EventSystem.current.onPlayerShotInformation -= WeaponFired;
     }
 
 }

@@ -18,13 +18,23 @@ public class SceneHandler_Mason : MonoBehaviour
     public Button controlsMenuButton;
     public Button optionsScreenButton;
 
+    public Dictionary<GameObject, Button> menuToButtonMap = new Dictionary<GameObject, Button>();
+
     [SerializeField] private string currentControlScheme;
 
     [SerializeField]
     private GameObject quitButton;
     public GameController gameController;
 
-    private void Start() { gameController = FindObjectOfType<GameController>(); }
+    private void Start() 
+    { 
+        gameController = FindObjectOfType<GameController>();
+        // Initialize the dictionary with GameObjects and Buttons
+        menuToButtonMap.Add(mainMenuScreen, mainMenuButton);
+        menuToButtonMap.Add(loadGameScreen, loadMenuButton);
+        menuToButtonMap.Add(controlsScreen, controlsMenuButton);
+        menuToButtonMap.Add(optionsScreen, optionsScreenButton);
+    }
 
     private void Update() 
     {
@@ -93,6 +103,18 @@ public class SceneHandler_Mason : MonoBehaviour
     public void OpenLoadGameOptions() { mainMenuScreen.SetActive(false); loadGameScreen.SetActive(true); OnMenuChanged(); }    
     public void CloseOptionsMenu() { mainMenuScreen.SetActive(true); optionsScreen.SetActive(false); OnMenuChanged(); }
     public void OpenOptionsMenu() { mainMenuScreen.SetActive(false); optionsScreen.SetActive(true); OnMenuChanged(); }
+
+    void SelectRelevantButton(GameObject menuThatClosed)
+    {
+        if (currentControlScheme == "Gamepad")
+        {
+            if (menuToButtonMap.ContainsKey(menuThatClosed))
+            {
+                // Get the corresponding button and select it
+                menuToButtonMap[menuThatClosed].Select();
+            }
+        }
+    }
 }
 
 

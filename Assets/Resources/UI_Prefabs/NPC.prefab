@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5436917033930142058}
   - component: {fileID: 5436917033930142057}
+  - component: {fileID: 6559344474008639472}
   m_Layer: 0
   m_Name: VisualCue
   m_TagString: Untagged
@@ -84,6 +85,20 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &6559344474008639472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5436917033930142059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b91b893f9a8e2e147a989a4bb1b9ecd2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actionName: Interact
+  pauseMenuUI: {fileID: 0}
 --- !u!1 &5436917034180762831
 GameObject:
   m_ObjectHideFlags: 0
@@ -157,6 +172,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   visualCue: {fileID: 5436917033930142059}
   inkJSON: {fileID: 4900000, guid: e1326c7c8dc035848945c5d9c472cdc2, type: 3}
+  instantReact: 0
+  isNewExperience: 0
+  destroyObjectAfterUse: 1
 --- !u!1 &5436917034771611486
 GameObject:
   m_ObjectHideFlags: 0

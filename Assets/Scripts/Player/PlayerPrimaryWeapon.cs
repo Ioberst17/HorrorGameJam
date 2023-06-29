@@ -11,7 +11,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
     public PlayerController playerController;
     private GameController gameController;
     private AudioManager audioManager;
-    Animator animator;
+    PlayerAnimator animator;
 
     //these are all related to attack information
     public int minDamage;
@@ -62,7 +62,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
         chargePunch = GetComponent<ChargePunch>();
         playerController = GetComponentInParent<PlayerController>();
         audioManager = FindObjectOfType<AudioManager>();
-        animator = GetComponentInParent<Animator>();
+        animator = ComponentFinder.GetComponentInChildrenByNameAndType<PlayerAnimator>("Animator", transform.parent.gameObject);
         gameController = FindObjectOfType<GameController>();
     }
     private void InitializeValues()

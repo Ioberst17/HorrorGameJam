@@ -11,6 +11,7 @@ public class GroundSlam : MonoBehaviour
     PlayerPrimaryWeapon playerPrimaryWeapon;
     PlayerHealth playerHealth;
     PlayerController playerController;
+    PlayerAnimator playerAnimator;
     SpriteRenderer detectorSprite;
     [SerializeField] bool groundSlamStop = true;
     public enum TypeOfHit { Damagable, NonDamagable } // i.e. an enemy or breakable object vs the ground
@@ -33,6 +34,7 @@ public class GroundSlam : MonoBehaviour
         playerHealth = GetComponentInParent<PlayerHealth>();
         playerPrimaryWeapon = GetComponent<PlayerPrimaryWeapon>();
         playerController = playerPrimaryWeapon.GetComponentInParent<PlayerController>();
+        playerAnimator = playerController.GetComponentInChildren<PlayerAnimator>();
 
         // used for nondamagable VFX on landing
         detectorSprite = GetComponentInChildren<PlayerGroundSlamDetector>().GetComponent<SpriteRenderer>();
@@ -77,7 +79,11 @@ public class GroundSlam : MonoBehaviour
         FindObjectOfType<AudioManager>().PlaySFX("GroundSlam");
         detectionColliderCenter = detectorSprite.transform.position;
         detectionColliderUpperCenter = detectionColliderCenter + new Vector2(0, detectorSprite.bounds.size.y / 2f);
-        Instantiate(Resources.Load("VFXPrefabs/DustCloud"), detectionColliderUpperCenter, Quaternion.identity);
+        //if (playerController.IsGrounded) 
+        //{
+            playerAnimator.Play("PlayerLand");
+            Instantiate(Resources.Load("VFXPrefabs/DustCloud"), detectionColliderUpperCenter, Quaternion.identity); 
+        //}
     }
 
 
