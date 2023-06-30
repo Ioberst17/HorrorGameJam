@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyController : MonoBehaviour, IDamageable
@@ -29,6 +30,8 @@ public class EnemyController : MonoBehaviour, IDamageable
     public int mostRecentAttack;
 
     private EnemyHealth enemyHealth;
+    [SerializeField] float hpMultiplier;
+    [SerializeField] float apMultiplier;
     public int HP_MAX;
     public int HP;
     private int damageToPass;
@@ -253,18 +256,32 @@ public class EnemyController : MonoBehaviour, IDamageable
         //this is for setting up the values of hp, damage, etc
         if(EnemytypeID  >= 0)
         {
-            var loadedValue = enemyDatabase.enemyDatabase.entries[EnemytypeID];
-            HP = loadedValue.health; //50;
-            HP_MAX = loadedValue.health;
-            dmgVal1 = loadedValue.attack1Damage; //10;
-            dmgVal2 = loadedValue.attack2Damage;
-            dmgVal3 = loadedValue.attack3Damage;
-            dmgVal4 = loadedValue.attack4Damage;
-            dmgVal5 = loadedValue.attack5Damage;
-            dmgVal6 = loadedValue.attack6Damage;
-            SoulPointsDropped = loadedValue.soulPointsDropped; //45;
-            knockbackForce = loadedValue.knockback; //3
+            var loadedValue = enemyDatabase.data.entries[EnemytypeID];
+
+            UpdateMultipliers(loadedValue);
+
+            (HP, HP_MAX) = ((int)(loadedValue.health * hpMultiplier), (int)(loadedValue.health * hpMultiplier));
+            dmgVal1 = (int)(loadedValue.attack1Damage * apMultiplier); //10;
+            dmgVal2 = (int)(loadedValue.attack2Damage * apMultiplier);
+            dmgVal3 = (int)(loadedValue.attack3Damage * apMultiplier);
+            dmgVal4 = (int)(loadedValue.attack4Damage * apMultiplier);
+            dmgVal5 = (int)(loadedValue.attack5Damage * apMultiplier);
+            dmgVal6 = (int)(loadedValue.attack6Damage * apMultiplier);
+            SoulPointsDropped = (int)(loadedValue.soulPointsDropped); //45;
+            knockbackForce = (int)(loadedValue.knockback); //3
         }
+    }
+
+    void UpdateMultipliers(EnemyData data)
+    {
+        // assume medium, but otherwise get the difficulty level from player prefs
+        string difficultyLevel = "Medium";
+        if (PlayerPrefs.HasKey("DifficultyLevel")) { difficultyLevel = PlayerPrefs.GetString("DifficultyLevel"); }
+
+        // set multipliers based on value
+        if(difficultyLevel == "Easy") { hpMultiplier = data.easyHPMultiplier; apMultiplier = data.easyAPMultiplier; }
+        else if(difficultyLevel == "Hard") { hpMultiplier = data.hardHPMultiplier; apMultiplier = data.hardAPMultiplier; }
+        else { hpMultiplier = data.hardHPMultiplier; apMultiplier = data.hardAPMultiplier; }
     }
     private void OnDestroy()
     {

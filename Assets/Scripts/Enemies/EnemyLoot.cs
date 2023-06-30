@@ -10,7 +10,7 @@ public class EnemyLoot : MonoBehaviour
     [SerializeField] List<Loot> lootList = new List<Loot>();
     private List<PickupableItem> ammoList = new List<PickupableItem>();
     private int enemyTypeID = -1;
-    private EnemyDatabase.Database enemyDB;
+    private EnemyDatabase.DB enemyDB;
     private ConsumablesDatabase.DB consumablesDB;
     private List<GameObject> itemPrefabs;
     float lootLaunchForce = 5f;
@@ -18,7 +18,7 @@ public class EnemyLoot : MonoBehaviour
 
     private void Start()
     {
-        enemyDB = GameObject.Find("EnemyDatabase").GetComponent<EnemyDatabase>().enemyDatabase;
+        enemyDB = GameObject.Find("EnemyDatabase").GetComponent<EnemyDatabase>().data;
         consumablesDB = GameObject.Find("ConsumablesDatabase").GetComponent<ConsumablesDatabase>().data;
         itemPrefabs = GameObject.Find("ItemPrefabs").GetComponent<ItemPrefabs>().itemPrefabs;
 

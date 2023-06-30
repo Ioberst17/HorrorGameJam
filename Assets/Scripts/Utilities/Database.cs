@@ -7,7 +7,7 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class Database<T> : MonoBehaviour where T : IDatabaseItem, IShoppable
+public class Database<T> : MonoBehaviour where T : IDatabaseItem
 {
     public TextAsset textAssetData; // the CSV to read from, must be assigned in Inspector
     public int numOfColumns;
