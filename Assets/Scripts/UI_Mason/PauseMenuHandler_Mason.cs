@@ -10,6 +10,7 @@ public class PauseMenuHandler_Mason : MonoBehaviour
 {
     public GameObject pauseMenu;
     public GameObject controlsMenu;
+    public GameObject optionsMenu;
 
     public Button resumeButton;
     public Button controlsButton;
@@ -21,6 +22,7 @@ public class PauseMenuHandler_Mason : MonoBehaviour
 
     [SerializeField]
     public GameController gameController;
+
 
     private void Start()
     {
@@ -96,5 +98,10 @@ public class PauseMenuHandler_Mason : MonoBehaviour
         Debug.Log("Quitting Game.");
         Application.Quit();
     }
+
+    public void CloseOptionsMenu() { pauseMenu.SetActive(true); optionsMenu.SetActive(false); }
+    public void OpenOptionsMenu() { pauseMenu.SetActive(false); optionsMenu.SetActive(true); }
+
+
 }
 
