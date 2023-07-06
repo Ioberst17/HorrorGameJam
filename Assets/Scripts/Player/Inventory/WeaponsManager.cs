@@ -71,7 +71,7 @@ public class WeaponsManager : MonoBehaviour
         if (dataManagerWeaponList == null) { weaponList = new List<PlayerWeapons>(); }
         else { weaponList = dataManagerWeaponList; }
 
-        currentWeaponID = activeWeapon;
+        //currentWeaponID = dataManager.
 
         LoadActiveWeapon();
     }

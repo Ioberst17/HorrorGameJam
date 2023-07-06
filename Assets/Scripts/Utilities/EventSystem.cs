@@ -140,6 +140,13 @@ public class EventSystem : MonoBehaviour
 
     public void AddHealthTrigger(int healthToAdd) { if (onAddHealthTrigger != null) { onAddHealthTrigger(healthToAdd); } }
 
+    // QUEST RELATED
+
+    public event Action<string, int> onQuestUpdateTrigger;
+
+    public void UpdateQuestTrigger(string questToUpdate, int subQuestIndex) { if (onQuestUpdateTrigger != null) { onQuestUpdateTrigger(questToUpdate, subQuestIndex); } }
+
+
     // OTHER PLAYER-RELATED
 
     public event Action<PickupableItem> onItemPickupTrigger;

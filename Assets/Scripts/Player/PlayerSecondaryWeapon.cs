@@ -138,7 +138,7 @@ public class PlayerSecondaryWeapon : MonoBehaviour
     private void WeaponChanged(int weaponID, string weaponName, int weaponLevel)
     {
 
-        currentWeapon = weaponDatabase.ReturnItemFromID(weaponID);
+        currentWeapon = weaponDatabase.ReturnItemFromID(weaponID); 
         UpdateAmmoUsed(weaponID, weaponLevel);
         UpdateFirePoint();
     }

@@ -10,17 +10,23 @@ public class Door_Script : MonoBehaviour
     [SerializeField] Transform player;
     [SerializeField] ObjectiveUI objectiveUI;
 
+    // For Quests
+    QuestUpdaterSupport questUpdater;
+
 
     // Start is called before the first frame update
     void Start()
     {
         playerDetected = false;
+        questUpdater = GetComponent<QuestUpdaterSupport>();
     }
 
      public void InteractWithPlayer()
     {
         player.transform.position = posToGo.position;
         playerDetected = false;
+
+        if(questUpdater != null) { questUpdater.UpdateQuest(); }
 
         // call the objectiveUI and update it when specific doors are used
         if (door.name == "Door_House1")

@@ -334,7 +334,7 @@ public class ChargePunch : MonoBehaviour
         playerPrimaryWeapon.damageToPass = playerPrimaryWeapon.minDamage + damageToPass;
         IsCharging = false;
         UpdateSpriteBounds();
-        StartCoroutine(playerPrimaryWeapon.AttackActiveFrames(attackDirection));
+        StartCoroutine(playerPrimaryWeapon.AttackActiveFrames(attackDirection, "PlayerBasicAttack"));
         HandleFinishSound();
         HandleFinishVFX();
         ParticleSystemsOn(false); GlowOn(false); chargeTime = 0; holdTimeNormalized = 0;

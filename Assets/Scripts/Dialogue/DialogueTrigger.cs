@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static QuestUpdater;
 
 public class DialogueTrigger : MonoBehaviour
 {
@@ -12,6 +13,17 @@ public class DialogueTrigger : MonoBehaviour
 
     public bool instantReact;
     private bool playerInRange;
+
+    public bool isPartOfAQuestActivity;
+    [System.Serializable]
+    public class QuestInfo
+    {
+        public string questName;
+        public int subQuestIndex;
+        public string npcName;
+    }
+
+    public QuestInfo[] questInfo;
 
     [HideInInspector]public bool isNewExperience; 
     public bool destroyObjectAfterUse = true;

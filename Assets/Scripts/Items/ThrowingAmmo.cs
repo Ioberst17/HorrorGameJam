@@ -11,7 +11,4 @@ public class ThrowingAmmo : MonoBehaviour
     float maxTorque = 1f;
 
     void Awake(){ GetComponent<Rigidbody2D>().AddTorque(Random.Range(minTorque, maxTorque), ForceMode2D.Impulse); }
-
-    
-
 }

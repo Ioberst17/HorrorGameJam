@@ -10,11 +10,12 @@ using UnityEngine.EventSystems;
 using Ink.Parsed;
 using static AreaHistory;
 using static SiblingComponentUtils;
-
+using Unity.VisualScripting;
 
 public class DialogueManager : MonoBehaviour
 {
     public DataManager dataManager;
+    private QuestUpdater questUpdater;
     private GameController gameController;
     private DialogueItemDisplay DialogueItemDisplay { get; set; }
     [SerializeField] private WeaponDatabase weaponDatabase;
@@ -95,6 +96,7 @@ public class DialogueManager : MonoBehaviour
     void OnSceneLoad(Scene scene, LoadSceneMode loadScene) // get references to objects in the new scene
     {
         gameController = FindObjectOfType<GameController>();
+        questUpdater = FindObjectOfType<QuestUpdater>();
         weaponDatabase = FindObjectOfType<WeaponDatabase>();
         narrativeItemsDatabase = FindObjectOfType<NarrativeItemsDatabase>();
         DialogueItemDisplay = FindObjectOfType<DialogueItemDisplay>();
@@ -107,6 +109,7 @@ public class DialogueManager : MonoBehaviour
     {
         currentStory = new Ink.Runtime.Story(inkJSON.text);
         if (openAnInkStitch) { currentStory.ChoosePathString("path/to/your/inkScript.json"); }
+        EnableQuestTracking(triggerObject);
         CheckIfSavePoint(triggerObject);
         CheckIfNewExperience(triggerObject);
         DialogueIsPlaying = true;
@@ -114,7 +117,30 @@ public class DialogueManager : MonoBehaviour
 
         ContinueStory();
     }
+    // used to update quest-related tracking objects by enabling functions from Ink
+    private void EnableQuestTracking(GameObject triggerObject)
+    {
+        DialogueTrigger trigger = triggerObject.GetComponent<DialogueTrigger>();
 
+        if (trigger.isPartOfAQuestActivity)
+        {
+            // when / if UpdateQuest is called from the Ink file
+            currentStory.BindExternalFunction("UpdateQuest", () =>
+            {
+                Debug.Log("Checking quests!");
+                // attempt to update the dialogue tracker in quest updater with relevant quest info
+                for (int i = 0; i < trigger.questInfo.Length; i++)
+                {
+                    questUpdater.UpdateDialogueTracker(trigger.questInfo[i].questName,
+                                                       trigger.questInfo[i].subQuestIndex,
+                                                       trigger.questInfo[i].npcName);
+                }
+            }
+            );  
+        }
+    }
+
+    // used at save point stations, makes functions usable from Ink
     public void CheckIfSavePoint(GameObject triggerObject)
     {
         if (triggerObject.transform.parent != null && triggerObject.transform.parent.name.Contains("SaveGamePoint"))
@@ -131,6 +157,7 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
+    // used when acquiring items for the first time
     void CheckIfNewExperience(GameObject triggerObject)
     {
         if(triggerObject.GetComponent<DialogueTrigger>() != null)

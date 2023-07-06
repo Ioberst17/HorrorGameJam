@@ -6,8 +6,19 @@ public class SecondaryWeaponsManager : WeaponsManager
 {
     private float lastWeaponUseTime;
     private PlayerController playerController;
+    private PlayerPrimaryWeapon playerPrimaryWeapon;
     private ChargePunch chargePunch;
-    // Start is called before the first frame update
+
+    // Variables that track whether a weapon can be fired
+    bool hasAmmo;
+    bool doesNotExceedFireRate;
+    bool canThrow;
+    bool notChargePunching;
+    bool isNotWallHanging;
+    bool isNotMeleeing;
+
+
+
     public override void Start()
     {
         base.Start();
@@ -16,6 +27,7 @@ public class SecondaryWeaponsManager : WeaponsManager
 
         player = GameObject.Find("Player");
         playerController = player.GetComponentInChildren <PlayerController>();
+        playerPrimaryWeapon = player.GetComponentInChildren <PlayerPrimaryWeapon>();
         playerSecondaryWeapon = player.GetComponentInChildren<PlayerSecondaryWeapon>();
         chargePunch = player.GetComponentInChildren<ChargePunch>();
     }
@@ -67,13 +79,14 @@ public class SecondaryWeaponsManager : WeaponsManager
 
     public void CanWeaponBeFired() // used as a check before firing a weapon and decrementing inventory
     {
-        bool hasAmmo = weaponList[currentWeaponIndex].ammo > 0;
-        bool doesNotExceedFireRate = Time.time > lastWeaponUseTime + weaponList[currentWeaponIndex].fireRate;
-        bool canThrow = !playerSecondaryWeapon.throwHandler.inActiveThrow;
-        bool notChargePunching = !chargePunch.IsCharging;
-        bool isNotWallHanging = !playerController.IsWallHanging; 
+        hasAmmo = weaponList[currentWeaponIndex].ammo > 0;
+        doesNotExceedFireRate = Time.time > lastWeaponUseTime + weaponList[currentWeaponIndex].fireRate;
+        canThrow = !playerSecondaryWeapon.throwHandler.inActiveThrow;
+        notChargePunching = !chargePunch.IsCharging;
+        isNotWallHanging = !playerController.IsWallHanging;
+        isNotMeleeing = !playerPrimaryWeapon.IsAttacking;
 
-        if (hasAmmo && doesNotExceedFireRate && canThrow && notChargePunching && isNotWallHanging)
+        if (hasAmmo && doesNotExceedFireRate && canThrow && notChargePunching && isNotWallHanging && isNotMeleeing)
         {
             lastWeaponUseTime = Time.time;
 

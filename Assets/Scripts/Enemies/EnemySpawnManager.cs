@@ -14,6 +14,7 @@ public class EnemySpawnManager : MonoBehaviour
     private int index; // for search
 
     public DataManager dataManager;
+    QuestUpdaterSupport questUpdater;
 
     [System.Serializable]
     public struct SpawnPoint
@@ -37,6 +38,7 @@ public class EnemySpawnManager : MonoBehaviour
     public void Start()
     {
         dataManager = DataManager.Instance;
+        questUpdater = FindObjectOfType<QuestUpdaterSupport>();
         spawnTrigger = GetComponent<BoxCollider2D>();
         if(spawnTrigger.isTrigger != true) { spawnTrigger.isTrigger = true; }
     }
@@ -77,6 +79,7 @@ public class EnemySpawnManager : MonoBehaviour
             if (currentWaveIndex >= waves.Length)
             {
                 EventSystem.current.AllWavesFinishedTrigger(areaID); Debug.Log("All Waves Cleared!");
+                if(questUpdater != null) { questUpdater.UpdateQuest(); }
                 if (respawnEveryTimePlayerEnters == false) { enemiesCleared = true; }
                 SaveToDataManager();
                 return;

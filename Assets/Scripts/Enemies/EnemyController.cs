@@ -281,7 +281,7 @@ public class EnemyController : MonoBehaviour, IDamageable
         // set multipliers based on value
         if(difficultyLevel == "Easy") { hpMultiplier = data.easyHPMultiplier; apMultiplier = data.easyAPMultiplier; }
         else if(difficultyLevel == "Hard") { hpMultiplier = data.hardHPMultiplier; apMultiplier = data.hardAPMultiplier; }
-        else { hpMultiplier = data.hardHPMultiplier; apMultiplier = data.hardAPMultiplier; }
+        else { hpMultiplier = data.mediumHPMultiplier; apMultiplier = data.mediumAPMultiplier; }
     }
     private void OnDestroy()
     {
