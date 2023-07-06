@@ -1,3 +1,4 @@
+EXTERNAL UpdateQuest()
 EXTERNAL SaveCurrent()
 EXTERNAL SaveNew(int)
 
@@ -16,7 +17,7 @@ Hey, kid - wanna save your game?
 * [Nevermind] -> END
 
 == CheckSaveGame ==
-{SeeIfFileHasBeenSavedBefore(): {SaveCurrent()} {PlaySaveSound()} {PlaySaveVFX()} {PlaySaveVFX2()} -> END |-> SaveGameOptions }
+{SeeIfFileHasBeenSavedBefore(): {SaveCurrent()} {PlaySaveSound()} {PlaySaveVFX()} {PlaySaveVFX2()} {UpdateQuest()}-> END |-> SaveGameOptions }
 
 
 == SaveGameOptions ==
@@ -57,6 +58,9 @@ An error occurred while saving the game. Please try again.
 -> END
 
 //fallback functions for Editor testing
+
+=== function UpdateQuest() ===
+~ return 0
 
 === function SaveCurrent() ===
 ~ return 0

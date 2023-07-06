@@ -10,13 +10,14 @@ public class PlayerPrimaryWeapon : MonoBehaviour
     public WeaponDatabase weaponDatabase;
     public PlayerController playerController;
     private GameController gameController;
+    private ComboSystem comboSystem;
     private AudioManager audioManager;
     PlayerAnimator animator;
 
     //these are all related to attack information
     public int minDamage;
     public int damageToPass;
-    public bool isAttacking;
+    [SerializeField] private bool _isAttacking; public bool IsAttacking { get { return _isAttacking; } set { _isAttacking = value; } }
 
     //List of objects hit by an attack, used to let the player hit multiple things with one swing
     private List<Collider2D> hitList;
@@ -50,7 +51,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
 
     void FixedUpdate()
     {
-        playerController.isAttacking = isAttacking;
+        playerController.isAttacking = IsAttacking;
         if (attackLagTimer > 0) { attackLagTimer -= 1; }
         AttackHelper();
     }
@@ -58,6 +59,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
     private void GetSupportingReferences()
     {
         weaponDatabase = GameObject.Find("WeaponDatabase").GetComponent<WeaponDatabase>();
+        comboSystem = GetComponent<ComboSystem>();
         groundSlam = GetComponent<GroundSlam>();
         chargePunch = GetComponent<ChargePunch>();
         playerController = GetComponentInParent<PlayerController>();
@@ -70,7 +72,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
         attackLagTimer = 0;
         minDamage = 10;
         damageToPass = minDamage;
-        isAttacking = false;
+        IsAttacking = false;
         AddLayersToCheck();
     }
 
@@ -83,18 +85,17 @@ public class PlayerPrimaryWeapon : MonoBehaviour
 
     public void Attack(int attackDirection)
     {
-        //Debug.Log("attack called 2");
-        if (!isAttacking && !DialogueManager.GetInstance().DialogueIsPlaying)
+        if (!IsAttacking && !DialogueManager.GetInstance().DialogueIsPlaying)
         {
             if(attackLagTimer == 0)
             {
-                isAttacking = true;
+                IsAttacking = true;
 
-                if (attackDirection == 1 && !playerController.IsGrounded && !groundSlam.IsGroundSlam) { groundSlam.Execute(); Debug.Log("Executing groundslam"); }
+                if (attackDirection == 1 && !playerController.IsGrounded && !groundSlam.IsGroundSlam) { groundSlam.Execute(); }
                 else
                 {
                     if (chargePunch != null) { chargePunch.Execute(); }
-                    else { StartCoroutine(AttackActiveFrames(attackDirection)); }
+                    else { comboSystem.PerformCombo(attackDirection); }
                 }
             }
         }
@@ -102,11 +103,11 @@ public class PlayerPrimaryWeapon : MonoBehaviour
 
     public void Release(int attackDirection) { if (chargePunch != null) { chargePunch.Release(attackDirection); } }
 
-    public IEnumerator AttackActiveFrames(int attackDirection) // is called by the trigger event for powerups to countdown how long the power lasts
+    public IEnumerator AttackActiveFrames(int attackDirection, string animationToPlay) // is called by the trigger event for powerups to countdown how long the power lasts
     {
         if (attackLagTimer == 0)
         {
-            animator.Play("PlayerBasicAttack");
+            animator.Play(animationToPlay);
             FindObjectOfType<AudioManager>().PlaySFX("PlayerMelee");
             attackLagTimer = attackLagValue;
             if (attackDirection >= 0 && attackDirection <= 2)
@@ -117,9 +118,9 @@ public class PlayerPrimaryWeapon : MonoBehaviour
                 yield return new WaitForSeconds(activeFrames / 60); // waits a certain number of seconds
                 CheckAttackDirection(attackDirection, false);
                 yield return new WaitForSeconds(recoveryFrames / 60);
-                isAttacking = false;
+                IsAttacking = false;
             }
-            else { isAttacking = false; Debug.LogFormat("Attack direction value should be between 0 and 2, but it is {0}", attackDirection); }
+            else { IsAttacking = false; Debug.LogFormat("Attack direction value should be between 0 and 2, but it is {0}", attackDirection); }
         }
         
     }

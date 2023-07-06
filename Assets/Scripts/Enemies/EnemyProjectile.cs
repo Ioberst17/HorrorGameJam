@@ -15,5 +15,5 @@ public class EnemyProjectile : Projectile
         GetDamage();
     }
 
-    public virtual void GetDamage() { damageValue = enemyDatabase.GetAttackDamage(gameObject.tag, attackNumber); }
+    public virtual void GetDamage() { damageValue = enemyDatabase.GetAttackDamages(gameObject.tag, attackNumber); }
 }

@@ -17,25 +17,4 @@ public class ConsumablesDatabase : Database<Consumables>
         string[] data = ReadCSV();
         CreateDatabase(data);
     }
-
-    public string ReturnNameFromID(int id) 
-    {
-        string toReturn = "No Match"; Debug.Log("ReturnNameFromID in ConsumablesDatabase.cs returned no match");
-        for(int i = 0; i < this.data.entries.Length; i++)
-        {
-            if (id == this.data.entries[i].id) { toReturn = this.data.entries[i].name; }
-        }
-        return toReturn;
-    }
-
-    public int ReturnIDfromName(string name)
-    {
-        int toReturn = -1; Debug.Log("ReturnNameFromID in ConsumablesDatabase.cs returned no match");
-        for (int i = 0; i < this.data.entries.Length; i++)
-        {
-            if (name == this.data.entries[i].name) { toReturn = this.data.entries[i].id; }
-        }
-        return toReturn;
-    }
-
 }

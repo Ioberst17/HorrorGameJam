@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class EnemyData // are added in the same order as the column schema
+public class EnemyData : IDatabaseItem // are added in the same order as the column schema
 {
     // CORE ATTRIBUTES
-    public int id;
-    public string name;
+    [SerializeField] private int _id;
+    public int id { get { return _id; } set { _id = value; } }
+    [SerializeField] private string _name;
+    public string name { get { return _name; } set { _name = value; } }
     public string nameNoSpace;
     public int tier;
     public bool isFlying;
@@ -15,6 +17,10 @@ public class EnemyData // are added in the same order as the column schema
     public int health;
     public int knockback;
     public int soulPointsDropped;
+
+    // DIFFICULTY INFO
+    public float easyHPMultiplier, mediumHPMultiplier, hardHPMultiplier;
+    public float easyAPMultiplier, mediumAPMultiplier, hardAPMultiplier;    
 
     //ATTACK INFO
     public string attack1;

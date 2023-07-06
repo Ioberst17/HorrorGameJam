@@ -53,6 +53,7 @@ public class DataManager : MonoBehaviour
         public float lastKnownWorldLocationX;
         public float lastKnownWorldLocationY;
         [Header("Inventory Data")]
+        public List<Quest> quests = new List<Quest>();
         public List<NarrativeItems> narrativeItems = new List<NarrativeItems>();
         [SerializeField]
         public List<PlayerConsumables> consumables = new List<PlayerConsumables>();

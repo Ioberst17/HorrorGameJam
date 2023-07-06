@@ -5,6 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class PlayerWeapons
 {
+    // information specific to player functioning and datamanager
     public string name;
     public int id;
     public int level;

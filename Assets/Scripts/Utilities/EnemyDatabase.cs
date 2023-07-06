@@ -4,66 +4,58 @@ using System.Reflection;
 using System.Linq;
 using System;
 
-public class EnemyDatabase : MonoBehaviour
+public class EnemyDatabase : Database<EnemyData> 
 {
     // must be attached to a game object in the scene hierarchy
     // creates an enemy database (the store of enemies and information about them), and reads it from the enemyDatbase.csv in /Resources
 
-    private TextAsset textAssetData; // the CSV to read from, must be assigned in Inspector
     private EnemyData enemyChecker;
 
-    [System.Serializable]
-    public class Database // create the a database of all game items
+    private void Awake()
     {
-        public EnemyData[] entries;
+        numOfColumns = 61;
+        textAssetData = Resources.Load<TextAsset>("TextFiles/EnemyDatabase");
+        string[] data = ReadCSV();
+        CreateDatabase(data);
     }
 
-    public Database enemyDatabase = new Database();
+    //private void Awake() // load CSV from Resources folder then add it to the Weapon Database game object
+    //{
+    //    ReadCSV();
+    //}
 
-    private void Awake() // load CSV from Resources folder then add it to the Weapon Database game object
-    {
-        ReadCSV();
-    }
+    //void ReadCSV() // adds database to the enemyDatabase game object that should be in scene, from a csv file
+    //{
+    //    List<Dictionary<string, string>> testData = CSVReader.Read("TextFiles/EnemyDatabase");
 
-    void ReadCSV() // adds database to the enemyDatabase game object that should be in scene, from a csv file
-    {
-        List<Dictionary<string, string>> testData = CSVReader.Read("TextFiles/EnemyDatabase");
+    //    enemyDatabase.entries = new EnemyData[testData.Count];
 
-        enemyDatabase.entries = new EnemyData[testData.Count];
+    //    for (int i = 0; i < testData.Count; i++) 
+    //    {
+    //        enemyDatabase.entries[i] = new EnemyData(); // creates new row entry in memory
 
-        for (int i = 0; i < testData.Count; i++) 
-        {
-            enemyDatabase.entries[i] = new EnemyData(); // creates new row entry in memory
+    //        FieldInfo[] fields = enemyDatabase.entries[i].GetType().GetFields(); // used to validate the data type of fields that need to be read in (below)
 
-            FieldInfo[] fields = enemyDatabase.entries[i].GetType().GetFields(); // used to validate the data type of fields that need to be read in (below)
+    //        for (int j = 0; j < fields.Length; j++)
+    //        {
+    //            if(typeof(int) == fields[j].FieldType) { // if the variable that's being loaded is meant to be an INT, use the below
+    //                try { fields[j].SetValue(enemyDatabase.entries[i], int.Parse(testData[i].Values.ElementAt(j))); }
+    //                catch { fields[j].SetValue(enemyDatabase.entries[i], 0); } // if can't parse the value set this default value*/
+    //            }
+    //            else if (typeof(bool) == fields[j].FieldType) // else, if it's meant to be a bool, use the below to parse in data
+    //            {
+    //                try { fields[j].SetValue(enemyDatabase.entries[i], bool.Parse(testData[i].Values.ElementAt(j))); }
+    //                catch { fields[j].SetValue(enemyDatabase.entries[i], false); } // if can't parse the value set this default value*/
+    //            }
+    //            else if(typeof(string) == fields[j].FieldType){ // selse if it's a string...
+    //                try { fields[j].SetValue(enemyDatabase.entries[i], testData[i].Values.ElementAt(j)); }
+    //                catch { fields[j].SetValue(enemyDatabase.entries[i], "No Value"); } // if can't parse the value set this default value*/
+    //            }
+    //        }
+    //    }
+    //}
 
-            for (int j = 0; j < fields.Length; j++)
-            {
-                if(typeof(int) == fields[j].FieldType) { // if the variable that's being loaded is meant to be an INT, use the below
-                    try { fields[j].SetValue(enemyDatabase.entries[i], int.Parse(testData[i].Values.ElementAt(j))); }
-                    catch { fields[j].SetValue(enemyDatabase.entries[i], 0); } // if can't parse the value set this default value*/
-                }
-                else if (typeof(bool) == fields[j].FieldType) // else, if it's meant to be a bool, use the below to parse in data
-                {
-                    try { fields[j].SetValue(enemyDatabase.entries[i], bool.Parse(testData[i].Values.ElementAt(j))); }
-                    catch { fields[j].SetValue(enemyDatabase.entries[i], false); } // if can't parse the value set this default value*/
-                }
-                else if(typeof(string) == fields[j].FieldType){ // selse if it's a string...
-                    try { fields[j].SetValue(enemyDatabase.entries[i], testData[i].Values.ElementAt(j)); }
-                    catch { fields[j].SetValue(enemyDatabase.entries[i], "No Value"); } // if can't parse the value set this default value*/
-                }
-            }
-        }
-    }
-
-    private EnemyData GetEnemy(string nameNoSpace) 
-    {
-        enemyChecker = Array.Find(enemyDatabase.entries, x => x.nameNoSpace == nameNoSpace); //enemyDatabase.entries.Find(x => x.nameNoSpace == nameNoSpace);
-        if(enemyChecker == null) { Debug.LogFormat("Enemy data requested in 'name' was not properly input, no match was found in EnemyDatabase. Check the input and database names"); }
-        return enemyChecker; 
-    }
-
-    private int GetAttackDamage(EnemyData enemy, int attackNumber)
+    private int GetSpecificAttackDamage(EnemyData enemy, int attackNumber)
     {
         if (attackNumber == 1) { return enemy.attack1Damage; }
         else if (attackNumber == 2) { return enemy.attack2Damage; }
@@ -76,8 +68,8 @@ public class EnemyDatabase : MonoBehaviour
         return -1;
     }
 
-    public int GetAttackDamage(string enemyName, int attackNumber) 
+    public int GetAttackDamages(string enemyName, int attackNumber) 
     {
-        return GetAttackDamage(GetEnemy(enemyName), attackNumber);
+        return GetSpecificAttackDamage(ReturnItemFromName(enemyName), attackNumber);
     }
 }

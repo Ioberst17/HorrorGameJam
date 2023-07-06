@@ -97,7 +97,7 @@ public class GroundSlam : MonoBehaviour
     public void Finished(GameObject hitObject, TypeOfHit typeOfHit)
     {
         // Reset conditions
-        IsGroundSlam = false; groundSlamStop = true; playerPrimaryWeapon.isAttacking = false; //ActivateDetection(false);
+        IsGroundSlam = false; groundSlamStop = true; playerPrimaryWeapon.IsAttacking = false; //ActivateDetection(false);
         
         // Unique behaviors depending what type of object has been hit
         if (typeOfHit == TypeOfHit.NonDamagable) { playerController.SetVelocity(); HitNonDamagableSoundAndVFX(); }
