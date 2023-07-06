@@ -530,8 +530,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 875260257270039462}
   m_HandleRect: {fileID: 875260257270039457}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.5042017
+  m_Value: 0.5
+  m_Size: 0.45045045
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -709,8 +709,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 100, y: -335}
-  m_SizeDelta: {x: 200, y: 200}
+  m_AnchoredPosition: {x: 92.5, y: -312.5}
+  m_SizeDelta: {x: 185, y: 185}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260257172826888
 CanvasRenderer:
@@ -1279,8 +1279,8 @@ RectTransform:
   m_Father: {fileID: 875260258358573259}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.4957983}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 0.2747748}
+  m_AnchorMax: {x: 1, y: 0.7252252}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1585,7 +1585,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 875260258206832728}
         m_TargetAssemblyTypeName: Inventory_UI_Mason, Assembly-CSharp
-        m_MethodName: OpenMeleeInventory
+        m_MethodName: OpenNarrativeItemInventory
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1891,8 +1891,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 100, y: -785}
-  m_SizeDelta: {x: 200, y: 200}
+  m_AnchoredPosition: {x: 92.5, y: -732.5}
+  m_SizeDelta: {x: 185, y: 185}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260257377248723
 CanvasRenderer:
@@ -2201,8 +2201,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 100, y: -110}
-  m_SizeDelta: {x: 200, y: 200}
+  m_AnchoredPosition: {x: 92.5, y: -102.5}
+  m_SizeDelta: {x: 185, y: 185}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260257440383936
 CanvasRenderer:
@@ -2820,8 +2820,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 100, y: -1010}
-  m_SizeDelta: {x: 200, y: 200}
+  m_AnchoredPosition: {x: 92.5, y: -942.5}
+  m_SizeDelta: {x: 185, y: 185}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260257567656169
 CanvasRenderer:
@@ -5190,8 +5190,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 100, y: -1460}
-  m_SizeDelta: {x: 200, y: 200}
+  m_AnchoredPosition: {x: 92.5, y: -1362.5}
+  m_SizeDelta: {x: 185, y: 185}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260258075420789
 CanvasRenderer:
@@ -5644,7 +5644,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 1785}
+  m_SizeDelta: {x: 185, y: 1665}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260258141965644
 CanvasRenderer:
@@ -6297,8 +6297,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 100, y: -1685}
-  m_SizeDelta: {x: 200, y: 200}
+  m_AnchoredPosition: {x: 92.5, y: -1572.5}
+  m_SizeDelta: {x: 185, y: 185}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260258217886435
 CanvasRenderer:
@@ -6628,8 +6628,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 100, y: -560}
-  m_SizeDelta: {x: 200, y: 200}
+  m_AnchoredPosition: {x: 92.5, y: -522.5}
+  m_SizeDelta: {x: 185, y: 185}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260258264254068
 CanvasRenderer:
@@ -9265,8 +9265,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 100, y: -1235}
-  m_SizeDelta: {x: 200, y: 200}
+  m_AnchoredPosition: {x: 92.5, y: -1152.5}
+  m_SizeDelta: {x: 185, y: 185}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &875260258930795166
 CanvasRenderer:
