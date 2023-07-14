@@ -51,7 +51,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""id"": ""14e1018d-433a-43bd-9778-05cdb96cf740"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""SlowTap(duration=0.1)"",
+                    ""interactions"": ""Tap,SlowTap"",
                     ""initialStateCheck"": false
                 },
                 {
@@ -60,7 +60,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""id"": ""767a73f5-0f05-4121-b1d3-021b2ebbc46b"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""SlowTap(duration=0.1)"",
+                    ""interactions"": ""SlowTap(duration=0.01)"",
                     ""initialStateCheck"": false
                 },
                 {

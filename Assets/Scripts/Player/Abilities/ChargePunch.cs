@@ -139,7 +139,7 @@ public class ChargePunch : MonoBehaviour
         PunchSprite.transform.localPosition += new Vector3(offsetAmount, 0.0f, 0.0f);
     }
 
-    public void Release(int attackDirection) { this.attackDirection = attackDirection; IsCharging = false; ReleasePunch();  } 
+    public void Release(int attackDirection) { this.attackDirection = attackDirection; ReleasePunch();  } 
 
     void FixedUpdate()
     {
@@ -331,14 +331,18 @@ public class ChargePunch : MonoBehaviour
 
     void ReleasePunch()
     {
-        playerPrimaryWeapon.damageToPass = playerPrimaryWeapon.minDamage + damageToPass;
-        IsCharging = false;
-        UpdateSpriteBounds();
-        StartCoroutine(playerPrimaryWeapon.AttackActiveFrames(attackDirection, "PlayerBasicAttack"));
-        HandleFinishSound();
-        HandleFinishVFX();
-        ParticleSystemsOn(false); GlowOn(false); chargeTime = 0; holdTimeNormalized = 0;
-        //Instantiate(punchEffect, transform.position, Quaternion.identity);
-        EventSystem.current.FinishChargedAttackTrigger();
+        if (IsCharging)
+        {
+            Debug.Log("Released from ChargePunch.cs");
+            playerPrimaryWeapon.damageToPass = playerPrimaryWeapon.minDamage + damageToPass;
+            IsCharging = false;
+            UpdateSpriteBounds();
+            StartCoroutine(playerPrimaryWeapon.AttackActiveFrames(attackDirection, "PlayerBasicAttack"));
+            HandleFinishSound();
+            HandleFinishVFX();
+            ParticleSystemsOn(false); GlowOn(false); chargeTime = 0; holdTimeNormalized = 0;
+            //Instantiate(punchEffect, transform.position, Quaternion.identity);
+            EventSystem.current.FinishChargedAttackTrigger();
+        }
     }
 }

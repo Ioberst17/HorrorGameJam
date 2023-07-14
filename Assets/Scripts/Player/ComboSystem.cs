@@ -20,10 +20,7 @@ public class ComboSystem : MonoBehaviour
     void Update()
     {
         // Check for combo input
-        if (Time.time - lastInputTime > comboInputTimeThreshold)
-        {
-            comboCount = 0;
-        }
+        if (Time.time - lastInputTime > comboInputTimeThreshold) { comboCount = 0; }
     }
 
     public void PerformCombo(int attackDirection)
@@ -47,12 +44,15 @@ public class ComboSystem : MonoBehaviour
             case 3:
                 // Perform third punch
                 Debug.Log("Third punch!");
-                StartCoroutine(playerPrimaryWeapon.AttackActiveFrames(attackDirection, "PlayerThirdPunch"));
+                StartCoroutine(playerPrimaryWeapon.AttackActiveFrames(attackDirection, "PlayerBasicAttack"));
+                //StartCoroutine(playerPrimaryWeapon.AttackActiveFrames(attackDirection, "PlayerThirdPunch"));
                 break;
-            default:
-                // Reset combo count
+            case 4:
+                // Perform third punch
+                Debug.Log("Restart Combo!");
                 comboCount = 0;
-                Debug.Log("Combo interrupted!");
+                StartCoroutine(playerPrimaryWeapon.AttackActiveFrames(attackDirection, "PlayerBasicAttack"));
+                //StartCoroutine(playerPrimaryWeapon.AttackActiveFrames(attackDirection, "PlayerThirdPunch"));
                 break;
         }
 

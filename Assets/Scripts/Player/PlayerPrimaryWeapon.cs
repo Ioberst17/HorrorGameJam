@@ -83,7 +83,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
         normalCollisionFilter.SetLayerMask((1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("BreakableEnviro")));
     }
 
-    public void Attack(int attackDirection)
+    public void Attack(int attackDirection, GameController.ButtonState state)
     {
         if (!IsAttacking && !DialogueManager.GetInstance().DialogueIsPlaying)
         {
@@ -94,14 +94,14 @@ public class PlayerPrimaryWeapon : MonoBehaviour
                 if (attackDirection == 1 && !playerController.IsGrounded && !groundSlam.IsGroundSlam) { groundSlam.Execute(); }
                 else
                 {
-                    if (chargePunch != null) { chargePunch.Execute(); }
+                    if (chargePunch != null && state == GameController.ButtonState.Held) { chargePunch.Execute(); }
                     else { comboSystem.PerformCombo(attackDirection); }
                 }
             }
         }
     }
 
-    public void Release(int attackDirection) { if (chargePunch != null) { chargePunch.Release(attackDirection); } }
+    public void Release(int attackDirection) { Debug.Log("ChargePunchRelease"); if (chargePunch != null) { chargePunch.Release(attackDirection); } }
 
     public IEnumerator AttackActiveFrames(int attackDirection, string animationToPlay) // is called by the trigger event for powerups to countdown how long the power lasts
     {

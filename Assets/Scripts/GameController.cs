@@ -37,6 +37,8 @@ public class GameController : MonoBehaviour
     private EnemyCreationForTesting enemySpawner;
     private Camera cameraToUse;
 
+    public enum ButtonState { Pressed, Held, Released}
+    
     // INTERNAL TO GAMECONTROLLER
     // Trackers for states
     [SerializeField] private string _gameState;  public string GameState { get { return _gameState; } set { _gameState = value; } }
@@ -50,7 +52,7 @@ public class GameController : MonoBehaviour
     private bool pauseButtonDown, submitButtonDown, cancelButtonDown;
 
     // button state trackers, more complex due to hold interaction
-    private bool AttackButtonDown, AttackButtonHeld, AttackButtonRelease, ShootButtonDown, ShootButtonHeld, ShootButtonRelease;
+    [SerializeField] private bool AttackButtonDown, AttackButtonHeld, AttackButtonRelease, ShootButtonDown, ShootButtonHeld, ShootButtonRelease;
 
     // buffers between button presses
     private int AttackBuffer, ShootBuffer, JumpBuffer, DashBuffer;
@@ -199,9 +201,21 @@ public class GameController : MonoBehaviour
 
     void CheckAttackInputEvents(InputAction.CallbackContext ctx, string check) // NOTE: THESE ARE EVENTS AND FIRE AS INITIALIZED IN OnEnable(), THEREFORE THEY ARE NOT IN CheckInput()
     {
-        if ("Started" == check) { if (ctx.interaction is SlowTapInteraction) { AttackButtonHeld = true; } else { AttackButtonDown = true; } }
-        if ("Performed" == check) { if (ctx.interaction is SlowTapInteraction) { AttackButtonHeld = false; AttackButtonRelease = true; } }// weapon has fired after hold }
-        if ("Cancelled" == check) { AttackButtonHeld = false; AttackButtonRelease = true; }
+        if ("Started" == check)
+        {
+            if (ctx.interaction is TapInteraction) { AttackButtonDown = true; Debug.Log(ctx.interaction + " - Started"); }
+            if (ctx.interaction is SlowTapInteraction) { AttackButtonHeld = true;  Debug.Log(ctx.interaction + " - Started"); }
+        }
+        if ("Performed" == check)
+        {
+            if (ctx.interaction is TapInteraction) { Debug.Log(ctx.interaction + " - Performed"); }
+            if (ctx.interaction is SlowTapInteraction) { AttackButtonRelease = true; Debug.Log(ctx.interaction + " - Performed"); }
+        }
+        if ("Cancelled" == check) 
+        {
+            if (ctx.interaction is TapInteraction) { Debug.Log(ctx.interaction + " - Cancelled"); }
+            if (ctx.interaction is SlowTapInteraction) { Debug.Log(ctx.interaction + " - Cancelled"); }
+        }
     }
 
     void CheckFireInputEvents(InputAction.CallbackContext ctx, string check) // NOTE: THESE ARE EVENTS AND FIRE AS INITIALIZED IN OnEnable(), THEREFORE THEY ARE NOT IN CheckInput()
@@ -256,7 +270,7 @@ public class GameController : MonoBehaviour
                 if (jump.triggered) { JumpButton = true; }
                 if (jump.WasReleasedThisFrame()) { JumpButton = false; JumpBuffer = 0; }
 
-                if (attack.WasReleasedThisFrame()) { AttackButtonDown = false; AttackButtonRelease = true; AttackBuffer = 0; }
+                if (attack.WasReleasedThisFrame()) { /*AttackButtonDown = false;*/ AttackButtonRelease = true; AttackBuffer = 0; }
 
                 if (dash.triggered) { DashButton = true; }
                 if (dash.WasReleasedThisFrame()) { DashButton = false; DashBuffer = 0; }
@@ -363,17 +377,17 @@ public class GameController : MonoBehaviour
     {
         if (AttackButtonDown && !(AttackBuffer > 5))
         {
-            if (YInput > 0.2f) { playerPrimaryWeapon.Attack(0); }
-            else if (YInput < -0.2f) { playerPrimaryWeapon.Attack(1); }
-            else { playerPrimaryWeapon.Attack(2); }
+            if (YInput > 0.2f) { playerPrimaryWeapon.Attack(0, ButtonState.Pressed); }
+            else if (YInput < -0.2f) { playerPrimaryWeapon.Attack(1, ButtonState.Pressed); }
+            else { playerPrimaryWeapon.Attack(2, ButtonState.Pressed); }
             ++AttackBuffer;
             AttackButtonDown = false;
         }
         if (AttackButtonHeld)
         {
-            if (YInput > 0.2f) { playerPrimaryWeapon.Attack(0); }
-            else if (YInput < -0.2f) { playerPrimaryWeapon.Attack(1); }
-            else { playerPrimaryWeapon.Attack(2); }
+            if (YInput > 0.2f) { playerPrimaryWeapon.Attack(0, ButtonState.Held); }
+            else if (YInput < -0.2f) { playerPrimaryWeapon.Attack(1, ButtonState.Held); }
+            else { playerPrimaryWeapon.Attack(2, ButtonState.Held); }
         }
         if (AttackButtonRelease)
         {

@@ -3665,20 +3665,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f933c126b8391b548a706810e5ab2949, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cachedDialogueTracker:
-    questName: 
-    questIndex: 0
-    isActive: 0
-    dialogues: []
   dialoguesToTrack:
   - questName: Tutorial
     questIndex: 1
     isActive: 0
+    numOfSubTasksCompleted: 0
+    percentOfTaskComplete: 0
     dialogues:
     - npcName: SaveGamePoint1
       hasTalkedTo: 0
     - npcName: SaveGamePoint2
       hasTalkedTo: 0
+  cachedDialogueTracker:
+    questName: 
+    questIndex: 0
+    isActive: 0
+    numOfSubTasksCompleted: 0
+    percentOfTaskComplete: 0
+    dialogues: []
 --- !u!1001 &1322702519
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3749,6 +3753,10 @@ PrefabInstance:
     - target: {fileID: 7411469056186198947, guid: 03f057cf20b8e264d866009c81cf871e, type: 3}
       propertyPath: questInfo.Array.data[0].questName
       value: Tutorial
+      objectReference: {fileID: 0}
+    - target: {fileID: 7411469056186198947, guid: 03f057cf20b8e264d866009c81cf871e, type: 3}
+      propertyPath: questInfo.Array.data[0].subQuestIndex
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7411469057038125106, guid: 03f057cf20b8e264d866009c81cf871e, type: 3}
       propertyPath: m_Materials.Array.data[0]
