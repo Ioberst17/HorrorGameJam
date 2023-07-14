@@ -27,6 +27,7 @@ public class SubQuestDatabase : Database<SubQuest>
         {
             // set the number of sub quests = to the number of activities in the associated subquest collection
             questDatabase.data.entries[i].numOfSubQuests = this.dataArray[i].entries.Length;
+            questDatabase.data.entries[i].subQuests = this.dataArray[i].entries;
         }
     }
 }

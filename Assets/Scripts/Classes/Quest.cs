@@ -13,10 +13,12 @@ public class Quest: IDatabaseItem
     public int numOfSubQuests;
 
     // information tracked by data manager
-    [SerializeField] private int _currentSubQuestIndex; public int currentSubQuestIndex { get { return _currentSubQuestIndex; } set { _currentSubQuestIndex = value; } }
+    [SerializeField] private int _currentSubQuestIndex; public int currentSubQuestIndex  {  get { return _currentSubQuestIndex; }  set { _currentSubQuestIndex = value; }  }
     [SerializeField] private bool _isStarted; public bool isStarted { get { return _isStarted; } set { _isStarted = value; } }
     [SerializeField] private bool _isActive; public bool isActive { get { return _isActive; } set { _isActive = value; } }
     [SerializeField] private bool _isCompleted; public bool isCompleted { get { return _isCompleted; } set { _isCompleted = value; } }
+
+    public SubQuest[] subQuests;
 
     public Quest()
     {

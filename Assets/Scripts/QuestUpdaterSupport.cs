@@ -1,9 +1,15 @@
 using UnityEngine;
-using System.Collections.Generic;
 using UnityEngine.Events;
+using System;
+using System.Collections.Generic;
 
 public class QuestUpdaterSupport : MonoBehaviour
 {
+    // external reference
+    QuestManager questManager;
+
+    private void Start() { questManager = FindObjectOfType<QuestManager>(); }
+
     [System.Serializable]
     public class QuestInformationToSend
     {
@@ -12,27 +18,9 @@ public class QuestUpdaterSupport : MonoBehaviour
     }
 
     public List<QuestInformationToSend> questFunctions; // List of quest information to listen for
-    private QuestManager questManager; // Reference to the QuestManager
-
-    private void Start()
-    {
-        questManager = FindObjectOfType<QuestManager>(); // Find the QuestManager in the scene
-
-        if (questManager == null)
-        {
-            Debug.LogError("QuestManager not found in the scene.");
-            return;
-        }
-    }
 
     public void UpdateQuest()
     {
-        foreach (QuestInformationToSend functionInfo in questFunctions)
-        {
-            questManager.UpdateQuestStatus(functionInfo.questName, functionInfo.subQuestIndex);
-        }
+        foreach (QuestInformationToSend questInfo in questFunctions) { questManager.UpdateQuestStatus(questInfo.questName, questInfo.subQuestIndex); }
     }
-
 }
-
-

@@ -184,7 +184,8 @@ public class Database<T> : MonoBehaviour where T : IDatabaseItem
                 { "bool", (value) => { bool boolVal = bool.Parse(value); SetValue(entryToChange, dataEntry, boolVal); } },
                 { "float", (value) => { float floatVal = float.Parse(value); SetValue(entryToChange, dataEntry, floatVal); } },
                 { "sprite", (value) => { Sprite spriteVal = Resources.Load<Sprite>(value); SetValue(entryToChange, dataEntry, spriteVal); } },
-                { "SubQuestType", (value) => { SubQuestType enumVal = (SubQuestType)Enum.Parse(typeof(SubQuestType), value); SetValue(entryToChange, dataEntry, enumVal); } }
+                { "SubQuestType", (value) => { SubQuestType enumVal = (SubQuestType)Enum.Parse(typeof(SubQuestType), value); SetValue(entryToChange, dataEntry, enumVal); } },
+                { "SubQuest", (value) =>  { SetValue<MemberInfo, List<SubQuest>>(entryToChange, dataEntry, null); } }
             };
 
             // if the dictionary contains the value that is of the type of the columnDataType -> try and parse it in

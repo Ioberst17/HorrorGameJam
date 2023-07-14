@@ -196,7 +196,7 @@ AnimatorStateMachine:
     m_Position: {x: 740, y: 780, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 6975261960739972809}
-    m_Position: {x: 710, y: 720, z: 0}
+    m_Position: {x: 230, y: 690, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -4469021278254566957}
     m_Position: {x: 670, y: 650, z: 0}
@@ -245,6 +245,9 @@ AnimatorStateMachine:
   - serializedVersion: 1
     m_State: {fileID: -4058755638420479506}
     m_Position: {x: 880, y: 970, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: 6197846604296685635}
+    m_Position: {x: 230, y: 750, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -624,6 +627,32 @@ AnimatorState:
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
   m_Motion: {fileID: 7400000, guid: 0573df86834860e42bff8ca9ec6f7bef, type: 2}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
+--- !u!1102 &6197846604296685635
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: PlayerSecondPunch
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 7400000, guid: 50f03aba5aae8c14eb485fe22b2485f8, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
