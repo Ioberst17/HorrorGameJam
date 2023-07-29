@@ -27,6 +27,7 @@ public class Inventory_UI_Mason : MonoBehaviour
     public int currentNarrativeSlotNum;
     public int currentSecondarySlotNum;
     public int currentConsumableSlotNum;
+    private int currentObjectiveSlotNum;
 
 
     [SerializeField] private GameObject _inventory; public GameObject Inventory{ get { return _inventory; } set { _inventory = value; } }
@@ -36,6 +37,7 @@ public class Inventory_UI_Mason : MonoBehaviour
     [SerializeField] private Button weaponTab;
     [SerializeField] private Button consumableTab;
     [SerializeField] private Button narrativeTab;
+    [SerializeField] private Button objectiveTab;
 
     [SerializeField] private GameObject equipButton;
     [SerializeField] private GameObject useButton;
@@ -50,11 +52,22 @@ public class Inventory_UI_Mason : MonoBehaviour
     [SerializeField] private TextMeshProUGUI amountText;
     [SerializeField] private TextMeshProUGUI amount;
 
+    [SerializeField] private TextMeshProUGUI objectiveTitle;
+    [SerializeField] private TextMeshProUGUI currentObjectiveStepText;
+    [SerializeField] private TextMeshProUGUI currentCompletedStepsText;
+    [SerializeField] private TextMeshProUGUI currentHeaderText;
+    [SerializeField] private TextMeshProUGUI completedHeaderText;
+    [SerializeField] private TextMeshProUGUI objectiveDescription;
+
     [SerializeField] private GameObject narrative_Inventory;
     [SerializeField] private GameObject ranged_Inventory;
     [SerializeField] private GameObject consumables_Inventory;
+    [SerializeField] private GameObject currentObjective_Inventory;
+    [SerializeField] private GameObject completedObjective_Inventory;
 
     private List<GameObject> narrativeSlots = new List<GameObject>();
+    private List<GameObject> currentObjectiveSlots = new List<GameObject>();
+    private List<GameObject> completedObjectiveSlots = new List<GameObject>();
     private List<GameObject> rangedSlots = new List<GameObject>();
     private List<GameObject> consumableSlots = new List<GameObject>();
     private List<TextMeshProUGUI> rangedAmmoNumbers = new List<TextMeshProUGUI>();
@@ -70,6 +83,10 @@ public class Inventory_UI_Mason : MonoBehaviour
     [SerializeField] private GameObject narrative_Slot6;
     [SerializeField] private GameObject narrative_Slot7;
     [SerializeField] private GameObject narrative_Slot8;
+
+    [SerializeField] private GameObject currentObjective_Slot1;
+
+    [SerializeField] private GameObject completedObjective_Slot1;
 
     [SerializeField] private GameObject ranged_Slot1;
     [SerializeField] private TextMeshProUGUI r_Ammo1;
@@ -129,6 +146,10 @@ public class Inventory_UI_Mason : MonoBehaviour
         narrativeSlots.Add(narrative_Slot6);
         narrativeSlots.Add(narrative_Slot7);
         narrativeSlots.Add(narrative_Slot8);
+
+        currentObjectiveSlots.Add(currentObjective_Slot1);
+
+        completedObjectiveSlots.Add(completedObjective_Slot1);
 
         rangedSlots.Add(ranged_Slot1);
         rangedSlots.Add(ranged_Slot2);
@@ -252,6 +273,8 @@ public class Inventory_UI_Mason : MonoBehaviour
         narrative_Inventory.SetActive(true);
         ranged_Inventory.SetActive(false);
         consumables_Inventory.SetActive(false);
+        currentObjective_Inventory.SetActive(false);
+        completedObjective_Inventory.SetActive(false);
     }
 
     public void OpenRangedInventory() //switch ui to ranged weapons
@@ -259,6 +282,8 @@ public class Inventory_UI_Mason : MonoBehaviour
         narrative_Inventory.SetActive(false);
         ranged_Inventory.SetActive(true);
         consumables_Inventory.SetActive(false);
+        currentObjective_Inventory.SetActive(false);
+        completedObjective_Inventory.SetActive(false);
     }
 
     public void OpenConsumablesInventory() //switch ui to consumable panel and items.
@@ -266,6 +291,17 @@ public class Inventory_UI_Mason : MonoBehaviour
         narrative_Inventory.SetActive(false);
         ranged_Inventory.SetActive(false);
         consumables_Inventory.SetActive(true);
+        currentObjective_Inventory.SetActive(false);
+        completedObjective_Inventory.SetActive(false);
+    }
+
+    public void OpenObjectiveInventory() //switch ui to objective panel and items.
+    {
+        narrative_Inventory.SetActive(false);
+        ranged_Inventory.SetActive(false);
+        consumables_Inventory.SetActive(false);
+        currentObjective_Inventory.SetActive(true);
+        completedObjective_Inventory.SetActive(true);
     }
 
 
@@ -281,8 +317,14 @@ public class Inventory_UI_Mason : MonoBehaviour
         effectText.enabled = true;
         effectText.text = "Lucidity:";
         effectAmount.enabled = true;
-
         description.enabled = true;
+
+        objectiveTitle.enabled = false;
+        currentHeaderText.enabled = false;
+        completedHeaderText.enabled = false;
+        currentObjectiveStepText.enabled = false;
+        currentCompletedStepsText.enabled = false;
+        objectiveDescription.enabled = false;
 
         currentNarrativeSlotNum = slotNum;
 
@@ -307,8 +349,14 @@ public class Inventory_UI_Mason : MonoBehaviour
         amountText.enabled = true;
         amountText.text = "Ammo:";
         amount.enabled = true;
-
         description.enabled = true;
+
+        objectiveTitle.enabled = false;
+        currentHeaderText.enabled = false;
+        completedHeaderText.enabled = false;
+        currentObjectiveStepText.enabled = false;
+        currentCompletedStepsText.enabled = false;
+        objectiveDescription.enabled = false;
 
         currentSecondarySlotNum = slotNum;
 
@@ -340,8 +388,14 @@ public class Inventory_UI_Mason : MonoBehaviour
         amountText.enabled = true;
         amountText.text = "Amount:";
         amount.enabled = true;
-
         description.enabled = true;
+
+        objectiveTitle.enabled = false;
+        currentHeaderText.enabled = false;
+        completedHeaderText.enabled = false;
+        currentObjectiveStepText.enabled = false;
+        currentCompletedStepsText.enabled = false;
+        objectiveDescription.enabled = false;
 
         currentConsumableSlotNum = slotNum;
 
@@ -349,6 +403,36 @@ public class Inventory_UI_Mason : MonoBehaviour
         amount.text = dataManager.sessionData.consumables[slotNum].amount.ToString();
         //healingamount.text = dataManager.sessionData.consumables[slotNum].amount.ToString();
         description.text = dataManager.sessionData.consumables[slotNum].description;
+    }
+
+    public void OpenInfoPanelObjective(int slotNum) //opens the consumable panel in the inventory and turns on the text fields and fills them with the info of the current selected item.
+    {
+        infoPanel.SetActive(true);
+
+        useButton.SetActive(false);
+        equipButton.SetActive(false);
+
+        //DisableSideButtons();
+
+        objectiveTitle.enabled = true;
+        currentHeaderText.enabled = true;
+        completedHeaderText.enabled = true;
+        currentObjectiveStepText.enabled = true;
+        currentCompletedStepsText.enabled = true;
+        objectiveDescription.enabled = true;
+
+        weaponName.enabled = false;
+        effectText.enabled = false;
+        effectAmount.enabled = false;
+        amountText.enabled = false;
+        amount.enabled = false;
+        description.enabled = false;
+        equippedText.enabled = false;
+
+        currentObjectiveSlotNum = slotNum;
+
+        //todo grab current objective title/description/steps and assign to above text fields in the infopanel
+        
     }
 
     public void EquipWeapon()
