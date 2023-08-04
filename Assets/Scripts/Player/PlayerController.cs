@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
     private PlayerAnimator animator;
     public PlayerVisualEffectsController visualEffects;
     private PlayerPrimaryWeapon playerPrimaryWeapon;
+    private PlayerShield playerShield;
 
     // other ability references
     PlayerDash playerDash;
@@ -83,7 +84,8 @@ public class PlayerController : MonoBehaviour
         Rb = GetComponent<Rigidbody2D>();
         cc = GetComponent<BoxCollider2D>();
         gameController = FindObjectOfType<GameController>();
-        playerPrimaryWeapon = FindObjectOfType<PlayerPrimaryWeapon>();
+        playerPrimaryWeapon = GetComponentInChildren<PlayerPrimaryWeapon>();
+        playerShield = GetComponentInChildren<PlayerShield>();
         playerJump = GetComponentInChildren<PlayerJump>();
         playerDash = GetComponentInChildren<PlayerDash>();
         chargePunch = GetComponentInChildren<ChargePunch>();
@@ -141,7 +143,21 @@ public class PlayerController : MonoBehaviour
         else { _isWallHanging = false; }
     }
 
-    public void CheckWall() { _isAgainstWall = Physics2D.OverlapCircle(wallCheck.position, groundCheckRadius, whatIsGround); }
+    public void CheckWall() 
+    {
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(wallCheck.position, groundCheckRadius);
+
+        // Check if any of the colliders have the desired tag
+        _isAgainstWall = false;
+        foreach (Collider2D collider in colliders)
+        {
+            if (collider.CompareTag("Boundary"))
+            {
+                _isAgainstWall = true;
+                break; // No need to check further if we found a wall
+            }
+        }
+    }
 
     //called by the GameController, Cutscenes (Cutscene.cs), and by PlayerController for idling
     //'optional' parameters are used by cutscenes
@@ -158,11 +174,11 @@ public class PlayerController : MonoBehaviour
                 
                 if(!isAttacking && !playerJump.IsJumping)
                 {
-                    if (Rb.velocity.x == 0 || DialogueManager.GetInstance().DialogueIsPlaying) // if still
+                    if ((Rb.velocity.x == 0 && !playerShield.shieldOn) || DialogueManager.GetInstance().DialogueIsPlaying) // if still and not shielding or cutscene manager is on
                     {
                         IdlePlayer();
                     }
-                    else // if moving
+                    else if(Rb.velocity.x != 0) // if moving
                     {
                         animator.Play("PlayerRun");
                         visualEffects.PlayParticleSystem("MovementDust");

@@ -22,12 +22,12 @@ public class RightArmAnimator : ArmWeaponAnimatorCommonFunctionality
 
     override public void AssignNewAnimations(string weaponName)
     {
-        if(oneHandedWeaponInUse) 
+        if(OneHandedWeaponInUse) 
         {
             specificFilePathToAnimations = "Animations/Overrides/PlayerBodyParts/RightArm/";
             base.AssignNewAnimations("OneHandedWeapon");
         }
-        else if (twoHandedWeaponInUse)
+        else if (TwoHandedWeaponInUse)
         {
             specificFilePathToAnimations = "Animations/Overrides/PlayerBodyParts/RightArm/";
             base.AssignNewAnimations("TwoHandedWeapon");

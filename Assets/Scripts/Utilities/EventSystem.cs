@@ -10,6 +10,17 @@ public class EventSystem : MonoBehaviour
 
     private void Awake() { current = this; }
 
+    // ANIMATION EVENTS, RELATED TO VARIOUS PLAYER ACTIONS
+
+    public event Action onChargePunchRelease;
+
+    public void ChargePunchTrigger() { if (onChargePunchRelease != null) { onChargePunchRelease(); } }    
+    
+    public event Action onGroundSlamDrop;
+
+    public void GroundSlamDropTrigger() { if (onGroundSlamDrop != null) { onGroundSlamDrop(); } }
+
+
     // COMBAT-CALCULATIONS (WITH ENEMIES)
 
     public event Action<int, Vector3, string, EnemyController> onEnemyEnviroDamage;
@@ -145,7 +156,6 @@ public class EventSystem : MonoBehaviour
     public event Action<string, int> onQuestUpdateTrigger;
 
     public void UpdateQuestTrigger(string questToUpdate, int subQuestIndex) { if (onQuestUpdateTrigger != null) { onQuestUpdateTrigger(questToUpdate, subQuestIndex); } }
-
 
     // OTHER PLAYER-RELATED
 

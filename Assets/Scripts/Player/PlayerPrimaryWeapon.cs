@@ -91,7 +91,14 @@ public class PlayerPrimaryWeapon : MonoBehaviour
             {
                 IsAttacking = true;
 
-                if (attackDirection == 1 && !playerController.IsGrounded && !groundSlam.IsGroundSlam) { groundSlam.Execute(); }
+                // AIR ATTACKS
+                if (!playerController.IsGrounded) 
+                {
+                    if (attackDirection == 1 && !groundSlam.IsGroundSlam) { groundSlam.Execute(); }
+                    else if (attackDirection == 2) { StartCoroutine(AttackActiveFrames(attackDirection, "PlayerNeutralAir")); }
+                }
+                
+                // GROUND ATTACKS
                 else
                 {
                     if (chargePunch != null && state == GameController.ButtonState.Held) { chargePunch.Execute(); }
@@ -103,10 +110,11 @@ public class PlayerPrimaryWeapon : MonoBehaviour
 
     public void Release(int attackDirection) { Debug.Log("ChargePunchRelease"); if (chargePunch != null) { chargePunch.Release(attackDirection); } }
 
-    public IEnumerator AttackActiveFrames(int attackDirection, string animationToPlay) // is called by the trigger event for powerups to countdown how long the power lasts
+    public IEnumerator AttackActiveFrames(int attackDirection, string animationToPlay) // is called by the trigger event for attack to countdown how long the power lasts
     {
         if (attackLagTimer == 0)
         {
+            Debug.Log("Animation to play is named: " + animationToPlay);
             animator.Play(animationToPlay);
             FindObjectOfType<AudioManager>().PlaySFX("PlayerMelee");
             attackLagTimer = attackLagValue;

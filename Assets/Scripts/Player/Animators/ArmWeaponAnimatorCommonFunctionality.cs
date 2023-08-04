@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class ArmWeaponAnimatorCommonFunctionality : BodyPartAnimator
 {
@@ -9,12 +10,13 @@ public class ArmWeaponAnimatorCommonFunctionality : BodyPartAnimator
     // IT PRIMARILY REOLVES AROUND PLAYING ANIMATIONS RELATED TO SHOOTING - initial shots, shots within a timeframe, continuous fire
 
     [Header("References Needed for Arms and Weapons Functionality")]
-    public Transform parentTransform;
-    public GameController gameController;
-    public PlayerController playerController;
-    public PlayerSecondaryWeapon playerSecondaryWeapon;
-    public WeaponDatabase weaponDatabase;
-    public Weapons currentWeapon;
+    public Transform transformToRotateAround;
+    protected GameController gameController;
+    protected PlayerController playerController;
+    protected PlayerSecondaryWeapon playerSecondaryWeapon;
+    protected WeaponDatabase weaponDatabase;
+    protected Weapons currentWeapon;
+    BaseAnimator baseAnimator;
 
     [Header("Shooting Variables")]
     public Vector3 initialArmPosition;
@@ -27,7 +29,7 @@ public class ArmWeaponAnimatorCommonFunctionality : BodyPartAnimator
     public Quaternion shotDirectionRotation;
     public float shotRotation;
     public bool externalCallToBreakArmReturnLoop;
-    public float refirePauseTime = 3f;
+    protected float postShotPause = 2f;
 
     public bool isShootCoroutineRunning;
     public bool isRestartedShootCoroutineRunning;
@@ -36,25 +38,26 @@ public class ArmWeaponAnimatorCommonFunctionality : BodyPartAnimator
     public Coroutine playerShootRestartedCoroutine;
     public Coroutine playerShootContinousCoroutine;
     public bool farAlongEnoughToReset; // what direction the hand shoot return to idle
+    protected string[] animationsThatDoNotOverrideShooting = new string[5] { "PlayerIdle", "PlayerRun", "PlayerJump", "PlayerFall", "PlayerLand" };
 
     // regarding end condition of arm rotation
     private bool _oneHandedWeaponInUse, _twoHandedWeaponInUse;
-    public bool oneHandedWeaponInUse
+    public bool OneHandedWeaponInUse
     {
         get { return _oneHandedWeaponInUse; }
         set
         {
-            if(value == true)
+            if (value == true)
             {
                 _oneHandedWeaponInUse = value;
                 // Set the value of the float variable
-                endingArmRotation = -90; 
+                endingArmRotation = -90;
                 // Set the another bool to false
                 _twoHandedWeaponInUse = false;
             }
         }
     }
-    public bool twoHandedWeaponInUse
+    public bool TwoHandedWeaponInUse
     {
         get { return _twoHandedWeaponInUse; }
         set
@@ -69,8 +72,9 @@ public class ArmWeaponAnimatorCommonFunctionality : BodyPartAnimator
             }
         }
     }
+    protected float armPivot; // used by children to define an adjustment, e.g. how much and right and left arms are offset when pointing a gun
     private float endingArmRotation;
-    public float armFacingDownThresholdValue = 5f; // the angle that is 'reasonable' when checking if the shooting arm has returned
+    public float armFinishedRotatingThreshold = 10f; // the angle that is 'reasonable' when checking if the shooting arm has returned
     public bool isArmFacingEndPosition;
 
     override public void Start()
@@ -78,17 +82,18 @@ public class ArmWeaponAnimatorCommonFunctionality : BodyPartAnimator
         base.Start();
 
         // Set priority animations
-        priorityAnimationStates["PlayerShoot"] = new AnimationProperties("PlayerShoot", 2);
-        priorityAnimationStates["PlayerShootReturn"] = new AnimationProperties("PlayerShootReturn", 2);
-        priorityAnimationStates["PlayerThrow"] = new AnimationProperties("PlayerThrow", 2);
+        //priorityAnimationStates["PlayerShoot"] = new AnimationProperties("PlayerShoot", 2);
+        //priorityAnimationStates["PlayerShootReturn"] = new AnimationProperties("PlayerShootReturn", 2);
+        //priorityAnimationStates["PlayerThrow"] = new AnimationProperties("PlayerThrow", 2);
 
         // get key references
         gameController = FindObjectOfType<GameController>();
         playerController = FindObjectOfType<PlayerController>();
         weaponDatabase = FindObjectOfType<WeaponDatabase>();
+        baseAnimator = FindObjectOfType<BaseAnimator>();
         playerSecondaryWeapon = playerController.GetComponentInChildren<PlayerSecondaryWeapon>();
-        parentTransform = transform.parent.transform;
-        initialArmPosition = parentTransform.localPosition;
+        transformToRotateAround = transform.parent.parent.transform;
+        initialArmPosition = transformToRotateAround.localPosition;
         EventSystem.current.onUpdateSecondaryWeaponTrigger += OnWeaponSwitch;
     }
     private void OnDestroy()
@@ -96,19 +101,79 @@ public class ArmWeaponAnimatorCommonFunctionality : BodyPartAnimator
         EventSystem.current.onUpdateSecondaryWeaponTrigger -= OnWeaponSwitch;
     }
 
-    override public void AssignNewAnimations(string objectName)
+    private void Update()
     {
-        base.AssignNewAnimations(objectName);
+        //StandardizeWithBaseAnimatorAsNeeded();
     }
+
+    // used by child animations to set an animation when needed e.g. weapon change
+    override public void AssignNewAnimations(string objectName) { base.AssignNewAnimations(objectName); }
 
     void OnWeaponSwitch(int weaponID, string weaponName, int weaponLevel)
     {
         currentWeapon = weaponDatabase.ReturnItemFromID(weaponID);
-        if(currentWeapon.isOneHanded) { oneHandedWeaponInUse = true; }
-        if(currentWeapon.isTwoHanded) { twoHandedWeaponInUse = true; }
+        if (currentWeapon.isOneHanded) { OneHandedWeaponInUse = true; }
+        if (currentWeapon.isTwoHanded) { TwoHandedWeaponInUse = true; }
     }
 
-    // called by secondary weaponsmanager, since it's invoked it does not register a refernce
+    //// override of body part animator's Check current animaion
+    //override protected bool CheckIfNewAnimationCanPlay(string newAnimation)
+    //{
+    //    if (priorityAnimationFlag && AnimationsThatOverrideShooting(newAnimation)) { ResetShootCoroutineVariables(); return true; }
+    //    else if (!priorityAnimationFlag) { return true; }
+    //    else { return false; }
+    //}
+
+    //bool AnimationsThatOverrideShooting(string animationName)
+    //{
+    //    return animationName != "PlayerIdle" && animationName != "PlayerRun" && animationName != "PlayerJump";
+    //}
+    // sets arms and weapon animations to a blank animation, so base animator can play the whole animation (including arm parts)
+    // this is useful for simpliying animations with ChargePunch, which would otherwise require a separate sprite sheet as base can then hold the entire animation
+    void StandardizeWithBaseAnimatorAsNeeded()
+    {
+        if (baseAnimator.currentAnimationStateHasCompleteTag)
+        {
+            if (priorityAnimationFlag) { ResetShootCoroutineVariables(); }
+            animator.Play(baseAnimator.currentAnimationStateName);
+        }
+    }
+
+    // BELOW THIS ARE FUNCTIONS TO HANDLE THE ROTATION OF GAMEOBJECTS RELATED TO SHOOTING ANIMATIONS
+    
+    // overrides check if new animation can play to handle shooting cases, and syncing body parts to base animator if using a 'complete' interaction
+    override public string CheckIfNewAnimationCanPlay(string newAnimation)
+    {
+        GetCurrentAnimationInfo();
+
+        // sync with base animator
+        if (baseAnimator.currentAnimationStateHasCompleteTag)
+        {
+            if (priorityAnimationFlag) { ResetShootCoroutineVariables(); }
+            shouldNewAnimationPlay = true;
+            return baseAnimator.currentAnimationStateName;
+        }
+
+        // if shoot is running and a low priority animation is running, then let shoot animation continue
+        if (priorityAnimationFlag && NewAnimationDoesNotOverridePriority(newAnimation)) { shouldNewAnimationPlay = false; return ""; }
+
+        // else compare priority
+
+        // Check if currentAnimationState is null
+        if (currentAnimationState == null) { Debug.Log($"{GetType().Name}: currentAnimationState is null"); }
+
+        if(currentAnimationState == null) { ResetShootCoroutineVariables(); shouldNewAnimationPlay = true; return newAnimation; } // currentAnimatStation loads as null if a player tries an action with a 'complete' tag
+        else if (animationStates[newAnimation].priorityLevel > currentAnimationState.priorityLevel || currentAnimation.normalizedTime >= 1f) { shouldNewAnimationPlay = true; return newAnimation; } // if so, then it can play
+        else { shouldNewAnimationPlay = false; return currentAnimationState.animationName; }
+    }
+    
+
+    private bool NewAnimationDoesNotOverridePriority(string newAnimation)
+    {
+        return System.Array.Exists(animationsThatDoNotOverrideShooting, animation => animation == newAnimation);
+    }
+
+    // called by secondary weaponsmanager, since it's invoked it does not register a reference
     public void PlayerShoot()
     {
         if (playerShootCoroutine != null)
@@ -127,40 +192,39 @@ public class ArmWeaponAnimatorCommonFunctionality : BodyPartAnimator
         else { playerShootCoroutine = StartCoroutine(PlayerShootCoroutine()); }
     }
 
-    // Called by PlayerSecondaryWeapon, which sends the request to PlayerAnimator
+    // handles inital player shot (not used if a shot is fired before completion, a function below is)
     public IEnumerator PlayerShootCoroutine()
     {
+        priorityAnimationFlag = true;
         isShootCoroutineRunning = true;
         farAlongEnoughToReset = false;
         startedShotOnLeft = false;
 
         if (playerController.FacingDirection == -1) { startedShotOnLeft = true; }
 
-        // Kept because for some odd reason rotations are faster on one side vs the other. Need to debug.
+        // Kept because for unknown reason rotations are faster on one side vs the other. Need to debug.
         if (playerController.FacingDirection == 1) { rotationTime = rotationRightSpeed; }
         else { rotationTime = rotationLeftSpeed; }
 
-        // Set priority of starting animation, play it
-        animator.SetLayerWeight(1, 1);
-        animator.Play("PlayerShoot", layer: 1);
+        animator.Play("PlayerShoot");
 
         // update arm position to where mouse is pointed
         SetPointingDirection();
         farAlongEnoughToReset = true;
 
         // now wait
-        yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
+        yield return new WaitForSeconds(postShotPause);
 
         // Pause the animator at the current frame of the starting animation
         animator.speed = 0f;
 
         yield return StartCoroutine(ReturnToStartingPosition());
 
-        PlayClosingAnimation();
+        ClosingAnimationChanges();
         ResetShootCoroutineVariables();
     }
 
-    // handles restarting player shoot (checks to see if an existing function is running)
+    // handles restarting player shoot if already handling a shot (checks to see if an existing function is running)
     private void RestartPlayerShoot()
     {
         if (playerShootRestartedCoroutine != null)
@@ -182,14 +246,14 @@ public class ArmWeaponAnimatorCommonFunctionality : BodyPartAnimator
 
         SetPointingDirection();
 
-        yield return new WaitForSeconds(refirePauseTime);
+        yield return new WaitForSeconds(postShotPause);
 
         // Pause the animator at the current frame of the starting animation
         animator.speed = 0f;
 
         yield return StartCoroutine(ReturnToStartingPosition());
 
-        PlayClosingAnimation();
+        ClosingAnimationChanges();
         ResetShootCoroutineVariables();
     }
 
@@ -199,16 +263,51 @@ public class ArmWeaponAnimatorCommonFunctionality : BodyPartAnimator
         Vector2 rotation = (Vector2)gameController.lookInput - (Vector2)gameController.playerPositionScreen;
         var rotationZ = Mathf.Atan2(rotation.y, rotation.x) * Mathf.Rad2Deg;
 
-        if (startedShotOnLeft || optionalForceLeftFacingModification)
-        {
-            rotationZ = MapLeftFacingValues(rotationZ);
-        }
+        if (startedShotOnLeft || optionalForceLeftFacingModification) { rotationZ = MapLeftFacingValues(rotationZ); }
 
-        transform.parent.localRotation = Quaternion.Euler(0, 0, rotationZ);
+        // done to adjust arms e.g. left arm is slightly off angle compared to right arm when shooting
+        rotationZ += AdjustArms(rotationZ);
 
-        shotDirectionRotation = transform.parent.localRotation;
+        transformToRotateAround.localRotation = Quaternion.Euler(0, 0, rotationZ);
+
+        shotDirectionRotation = transformToRotateAround.localRotation;
     }
 
+    // this is used to slightly adjust the right and left arms when a weapon is pointed in a direction
+    // for context if a gun is pointed at 45 degrees and up, the right and left arms will be slightly lower / more and not pointing in exactly the same direction as the weapon
+    virtual protected float AdjustArms(float inputValue)
+    {
+
+        // Clamp the inputValue between 0 and 360 degrees to handle all cases
+        inputValue = Mathf.Repeat(inputValue, 360f);
+
+        // flag used to define upper and lower bounds, if false bounds are reversed e.g. input of 360 should receive 0 adjustment, but 270 would receive maximum
+        bool smallToBig = true;
+        float lowerBound = 0f;
+        float upperBound = armPivot;
+
+        if (inputValue >= 270f && inputValue < 360f)
+        {
+            smallToBig = false;
+        }
+
+        // Determine the interpolation range based on the smallToBig flag
+        if (!smallToBig)
+        {
+            lowerBound = armPivot;
+            upperBound = 0f;
+        }
+
+        // Perform interpolation based on the quadrant the inputValue falls into
+        if (inputValue >= 0f && inputValue < 90f) { return Mathf.Lerp(lowerBound, upperBound, inputValue / 90f); }
+        else if (inputValue >= 90f && inputValue < 180f) { return Mathf.Lerp(lowerBound, upperBound, (inputValue - 90f) / 90f); }
+        else if (inputValue >= 180f && inputValue < 270f) { return Mathf.Lerp(lowerBound, upperBound, (inputValue - 180f) / 90f); }
+        else if (inputValue >= 270f && inputValue < 360f) { return Mathf.Lerp(lowerBound, upperBound, (inputValue - 270f) / 90f) * -1; }
+        else if (inputValue >= -90f && inputValue < 0f) { return Mathf.Lerp(lowerBound, upperBound, (inputValue + 90f) / 90f) * -1; }
+        else /* (inputValue >= -180f && inputValue < -90f) */ { return Mathf.Lerp(lowerBound, upperBound, (inputValue + 180f) / 90f); }
+    }
+
+    // used when facing left
     public float MapLeftFacingValues(float value)
     {
         if (value >= 90f && value <= 180f) { return 90f - (value - 90f); }
@@ -230,9 +329,9 @@ public class ArmWeaponAnimatorCommonFunctionality : BodyPartAnimator
             && !isArmFacingEndPosition // end condition
             && !externalCallToBreakArmReturnLoop) // an external breaker used when restarting coroutines
         {
-            SetDirectionOverTime(transform.parent.rotation.eulerAngles.z);
+            SetDirectionOverTime(transformToRotateAround.rotation.eulerAngles.z);
 
-            DetermineIfFinished(); 
+            DetermineIfFinished();
 
             elapsedTime += Time.deltaTime;
             yield return null;
@@ -242,41 +341,39 @@ public class ArmWeaponAnimatorCommonFunctionality : BodyPartAnimator
     void SetDirectionOverTime(float currentRotationZ)
     {
         var direction = -1; // works for all standard rotations
-        if (twoHandedWeaponInUse && transform.parent.localRotation.eulerAngles.z > 270) { direction = 1; } // ensure weapon goes up, if pointing down
+        if (TwoHandedWeaponInUse && transformToRotateAround.localRotation.eulerAngles.z > 270) { direction = 1; } // ensure weapon goes up, if pointing down
 
         currentRotationZ += direction * rotationSpeedToUse * Time.deltaTime; // Adjust rotation speed based on frame rate
-        
-        // Assign the new rotation to the transform
-        transform.parent.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, currentRotationZ);
+
+        currentRotationZ += AdjustArms(currentRotationZ);
     }
 
     // used to check if the arm rotation has finished setting direction over time
     private void DetermineIfFinished()
     {
-        float zRotation = transform.rotation.eulerAngles.z;
-        if (oneHandedWeaponInUse) { endingArmRotation = -90f; }
-        else if (twoHandedWeaponInUse) { endingArmRotation = 0; }
+        float zRotation = transformToRotateAround.rotation.eulerAngles.z;
+        if (OneHandedWeaponInUse) { endingArmRotation = -90f; }
+        else if (TwoHandedWeaponInUse) { endingArmRotation = 0; }
 
         float angleDifference = Mathf.DeltaAngle(zRotation, endingArmRotation);
 
-        if (Mathf.Abs(angleDifference) <= armFacingDownThresholdValue) // check if arm is within a reasonable threshold of done
+        if (Mathf.Abs(angleDifference) <= armFinishedRotatingThreshold) // check if arm is within a reasonable threshold of done
         {
             isArmFacingEndPosition = true;
         }
     }
 
     // used when returning a single / discrete shot weapon to the player's hand
-    void PlayClosingAnimation()
+    void ClosingAnimationChanges()
     {
-        // Play the ending animation
         animator.speed = 1f; // Resume animator speed
-        animator.Play("PlayerShootReturn", layer: 1);
-        //yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
-        animator.SetLayerWeight(1, 0);
+        // placeholder for other changes
     }
 
     void ResetShootCoroutineVariables()
     {
+        animator.speed = 1f;
+        priorityAnimationFlag = false;
         isShootCoroutineRunning = false;
         isRestartedShootCoroutineRunning = false;
         farAlongEnoughToReset = false;
@@ -284,33 +381,35 @@ public class ArmWeaponAnimatorCommonFunctionality : BodyPartAnimator
         playerShootRestartedCoroutine = null;
         playerShootContinousCoroutine = null;
         // Animation sequence completed
-        if (startedShotOnLeft == true) { startedShotOnLeft = false;/* PhysicsExtensions.Flip(gameObject)*/; }
-        transform.parent.localPosition = initialArmPosition;
-        transform.parent.localRotation = new Quaternion();
+        if (startedShotOnLeft == true) { startedShotOnLeft = false; }
+        transformToRotateAround.localPosition = initialArmPosition;
+        transformToRotateAround.localRotation = new Quaternion();
     }
 
+    // used by continously shooting weapons e.g. flamethrower
     public void PlayerShootContinuous()
     {
         if (playerShootContinousCoroutine != null) { return; }
-        else 
+        else
         {
             isContinuousShootCoroutineRunning = true;
-            playerShootContinousCoroutine = StartCoroutine(PlayerShootContinousCoroutine()); 
+            playerShootContinousCoroutine = StartCoroutine(PlayerShootContinousCoroutine());
         }
     }
 
+    // points a continuously firing weapon int he direction of player input
     virtual public IEnumerator PlayerShootContinousCoroutine()
     {
-        while(isContinuousShootCoroutineRunning) 
+        while (isContinuousShootCoroutineRunning)
         {
-            if (playerController.FacingDirection == -1) 
-            { 
+            if (playerController.FacingDirection == -1)
+            {
                 SetPointingDirection(true);
                 Debug.Log("Is recognizing player is facing left");
             }
             else { SetPointingDirection(); }
 
-            transform.parent.localPosition = initialArmPosition;
+            transformToRotateAround.localPosition = initialArmPosition;
 
             yield return null;
         }

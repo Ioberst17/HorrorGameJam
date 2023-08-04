@@ -4,10 +4,21 @@ using UnityEngine;
 
 public class BaseAnimator : BodyPartAnimator
 {
-    // Start is called before the first frame update
+    // used by other player parts to sync animations as needed
+    public AnimatorStateInfo currentBaseAnimatorState;
+    public bool currentAnimationStateHasCompleteTag;
+    public string currentAnimationStateName;
+
     override public void Start()
     {
-        priorityAnimationStates["PlayerLand"] = new AnimationProperties("PlayerLand", 2);
+        //priorityAnimationStates["PlayerLand"] = new AnimationProperties("PlayerLand", 2);
         base.Start();
+    }
+
+    private void Update()
+    {
+        currentBaseAnimatorState = animator.GetCurrentAnimatorStateInfo(0);
+        currentAnimationStateHasCompleteTag = animator.GetCurrentAnimatorStateInfo(0).IsTag("Complete");
+        currentAnimationStateName = animationStatesWithHashAsKey[currentBaseAnimatorState.shortNameHash].animationName;
     }
 }

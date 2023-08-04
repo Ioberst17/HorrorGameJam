@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ComboSystem : MonoBehaviour
 {
-    [SerializeField] private float comboInputTimeThreshold = 0.5f;
+    [SerializeField] private float comboInputTimeThreshold = 1f;
     [SerializeField] private float lastInputTime;
     [SerializeField] private int comboCount = 0;
     [SerializeField] private int maxComboCount = 3;
@@ -34,24 +34,24 @@ public class ComboSystem : MonoBehaviour
             case 1:
                 // Perform first punch
                 Debug.Log("First punch!");
-                StartCoroutine(playerPrimaryWeapon.AttackActiveFrames(attackDirection, "PlayerBasicAttack"));
+                StartCoroutine(playerPrimaryWeapon.AttackActiveFrames(attackDirection, "PlayerBasicAttack1"));
                 break;
             case 2:
                 // Perform second punch
                 Debug.Log("Second punch!");
-                StartCoroutine(playerPrimaryWeapon.AttackActiveFrames(attackDirection, "PlayerSecondPunch"));
+                StartCoroutine(playerPrimaryWeapon.AttackActiveFrames(attackDirection, "PlayerBasicAttack2"));
                 break;
             case 3:
                 // Perform third punch
                 Debug.Log("Third punch!");
-                StartCoroutine(playerPrimaryWeapon.AttackActiveFrames(attackDirection, "PlayerBasicAttack"));
+                StartCoroutine(playerPrimaryWeapon.AttackActiveFrames(attackDirection, "PlayerBasicAttack3"));
                 //StartCoroutine(playerPrimaryWeapon.AttackActiveFrames(attackDirection, "PlayerThirdPunch"));
                 break;
             case 4:
                 // Perform third punch
                 Debug.Log("Restart Combo!");
                 comboCount = 0;
-                StartCoroutine(playerPrimaryWeapon.AttackActiveFrames(attackDirection, "PlayerBasicAttack"));
+                StartCoroutine(playerPrimaryWeapon.AttackActiveFrames(attackDirection, "PlayerBasicAttack1"));
                 //StartCoroutine(playerPrimaryWeapon.AttackActiveFrames(attackDirection, "PlayerThirdPunch"));
                 break;
         }

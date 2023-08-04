@@ -1,0 +1,794 @@
+fileFormatVersion: 2
+guid: e454a2bc005409a4faf00e83acf4a2ea
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: SSPlayer_Jump_RightArm_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1355
+        width: 256
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a2751c4d641fcfa4a86af2e0eeb52f82
+      internalID: 769287400
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SSPlayer_Jump_RightArm_1
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 1355
+        width: 256
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ac05d0207ff627479d912ad632d38e1
+      internalID: -671319456
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SSPlayer_Jump_RightArm_2
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 1355
+        width: 256
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 954b19372ca10e947b0866edb044ec05
+      internalID: -1253083081
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SSPlayer_Jump_RightArm_3
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 1355
+        width: 256
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d6a8fe0e07410294e9a8f949d4fd07f1
+      internalID: -690638798
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SSPlayer_Jump_RightArm_4
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 1355
+        width: 256
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 430799fbcdcbb244b8bd30f2ed228c51
+      internalID: -1781563863
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SSPlayer_Jump_RightArm_5
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1099
+        width: 256
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6200760229261da4395898790fbb4137
+      internalID: 1077201187
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SSPlayer_Jump_RightArm_6
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 1099
+        width: 256
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c04076feb3f08c745ac82671d69b9285
+      internalID: 1489643947
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SSPlayer_Jump_RightArm_7
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 1099
+        width: 256
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 616d2fece0e117d4dbcc6ba90b409fa6
+      internalID: 1336661945
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SSPlayer_Jump_RightArm_8
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 1099
+        width: 256
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b31535c79f4a10b4d9039b1a1e56d626
+      internalID: -1418417578
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SSPlayer_Jump_RightArm_9
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 1099
+        width: 256
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8da90ae1429fdf447b3aeb8f4c407167
+      internalID: 818385307
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SSPlayer_Jump_RightArm_10
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 843
+        width: 256
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8517d2ba60a3dbb4b86627991f0eb929
+      internalID: 401317752
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SSPlayer_Jump_RightArm_11
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 843
+        width: 256
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f858832e87dc20f4a8f47fb3dab9bd53
+      internalID: 1370618844
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SSPlayer_Jump_RightArm_12
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 843
+        width: 256
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7340b3b86d33ec54d9da82d779c2b93d
+      internalID: -1187732221
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SSPlayer_Jump_RightArm_13
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 843
+        width: 256
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 28e4711b9eea4ec418cd899e49cc98bc
+      internalID: 1134972490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SSPlayer_Jump_RightArm_14
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 843
+        width: 256
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8640df972a4f77f46be67d938f2e498e
+      internalID: 308626876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SSPlayer_Jump_RightArm_15
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 587
+        width: 256
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 39498aaab9a83e842997056e2c8af303
+      internalID: -2036855084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SSPlayer_Jump_RightArm_16
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 587
+        width: 256
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a60447580607edf4e83276c2dbc35262
+      internalID: 1917650233
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SSPlayer_Jump_RightArm_17
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 587
+        width: 256
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ceacb3e6241bcca429a988c2c9a92843
+      internalID: 1608422456
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SSPlayer_Jump_RightArm_18
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 587
+        width: 256
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2bb17b80bfddd1b478aab0a765fddb8b
+      internalID: -1261954652
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SSPlayer_Jump_RightArm_19
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 587
+        width: 256
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b307a2b21605935428c65e6daa71efb0
+      internalID: 1827677342
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SSPlayer_Jump_RightArm_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 331
+        width: 256
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 431ce13857eb82f4fb4a02bef877cb5f
+      internalID: 1716103605
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SSPlayer_Jump_RightArm_21
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 331
+        width: 256
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f5be47a2d9e585d49b8bba4d729438b0
+      internalID: -421023452
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SSPlayer_Jump_RightArm_22
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 331
+        width: 256
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 88299eced2437644c990af7de8f2d68d
+      internalID: 433869687
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SSPlayer_Jump_RightArm_23
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 331
+        width: 256
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c04e6a4038dc8a4489314a68f1113bb4
+      internalID: 1713857168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SSPlayer_Jump_RightArm_24
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 331
+        width: 256
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4b254efc795e2574dbdac543e9abf66e
+      internalID: 1512214460
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SSPlayer_Jump_RightArm_25
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 75
+        width: 256
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 859d6801e64caec488c00ce8abe02319
+      internalID: -1070692060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SSPlayer_Jump_RightArm_26
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 75
+        width: 256
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f705261120b9b74498644a0c881d277f
+      internalID: 1767122732
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SSPlayer_Jump_RightArm_27
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 75
+        width: 256
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a21e85d61775ebc4da8dfa022cd93606
+      internalID: 64953488
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SSPlayer_Jump_RightArm_28
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 75
+        width: 256
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2b7ecf15911faa24287ee0fdd20cc80d
+      internalID: 1247186908
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SSPlayer_Jump_RightArm_29
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 75
+        width: 256
+        height: 181
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: af3923b5a8addf043b9b4af671667432
+      internalID: -1207382280
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      SSPlayer_Jump_RightArm_25: -1070692060
+      SSPlayer_Jump_RightArm_5: 1077201187
+      SSPlayer_Jump_RightArm_4: -1781563863
+      SSPlayer_Jump_RightArm_9: 818385307
+      SSPlayer_Jump_RightArm_10: 401317752
+      SSPlayer_Jump_RightArm_28: 1247186908
+      SSPlayer_Jump_RightArm_17: 1608422456
+      SSPlayer_Jump_RightArm_2: -1253083081
+      SSPlayer_Jump_RightArm_0: 769287400
+      SSPlayer_Jump_RightArm_1: -671319456
+      SSPlayer_Jump_RightArm_26: 1767122732
+      SSPlayer_Jump_RightArm_15: -2036855084
+      SSPlayer_Jump_RightArm_27: 64953488
+      SSPlayer_Jump_RightArm_18: -1261954652
+      SSPlayer_Jump_RightArm_19: 1827677342
+      SSPlayer_Jump_RightArm_12: -1187732221
+      SSPlayer_Jump_RightArm_16: 1917650233
+      SSPlayer_Jump_RightArm_6: 1489643947
+      SSPlayer_Jump_RightArm_13: 1134972490
+      SSPlayer_Jump_RightArm_11: 1370618844
+      SSPlayer_Jump_RightArm_7: 1336661945
+      SSPlayer_Jump_RightArm_22: 433869687
+      SSPlayer_Jump_RightArm_21: -421023452
+      SSPlayer_Jump_RightArm_24: 1512214460
+      SSPlayer_Jump_RightArm_23: 1713857168
+      SSPlayer_Jump_RightArm_3: -690638798
+      SSPlayer_Jump_RightArm_8: -1418417578
+      SSPlayer_Jump_RightArm_20: 1716103605
+      SSPlayer_Jump_RightArm_29: -1207382280
+      SSPlayer_Jump_RightArm_14: 308626876
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
