@@ -17,10 +17,12 @@ public class QuestUpdater : MonoBehaviour
     [System.Serializable]
     public class DialogueTracker
     {
+        [Header("Identifier")]
         public string questName;
         public int questIndex;
-        public bool isActive;
 
+        [Header("Progress")]
+        public bool isActive;
         // tracked for UI / other systems to reference
         public int numOfSubTasksCompleted; // captures the actual number of tasks accomplished of the total
         public float percentOfTaskComplete; // captures the number of tasks : total tasks

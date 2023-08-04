@@ -1246,11 +1246,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6692248386998842308, guid: 72c3a56afd3179d44a95acbfc542bf79, type: 3}
   m_PrefabInstance: {fileID: 6692248387264287006}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &283382097 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1458881045126449814, guid: eb2664123c277934fb626507fe6ad021, type: 3}
-  m_PrefabInstance: {fileID: 1458881044282191579}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &286216778
 GameObject:
   m_ObjectHideFlags: 0
@@ -1893,27 +1888,6 @@ MonoBehaviour:
     entries: []
   arrayOfTextAssetData: []
   dataArray: []
---- !u!1 &522405332 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1458881044374652408, guid: eb2664123c277934fb626507fe6ad021, type: 3}
-  m_PrefabInstance: {fileID: 1458881044282191579}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &522405337
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 522405332}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3bfc8880bfd4c7045b8d88588c81085a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  comboInputTimeThreshold: 0.5
-  lastInputTime: 0
-  comboCount: 0
-  maxComboCount: 3
 --- !u!1 &566163939
 GameObject:
   m_ObjectHideFlags: 0
@@ -3621,68 +3595,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1458881045126449812, guid: eb2664123c277934fb626507fe6ad021, type: 3}
   m_PrefabInstance: {fileID: 1458881044282191579}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1303225429
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 283382097}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 537b1bf2e7371ab4ca32af73fc1ccdd0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  quests: []
-  questChecker:
-    _id: 0
-    _name: 
-    description: 
-    numOfSubQuests: 0
-    _currentSubQuestIndex: 0
-    _isStarted: 0
-    _isActive: 0
-    _isCompleted: 0
-  activeQuest:
-    _id: 0
-    _name: 
-    description: 
-    numOfSubQuests: 0
-    _currentSubQuestIndex: 0
-    _isStarted: 0
-    _isActive: 0
-    _isCompleted: 0
-  activeQuestIndex: 0
---- !u!114 &1303225430
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 283382097}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f933c126b8391b548a706810e5ab2949, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dialoguesToTrack:
-  - questName: Tutorial
-    questIndex: 1
-    isActive: 0
-    numOfSubTasksCompleted: 0
-    percentOfTaskComplete: 0
-    dialogues:
-    - npcName: SaveGamePoint1
-      hasTalkedTo: 0
-    - npcName: SaveGamePoint2
-      hasTalkedTo: 0
-  cachedDialogueTracker:
-    questName: 
-    questIndex: 0
-    isActive: 0
-    numOfSubTasksCompleted: 0
-    percentOfTaskComplete: 0
-    dialogues: []
 --- !u!1001 &1322702519
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6776,10 +6688,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 623651701, guid: eb2664123c277934fb626507fe6ad021, type: 3}
-      propertyPath: _jumpForce
-      value: 14
-      objectReference: {fileID: 0}
     - target: {fileID: 1156582538, guid: eb2664123c277934fb626507fe6ad021, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -6791,14 +6699,6 @@ PrefabInstance:
     - target: {fileID: 1910728978, guid: eb2664123c277934fb626507fe6ad021, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1458881045040599449, guid: eb2664123c277934fb626507fe6ad021, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1458881045040599524, guid: eb2664123c277934fb626507fe6ad021, type: 3}
-      propertyPath: _movementSpeed
-      value: 7.5
       objectReference: {fileID: 0}
     - target: {fileID: 1458881045126449812, guid: eb2664123c277934fb626507fe6ad021, type: 3}
       propertyPath: m_RootOrder
@@ -6847,30 +6747,6 @@ PrefabInstance:
     - target: {fileID: 1458881045126449814, guid: eb2664123c277934fb626507fe6ad021, type: 3}
       propertyPath: m_Name
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 3765984461718782869, guid: eb2664123c277934fb626507fe6ad021, type: 3}
-      propertyPath: ignoreScript
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3765984461718782869, guid: eb2664123c277934fb626507fe6ad021, type: 3}
-      propertyPath: OnlyDeactivate
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3765984461743746833, guid: eb2664123c277934fb626507fe6ad021, type: 3}
-      propertyPath: playOnAwake
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3765984461743746835, guid: eb2664123c277934fb626507fe6ad021, type: 3}
-      propertyPath: playOnAwake
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3765984461743746837, guid: eb2664123c277934fb626507fe6ad021, type: 3}
-      propertyPath: playOnAwake
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3765984461743746839, guid: eb2664123c277934fb626507fe6ad021, type: 3}
-      propertyPath: playOnAwake
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eb2664123c277934fb626507fe6ad021, type: 3}

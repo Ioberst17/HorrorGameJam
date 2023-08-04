@@ -84,6 +84,7 @@ public class ChargePunch : MonoBehaviour
 
     private void Start()
     {
+        EventSystem.current.onChargePunchRelease += ReleasePunchOnFrame;
         playerPrimaryWeapon = GetComponent<PlayerPrimaryWeapon>();
         gameController = FindObjectOfType<GameController>();
         LoadVFXReferences();
@@ -91,6 +92,11 @@ public class ChargePunch : MonoBehaviour
         Sound punch1Sound = audioManager.GetSFX("ChargePunch1");
         punch1Length = punch1Sound.clip.length;
         ParticleSystemsOn(false);
+    }
+
+    private void OnDestroy()
+    {
+        EventSystem.current.onChargePunchRelease -= ReleasePunchOnFrame;
     }
 
     void LoadVFXReferences()
@@ -329,20 +335,22 @@ public class ChargePunch : MonoBehaviour
         else { glowTrigger = false; spriteGlow.GlowBrightness = 0; spriteGlow.OutlineWidth = 0; }
     }
 
+    // calls animation
     void ReleasePunch()
     {
-        if (IsCharging)
-        {
-            Debug.Log("Released from ChargePunch.cs");
-            playerPrimaryWeapon.damageToPass = playerPrimaryWeapon.minDamage + damageToPass;
-            IsCharging = false;
-            UpdateSpriteBounds();
-            StartCoroutine(playerPrimaryWeapon.AttackActiveFrames(attackDirection, "PlayerBasicAttack"));
-            HandleFinishSound();
-            HandleFinishVFX();
-            ParticleSystemsOn(false); GlowOn(false); chargeTime = 0; holdTimeNormalized = 0;
-            //Instantiate(punchEffect, transform.position, Quaternion.identity);
-            EventSystem.current.FinishChargedAttackTrigger();
-        }
+        if (IsCharging) {StartCoroutine(playerPrimaryWeapon.AttackActiveFrames(attackDirection, "PlayerChargePunch")); }
+    }
+
+    // called by specific key frame on player's base animator, so 
+    void ReleasePunchOnFrame()
+    {
+        playerPrimaryWeapon.damageToPass = playerPrimaryWeapon.minDamage + damageToPass;
+        IsCharging = false;
+        UpdateSpriteBounds();
+        HandleFinishSound();
+        HandleFinishVFX();
+        ParticleSystemsOn(false); GlowOn(false); chargeTime = 0; holdTimeNormalized = 0;
+        //Instantiate(punchEffect, transform.position, Quaternion.identity);
+        EventSystem.current.FinishChargedAttackTrigger();
     }
 }

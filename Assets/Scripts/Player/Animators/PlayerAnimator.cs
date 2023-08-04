@@ -88,6 +88,7 @@ public class PlayerAnimator : BodyPartAnimator
         }
     }    
     
+    // invokes a function from an animator; calls all unless a specific animator is needed, in which case it gets it from the enum
     public void PlayFunction(string animationName, PlayerPart playerPartPassedIn = PlayerPart.All)
     {
         if (playerPartPassedIn == PlayerPart.All)

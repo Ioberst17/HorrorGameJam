@@ -2,12 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using UnityEngine.Animations;
 using UnityEngine;
+using static BodyPartAnimator;
 
 public class BodyPartAnimator : MonoBehaviour
 {
     [Header("Common Variables Across All Body Part Animators")]
     [SerializeField] public Animator animator;
+    protected bool priorityAnimationFlag; // used by child classes as a flag to enable priority animation playing e.g. arms and player shooting
 
     // used for overriding animations
     public RuntimeAnimatorController runtimeAnimator;
@@ -16,10 +19,14 @@ public class BodyPartAnimator : MonoBehaviour
     public string specificFilePathToAnimations;
 
     // information about animations
-    private AnimatorStateInfo stateInfo;
-    private AnimatorClipInfo clipInfo;
-    [SerializeField] private AnimationProperties currentPriorityAnimationState; // list of animations and their priority levels
-    [SerializeField] string currentPriorityAnimationClipName; // keeps track of current priority animation being played
+    protected AnimationStates animationStateList = new AnimationStates();
+    protected AnimatorStateInfo currentAnimation;
+    protected AnimatorClipInfo clipInfo;
+    [SerializeField] protected AnimationProperties currentAnimationState; // list of animations and their priority levels
+    [SerializeField] protected string currentPriorityAnimationClipName; // keeps track of current priority animation being played
+
+    protected string animationToPlay;
+    protected bool shouldNewAnimationPlay;
 
     [Serializable]
     public class AnimationProperties
@@ -36,22 +43,59 @@ public class BodyPartAnimator : MonoBehaviour
         }
     }
 
-    public SimpleSerializableDictionary<string, AnimationProperties> priorityAnimationStates = new SimpleSerializableDictionary<string, AnimationProperties>(); // animation state names
+    public SimpleSerializableDictionary<string, AnimationProperties> animationStates = new SimpleSerializableDictionary<string, AnimationProperties>(); // animation state names
+    public SimpleSerializableDictionary<int, AnimationProperties> animationStatesWithHashAsKey = new SimpleSerializableDictionary<int, AnimationProperties>(); 
+
+    // used to ensure updates are standardized between the two dictionaries
+    virtual protected void UpdateAnimationStatePriority(string name, int priorityLevel)
+    {
+        animationStates[name] = new AnimationProperties(name, priorityLevel);
+        animationStatesWithHashAsKey[animationStates[name].animationHash] = new AnimationProperties(name, priorityLevel);
+    }
+
 
     virtual public void Start() 
     { 
         animator = GetComponentInChildren<Animator>();
+        BuildAnimationStateDictionary();
+
+        // update base animation hierarchy
+        UpdateAnimationStatePriority("PlayerJump", -1);
+        UpdateAnimationStatePriority("PlayerRun", -2);
+        UpdateAnimationStatePriority("PlayerIdle", -3);
     }
+
+    // used to build a dictionary that lets you reference animation states, note: Unity does not allow you to directly reference an animation by name you need to use a hash
+    virtual protected void BuildAnimationStateDictionary()
+    {
+        // Get the current Animator Controller (runtimeAnimatorController)
+        RuntimeAnimatorController controller = animator.runtimeAnimatorController;
+
+        // Now, populate the dictionaries with the animation state names and priority levels
+        animationStates.Clear();
+        animationStatesWithHashAsKey.Clear();
+
+        foreach (string state in animationStateList.animationStates)
+        {
+            var animationProperties = new AnimationProperties(state, 0);
+            animationStates.Add(state, animationProperties);
+            animationStatesWithHashAsKey.Add(animationProperties.animationHash, animationProperties);
+        }
+    }
+
 
     virtual public void Play(string animationName)
     {
-        if (CheckIfNewAnimationCanPlay(animationName)) // if a priority animation is running, do nothing
+        animationToPlay = CheckIfNewAnimationCanPlay(animationName);
+
+        if (shouldNewAnimationPlay) // if a priority animation is running, do nothing
         {
-            animator.Play(animationName); 
+            animator.Play(animationToPlay); 
         }
         else
         {
-            Debug.Log("Did not play while priority animation is running named: " + currentPriorityAnimationClipName);
+            // only do this if not trying to overwrite the same animation
+            if(!currentAnimation.IsName(animationName)) { Debug.Log("Did not play while priority animation is running named: " + currentPriorityAnimationClipName); }
         }
     }
 
@@ -72,44 +116,19 @@ public class BodyPartAnimator : MonoBehaviour
     }
 
     // checks if the input string name for the animation has greater priority than the currently playing animation
-    private bool CheckIfNewAnimationCanPlay(string newAnimation)
+    virtual public string CheckIfNewAnimationCanPlay(string newAnimation)
     {
+        GetCurrentAnimationInfo();
 
-        if (CheckCurrentAnimationState()) // if there is a current animation with priority
-        {
-            // keep evaluating
-        }
-        else { return true; } // otherwise, new animation should play 
-
-        if (priorityAnimationStates.ContainsKey(newAnimation)) // if the new animation also has priority
-        {
-            // check to see if it has a higher priority level or whether the current animation has ended
-            clipInfo = animator.GetCurrentAnimatorClipInfo(0)[0];
-            if (priorityAnimationStates[newAnimation].priorityLevel > currentPriorityAnimationState.priorityLevel || stateInfo.normalizedTime >= 1f) { Debug.Log("Existing animation can play"); return true; } // if so, then it can play
-            else return false;
-        }
-        else { return false; } // else the existing animation takes priority
+        if (animationStates[newAnimation].priorityLevel > currentAnimationState.priorityLevel || currentAnimation.normalizedTime >= 1f) { shouldNewAnimationPlay = true; return newAnimation; } // if so, then it can play
+        else { shouldNewAnimationPlay = false; return currentAnimationState.animationName; }
     }
 
     // gets the current animation states and updates currentAnimationState with its value
-    bool CheckCurrentAnimationState()
+    virtual protected void GetCurrentAnimationInfo() 
     {
-        stateInfo = animator.GetCurrentAnimatorStateInfo(0); // currently playing animation
-
-        foreach (string animation in priorityAnimationStates.GetKeys()) 
-        {
-            if (stateInfo.IsName(animation)) // if a match exists
-            {
-                currentPriorityAnimationClipName = animation;
-                if(stateInfo.normalizedTime < 1f) // and the clip hasn't finished
-                {
-                    currentPriorityAnimationState = priorityAnimationStates[animation];
-                    return true;
-                }
-            }
-        }
-        currentPriorityAnimationState = null;
-        return false;
+        currentAnimation = animator.GetCurrentAnimatorStateInfo(0);
+        currentAnimationState = animationStatesWithHashAsKey[currentAnimation.shortNameHash];  
     }
 
     public bool CheckAnimationState(string animationName, Animator animator)

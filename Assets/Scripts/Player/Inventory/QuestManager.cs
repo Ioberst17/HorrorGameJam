@@ -18,7 +18,6 @@ public class QuestManager : MonoBehaviour
     public List<Quest> quests;
     private Quest questChecker;
     public Quest activeQuest;
-    public int activeQuestIndex;
 
     private void Start()
     {

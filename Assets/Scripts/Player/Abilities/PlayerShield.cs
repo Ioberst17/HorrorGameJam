@@ -7,6 +7,7 @@ public class PlayerShield : Shield
     // Outside references
     private PlayerStamina playerStamina;
     private PlayerHealth playerHealth;
+    private PlayerAnimator animator;
 
     // internal variables and trackers
     private int parryDamage = 10;
@@ -24,6 +25,7 @@ public class PlayerShield : Shield
         base.Start();
         playerStamina = SiblingComponentUtils.GetSiblingComponent<PlayerStamina>(this.gameObject);
         playerHealth = GetComponentInParent<PlayerHealth>();
+        animator = FindObjectOfType<PlayerAnimator>();
         effectcooldown = 0;
     }
 
@@ -46,10 +48,7 @@ public class PlayerShield : Shield
     private void FixedUpdate()
     {
         if (!shieldButtonDown) { ChangeSP(staminaRate / 2, Time.deltaTime); }
-        if(effectcooldown > 0)
-        {
-            effectcooldown--;
-        }
+        if(effectcooldown > 0) { effectcooldown--; }
     }
 
 
@@ -67,7 +66,7 @@ public class PlayerShield : Shield
 
     public void ShieldButtonHeld()
     {
-        if(shieldButtonDown == true) { if (playerStamina.SP > 0) { ChangeSP(-staminaRate, Time.deltaTime); } }
+        if(shieldButtonDown == true) { if (playerStamina.SP > 0) { ChangeSP(-staminaRate, Time.deltaTime); } animator.Play("PlayerShield"); }
     }
 
     public void ShieldButtonUp()

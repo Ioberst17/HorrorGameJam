@@ -59,9 +59,6 @@ public class PlayerAfterImageObjectPool : ObjectPool
             // set sprite to current sprite from renderer
             instance.GetComponent<SpriteRenderer>().sprite = renderer.sprite;
 
-            // grow scale to match default sprite size
-            instance.transform.localScale = new Vector3(3, 3, 1);
-
             // match direction
             if(playerController.FacingDirection == -1) { instance.transform.rotation = Quaternion.Euler(0, -180, 0); } // if facing left, do this
             else { instance.transform.rotation = Quaternion.Euler(0, 0, 0); } // if facing right, do this

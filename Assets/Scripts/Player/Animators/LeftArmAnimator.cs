@@ -8,6 +8,7 @@ public class LeftArmAnimator : ArmWeaponAnimatorCommonFunctionality
     {
         base.Start();
         EventSystem.current.onUpdateSecondaryWeaponTrigger += OnWeaponSwitch;
+        armPivot = 45;
     }
     private void OnDestroy()
     {
@@ -16,12 +17,12 @@ public class LeftArmAnimator : ArmWeaponAnimatorCommonFunctionality
 
     override public void AssignNewAnimations(string weaponName)
     {
-        if (oneHandedWeaponInUse) // may not work since child funciton is called first
+        if (OneHandedWeaponInUse) // may not work since child funciton is called first
         {
             specificFilePathToAnimations = "Animations/Overrides/PlayerBodyParts/LeftArm/";
             base.AssignNewAnimations("OneHandedWeapon");
         }
-        else if (twoHandedWeaponInUse)
+        else if (TwoHandedWeaponInUse)
         {
             specificFilePathToAnimations = "Animations/Overrides/PlayerBodyParts/LeftArm/";
             base.AssignNewAnimations("TwoHandedWeapon");

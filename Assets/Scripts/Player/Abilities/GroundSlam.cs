@@ -31,6 +31,7 @@ public class GroundSlam : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        EventSystem.current.onGroundSlamDrop += ReleaseGroundSlamOnFrame;
         playerHealth = GetComponentInParent<PlayerHealth>();
         playerPrimaryWeapon = GetComponent<PlayerPrimaryWeapon>();
         playerController = playerPrimaryWeapon.GetComponentInParent<PlayerController>();
@@ -40,6 +41,11 @@ public class GroundSlam : MonoBehaviour
         detectorSprite = GetComponentInChildren<PlayerGroundSlamDetector>().GetComponent<SpriteRenderer>();
         detectionColliderCenter = detectorSprite.transform.position;
         detectionColliderUpperCenter = detectionColliderCenter + new Vector2(0, detectorSprite.bounds.size.y / 2f);
+    }
+
+    private void OnDestroy()
+    {
+        EventSystem.current.onGroundSlamDrop -= ReleaseGroundSlamOnFrame;
     }
 
     // Note: groundslam is finished / triggered off by the PlayerGroundSlamDetector, which handles checks for overlaps
@@ -53,9 +59,13 @@ public class GroundSlam : MonoBehaviour
     public void Execute()
     {
         IsGroundSlam = true; playerHealth.IsInvincible = true; groundSlamStop = false; //ActivateDetection(true); // turn on update conditions
+        playerAnimator.Play("PlayerGroundSlam");
+    }
+
+    // triggered by a specific frame in the groundslam animation on the base animator
+    void ReleaseGroundSlamOnFrame()
+    {
         playerController.SetVelocity(0, groundSlamSpeed); // trigger speed change, once
-        
-        // One-time SFX and VFX updates
         FindObjectOfType<AudioManager>().PlaySFX("PlayerMelee");
         Instantiate(Resources.Load("VFXPrefabs/GroundSlamImpact"), transform.position, Quaternion.identity);
     }

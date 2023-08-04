@@ -68,15 +68,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 342951347}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.0293, y: 0.0753, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0.0026179885, w: 0.9999966}
+  m_LocalPosition: {x: 0.1202, y: -0.1606, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1547280752}
-  m_Father: {fileID: 1747682779}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Father: {fileID: 5684200894615291593}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0.3}
 --- !u!1 &452028761
 GameObject:
   m_ObjectHideFlags: 0
@@ -204,14 +204,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 511008904}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.0293, y: 0.0753, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.131, y: -0.171, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2113303498}
-  m_Father: {fileID: 1747682779}
-  m_RootOrder: 3
+  m_Father: {fileID: 8343500818255137537}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &623651699
 GameObject:
@@ -259,7 +259,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   numberOfJumps: 2
   _isJumping: 0
-  _jumpForce: 15
+  _jumpForce: 14
   _canJump: 0
 --- !u!1 &648145155
 GameObject:
@@ -417,7 +417,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 710302206}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.60455036, y: 0.01, z: 0}
+  m_LocalPosition: {x: 0.595, y: 0.092, z: 0}
   m_LocalScale: {x: 0.18091464, y: 0.049213212, z: 1.3333334}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -838,7 +838,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.306, y: 0.132}
+  m_AnchoredPosition: {x: 0.306, y: 0}
   m_SizeDelta: {x: 556, y: 556}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!212 &1017427858
@@ -5871,7 +5871,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -652803590, guid: af1e5dd119aec0743aeb1d5a76d47a14, type: 3}
+  m_Sprite: {fileID: -898295304, guid: 319a9b2ce9534c448b35cb525a805934, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -5936,68 +5936,33 @@ MonoBehaviour:
   runtimeAnimator: {fileID: 0}
   animatorOverrideController: {fileID: 0}
   specificFilePathToAnimations: 
-  currentPriorityAnimationState:
+  currentAnimationState:
     animationName: 
     priorityLevel: 0
     animationHash: 0
   currentPriorityAnimationClipName: 
-  priorityAnimationStates:
+  animationStates:
     keys: []
     values: []
-  parentTransform: {fileID: 0}
-  gameController: {fileID: 0}
-  playerController: {fileID: 0}
-  playerSecondaryWeapon: {fileID: 0}
-  weaponDatabase: {fileID: 0}
-  currentWeapon:
-    _id: 0
-    _classType: 
-    _name: 
-    _description: 
-    amount: 0
-    sprite: {fileID: 0}
-    audioOnAcquisition: 
-    tier: 0
-    isSecondary: 0
-    isOneHanded: 0
-    isTwoHanded: 0
-    isShot: 0
-    isThrown: 0
-    isFixedDistance: 0
-    statusModifier: 
-    isKinetic: 0
-    isElemental: 0
-    isHeavy: 0
-    weight: 
-    level1Damage: 0
-    level2Damage: 0
-    level3Damage: 0
-    level: 0
-    isLightSource: 0
-    firePointXPosition: 0
-    firePointYPosition: 0
-    fireRate: 0
-    ammoLimit: 0
-    isPurchasable: 0
-    _cost: 0
-    shopAmountPerPurchase: 0
-    shopStock: 0
+  animationStatesWithHashAsKey:
+    keys: 
+    values: []
+  transformToRotateAround: {fileID: 0}
   initialArmPosition: {x: 0, y: 0, z: 0}
   startedShotOnLeft: 0
   elapsedTime: 0
-  rotationTime: 10
-  rotationRightSpeed: 25
-  rotationLeftSpeed: 5
+  rotationTime: 1
+  rotationRightSpeed: 1
+  rotationLeftSpeed: 1
   rotationSpeedToUse: 100
   shotDirectionRotation: {x: 0, y: 0, z: 0, w: 0}
   shotRotation: 0
   externalCallToBreakArmReturnLoop: 0
-  refirePauseTime: 3
   isShootCoroutineRunning: 0
   isRestartedShootCoroutineRunning: 0
   isContinuousShootCoroutineRunning: 0
   farAlongEnoughToReset: 0
-  armFacingDownThresholdValue: 5
+  armFinishedRotatingThreshold: 10
   isArmFacingEndPosition: 0
 --- !u!1 &1159314694
 GameObject:
@@ -6071,7 +6036,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1163830601}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -1.74, y: 0.84, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10890,13 +10855,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1283517113}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0.12, y: -0.465, z: 0}
+  m_LocalScale: {x: 3, y: 3, z: 0.75}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1156582534}
-  m_Father: {fileID: 1747682779}
-  m_RootOrder: 2
+  m_Father: {fileID: 4558990444256090232}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1296200717
 GameObject:
@@ -11183,7 +11148,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1547280751}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.0356, y: -0.0772, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11231,7 +11196,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 3
-  m_Sprite: {fileID: -1062879408, guid: 004650d9f72b3de42a252a773ef903eb, type: 3}
+  m_Sprite: {fileID: 375076378, guid: 7aa2a3e8de7af7e43ac85c3b32d429fb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -11296,68 +11261,33 @@ MonoBehaviour:
   runtimeAnimator: {fileID: 0}
   animatorOverrideController: {fileID: 0}
   specificFilePathToAnimations: 
-  currentPriorityAnimationState:
+  currentAnimationState:
     animationName: 
     priorityLevel: 0
     animationHash: 0
   currentPriorityAnimationClipName: 
-  priorityAnimationStates:
+  animationStates:
     keys: []
     values: []
-  parentTransform: {fileID: 0}
-  gameController: {fileID: 0}
-  playerController: {fileID: 0}
-  playerSecondaryWeapon: {fileID: 0}
-  weaponDatabase: {fileID: 0}
-  currentWeapon:
-    _id: 0
-    _classType: 
-    _name: 
-    _description: 
-    amount: 0
-    sprite: {fileID: 0}
-    audioOnAcquisition: 
-    tier: 0
-    isSecondary: 0
-    isOneHanded: 0
-    isTwoHanded: 0
-    isShot: 0
-    isThrown: 0
-    isFixedDistance: 0
-    statusModifier: 
-    isKinetic: 0
-    isElemental: 0
-    isHeavy: 0
-    weight: 
-    level1Damage: 0
-    level2Damage: 0
-    level3Damage: 0
-    level: 0
-    isLightSource: 0
-    firePointXPosition: 0
-    firePointYPosition: 0
-    fireRate: 0
-    ammoLimit: 0
-    isPurchasable: 0
-    _cost: 0
-    shopAmountPerPurchase: 0
-    shopStock: 0
+  animationStatesWithHashAsKey:
+    keys: 
+    values: []
+  transformToRotateAround: {fileID: 0}
   initialArmPosition: {x: 0, y: 0, z: 0}
   startedShotOnLeft: 0
   elapsedTime: 0
-  rotationTime: 10
-  rotationRightSpeed: 25
-  rotationLeftSpeed: 5
+  rotationTime: 1
+  rotationRightSpeed: 1
+  rotationLeftSpeed: 1
   rotationSpeedToUse: 100
   shotDirectionRotation: {x: 0, y: 0, z: 0, w: 0}
   shotRotation: 0
   externalCallToBreakArmReturnLoop: 0
-  refirePauseTime: 3
   isShootCoroutineRunning: 0
   isRestartedShootCoroutineRunning: 0
   isContinuousShootCoroutineRunning: 0
   farAlongEnoughToReset: 0
-  armFacingDownThresholdValue: 5
+  armFinishedRotatingThreshold: 10
   isArmFacingEndPosition: 0
 --- !u!1 &1747682778
 GameObject:
@@ -11384,14 +11314,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1747682778}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.133, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 0.75}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.25, y: 1.25, z: 0.3125}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 722215973}
-  - {fileID: 342951348}
-  - {fileID: 1283517114}
-  - {fileID: 511008905}
+  - {fileID: 5684200894615291593}
+  - {fileID: 4558990444256090232}
+  - {fileID: 8343500818255137537}
   m_Father: {fileID: 1458881045040599526}
   m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -11411,13 +11341,16 @@ MonoBehaviour:
   runtimeAnimator: {fileID: 0}
   animatorOverrideController: {fileID: 0}
   specificFilePathToAnimations: 
-  currentPriorityAnimationState:
+  currentAnimationState:
     animationName: 
     priorityLevel: 0
     animationHash: 0
   currentPriorityAnimationClipName: 
-  priorityAnimationStates:
+  animationStates:
     keys: []
+    values: []
+  animationStatesWithHashAsKey:
+    keys: 
     values: []
   body: {fileID: 0}
   rightArm: {fileID: 0}
@@ -11622,6 +11555,7 @@ GameObject:
   - component: {fileID: 1910728977}
   - component: {fileID: 1910728976}
   - component: {fileID: 1910728975}
+  - component: {fileID: 2025577441}
   m_Layer: 6
   m_Name: SpriteAndAnimations
   m_TagString: Untagged
@@ -11685,7 +11619,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: -1795458679, guid: 27e507c6257f0b0499283c5b3421a819, type: 3}
+  m_Sprite: {fileID: -1718664249, guid: 23b907f68d1556946a50a82a5a3f6431, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -11750,14 +11684,31 @@ MonoBehaviour:
   runtimeAnimator: {fileID: 0}
   animatorOverrideController: {fileID: 0}
   specificFilePathToAnimations: 
-  currentPriorityAnimationState:
+  currentAnimationState:
     animationName: 
     priorityLevel: 0
     animationHash: 0
   currentPriorityAnimationClipName: 
-  priorityAnimationStates:
+  animationStates:
     keys: []
     values: []
+  animationStatesWithHashAsKey:
+    keys: 
+    values: []
+  currentAnimationStateHasCompleteTag: 0
+  currentAnimationStateName: 
+--- !u!114 &2025577441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1910728973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37743bca6b4292343af5ffd628c6382d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1959964387
 GameObject:
   m_ObjectHideFlags: 0
@@ -11785,7 +11736,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1959964387}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.0282, y: -0.1052, z: 0}
+  m_LocalPosition: {x: -0.066, y: -0.206, z: 0}
   m_LocalScale: {x: 0.1, y: 0.1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11880,13 +11831,16 @@ MonoBehaviour:
   runtimeAnimator: {fileID: 0}
   animatorOverrideController: {fileID: 0}
   specificFilePathToAnimations: 
-  currentPriorityAnimationState:
+  currentAnimationState:
     animationName: 
     priorityLevel: 0
     animationHash: 0
   currentPriorityAnimationClipName: 
-  priorityAnimationStates:
+  animationStates:
     keys: []
+    values: []
+  animationStatesWithHashAsKey:
+    keys: 
     values: []
 --- !u!1 &2001966245
 GameObject:
@@ -11999,7 +11953,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2113303497}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.0353, y: -0.0772, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -12049,7 +12003,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -2108549077, guid: 11bb65f31bcdddf49a1ea08163bdb8a5, type: 3}
+  m_Sprite: {fileID: 506491678, guid: 52b0d4f07ee68014da56b88c5ef9f74f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -12096,68 +12050,33 @@ MonoBehaviour:
   runtimeAnimator: {fileID: 0}
   animatorOverrideController: {fileID: 0}
   specificFilePathToAnimations: 
-  currentPriorityAnimationState:
+  currentAnimationState:
     animationName: 
     priorityLevel: 0
     animationHash: 0
   currentPriorityAnimationClipName: 
-  priorityAnimationStates:
+  animationStates:
     keys: []
     values: []
-  parentTransform: {fileID: 0}
-  gameController: {fileID: 0}
-  playerController: {fileID: 0}
-  playerSecondaryWeapon: {fileID: 0}
-  weaponDatabase: {fileID: 0}
-  currentWeapon:
-    _id: 0
-    _classType: 
-    _name: 
-    _description: 
-    amount: 0
-    sprite: {fileID: 0}
-    audioOnAcquisition: 
-    tier: 0
-    isSecondary: 0
-    isOneHanded: 0
-    isTwoHanded: 0
-    isShot: 0
-    isThrown: 0
-    isFixedDistance: 0
-    statusModifier: 
-    isKinetic: 0
-    isElemental: 0
-    isHeavy: 0
-    weight: 
-    level1Damage: 0
-    level2Damage: 0
-    level3Damage: 0
-    level: 0
-    isLightSource: 0
-    firePointXPosition: 0
-    firePointYPosition: 0
-    fireRate: 0
-    ammoLimit: 0
-    isPurchasable: 0
-    _cost: 0
-    shopAmountPerPurchase: 0
-    shopStock: 0
+  animationStatesWithHashAsKey:
+    keys: 
+    values: []
+  transformToRotateAround: {fileID: 0}
   initialArmPosition: {x: 0, y: 0, z: 0}
   startedShotOnLeft: 0
   elapsedTime: 0
-  rotationTime: 10
-  rotationRightSpeed: 25
-  rotationLeftSpeed: 5
+  rotationTime: 1
+  rotationRightSpeed: 1
+  rotationLeftSpeed: 1
   rotationSpeedToUse: 100
   shotDirectionRotation: {x: 0, y: 0, z: 0, w: 0}
   shotRotation: 0
   externalCallToBreakArmReturnLoop: 0
-  refirePauseTime: 3
   isShootCoroutineRunning: 0
   isRestartedShootCoroutineRunning: 0
   isContinuousShootCoroutineRunning: 0
   farAlongEnoughToReset: 0
-  armFacingDownThresholdValue: 5
+  armFinishedRotatingThreshold: 10
   isArmFacingEndPosition: 0
   currentFirePoint: {fileID: 0}
 --- !u!1 &1458881044085820166
@@ -12203,6 +12122,7 @@ GameObject:
   - component: {fileID: 717545746}
   - component: {fileID: 717545748}
   - component: {fileID: 717545750}
+  - component: {fileID: 522405337}
   m_Layer: 6
   m_Name: PrimaryWeapon
   m_TagString: Untagged
@@ -12246,7 +12166,7 @@ MonoBehaviour:
   playerController: {fileID: 0}
   minDamage: 0
   damageToPass: 0
-  isAttacking: 0
+  _isAttacking: 0
   attackHori: {fileID: 1458881044685643087}
   attackUp: {fileID: 1458881045363811431}
   attackDown: {fileID: 1458881044663540982}
@@ -12325,6 +12245,22 @@ MonoBehaviour:
   outlineVal: 0
   maxScale: 2
   offsetAmount: 1
+--- !u!114 &522405337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1458881044374652408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bfc8880bfd4c7045b8d88588c81085a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  comboInputTimeThreshold: 0.5
+  lastInputTime: 0
+  comboCount: 0
+  maxComboCount: 3
 --- !u!1 &1458881044442979827
 GameObject:
   m_ObjectHideFlags: 0
@@ -12952,8 +12888,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.039348602, y: 0.054267883}
-  m_Size: {x: 0.44092178, y: 1.044342}
+  m_Offset: {x: -0.0048048496, y: 0.04324341}
+  m_Size: {x: 0.4585824, y: 1.1380157}
   m_Direction: 0
 --- !u!114 &1547142142
 MonoBehaviour:
@@ -12987,6 +12923,8 @@ GameObject:
   - component: {fileID: 1303225426}
   - component: {fileID: 1303225427}
   - component: {fileID: 1458881044282191581}
+  - component: {fileID: 1303225429}
+  - component: {fileID: 1303225430}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -13179,6 +13117,59 @@ MonoBehaviour:
   player: {fileID: 0}
   lucidity: {fileID: 0}
   lucidityImpact: 0
+--- !u!114 &1303225429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1458881045126449814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 537b1bf2e7371ab4ca32af73fc1ccdd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  quests: []
+  activeQuest:
+    _id: 0
+    _name: 
+    description: 
+    numOfSubQuests: 0
+    _currentSubQuestIndex: 0
+    _isStarted: 0
+    _isActive: 0
+    _isCompleted: 0
+    subQuests: []
+--- !u!114 &1303225430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1458881045126449814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f933c126b8391b548a706810e5ab2949, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialoguesToTrack:
+  - questName: Tutorial
+    questIndex: 1
+    isActive: 0
+    numOfSubTasksCompleted: 0
+    percentOfTaskComplete: 0
+    dialogues:
+    - npcName: SaveGamePoint1
+      hasTalkedTo: 0
+    - npcName: SaveGamePoint2
+      hasTalkedTo: 0
+  cachedDialogueTracker:
+    questName: 
+    questIndex: 0
+    isActive: 0
+    numOfSubTasksCompleted: 0
+    percentOfTaskComplete: 0
+    dialogues: []
 --- !u!1 &1458881045285035849
 GameObject:
   m_ObjectHideFlags: 0
@@ -13505,6 +13496,38 @@ Transform:
   - {fileID: 1458881045456793709}
   m_Father: {fileID: 1458881045040599526}
   m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2876179685816303155
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5684200894615291593}
+  m_Layer: 6
+  m_Name: RightArmJoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5684200894615291593
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2876179685816303155}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.1107, y: 0.1524, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 342951348}
+  m_Father: {fileID: 1747682779}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3862237465613736185
 GameObject:
@@ -13915,6 +13938,70 @@ MonoBehaviour:
   - {x: -0.40356445, y: 0.5344391, z: 0}
   - {x: -0.51179504, y: 0.01953888, z: 0}
   - {x: -0.50040627, y: -0.3587265, z: 0}
+--- !u!1 &4551731685662337896
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8343500818255137537}
+  m_Layer: 6
+  m_Name: WeaponPivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8343500818255137537
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4551731685662337896}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.1107, y: 0.1524, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 511008905}
+  m_Father: {fileID: 1747682779}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6635828534173483560
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4558990444256090232}
+  m_Layer: 0
+  m_Name: LeftArmJoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4558990444256090232
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6635828534173483560}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.012, y: 0.138, z: 0}
+  m_LocalScale: {x: 0.33333334, y: 0.33333334, z: 1.3333334}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1283517114}
+  m_Father: {fileID: 1747682779}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7109627519444163445
 GameObject:
   m_ObjectHideFlags: 0
