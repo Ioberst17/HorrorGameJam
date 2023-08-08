@@ -2,8 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Xml;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using static BodyPartAnimator;
 
 public class PlayerPrimaryWeapon : MonoBehaviour
 {
@@ -28,6 +31,9 @@ public class PlayerPrimaryWeapon : MonoBehaviour
     private GameObject attackHori, attackUp, attackDown, chargePunchSprite;
     [SerializeField]
     private Transform AHPoint1, AHPoint2, AUPoint1, AUPoint2, ADPoint1, ADPoint2;
+
+
+
     [SerializeField]
     private float activeFrames, recoveryFrames, startupFrames;
 
@@ -38,6 +44,22 @@ public class PlayerPrimaryWeapon : MonoBehaviour
     public int attackLagValue, attackLagTimer;
 
     [SerializeField] ContactFilter2D normalCollisionFilter;
+
+    public class HitBox
+    {
+        [SerializeField] public Vector3 point1; // upper left corner of attack
+        [SerializeField] public Vector3 point2; // bottom right corner of attack
+
+        public HitBox(Vector3 point1, Vector3 point2)
+        {
+            this.point1 = point1;
+            this.point2 = point2;
+        }
+    }
+
+    public SimpleSerializableDictionary<string, HitBox> horizontalAttackDimensions = new SimpleSerializableDictionary<string, HitBox>();
+    public SimpleSerializableDictionary<string, HitBox> upwardAttackDimensions = new SimpleSerializableDictionary<string, HitBox>();
+    public SimpleSerializableDictionary<string, HitBox> downwardAttackDimensions = new SimpleSerializableDictionary<string, HitBox>();
 
     //abilities
     GroundSlam groundSlam;
@@ -74,6 +96,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
         damageToPass = minDamage;
         IsAttacking = false;
         AddLayersToCheck();
+        InitializeAttackHitBoxDimensions();
     }
 
     private void AddLayersToCheck() 
@@ -81,6 +104,22 @@ public class PlayerPrimaryWeapon : MonoBehaviour
         hitList = new List<Collider2D>();
         normalCollisionFilter = new ContactFilter2D();
         normalCollisionFilter.SetLayerMask((1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("BreakableEnviro")));
+    }
+
+    void InitializeAttackHitBoxDimensions()
+    {
+        // horizontal
+        horizontalAttackDimensions.Add("PlayerBasicAttack1", new HitBox(new Vector3(.29f, 1.02f), new Vector3(2.62f, -.348f)));
+        horizontalAttackDimensions.Add("PlayerBasicAttack2", new HitBox(new Vector3(.29f, 1.02f), new Vector3(2.62f, -.348f)));
+        horizontalAttackDimensions.Add("PlayerBasicAttack3", new HitBox(new Vector3(.85f, 1.65f), new Vector3(2.62f, -1.91f)));
+        horizontalAttackDimensions.Add("PlayerNeutralAir", new HitBox(new Vector3(-0.6f, .5f), new Vector3(1.41f, -1.218f)));
+        horizontalAttackDimensions.Add("PlayerNeutralCrouchAttack", new HitBox(new Vector3(.596f, -.441f), new Vector3(2.827f, -2.302f)));
+        
+        // upward
+        
+        
+        // downward
+        
     }
 
     public void Attack(int attackDirection, GameController.ButtonState state)
@@ -101,7 +140,9 @@ public class PlayerPrimaryWeapon : MonoBehaviour
                 // GROUND ATTACKS
                 else
                 {
-                    if (chargePunch != null && state == GameController.ButtonState.Held) { chargePunch.Execute(); }
+                    if (playerController.IsRunning && (playerController.ControlMomentum > 5 || playerController.ControlMomentum < -5)) { StartCoroutine(AttackActiveFrames(attackDirection, "PlayerSideKnee")); }
+                    else if (chargePunch != null && state == GameController.ButtonState.Held) { chargePunch.Execute(); }
+                    else if (playerController.IsCrouching) { StartCoroutine(AttackActiveFrames(attackDirection, "PlayerNeutralCrouchAttack")); }
                     else { comboSystem.PerformCombo(attackDirection); }
                 }
             }
@@ -114,7 +155,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
     {
         if (attackLagTimer == 0)
         {
-            Debug.Log("Animation to play is named: " + animationToPlay);
+            UpdateHitBox(attackDirection, animationToPlay);
             animator.Play(animationToPlay);
             FindObjectOfType<AudioManager>().PlaySFX("PlayerMelee");
             attackLagTimer = attackLagValue;
@@ -133,6 +174,28 @@ public class PlayerPrimaryWeapon : MonoBehaviour
         
     }
 
+    private void UpdateHitBox(int attackDirection, string animationToPlay)
+    {
+        if(attackDirection == 0) { UpdateHitBoxHelper(upwardAttackDimensions, animationToPlay, AUPoint1, AUPoint2); }
+        else if(attackDirection == 1) { UpdateHitBoxHelper(downwardAttackDimensions, animationToPlay, ADPoint1, ADPoint2); }
+        else if(attackDirection == 2) { UpdateHitBoxHelper(horizontalAttackDimensions, animationToPlay, AHPoint1, AHPoint2); }
+
+    }
+
+    private void UpdateHitBoxHelper(SimpleSerializableDictionary<string, HitBox> attackDimensions, string animationToPlay, Transform point1, Transform point2) 
+    {
+        if (attackDimensions.TryGetValue(animationToPlay, out HitBox value))
+        {
+            point1.transform.localPosition = value.point1;
+            point2.transform.localPosition = value.point2;
+        }
+        else
+        {
+            Debug.Log("Key '" + animationToPlay + "' not found in the dictionary: " + attackDimensions);
+        }
+    }
+
+
     private void CheckAttackDirection(int attackDirection, bool setCondition)
     {
         if (attackDirection == 0) { attackUp.SetActive(setCondition); }
@@ -147,12 +210,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
         //up attack
         if (attackUp.activeSelf) { CheckForCollisions(AUPoint1.position, AUPoint2.position); }
         //down attack
-        if (attackDown.activeSelf)
-        {
-            CheckForCollisions(ADPoint1.position, ADPoint2.position);
-            //Debug.Log("Swinging");
-            //animator.Play("PlayerAttackDown");
-        }
+        if (attackDown.activeSelf) { CheckForCollisions(ADPoint1.position, ADPoint2.position); }
         if (chargePunch.PunchSprite.gameObject.activeSelf) { CheckForCollisions(chargePunch.UpperRightCorner, chargePunch.BottomLeftCorner, true); }
     }
     private void CheckForCollisions(Vector2 point1, Vector2 point2, bool isChargePunch = false)

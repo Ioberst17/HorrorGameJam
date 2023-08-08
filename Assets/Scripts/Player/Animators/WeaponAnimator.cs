@@ -28,6 +28,8 @@ public class WeaponAnimator : ArmWeaponAnimatorCommonFunctionality
     {
         base.Start();
 
+        initialArmPositionWhenCrouching = new Vector3(-.114f, -.038f);
+
         // get key references
         firePointAnimator = GetComponentInChildren<FirePointAnimator>();
         currentFirePoint = firePointAnimator.transform;

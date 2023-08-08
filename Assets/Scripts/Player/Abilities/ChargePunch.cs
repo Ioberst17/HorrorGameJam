@@ -353,4 +353,16 @@ public class ChargePunch : MonoBehaviour
         //Instantiate(punchEffect, transform.position, Quaternion.identity);
         EventSystem.current.FinishChargedAttackTrigger();
     }
+    
+    // used if a player is hit vs. 
+    public void ReleaseCharge()
+    {
+        IsCharging = false;
+        playerPrimaryWeapon.IsAttacking = false;
+        UpdateSpriteBounds();
+        HandleFinishSound();
+        HandleFinishVFX();
+        ParticleSystemsOn(false); GlowOn(false); chargeTime = 0; holdTimeNormalized = 0;
+        EventSystem.current.FinishChargedAttackTrigger();
+    }
 }

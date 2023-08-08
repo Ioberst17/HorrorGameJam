@@ -792,7 +792,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a9e2d487df62a24f8d898119e44501b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controller: {fileID: 0}
+  playerController: {fileID: 0}
   dashParticles: {fileID: 0}
   _canDash: 0
   _isDashing: 0
@@ -5949,6 +5949,7 @@ MonoBehaviour:
     values: []
   transformToRotateAround: {fileID: 0}
   initialArmPosition: {x: 0, y: 0, z: 0}
+  initialArmPositionWhenCrouching: {x: 0, y: 0, z: 0}
   startedShotOnLeft: 0
   elapsedTime: 0
   rotationTime: 1
@@ -11133,6 +11134,7 @@ GameObject:
   - component: {fileID: 1547280755}
   - component: {fileID: 1547280754}
   - component: {fileID: 1547280753}
+  - component: {fileID: 538638611}
   m_Layer: 6
   m_Name: SpriteAndAnimations
   m_TagString: Untagged
@@ -11274,6 +11276,7 @@ MonoBehaviour:
     values: []
   transformToRotateAround: {fileID: 0}
   initialArmPosition: {x: 0, y: 0, z: 0}
+  initialArmPositionWhenCrouching: {x: 0, y: 0, z: 0}
   startedShotOnLeft: 0
   elapsedTime: 0
   rotationTime: 1
@@ -11289,6 +11292,18 @@ MonoBehaviour:
   farAlongEnoughToReset: 0
   armFinishedRotatingThreshold: 10
   isArmFacingEndPosition: 0
+--- !u!114 &538638611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1547280751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b2ce326187dd0b4a95d2808a95c91cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1747682778
 GameObject:
   m_ObjectHideFlags: 0
@@ -11938,6 +11953,7 @@ GameObject:
   - component: {fileID: 2113303502}
   - component: {fileID: 2113303500}
   - component: {fileID: 2113303499}
+  - component: {fileID: 1232583187}
   m_Layer: 6
   m_Name: SpriteAndAnimations
   m_TagString: Untagged
@@ -12063,6 +12079,7 @@ MonoBehaviour:
     values: []
   transformToRotateAround: {fileID: 0}
   initialArmPosition: {x: 0, y: 0, z: 0}
+  initialArmPositionWhenCrouching: {x: 0, y: 0, z: 0}
   startedShotOnLeft: 0
   elapsedTime: 0
   rotationTime: 1
@@ -12079,6 +12096,18 @@ MonoBehaviour:
   armFinishedRotatingThreshold: 10
   isArmFacingEndPosition: 0
   currentFirePoint: {fileID: 0}
+--- !u!114 &1232583187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2113303497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caaf50a686267274088e80a2c524d953, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1458881044085820166
 GameObject:
   m_ObjectHideFlags: 0
@@ -12103,7 +12132,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1458881044085820166}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.592, z: 0}
+  m_LocalPosition: {x: -0.6, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12196,6 +12225,12 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
+  horizontalAttackDimensions:
+    keys: []
+  upwardAttackDimensions:
+    keys: []
+  downwardAttackDimensions:
+    keys: []
 --- !u!114 &717545748
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12698,7 +12733,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1458881044941643619}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.15, y: -0.444, z: 0}
+  m_LocalPosition: {x: 1.41, y: -1.218, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12864,9 +12899,13 @@ MonoBehaviour:
     m_Bits: 256
   visualEffects: {fileID: 0}
   playerJump: {fileID: 0}
+  thresholdToTransitionToIdle: 20
+  thresHoldToLoopAlternativeIdleAnimation: 20.5
   isAttacking: 0
   ControlMomentum: 0
   _isGrounded: 0
+  _isCrouching: 0
+  _isRunning: 0
   _isAgainstWall: 0
   _isWallHanging: 0
   _canWallJump: 0

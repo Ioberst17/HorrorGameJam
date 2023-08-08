@@ -8,30 +8,37 @@ public class AnimationStates
     {
         // Movement 
         "PlayerIdle", "PlayerWalk", "PlayerRun", "PlayerDash",
+
+        // Aerial Movement
+        "PlayerJump", "PlayerFall", "PlayerWallLand", "PlayerLand",
         
+        // Idles
+        "PlayerMeditate", "PlayerStandToMeditate",
+
         // Block
         "PlayerShield",
         
         // Crouching
-        "PlayerStandToCrouch", "PlayerCrouch", "PlayerCrouchToStand",
+        "PlayerStandToCrouch", "PlayerCrouch", "PlayerCrouchToStand", "PlayerCrouchDodge",
         
+        // Crouch Attacks
+        "PlayerNeutralCrouchAttack",
+
         // Taking Damage
         "PlayerHurt", "PlayerDeath", "PlayerDead",
         
-        // ATTACKS
+        // ATTACKS (non-Crouch)
             // Aerial
             "PlayerNeutralAir",
             "PlayerForwardAir",
         
-            // Ground / Impact on Ground
+            // Ground / Impact on Ground / Crouching
             "PlayerCharge",
             "PlayerGroundSlam",
             "PlayerChargePunch",
             "PlayerBasicAttack1", "PlayerBasicAttack2", "PlayerBasicAttack3",
             "PlayerSideKick",
+            "PlayerSideKnee",
             "PlayerThrow",
-        
-        // Aerial Movement
-        "PlayerJump", "PlayerFall", "PlayerWallLand", "PlayerLand"
     };
 }

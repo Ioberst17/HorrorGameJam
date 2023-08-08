@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using System;
+using UnityEngine;
 //using static UnityEditor.Progress;
 
 public class EventSystem : MonoBehaviour
@@ -12,14 +10,24 @@ public class EventSystem : MonoBehaviour
 
     // ANIMATION EVENTS, RELATED TO VARIOUS PLAYER ACTIONS
 
+    // base animator
+
     public event Action onChargePunchRelease;
 
     public void ChargePunchTrigger() { if (onChargePunchRelease != null) { onChargePunchRelease(); } }    
     
     public event Action onGroundSlamDrop;
 
-    public void GroundSlamDropTrigger() { if (onGroundSlamDrop != null) { onGroundSlamDrop(); } }
+    public void GroundSlamDropTrigger() { if (onGroundSlamDrop != null) { onGroundSlamDrop(); } }    
+    
+    public event Action onThrowWeaponRelease;
 
+    public void ThrowWeaponTrigger() { if (onThrowWeaponRelease != null) { onThrowWeaponRelease(); } }
+
+    // right arm
+    public event Action OnShotFired;
+
+    public void OnFireAnimationRelease() { if (OnShotFired != null) { OnShotFired(); } }
 
     // COMBAT-CALCULATIONS (WITH ENEMIES)
 

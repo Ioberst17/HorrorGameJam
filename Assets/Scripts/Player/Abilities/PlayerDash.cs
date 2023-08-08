@@ -6,7 +6,8 @@ public class PlayerDash : MonoBehaviour
 {
     // references to other objects
     private GameController gameController;
-    [SerializeField] private PlayerController controller;
+    [SerializeField] private PlayerController playerController;
+    PlayerHealth playerHealth;
     // vfx references
     private GameObject visualEffects;
     private PlayerAnimator animator;
@@ -27,7 +28,8 @@ public class PlayerDash : MonoBehaviour
     private void Start()
     {
         gameController = FindObjectOfType<GameController>();
-        controller = FindObjectOfType<PlayerController>();
+        playerController = FindObjectOfType<PlayerController>();
+        playerHealth = GetComponentInParent<PlayerHealth>();
         animator = ComponentFinder.GetComponentInChildrenByNameAndType<PlayerAnimator>("Animator", transform.parent.gameObject);
         visualEffects = transform.GetSibling("VisualEffects").gameObject;
         dashParticles = ComponentFinder.GetComponentInChildrenByNameAndType<ParticleSystem>("DashParticleEffect", visualEffects, true);
@@ -59,21 +61,23 @@ public class PlayerDash : MonoBehaviour
         if(dashcooldown == 0)
         {
             _isDashing = true;
-            controller.Rb.gravityScale = 0;
+            playerHealth.IsInvincible = true;
+            playerController.Rb.gravityScale = 0;
             FindObjectOfType<AudioManager>().PlaySFX("Dash1");
             dashParticles.Play();
-            if (gameController.XInput == 0 & gameController.YInput == 0)
+            if ((gameController.XInput == 0 & gameController.YInput == 0) || playerController.IsCrouching)
             {
-                controller.SetVelocity(controller.MovementSpeed * 2 * controller.FacingDirection, 0);
+                playerController.SetVelocity(playerController.MovementSpeed * 2 * playerController.FacingDirection, 0);
             }
             else { HandleMultiDirectionalDash(); }
-            animator.Play("PlayerDash", PlayerAnimator.PlayerPart.All, true, true, true, false);
+            if (playerController.IsCrouching) { animator.Play("PlayerCrouchDodge"); }
+            else { animator.Play("PlayerDash", PlayerAnimator.PlayerPart.All, true, true, true, false); }
             yield return DashAfterImageHandler();
+            playerHealth.IsInvincible = false;
             _isDashing = false;
-            controller.Rb.gravityScale = 3;
-            controller.SetVelocity(0, 0);
+            playerController.Rb.gravityScale = 3;
+            playerController.SetVelocity(0, 0);
             dashcooldown = dashCooldownNumber;
-            
         }
         
     }
@@ -95,8 +99,7 @@ public class PlayerDash : MonoBehaviour
     {
         if (gameController.PlayerInput.currentControlScheme == "Keyboard & Mouse")
         {
-            float baseInput = controller.MovementSpeed * 2;
-            controller.SetVelocity(gameController.XInput * baseInput, gameController.YInput * baseInput);
+            playerController.SetVelocity(playerController.MovementSpeed * 2 * playerController.FacingDirection, 0);
 
             //if (gameController.XInput > 0 && gameController.YInput > 0) { controller.SetVelocity(gameController.XInput * baseInput, gameController.YInput* baseInput); }
             //else if (gameController.XInput > 0 && gameController.YInput < 0) { controller.SetVelocity(gameController.XInput * baseInput, gameController.YInput * baseInput); }
@@ -109,7 +112,7 @@ public class PlayerDash : MonoBehaviour
         }
         else if (gameController.PlayerInput.currentControlScheme == "Gamepad")
         {
-            controller.SetVelocity(gameController.XInput * controller.MovementSpeed * 2, gameController.YInput * controller.MovementSpeed * 2);
+            playerController.SetVelocity(gameController.XInput * playerController.MovementSpeed * 2, gameController.YInput * playerController.MovementSpeed * 2);
         }
     }
 

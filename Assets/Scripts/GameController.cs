@@ -39,13 +39,17 @@ public class GameController : MonoBehaviour
 
     public enum ButtonState { Pressed, Held, Released}
     
-    // INTERNAL TO GAMECONTROLLER
+    // GAMECONTROLLER VARIABLES
     // Trackers for states
     [SerializeField] private string _gameState;  public string GameState { get { return _gameState; } set { _gameState = value; } }
     [SerializeField] private bool _isPaused;  public bool IsPaused { get { return _isPaused; } set { _isPaused = value; } }
     [SerializeField] private bool _isCutscene; public bool IsCutscene { get { return _isCutscene; } set { _isCutscene = value; } }
 
     private bool pauseHelper;
+
+    // button state
+    private bool _playerIsInputting; public bool PlayerIsInputting { get { return _playerIsInputting; } set { _playerIsInputting = value; } }
+    public float timeSinceInput;
 
     // button state trackers: simple
     private bool InteractButton, JumpButton, DashButton, ShieldButton;
@@ -172,6 +176,7 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update() 
     {
+        PlayerIsInputting = false;
         CurrentControlScheme = PlayerInput.currentControlScheme;
         CheckInput(); 
     }
@@ -191,6 +196,7 @@ public class GameController : MonoBehaviour
     {
         XInput = move.ReadValue<Vector2>().x;
         YInput = move.ReadValue<Vector2>().y;
+        if(XInput != 0 || YInput != 0) { PlayerIsInputting = true; }
         lookInput = look.ReadValue<Vector2>(); // used by Gamepad
         lookInputScreen = cameraToUse.WorldToScreenPoint(lookInput); 
         lookInputWorld = cameraToUse.ScreenToWorldPoint(lookInput);
@@ -203,13 +209,13 @@ public class GameController : MonoBehaviour
     {
         if ("Started" == check)
         {
-            if (ctx.interaction is TapInteraction) { AttackButtonDown = true; Debug.Log(ctx.interaction + " - Started"); }
-            if (ctx.interaction is SlowTapInteraction) { AttackButtonHeld = true;  Debug.Log(ctx.interaction + " - Started"); }
+            if (ctx.interaction is TapInteraction) { AttackButtonDown = true; Debug.Log(ctx.interaction + " - Started"); PlayerIsInputting = true; }
+            if (ctx.interaction is SlowTapInteraction) { AttackButtonHeld = true;  Debug.Log(ctx.interaction + " - Started"); PlayerIsInputting = true; }
         }
         if ("Performed" == check)
         {
             if (ctx.interaction is TapInteraction) { Debug.Log(ctx.interaction + " - Performed"); }
-            if (ctx.interaction is SlowTapInteraction) { AttackButtonRelease = true; Debug.Log(ctx.interaction + " - Performed"); }
+            if (ctx.interaction is SlowTapInteraction) { AttackButtonRelease = true; Debug.Log(ctx.interaction + " - Performed"); PlayerIsInputting = true; }
         }
         if ("Cancelled" == check) 
         {
@@ -220,9 +226,9 @@ public class GameController : MonoBehaviour
 
     void CheckFireInputEvents(InputAction.CallbackContext ctx, string check) // NOTE: THESE ARE EVENTS AND FIRE AS INITIALIZED IN OnEnable(), THEREFORE THEY ARE NOT IN CheckInput()
     {
-        if ("Started" == check) { if (ctx.interaction is SlowTapInteraction) { ShootButtonHeld = true; } ShootButtonDown = true; }
-        if ("Performed" == check) { if (ctx.interaction is SlowTapInteraction) { ShootButtonHeld = false; ShootButtonRelease = true; } }// weapon has fired after hold }
-        if ("Cancelled" == check)  { ShootButtonHeld = false; ShootButtonRelease = true; }
+        if ("Started" == check) { if (ctx.interaction is SlowTapInteraction) { ShootButtonHeld = true; } ShootButtonDown = true; PlayerIsInputting = true; }
+        if ("Performed" == check) { if (ctx.interaction is SlowTapInteraction) { ShootButtonHeld = false; ShootButtonRelease = true; } PlayerIsInputting = true; }// weapon has fired after hold }
+        if ("Cancelled" == check)  { ShootButtonHeld = false; ShootButtonRelease = true; PlayerIsInputting = true; }
     }
 
     public void CheckInput() // CALLED IN UPDATE TO GET INPUTS AND UPDATE BUTTON VARIABLES FOR CalcInputs()
@@ -265,25 +271,25 @@ public class GameController : MonoBehaviour
                 LimitToOnlyUIActions(false);
                 GetMovementAndAnalogInputs();
 
-                if (interact.triggered) { InteractButton = true; }
+                if (interact.triggered) { InteractButton = true; PlayerIsInputting = true; }
 
-                if (jump.triggered) { JumpButton = true; }
+                if (jump.triggered) { JumpButton = true; PlayerIsInputting = true; }
                 if (jump.WasReleasedThisFrame()) { JumpButton = false; JumpBuffer = 0; }
 
-                if (attack.WasReleasedThisFrame()) { /*AttackButtonDown = false;*/ AttackButtonRelease = true; AttackBuffer = 0; }
+                if (attack.WasReleasedThisFrame()) { /*AttackButtonDown = false;*/ AttackButtonRelease = true; AttackBuffer = 0; PlayerIsInputting = true; }
 
-                if (dash.triggered) { DashButton = true; }
+                if (dash.triggered) { DashButton = true; PlayerIsInputting = true; }
                 if (dash.WasReleasedThisFrame()) { DashButton = false; DashBuffer = 0; }
 
-                if (jump.triggered && skills.hasJump()) { JumpButton = true; }
+                if (jump.triggered && skills.hasJump()) { JumpButton = true; PlayerIsInputting = true; }
 
-                if (fire.WasReleasedThisFrame()) { EventSystem.current.WeaponStopTrigger(); }
+                if (fire.WasReleasedThisFrame()) { EventSystem.current.WeaponStopTrigger(); PlayerIsInputting = true; }
 
                 if (skills.hasBlock())
                 {
-                    if (shield.triggered) { playerShield.ShieldButtonDown(); }
-                    if (shield.ReadValue<float>() > 0f) { playerShield.ShieldButtonHeld(); }
-                    if (shield.WasReleasedThisFrame()) { playerShield.ShieldButtonUp(); }
+                    if (shield.triggered) { playerShield.ShieldButtonDown(); PlayerIsInputting = true; }
+                    if (shield.ReadValue<float>() > 0f) { playerShield.ShieldButtonHeld(); PlayerIsInputting = true; }
+                    if (shield.WasReleasedThisFrame()) { playerShield.ShieldButtonUp(); PlayerIsInputting = true; }
                 }
 
                 // NOTE: Keyboard only commands are listed as they are primarily testing related; they don't exist in the controller input map
@@ -299,13 +305,16 @@ public class GameController : MonoBehaviour
                 // For Inventory
                 InventoryTriggerCheck();
                 if (currentWeaponAmmoAdd.triggered) { EventSystem.current.WeaponAddAmmoTrigger(100); }
-                if (changeWeaponLeft.triggered) { EventSystem.current.WeaponChangeTrigger(-1); }
-                if (changeWeaponRight.triggered) { EventSystem.current.WeaponChangeTrigger(1); }
-                if (healthKit.triggered) { FindObjectOfType<PlayerData_UI_Mason>().UseHealthPack(); } // To-Do: move this function to a more apt script vs in a UI script
+                if (changeWeaponLeft.triggered) { EventSystem.current.WeaponChangeTrigger(-1); PlayerIsInputting = true; }
+                if (changeWeaponRight.triggered) { EventSystem.current.WeaponChangeTrigger(1); PlayerIsInputting = true; }
+                if (healthKit.triggered) { FindObjectOfType<PlayerData_UI_Mason>().UseHealthPack(); PlayerIsInputting = true; } // To-Do: move this function to a more apt script vs in a UI script
 
                 // Debug Console
                 if (Keyboard.current.backquoteKey.wasPressedThisFrame) { FindObjectOfType<DebugController_Mason>().ToggleDebugConsole(); }
                 if (Keyboard.current.enterKey.wasPressedThisFrame) { FindObjectOfType<DebugController_Mason>().EnterInput(); }
+
+                if (!PlayerIsInputting) { timeSinceInput += Time.deltaTime; }
+                else if (PlayerIsInputting) { timeSinceInput = 0; }
             }
         }
     }

@@ -7,4 +7,5 @@ public class BaseAnimationEventSupport : MonoBehaviour
     // these are called from animations
     public void ChargePunchRelease() { EventSystem.current.ChargePunchTrigger(); } // base charge punch animation
     public void GroundSlamDrop() { EventSystem.current.GroundSlamDropTrigger(); } // base ground slam animation
+    public void ReleaseThrow() { EventSystem.current.ThrowWeaponTrigger(); } // base release throw animation
 }
