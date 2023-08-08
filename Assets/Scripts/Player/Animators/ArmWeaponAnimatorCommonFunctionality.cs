@@ -20,6 +20,7 @@ public class ArmWeaponAnimatorCommonFunctionality : BodyPartAnimator
 
     [Header("Shooting Variables")]
     public Vector3 initialArmPosition;
+    public Vector3 initialArmPositionWhenCrouching;
     public bool startedShotOnLeft;
     public float elapsedTime;
     public float rotationTime = 10f;
@@ -38,7 +39,7 @@ public class ArmWeaponAnimatorCommonFunctionality : BodyPartAnimator
     public Coroutine playerShootRestartedCoroutine;
     public Coroutine playerShootContinousCoroutine;
     public bool farAlongEnoughToReset; // what direction the hand shoot return to idle
-    protected string[] animationsThatDoNotOverrideShooting = new string[5] { "PlayerIdle", "PlayerRun", "PlayerJump", "PlayerFall", "PlayerLand" };
+    protected string[] animationsThatDoNotOverrideShooting = new string[6] { "PlayerIdle", "PlayerCrouch", "PlayerRun", "PlayerJump", "PlayerFall", "PlayerLand" };
 
     // regarding end condition of arm rotation
     private bool _oneHandedWeaponInUse, _twoHandedWeaponInUse;
@@ -81,11 +82,6 @@ public class ArmWeaponAnimatorCommonFunctionality : BodyPartAnimator
     {
         base.Start();
 
-        // Set priority animations
-        //priorityAnimationStates["PlayerShoot"] = new AnimationProperties("PlayerShoot", 2);
-        //priorityAnimationStates["PlayerShootReturn"] = new AnimationProperties("PlayerShootReturn", 2);
-        //priorityAnimationStates["PlayerThrow"] = new AnimationProperties("PlayerThrow", 2);
-
         // get key references
         gameController = FindObjectOfType<GameController>();
         playerController = FindObjectOfType<PlayerController>();
@@ -95,15 +91,12 @@ public class ArmWeaponAnimatorCommonFunctionality : BodyPartAnimator
         transformToRotateAround = transform.parent.parent.transform;
         initialArmPosition = transformToRotateAround.localPosition;
         EventSystem.current.onUpdateSecondaryWeaponTrigger += OnWeaponSwitch;
+        EventSystem.current.OnShotFired += PauseAnimator; // called by animation Keyframes
     }
     private void OnDestroy()
     {
         EventSystem.current.onUpdateSecondaryWeaponTrigger -= OnWeaponSwitch;
-    }
-
-    private void Update()
-    {
-        //StandardizeWithBaseAnimatorAsNeeded();
+        EventSystem.current.OnShotFired -= PauseAnimator;
     }
 
     // used by child animations to set an animation when needed e.g. weapon change
@@ -116,31 +109,8 @@ public class ArmWeaponAnimatorCommonFunctionality : BodyPartAnimator
         if (currentWeapon.isTwoHanded) { TwoHandedWeaponInUse = true; }
     }
 
-    //// override of body part animator's Check current animaion
-    //override protected bool CheckIfNewAnimationCanPlay(string newAnimation)
-    //{
-    //    if (priorityAnimationFlag && AnimationsThatOverrideShooting(newAnimation)) { ResetShootCoroutineVariables(); return true; }
-    //    else if (!priorityAnimationFlag) { return true; }
-    //    else { return false; }
-    //}
-
-    //bool AnimationsThatOverrideShooting(string animationName)
-    //{
-    //    return animationName != "PlayerIdle" && animationName != "PlayerRun" && animationName != "PlayerJump";
-    //}
-    // sets arms and weapon animations to a blank animation, so base animator can play the whole animation (including arm parts)
-    // this is useful for simpliying animations with ChargePunch, which would otherwise require a separate sprite sheet as base can then hold the entire animation
-    void StandardizeWithBaseAnimatorAsNeeded()
-    {
-        if (baseAnimator.currentAnimationStateHasCompleteTag)
-        {
-            if (priorityAnimationFlag) { ResetShootCoroutineVariables(); }
-            animator.Play(baseAnimator.currentAnimationStateName);
-        }
-    }
-
     // BELOW THIS ARE FUNCTIONS TO HANDLE THE ROTATION OF GAMEOBJECTS RELATED TO SHOOTING ANIMATIONS
-    
+
     // overrides check if new animation can play to handle shooting cases, and syncing body parts to base animator if using a 'complete' interaction
     override public string CheckIfNewAnimationCanPlay(string newAnimation)
     {
@@ -155,18 +125,18 @@ public class ArmWeaponAnimatorCommonFunctionality : BodyPartAnimator
         }
 
         // if shoot is running and a low priority animation is running, then let shoot animation continue
-        if (priorityAnimationFlag && NewAnimationDoesNotOverridePriority(newAnimation)) { shouldNewAnimationPlay = false; return ""; }
+        if (priorityAnimationFlag && NewAnimationDoesNotOverridePriority(newAnimation) && newAnimation != "PlayerShoot") { shouldNewAnimationPlay = false; return ""; }
 
         // else compare priority
 
         // Check if currentAnimationState is null
         if (currentAnimationState == null) { Debug.Log($"{GetType().Name}: currentAnimationState is null"); }
 
-        if(currentAnimationState == null) { ResetShootCoroutineVariables(); shouldNewAnimationPlay = true; return newAnimation; } // currentAnimatStation loads as null if a player tries an action with a 'complete' tag
+        if (currentAnimationState == null) { ResetShootCoroutineVariables(); shouldNewAnimationPlay = true; return newAnimation; } // currentAnimatStation loads as null if a player tries an action with a 'complete' tag
         else if (animationStates[newAnimation].priorityLevel > currentAnimationState.priorityLevel || currentAnimation.normalizedTime >= 1f) { shouldNewAnimationPlay = true; return newAnimation; } // if so, then it can play
         else { shouldNewAnimationPlay = false; return currentAnimationState.animationName; }
     }
-    
+
 
     private bool NewAnimationDoesNotOverridePriority(string newAnimation)
     {
@@ -207,6 +177,8 @@ public class ArmWeaponAnimatorCommonFunctionality : BodyPartAnimator
         else { rotationTime = rotationLeftSpeed; }
 
         animator.Play("PlayerShoot");
+        if (!playerController.IsCrouching) { transformToRotateAround.localPosition = initialArmPosition; }
+        else { transformToRotateAround.localPosition = initialArmPositionWhenCrouching; }
 
         // update arm position to where mouse is pointed
         SetPointingDirection();
@@ -214,9 +186,6 @@ public class ArmWeaponAnimatorCommonFunctionality : BodyPartAnimator
 
         // now wait
         yield return new WaitForSeconds(postShotPause);
-
-        // Pause the animator at the current frame of the starting animation
-        animator.speed = 0f;
 
         yield return StartCoroutine(ReturnToStartingPosition());
 
@@ -247,9 +216,6 @@ public class ArmWeaponAnimatorCommonFunctionality : BodyPartAnimator
         SetPointingDirection();
 
         yield return new WaitForSeconds(postShotPause);
-
-        // Pause the animator at the current frame of the starting animation
-        animator.speed = 0f;
 
         yield return StartCoroutine(ReturnToStartingPosition());
 
@@ -362,6 +328,8 @@ public class ArmWeaponAnimatorCommonFunctionality : BodyPartAnimator
             isArmFacingEndPosition = true;
         }
     }
+
+    void PauseAnimator() { animator.speed = 0; }
 
     // used when returning a single / discrete shot weapon to the player's hand
     void ClosingAnimationChanges()

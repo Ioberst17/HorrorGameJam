@@ -13,6 +13,7 @@ public class RightArmAnimator : ArmWeaponAnimatorCommonFunctionality
     override public void Start()
     {
         base.Start();
+        initialArmPositionWhenCrouching = new Vector3(-.069f, -.059f);
         EventSystem.current.onUpdateSecondaryWeaponTrigger += OnWeaponSwitch;
     }
     private void OnDestroy()

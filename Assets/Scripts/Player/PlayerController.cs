@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Unity.Burst.CompilerServices;
+//using UnityEditorInternal;
 //using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -35,6 +36,10 @@ public class PlayerController : MonoBehaviour
     PlayerDash playerDash;
     [SerializeField] PlayerJump playerJump;
 
+    // alt idle animations
+    public float thresholdToTransitionToIdle = 5;
+    public float thresHoldToLoopAlternativeIdleAnimation = 5.5f;
+
     //To make the player temporarily unable to control themselves
 
     public bool isAttacking;
@@ -47,10 +52,12 @@ public class PlayerController : MonoBehaviour
     public Vector2 NewVelocity { get; set; }
     private Vector2 newForce;
 
-    //used to calculate "control interta"
+    //used to calculate "control intertia"
     public float ControlMomentum;
 
     [SerializeField] private bool _isGrounded; public bool IsGrounded { get { return _isGrounded; } set { _isGrounded = value; } }
+    [SerializeField] private bool _isCrouching; public bool IsCrouching { get { return _isCrouching; } set { _isCrouching = value; } }
+    [SerializeField] private bool _isRunning; public bool IsRunning { get { return _isRunning; } set { _isRunning = value; } }
     //private bool isOnSlope;
     //private bool canWalkOnSlope;
     [SerializeField] private bool _isAgainstWall; public bool IsAgainstWall { get { return _isAgainstWall; } set { _isAgainstWall = value; } }
@@ -133,6 +140,7 @@ public class PlayerController : MonoBehaviour
             _canWallJump = true;
 
             if (!playerDash.IsDashing) { playerDash.CanDash = true; }
+            PlayerCrouch(); 
         }
         else if (!_isGrounded)
         {
@@ -174,13 +182,16 @@ public class PlayerController : MonoBehaviour
                 
                 if(!isAttacking && !playerJump.IsJumping)
                 {
-                    if ((Rb.velocity.x == 0 && !playerShield.shieldOn) || DialogueManager.GetInstance().DialogueIsPlaying) // if still and not shielding or cutscene manager is on
+                    if ((Rb.velocity.x == 0 && !playerShield.shieldOn && !IsCrouching) || DialogueManager.GetInstance().DialogueIsPlaying) // if still and not shielding or cutscene manager is on
                     {
-                        IdlePlayer();
+                        if (gameController.timeSinceInput > thresHoldToLoopAlternativeIdleAnimation) { animator.Play("PlayerMeditate"); }
+                        else if (gameController.timeSinceInput > thresholdToTransitionToIdle) { animator.Play("PlayerStandToMeditate"); }
+                        else { IdlePlayer(); }     
                     }
                     else if(Rb.velocity.x != 0) // if moving
                     {
                         animator.Play("PlayerRun");
+                        IsRunning = true;
                         visualEffects.PlayParticleSystem("MovementDust");
                     }
                 }
@@ -188,17 +199,18 @@ public class PlayerController : MonoBehaviour
             }
             else if (!_isGrounded) //If in air
             {
+                IsRunning = false;
                 SetVelocity(MovementSpeed * ControlMomentum/10, Rb.velocity.y);
             }
         }
         else if (chargePunch.IsCharging) 
         {
             if (animator.CheckIfAnimationIsPlaying("PlayerBasicAttack")){ }
-            else { animator.Play("PlayerCharge"); } 
+            else { if (!IsCrouching) { animator.Play("PlayerCharge"); } } 
         }
         else if (playerSecondaryWeaponThrowHandler.inActiveThrow)
         {
-            animator.Play("PlayerCharge");
+            if (!IsCrouching) { animator.Play("PlayerCharge"); }
         }
     }
 
@@ -280,9 +292,18 @@ public class PlayerController : MonoBehaviour
         parentTransform.position = new Vector2(gameData.lastKnownWorldLocationX, gameData.lastKnownWorldLocationY);
     }
 
+    // handles crouching logic, assumes player is grounded
+    void PlayerCrouch()
+    {
+        if(IsCrouching == true && gameController.YInput >= 0) { IsCrouching = false; animator.Play("PlayerCrouchToStand"); }
+        else if (IsCrouching == true && gameController.YInput < 0) { animator.Play("PlayerCrouch"); }
+        else if(IsCrouching == false && gameController.YInput < 0) { IsCrouching = true; animator.Play("PlayerStandToCrouch"); }
+        
+    }
     public void IdlePlayer(bool doRegardlessOfPlayerInput = false) // if this optional value is called with a true, animator will play idle 
     {
         SetVelocity();
+        IsRunning = false; IsCrouching = false; IsGrounded = true;
         if (doRegardlessOfPlayerInput || gameController.XInput == 0)  { animator.Play("PlayerIdle");  }
     }
 

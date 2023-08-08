@@ -61,8 +61,10 @@ public class BodyPartAnimator : MonoBehaviour
 
         // update base animation hierarchy
         UpdateAnimationStatePriority("PlayerJump", -1);
+        UpdateAnimationStatePriority("PlayerWallLand", -1);
         UpdateAnimationStatePriority("PlayerRun", -2);
         UpdateAnimationStatePriority("PlayerIdle", -3);
+        UpdateAnimationStatePriority("PlayerCrouch", -3);
     }
 
     // used to build a dictionary that lets you reference animation states, note: Unity does not allow you to directly reference an animation by name you need to use a hash

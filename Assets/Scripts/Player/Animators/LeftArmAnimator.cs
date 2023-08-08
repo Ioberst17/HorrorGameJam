@@ -7,6 +7,7 @@ public class LeftArmAnimator : ArmWeaponAnimatorCommonFunctionality
     override public void Start()
     {
         base.Start();
+        initialArmPositionWhenCrouching = new Vector3(.025f, -.0192f);
         EventSystem.current.onUpdateSecondaryWeaponTrigger += OnWeaponSwitch;
         armPivot = 45;
     }

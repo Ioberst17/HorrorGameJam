@@ -9,6 +9,7 @@ public class PlayerHealth : Health
     private float blinkFrequency = 30f; // higher, isfaster blinking for hit stun
     private PlayerAnimator animator;
     public PlayerController playerController;
+    private ChargePunch chargePunch;
     private Shield shield;
     [SerializeField] private UIHealthChangeDisplay damageDisplay;
     public float lucidityDamageModifier;
@@ -20,6 +21,7 @@ public class PlayerHealth : Health
         EventSystem.current.onPlayerHitCalcTrigger += Hit;
         playerController = GetComponent<PlayerController>(); 
         shield = GetComponentInChildren<Shield>();
+        chargePunch = GetComponentInChildren<ChargePunch>();
         damageDisplay = GetComponentInChildren<UIHealthChangeDisplay>();
         animator = ComponentFinder.GetComponentInChildrenByNameAndType<PlayerAnimator>("Animator", this.gameObject, true);
         IsInvincible = false;
@@ -68,6 +70,8 @@ public class PlayerHealth : Health
 
     IEnumerator hitStun()
     {
+        chargePunch.ReleaseCharge();
+
         inHitStun = true;
         StartCoroutine(Invincibility(standardInvincibilityLength));
         animator.Play("PlayerHurt");

@@ -42,6 +42,12 @@ public class PlayerSecondaryWeaponThrowHandler : MonoBehaviour
         animator = ComponentFinder.GetComponentInChildrenByNameAndType<PlayerAnimator>("Animator", transform.parent.gameObject);
         playerSecondaryWeapon = GetComponent<PlayerSecondaryWeapon>();
         projectileSpawnPoint = playerSecondaryWeapon.projectileSpawnPoint;
+        EventSystem.current.onThrowWeaponRelease += ThrowWeapon;
+    }
+
+    private void OnDestroy()
+    {
+        EventSystem.current.onThrowWeaponRelease -= ThrowWeapon;
     }
 
     // tracks data around clicks and time held
@@ -60,11 +66,7 @@ public class PlayerSecondaryWeaponThrowHandler : MonoBehaviour
         else if (inputState == "Button Released")
         {
             throwKeyReleased = Time.time;
-            if (inActiveThrow) 
-            {
-                animator.Play("PlayerThrow");
-                ThrowWeapon(currentThrowForce); 
-            }
+            if (inActiveThrow) { animator.Play("PlayerThrow"); }
         }
         if (inputState == "Button Held")
         {
@@ -86,7 +88,7 @@ public class PlayerSecondaryWeaponThrowHandler : MonoBehaviour
         return force;
     }
 
-    public void ThrowWeapon(float throwSpeed)
+    public void ThrowWeapon()
     {
         GameObject toss = Instantiate(playerSecondaryWeapon.ammoPrefabs[playerSecondaryWeapon.currentAmmoIndex], projectileSpawnPoint.position, projectileSpawnPoint.transform.rotation);
         Vector3 bulletDir = ((Vector3)gameController.lookInput - (Vector3)gameController.playerPositionScreen).normalized;
@@ -96,9 +98,9 @@ public class PlayerSecondaryWeaponThrowHandler : MonoBehaviour
 
         if (10 > transform.rotation.eulerAngles.z && transform.rotation.eulerAngles.z > -10)
         {
-            toss.GetComponent<Rigidbody2D>().AddForce(bulletDir * throwSpeed, ForceMode2D.Impulse);
+            toss.GetComponent<Rigidbody2D>().AddForce(bulletDir * currentThrowForce, ForceMode2D.Impulse);
         }
-        else { toss.GetComponent<Rigidbody2D>().AddForce( bulletDir * throwSpeed, ForceMode2D.Impulse); }
+        else { toss.GetComponent<Rigidbody2D>().AddForce( bulletDir * currentThrowForce, ForceMode2D.Impulse); }
 
         inActiveThrow = false;
         secondaryWeaponsManager.ChangingIsBlocked = false;

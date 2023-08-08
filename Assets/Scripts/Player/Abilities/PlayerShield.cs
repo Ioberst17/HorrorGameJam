@@ -6,6 +6,7 @@ public class PlayerShield : Shield
 {
     // Outside references
     private PlayerStamina playerStamina;
+    private PlayerController playerController;
     private PlayerHealth playerHealth;
     private PlayerAnimator animator;
 
@@ -24,6 +25,7 @@ public class PlayerShield : Shield
     {
         base.Start();
         playerStamina = SiblingComponentUtils.GetSiblingComponent<PlayerStamina>(this.gameObject);
+        playerController = GetComponentInParent<PlayerController>();
         playerHealth = GetComponentInParent<PlayerHealth>();
         animator = FindObjectOfType<PlayerAnimator>();
         effectcooldown = 0;
@@ -66,7 +68,11 @@ public class PlayerShield : Shield
 
     public void ShieldButtonHeld()
     {
-        if(shieldButtonDown == true) { if (playerStamina.SP > 0) { ChangeSP(-staminaRate, Time.deltaTime); } animator.Play("PlayerShield"); }
+        if(shieldButtonDown == true) 
+        { 
+            if (playerStamina.SP > 0) { ChangeSP(-staminaRate, Time.deltaTime); }
+            if (!playerController.IsCrouching){ animator.Play("PlayerShield"); }
+        }
     }
 
     public void ShieldButtonUp()
