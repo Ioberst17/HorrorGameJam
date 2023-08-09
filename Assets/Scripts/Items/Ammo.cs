@@ -51,7 +51,7 @@ public class Ammo : MonoBehaviour
         if(other.gameObject.GetComponent<EnemyController>() != null)
         {
             var enemyController = other.gameObject.GetComponent<EnemyController>();
-            EventSystem.current.EnemyHitTrigger(weaponID, weaponLevel, GetComponentInParent<Transform>().position, statusModifier, enemyController);
+            EventSystem.current.EnemyAmmoHitTrigger(weaponID, weaponLevel, GetComponentInParent<Transform>().position, statusModifier, enemyController);
         }
     }
 
@@ -64,7 +64,7 @@ public class Ammo : MonoBehaviour
 
     private void PassDamage(int weaponID, int weaponLevel, Vector3 position, string statusModifier, EnemyController enemyController)
     {
-        EventSystem.current.EnemyHitTrigger(weaponID, weaponLevel, transform.position, statusModifier, enemyController);
+        EventSystem.current.EnemyAmmoHitTrigger(weaponID, weaponLevel, transform.position, statusModifier, enemyController);
         Instantiate(Resources.Load("VFXPrefabs/DamageImpact"), transform.position, Quaternion.identity);
         Destroy(gameObject);
     }

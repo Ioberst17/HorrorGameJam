@@ -2,120 +2,65 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HellhoundBehavior : MonoBehaviour
+public class HellhoundBehavior : EnemyAttackBehavior
 {
     public bool justAttacked = false;
     
-    private Vector2 newVelocity;
-    EnemyController enemyController;
     [SerializeField] private float HellhoundStartupFrames;
     [SerializeField] private float HellhoundActiveFrames;
     [SerializeField] private float HellhoundRecoveryFrames;
-    [SerializeField] private LayerMask whatIsGround;
-    [SerializeField] private float groundCheckRadius;
-    [SerializeField] private Transform groundCheck;
-    public bool isGrounded;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        enemyController = GetComponentInParent<EnemyController>();
-
+    override protected void Start() 
+    { 
+        base.Start();
+        enemyController.IsAttacking = false;
+        enemyController.GroundCheckRadius = 0.05f;
     }
 
-    // Update is called once per frame
-    void Update()
+    // Override the base passover called in Parent Fixed Update
+    override protected void Passover()
     {
-        
-    }
-    //this is effectively the fixedupdate block
-    public void HellhoundPassover()
-    {
-        if (enemyController.rb.velocity.y == 0.0f)
-        {
-            isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, whatIsGround);
-
-            //Debug.Log("isgrounded " + rb.velocity.y);
-        }
-        else
-        {
-            isGrounded = false;
-        }
         if (!justAttacked)
         {
-            if (enemyController.transform.position.x >= enemyController.patrol1Point.x)
-            {
-                enemyController.patrolID = 1;
-            }
-            else if (enemyController.transform.position.x <= enemyController.patrol2Point.x)
-            {
-                enemyController.patrolID = 2;
-            }
+            UpdatePatrolID();
 
             if (!enemyController.playerInZone)
             {
                 enemyController.animator.Play("HellhoundRun");
-                HoundPatrol();
-
+                Patrol();
             }
             else
             {
                 enemyController.animator.Play("HellhoundRun");
-                HoundChase();
+                Chase();
             }
         }
-        if (enemyController.rb.velocity.x >= 0.5f && enemyController.facingDirection == -1 && !enemyController.isAttacking)
+        if (enemyController.RB.velocity.x >= 0.5f && enemyController.FacingDirection == -1 && !enemyController.IsAttacking)
         {
             enemyController.Flip();
         }
-        else if (enemyController.rb.velocity.x <= -0.5f && enemyController.facingDirection == 1 && !enemyController.isAttacking)
+        else if (enemyController.RB.velocity.x <= -0.5f && enemyController.FacingDirection == 1 && !enemyController.IsAttacking)
         {
             enemyController.Flip();
         }
     }
-    private void HoundPatrol()
-    {
-        switch (enemyController.patrolID)
-        {
-            case 0:
-                newVelocity.Set(enemyController.patrolSpeed, enemyController.rb.velocity.y);
-                enemyController.rb.velocity = newVelocity;
-                break;
-            case 1:
-                newVelocity.Set(-enemyController.patrolSpeed, enemyController.rb.velocity.y);
-                enemyController.rb.velocity = newVelocity;
-                break;
-            case 2:
-                newVelocity.Set(enemyController.patrolSpeed, enemyController.rb.velocity.y);
-                enemyController.rb.velocity = newVelocity;
-                break;
-            default:
-                break;
-        }
 
-    }
-        private void HoundChase()
+    override protected void Chase()
     {
         if (enemyController.playerLocation.position.x >= transform.position.x)
         {
-            newVelocity.Set(enemyController.patrolSpeed * 1.5f, enemyController.rb.velocity.y);
-            enemyController.rb.velocity = newVelocity;
+            enemyController.SetVelocity(enemyController.MovementSpeed * 1.5f, enemyController.RB.velocity.y);
         }
-        else
-        {
-            newVelocity.Set(-enemyController.patrolSpeed * 1.5f, enemyController.rb.velocity.y);
-            enemyController.rb.velocity = newVelocity;
-        }
+        else { enemyController.SetVelocity(-enemyController.MovementSpeed * 1.5f, enemyController.RB.velocity.y); }
 
     }
 
     public void PounceTrigger()
     {
-        if (!justAttacked && enemyController.rb.velocity.y < 0.25f)
+        if (!justAttacked && enemyController.RB.velocity.y < 0.25f)
         {
             justAttacked = true;
-            newVelocity.Set(0.25f * enemyController.facingDirection, enemyController.rb.velocity.y);
-            enemyController.rb.velocity = newVelocity;
+            enemyController.SetVelocity(0.25f * enemyController.FacingDirection, enemyController.RB.velocity.y);
             enemyController.animator.Play("HellhoundCrouch");
             StartCoroutine(PounceStartup());
         }
@@ -125,18 +70,18 @@ public class HellhoundBehavior : MonoBehaviour
     IEnumerator PounceStartup()
     {
         yield return new WaitForSeconds(HellhoundStartupFrames);
-        if (enemyController.damageInterupt)
+        if (enemyHealth.damageInterupt)
         {
-            enemyController.damageInterupt = false;
+            enemyHealth.damageInterupt = false;
         }
         else
         {
-            enemyController.rb.AddForce(new Vector2(6.0f * enemyController.facingDirection, 3.0f), ForceMode2D.Impulse);
-            enemyController.isAttacking = true;
+            enemyController.AddForce(6.0f * enemyController.FacingDirection, 3.0f);
+            enemyController.IsAttacking = true;
             enemyController.animator.Play("HellhoundAirborne");
             yield return new WaitForSeconds(HellhoundActiveFrames);
-            yield return new WaitUntil(()=>isGrounded);
-            enemyController.isAttacking = false;
+            yield return new WaitUntil(()=> enemyController.IsGrounded);
+            enemyController.IsAttacking = false;
             yield return new WaitForSeconds(HellhoundRecoveryFrames);
             enemyController.animator.Play("HellHoundStand");
         }

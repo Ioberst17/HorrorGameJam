@@ -70,7 +70,6 @@ public class ChargePunch : MonoBehaviour
     Bounds punchSpriteBounds;
     public float maxScale = 2.0f; // SETS MAX SCALE OF SPRITE IN CHARGING, IMPORTANT FOR COLLISIONS
     public float offsetAmount = 1.0f;
-    private float visibleDuration = 0.2f;
     private Color originalColor;
     private Vector2 originalLocalPosition;
     private float fadeDuration = 0.5f;

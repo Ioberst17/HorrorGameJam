@@ -49,7 +49,7 @@ public class Explode : MonoBehaviour
         { /*touchedObject.gameObject.GetComponentInChildren<PlayerShield>().DamageHandler(gameObject.GetComponent<Collider2D>());*/ }
 
         else if (touchedObject.gameObject.layer == LayerMask.NameToLayer("Enemy"))
-        { touchedObject.gameObject.GetComponent<EnemyController>().TakeDamage(damageToGive); }
+        { touchedObject.gameObject.GetComponent<EnemyHealth>().TakeDamage(damageToGive); }
 
         else { target.Hit(damageToGive, transform.position, gameObject); } // last case is breakable objects
     }
@@ -64,7 +64,7 @@ public class Explode : MonoBehaviour
         else if (touchedObject.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         { 
             var enemyController = touchedObject.GetComponent<EnemyController>();
-            if (enemyController != null) { EventSystem.current.EnemyHitTrigger(weaponID, weaponLevel, transform.position, null, enemyController); } }
+            if (enemyController != null) { EventSystem.current.EnemyAmmoHitTrigger(weaponID, weaponLevel, transform.position, null, enemyController); } }
 
         else { target.Hit(touchedObject.gameObject); } // last case is breakable objects
     }

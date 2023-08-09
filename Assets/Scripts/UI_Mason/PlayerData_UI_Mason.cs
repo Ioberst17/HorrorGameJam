@@ -87,7 +87,7 @@ public class PlayerData_UI_Mason : MonoBehaviour
 
     void Update()
     {
-        if(healthChecker >  playerHealth.HP && healthChecker <= playerHealth.maxHealth) { display.ShowChange(healthChecker - playerHealth.HP, "Negative"); }
+        if(healthChecker >  playerHealth.HP && healthChecker <= playerHealth.MaxHealth) { display.ShowChange(healthChecker - playerHealth.HP, "Negative"); }
         else if (healthChecker < playerHealth.HP) { display.ShowChange(playerHealth.HP - healthChecker, "Positive"); }
 
         healthChecker = playerHealth.HP;

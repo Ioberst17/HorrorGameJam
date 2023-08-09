@@ -61,8 +61,8 @@ public class PlayerDash : MonoBehaviour
         if(dashcooldown == 0)
         {
             _isDashing = true;
-            playerHealth.IsInvincible = true;
-            playerController.Rb.gravityScale = 0;
+            playerController.IsInvincible = true;
+            playerController.RB.gravityScale = 0;
             FindObjectOfType<AudioManager>().PlaySFX("Dash1");
             dashParticles.Play();
             if ((gameController.XInput == 0 & gameController.YInput == 0) || playerController.IsCrouching)
@@ -73,9 +73,9 @@ public class PlayerDash : MonoBehaviour
             if (playerController.IsCrouching) { animator.Play("PlayerCrouchDodge"); }
             else { animator.Play("PlayerDash", PlayerAnimator.PlayerPart.All, true, true, true, false); }
             yield return DashAfterImageHandler();
-            playerHealth.IsInvincible = false;
+            playerController.IsInvincible = false;
             _isDashing = false;
-            playerController.Rb.gravityScale = 3;
+            playerController.RB.gravityScale = 3;
             playerController.SetVelocity(0, 0);
             dashcooldown = dashCooldownNumber;
         }

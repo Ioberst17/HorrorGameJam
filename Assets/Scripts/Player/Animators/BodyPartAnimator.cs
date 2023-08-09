@@ -97,7 +97,7 @@ public class BodyPartAnimator : MonoBehaviour
         else
         {
             // only do this if not trying to overwrite the same animation
-            if(!currentAnimation.IsName(animationName)) { Debug.Log("Did not play while priority animation is running named: " + currentPriorityAnimationClipName); }
+            if (!currentAnimation.IsName(animationName)) { }
         }
     }
 

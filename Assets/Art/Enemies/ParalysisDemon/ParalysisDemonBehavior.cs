@@ -2,106 +2,54 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ParalysisDemonBehavior : MonoBehaviour
+public class ParalysisDemonBehavior : EnemyAttackBehavior
 {
-
-    private Vector2 newVelocity;
-    EnemyController enemyController;
-    private int flipCooldown = 0;
-
-    // Start is called before the first frame update
-    void Start()
+    override protected void Start()
     {
-        enemyController = GetComponent<EnemyController>();
-        enemyController.isAttacking = true;
+        base.Start();
+        flipCoolDownMax = 25;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
+    override protected void Passover()
+    {        
+        UpdatePatrolID();
         
-    }
-    public void PDPassover()
-    {
-        if (flipCooldown > 0)
-        {
-            flipCooldown--;
-        }
-        if (enemyController.transform.position.x >= enemyController.patrol1Point.x)
-        {
-            enemyController.patrolID = 1;
-        }
-        else if (enemyController.transform.position.x <= enemyController.patrol2Point.x)
-        {
-            enemyController.patrolID = 2;
-        }
-        if (!enemyController.playerInZone)
-        {
-            PDemonPatrol();
-        }
-        else
-        {
-            PDemonChase();
-        }
-        if (enemyController.rb.velocity.x >= 0.5f && enemyController.facingDirection == -1)
-        {
-            if (flipCooldown == 0)
-            {
-                enemyController.Flip();
+        if (!enemyController.playerInZone) { Patrol(); }
+        else { Chase(); }
 
-                flipCooldown = 25;
-            }
-
-        }
-        else if (enemyController.rb.velocity.x <= -0.5f && enemyController.facingDirection == 1)
-        {
-            if (flipCooldown == 0)
-            {
-                enemyController.Flip();
-                flipCooldown = 25;
-            }
-        }
+        Flip();
     }
 
-    private void PDemonPatrol()
+    override protected void Patrol()
     {
         switch (enemyController.patrolID)
         {
             case 0:
-                newVelocity.Set(enemyController.patrolSpeed, enemyController.rb.velocity.y);
-                enemyController.rb.velocity = newVelocity;
+                enemyController.SetVelocity(enemyController.MovementSpeed, enemyController.RB.velocity.y);
                 break;
             case 1:
-                newVelocity.Set(-enemyController.patrolSpeed, enemyController.rb.velocity.y);
-                enemyController.rb.velocity = newVelocity;
+                enemyController.SetVelocity(-enemyController.MovementSpeed, enemyController.RB.velocity.y);
                 break;
             case 2:
-                newVelocity.Set(enemyController.patrolSpeed, enemyController.rb.velocity.y);
-                enemyController.rb.velocity = newVelocity;
+                enemyController.SetVelocity(enemyController.MovementSpeed, enemyController.RB.velocity.y);
                 break;
             default:
                 break;
         }
     }
-    private void PDemonChase()
+    override protected void Chase()
     {
-        if(flipCooldown == 0)
+        if(flipCoolDown == 0)
         {
             if (enemyController.playerLocation.position.x >= transform.position.x - 0.1f)
             {
-                newVelocity.Set(enemyController.patrolSpeed * 1.5f, enemyController.rb.velocity.y);
-                enemyController.rb.velocity = newVelocity;
+                enemyController.SetVelocity(enemyController.MovementSpeed * 1.5f, enemyController.RB.velocity.y);
             }
             else if (enemyController.playerLocation.position.x < transform.position.x + 0.1f)
             {
-                newVelocity.Set(-enemyController.patrolSpeed * 1.5f, enemyController.rb.velocity.y);
-                enemyController.rb.velocity = newVelocity;
+                enemyController.SetVelocity(-enemyController.MovementSpeed * 1.5f, enemyController.RB.velocity.y);
             }
-            else
-            {
-                newVelocity.Set(0, enemyController.rb.velocity.y);
-                enemyController.rb.velocity = newVelocity;
-            }
+            else { enemyController.SetVelocity(0, enemyController.RB.velocity.y); }
         }
         
     }

@@ -34,7 +34,7 @@ public class PlayerShield : Shield
     new void Update()
     {
         // handle invincibility
-        if (playerHealth.IsInvincible) { Invincibility = true; }
+        if (playerController.IsInvincible) { Invincibility = true; }
         else { Invincibility = false; }
 
         base.Update();
@@ -85,7 +85,7 @@ public class PlayerShield : Shield
     public override void SpecificDamageChecks(Collider2D collision)
     {
         if(collision.gameObject.tag == "EnemyAttack") { checkStatus = true;}
-        else if (collision.gameObject.GetComponent<EnemyController>() != null && collision.gameObject.GetComponent<EnemyController>().isAttacking) { checkStatus = true;  }
+        else if (collision.gameObject.GetComponent<EnemyController>() != null && collision.gameObject.GetComponent<EnemyController>().IsAttacking) { checkStatus = true;  }
         else if(collision.gameObject.GetComponent<EnemyProjectile>()) { checkStatus = true; }
         else if (collision.gameObject.GetComponent<Explode>() != null) { checkStatus = true; }
     }

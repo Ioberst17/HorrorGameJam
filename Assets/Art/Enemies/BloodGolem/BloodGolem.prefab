@@ -5141,6 +5141,7 @@ Transform:
   - {fileID: 1329347197571177932}
   - {fileID: 7767624219015263842}
   - {fileID: 2010646509477649061}
+  - {fileID: 64591799759260762}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5265,14 +5266,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58fdb91a52e72ef47818dfecf12d5abe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  rb: {fileID: 0}
+  _rb: {fileID: 0}
+  groundCheck: {fileID: 0}
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 0
+  wallCheck: {fileID: 0}
+  _movementSpeed: 0
+  _isGrounded: 0
+  _justLanded: 0
+  _isCrouching: 0
+  _isRunning: 0
+  _isAgainstWall: 0
+  _isOnCeiling: 0
+  _isWallHanging: 0
+  _canWallJump: 0
+  _isAttacking: 0
+  _isDead: 0
+  _isInvincible: 0
+  _isStunned: 0
+  _inHitStun: 0
   playerLocation: {fileID: 0}
+  animator: {fileID: 0}
+  hitBox: {fileID: 0}
   patrol1: {fileID: 2979654827206392808}
   patrol1Point: {x: 0, y: 0, z: 0}
   patrol2: {fileID: 2979654826367393975}
   patrol2Point: {x: 0, y: 0, z: 0}
-  patrolSpeed: 0
   patrolID: 0
   enemyDatabase: {fileID: 0}
   dmgVal1: 0
@@ -5282,18 +5302,10 @@ MonoBehaviour:
   dmgVal5: 0
   dmgVal6: 0
   mostRecentAttack: 0
-  HP_MAX: 0
-  HP: 0
-  isStunned: 0
-  blinkFrequency: 30
-  invincibilityCount: 0
-  invincibilitySet: 60
-  isAttacking: 0
+  hpMultiplier: 0
+  apMultiplier: 0
   playerInZone: 0
-  weaponDatabase: {fileID: 0}
   knockbackForce: 0
-  facingDirection: 1
-  damageInterupt: 0
 --- !u!114 &2979654826377499905
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5306,11 +5318,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8897639cf0918b546893682c570083cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShotCountdown: 0
   ChargeCountdown: 0
+  chargeInterupt: 0
+  ShotCountdown: 0
   Shotvalue: 25
   bloodballActive: 0
-  chargeInterupt: 0
   Bloodball: {fileID: 6683411310108108137, guid: 6503729d592564f4aa85d9d9a466942d, type: 3}
   Bloodballstart: {fileID: 2979654826340375489}
   particleEffect: {fileID: 1979284103980078791}
@@ -5420,8 +5432,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa40e798ce81f574b964fc28998e2fc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageTaken: 0
+  _maxHealth: 0
+  _hp: 0
   healthChecker: 0
-  HP_Max: 0
+  damageInterupt: 0
   healthSliderUI: {fileID: 0}
   healthSliderFill: {fileID: 0}
 --- !u!1 &2979654827206392809
@@ -5515,7 +5530,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 1.1026713, y: 0.12691116}
+  m_Offset: {x: -0.019747138, y: 0.12691116}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -5526,8 +5541,39 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.4033062, y: 2.4571266}
+  m_Size: {x: 4.648143, y: 2.4571266}
   m_EdgeRadius: 0
+--- !u!1 &4216373953121093535
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 64591799759260762}
+  m_Layer: 0
+  m_Name: GroundCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &64591799759260762
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4216373953121093535}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.012, y: -0.192, z: 0}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2979654826377499918}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8976482345820111330
 GameObject:
   m_ObjectHideFlags: 0
