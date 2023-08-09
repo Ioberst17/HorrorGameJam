@@ -8,6 +8,7 @@ public class GargoyleBehavior : MonoBehaviour
     [SerializeField] private Transform bottomRightPoint;
     [SerializeField] private Animator animator;
     private EnemyController enemyController;
+    private EnemyHealth enemyHealth;
     private PlayerController playerController;
     private Rigidbody2D GargRB;
     public string bossAction;
@@ -79,10 +80,11 @@ public class GargoyleBehavior : MonoBehaviour
         AntiAirTrigger = false;
         GargRB = GetComponent<Rigidbody2D>();
         enemyController.knockbackForce = 0;
-        enemyController.HP = 200;
-        StartingHP = enemyController.HP;
+        enemyHealth = GetComponent<EnemyHealth>();
+        enemyHealth.HP = 200;
+        StartingHP = enemyHealth.HP;
         HP = StartingHP;
-        enemyController.HP = HP;
+        enemyHealth.HP = HP;
         GetAttackObjects();
     }
 
@@ -106,7 +108,7 @@ public class GargoyleBehavior : MonoBehaviour
 
     public void GargoylePassover()
     {
-        HP = enemyController.HP;
+        HP = enemyHealth.HP;
         DistanceToPlayerX = transform.position.x - enemyController.playerLocation.position.x;
         DistanceToPlayerY = transform.position.y - enemyController.playerLocation.position.y;
         HeightOfPlayer = bottomRightPoint.position.y - enemyController.playerLocation.position.y;
@@ -116,7 +118,7 @@ public class GargoyleBehavior : MonoBehaviour
             phase2 = (HP <= StartingHP * 0.75);
             if (phase2)
             {
-                enemyController.invincibilityCount = 100;
+                enemyController.InvincibilityCount = 100;
             }
         }
         if (!ragemode)
@@ -124,7 +126,7 @@ public class GargoyleBehavior : MonoBehaviour
             ragemode = (HP <= StartingHP * 0.33);
             if (ragemode)
             {
-                enemyController.invincibilityCount = 100;
+                enemyController.InvincibilityCount = 100;
             }
         }
         if (bossAction == "Dormant" && enemyController.playerInZone)
@@ -132,7 +134,7 @@ public class GargoyleBehavior : MonoBehaviour
             bossAction = "Waking";
             animator.Play("GargoyleWake");
             stateTimer = 105;
-            enemyController.invincibilityCount = 105;
+            enemyController.InvincibilityCount = 105;
         }
         else if (stateTimer > 0)
         {
@@ -141,11 +143,11 @@ public class GargoyleBehavior : MonoBehaviour
         //AttackHelper();
         if (stateTimer == 0)
         {
-            if (enemyController.playerLocation.position.x > transform.position.x && enemyController.facingDirection == 1)
+            if (enemyController.playerLocation.position.x > transform.position.x && enemyController.FacingDirection == 1)
             {
                 enemyController.Flip();
             }
-            else if (enemyController.playerLocation.position.x < transform.position.x && enemyController.facingDirection == -1)
+            else if (enemyController.playerLocation.position.x < transform.position.x && enemyController.FacingDirection == -1)
             {
                 enemyController.Flip();
             }
@@ -291,11 +293,11 @@ public class GargoyleBehavior : MonoBehaviour
     }
     void TurnCheck()
     {
-        if (enemyController.playerLocation.position.x > transform.position.x && enemyController.facingDirection == 1)
+        if (enemyController.playerLocation.position.x > transform.position.x && enemyController.FacingDirection == 1)
         {
             enemyController.Flip();
         }
-        else if (enemyController.playerLocation.position.x < transform.position.x && enemyController.facingDirection == -1)
+        else if (enemyController.playerLocation.position.x < transform.position.x && enemyController.FacingDirection == -1)
         {
             enemyController.Flip();
         }
@@ -343,7 +345,7 @@ public class GargoyleBehavior : MonoBehaviour
     void Walk()
     {
         bossAction = "Walk";
-        GargRB.velocity = new Vector2(groundSpeed * -enemyController.facingDirection, GargRB.velocity.y);
+        GargRB.velocity = new Vector2(groundSpeed * -enemyController.FacingDirection, GargRB.velocity.y);
         animator.Play("GargoyleWalk");
         stateTimer = 0;
     }
@@ -373,15 +375,15 @@ public class GargoyleBehavior : MonoBehaviour
     IEnumerator SlamHelper()
     {
         yield return new WaitForSeconds(0.40f);
-        GargRB.velocity = new Vector2(1.0f * -enemyController.facingDirection, 10.0f);
+        GargRB.velocity = new Vector2(1.0f * -enemyController.FacingDirection, 10.0f);
         yield return new WaitForSeconds(0.10f);
-        GargRB.velocity = new Vector2(1.0f * -enemyController.facingDirection, 5.0f);
+        GargRB.velocity = new Vector2(1.0f * -enemyController.FacingDirection, 5.0f);
         yield return new WaitForSeconds(0.05f);
-        GargRB.velocity = new Vector2(1.0f * -enemyController.facingDirection, -10.0f);
+        GargRB.velocity = new Vector2(1.0f * -enemyController.FacingDirection, -10.0f);
         yield return new WaitForSeconds(0.15f);
         animator.Play("GargoyleLand2");
         Attack(2);
-        GargRB.velocity = new Vector2(0 * -enemyController.facingDirection, 0);
+        GargRB.velocity = new Vector2(0 * -enemyController.FacingDirection, 0);
         yield return new WaitForSeconds(0.01f);
 
     }
@@ -404,9 +406,9 @@ public class GargoyleBehavior : MonoBehaviour
         stateTimer = 91;
         Attack(1);
         yield return new WaitForSeconds(0.2f);
-        GargRB.velocity = new Vector2(15.0f * -enemyController.facingDirection, -12.0f);
+        GargRB.velocity = new Vector2(15.0f * -enemyController.FacingDirection, -12.0f);
         yield return new WaitForSeconds(0.7f);
-        GargRB.velocity = new Vector2(10.0f * -enemyController.facingDirection, 7.0f);
+        GargRB.velocity = new Vector2(10.0f * -enemyController.FacingDirection, 7.0f);
         yield return new WaitForSeconds(0.7f);
         isAttacking = false;
     }

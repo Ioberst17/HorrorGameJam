@@ -42,7 +42,6 @@ public class PlayerSecondaryWeapon : MonoBehaviour
 
     [Header("Weapon Rotation Settings")]
     [SerializeField] private float weaponDirection;
-    private GameObject player;
     private PlayerController playerController;
     private Vector3 lookDirection;
     private Vector3 playerPos;
@@ -52,20 +51,13 @@ public class PlayerSecondaryWeapon : MonoBehaviour
 
     void Start()
     {
-        // subscribe to events
-        EventSystem.current.onUpdateSecondaryWeaponTrigger += WeaponChanged;
-        EventSystem.current.onWeaponFire += WeaponFired;
-        EventSystem.current.onWeaponStopTrigger += WeaponStop;
-
         // get object and component references
         gameController = FindObjectOfType<GameController>();
-
-        player = GameObject.Find("Player");
-        animator = GetComponentInChildrenByNameAndType<PlayerAnimator>("Animator", player, true);
+        playerController = transform.parent.GetComponent<PlayerController>();
+        animator = GetComponentInChildrenByNameAndType<PlayerAnimator>("Animator", playerController.gameObject, true);
         var parentOfWeaponSprite = GetComponentInChildrenByNameAndType<Transform>("Weapon", animator.gameObject);
         weaponSprite = GetComponentInChildrenByNameAndType<SpriteRenderer>("SpriteAndAnimations", parentOfWeaponSprite.gameObject);
-        secondaryWeaponsManager = player.GetComponent<SecondaryWeaponsManager>();
-        playerController = transform.parent.GetComponent<PlayerController>();
+        secondaryWeaponsManager = playerController.GetComponentInParent<SecondaryWeaponsManager>();
         fixedDistanceAmmo = GetComponentInChildrenByNameAndType<Transform>("FixedDistanceAmmo", animator.gameObject).gameObject;
         throwHandler = GetComponent<PlayerSecondaryWeaponThrowHandler>();
 
@@ -80,6 +72,11 @@ public class PlayerSecondaryWeapon : MonoBehaviour
         ammoPrefabs.Sort((randomAmmo, ammoToCompareTo) => randomAmmo.GetComponent<Ammo>().GetAmmoID().CompareTo(ammoToCompareTo.GetComponent<Ammo>().GetAmmoID()));
     
         StopFixedFire();
+
+        // subscribe to events
+        EventSystem.current.onUpdateSecondaryWeaponTrigger += WeaponChanged;
+        EventSystem.current.onWeaponFire += WeaponFired;
+        EventSystem.current.onWeaponStopTrigger += WeaponStop;
     }
 
     public bool WeaponIsPointedToTheRight()

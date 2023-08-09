@@ -2,50 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BloodGolemBehavior : MonoBehaviour
+public class BloodGolemBehavior : EnemyAttackBehavior
 {
-    private Vector2 newVelocity;
-    EnemyController enemyController;
-    public int ShotCountdown;
     public int ChargeCountdown;
+    public bool chargeInterupt;
+    public int ShotCountdown;
     public int Shotvalue;
     public bool bloodballActive;
-    public bool chargeInterupt;
     [SerializeField] private Transform Bloodball;
-    //[SerializeField] private Rigidbody2D BloodBallrb;
     [SerializeField] private Transform Bloodballstart;
-    [SerializeField]
-    private GameObject particleEffect;
+
+    [SerializeField] private GameObject particleEffect;
     public int IDNumber;
-    // Start is called before the first frame update
-    void Start()
+
+    override protected void Start()
     {
-        enemyController = GetComponent<EnemyController>();
-        enemyController.isAttacking = true;
-        enemyController.knockbackForce = 0;
+        base.Start();
+
         ShotCountdown = Shotvalue;
-        bloodballActive = false;
-        chargeInterupt = false;
-        //Bloodballstart = Bloodball.transform.position;
         IDNumber = Random.Range(0, 10000);
         name += IDNumber;
         ChargeCountdown = 15;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void GolemPassover()
+    override protected void Passover()
     {
         if (!bloodballActive)
         {
-            if (enemyController.playerInZone && !enemyController.damageInterupt)
+            if (enemyController.playerInZone && !enemyHealth.damageInterupt)
             {
                 ShotCountdown--;
-                //Debug.Log(ShotCountdown);
                 if (ShotCountdown <= 0)
                 {
                     if (ChargeCountdown == 15)
@@ -57,19 +43,15 @@ public class BloodGolemBehavior : MonoBehaviour
                     {
                         ChargeCountdown--;   
                     }
-                    if(ChargeCountdown == 0 && !enemyController.damageInterupt)
-                    {
-                        Fire();
-                    }
+                    if(ChargeCountdown == 0 && !enemyHealth.damageInterupt) { Fire(); }
                 }
             }
             else
             {
                 ShotCountdown = Shotvalue;
                 ChargeCountdown = 60;
-                enemyController.damageInterupt = false;
+                enemyHealth.damageInterupt = false;
                 chargeInterupt = true;
-                
             }
         }
         else
@@ -77,6 +59,8 @@ public class BloodGolemBehavior : MonoBehaviour
             ShotCountdown = Shotvalue;
             ChargeCountdown = 60;
         }
+
+        FlipToFacePlayer();
 
     }
     private void Fire()
@@ -87,7 +71,7 @@ public class BloodGolemBehavior : MonoBehaviour
         Transform BloodBallObject = Instantiate(Bloodball, Bloodballstart.position, Quaternion.identity);
         //Debug.Log(Bloodballstart.position);
         bloodballActive = true;
-        enemyController.isAttacking = true;
+        enemyController.IsAttacking = true;
         //Debug.Log("Firing laser");
         //Debug.Log(transform.position + " " + enemyController.playerLocation.position);
        
@@ -95,10 +79,8 @@ public class BloodGolemBehavior : MonoBehaviour
         BloodBallObject.GetComponent<BloodGolemProjectile>().Setup(tempVector, this.name);
         
     }
-    public void BloodBallReset()
-    {
-        bloodballActive = false;
-    }
+    public void BloodBallReset() { bloodballActive = false; }
+
     IEnumerator BloodballCharge()
     {
         particleEffect.SetActive(true);

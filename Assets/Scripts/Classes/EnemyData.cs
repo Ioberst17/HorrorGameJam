@@ -16,6 +16,7 @@ public class EnemyData : IDatabaseItem // are added in the same order as the col
     public bool isGround;
     public int health;
     public int knockback;
+    public float movementSpeed;
     public int soulPointsDropped;
 
     // DIFFICULTY INFO

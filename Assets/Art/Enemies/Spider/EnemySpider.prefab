@@ -122,6 +122,37 @@ MonoBehaviour:
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
   m_PresetInfoIsWorld: 1
+--- !u!1 &7998623739519197867
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7276152082565643584}
+  m_Layer: 0
+  m_Name: GroundCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7276152082565643584
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7998623739519197867}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 1.7719998, y: -6.1260023, z: 0.037178896}
+  m_LocalScale: {x: 0.6666667, y: 0.6666667, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9102857237722544305}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8811878174272530294
 GameObject:
   m_ObjectHideFlags: 0
@@ -292,6 +323,7 @@ Transform:
   - {fileID: 9102857238050631412}
   - {fileID: 9102857237142537167}
   - {fileID: 9102857238579544809}
+  - {fileID: 7276152082565643584}
   - {fileID: 6659025337432086189}
   - {fileID: 2644464016984832055}
   - {fileID: 7355157032529981361}
@@ -364,14 +396,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58fdb91a52e72ef47818dfecf12d5abe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  rb: {fileID: 0}
+  _rb: {fileID: 0}
+  groundCheck: {fileID: 0}
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 0
+  wallCheck: {fileID: 0}
+  _movementSpeed: 0
+  _isGrounded: 0
+  _isCrouching: 0
+  _isRunning: 0
+  _isAgainstWall: 0
+  _isWallHanging: 0
+  _canWallJump: 0
+  _isAttacking: 0
+  _isDead: 0
+  _isInvincible: 0
+  _isStunned: 0
+  _inHitStun: 0
   playerLocation: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  animator: {fileID: 0}
+  hitBox: {fileID: 0}
   patrol1: {fileID: 9102857237142537167}
   patrol1Point: {x: 0, y: 0, z: 0}
   patrol2: {fileID: 9102857238579544809}
   patrol2Point: {x: 0, y: 0, z: 0}
-  patrolSpeed: 1
   patrolID: 0
   enemyDatabase: {fileID: 0}
   dmgVal1: 0
@@ -381,18 +431,11 @@ MonoBehaviour:
   dmgVal5: 0
   dmgVal6: 0
   mostRecentAttack: 0
-  HP_MAX: 0
-  HP: 0
-  isStunned: 0
-  blinkFrequency: 30
+  hpMultiplier: 0
+  apMultiplier: 0
   invincibilityCount: 0
-  invincibilitySet: 60
-  isAttacking: 0
   playerInZone: 0
-  weaponDatabase: {fileID: 0}
   knockbackForce: 0
-  facingDirection: 1
-  damageInterupt: 0
 --- !u!114 &9102857237722544306
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -413,7 +456,6 @@ MonoBehaviour:
   whatIsGround:
     serializedVersion: 2
     m_Bits: 8
-  isattacking: 0
 --- !u!50 &9102857237722544310
 Rigidbody2D:
   serializedVersion: 4
@@ -576,8 +618,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa40e798ce81f574b964fc28998e2fc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageTaken: 0
+  _maxHealth: 0
+  _hp: 0
   healthChecker: 0
-  HP_Max: 0
+  invincibilitySet: 0
+  damageInterupt: 0
   healthSliderUI: {fileID: 0}
   healthSliderFill: {fileID: 0}
 --- !u!1 &9102857237809162161
@@ -790,7 +836,7 @@ RectTransform:
   - {fileID: 4899627449588647239}
   - {fileID: 460824337622702349}
   m_Father: {fileID: 9102857237722544305}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -887,7 +933,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4493868289386600882, guid: a5da2c2e6ea9f6449a78a24887f7c0e4, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4493868289386600882, guid: a5da2c2e6ea9f6449a78a24887f7c0e4, type: 3}
       propertyPath: m_AnchorMax.x
@@ -985,7 +1031,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6387366218326294519, guid: 90034666b301ff54eabdcd1a0ca77d63, type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 6387366218326294519, guid: 90034666b301ff54eabdcd1a0ca77d63, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1047,7 +1093,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8265956032872244025, guid: 5b37d011897380f46946d1ed64cd6291, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8265956032872244025, guid: 5b37d011897380f46946d1ed64cd6291, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1105,7 +1151,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 676239786954926579, guid: 432969642db3b7a409bde439a5717a07, type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 676239786954926579, guid: 432969642db3b7a409bde439a5717a07, type: 3}
       propertyPath: m_LocalPosition.x

@@ -73,7 +73,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
 
     void FixedUpdate()
     {
-        playerController.isAttacking = IsAttacking;
+        playerController.IsAttacking = IsAttacking;
         if (attackLagTimer > 0) { attackLagTimer -= 1; }
         AttackHelper();
     }
@@ -155,7 +155,7 @@ public class PlayerPrimaryWeapon : MonoBehaviour
     {
         if (attackLagTimer == 0)
         {
-            UpdateHitBox(attackDirection, animationToPlay);
+            if (!chargePunch.IsCharging) { UpdateHitBox(attackDirection, animationToPlay); }
             animator.Play(animationToPlay);
             FindObjectOfType<AudioManager>().PlaySFX("PlayerMelee");
             attackLagTimer = attackLagValue;
@@ -224,7 +224,11 @@ public class PlayerPrimaryWeapon : MonoBehaviour
             {
                 Debug.LogFormat("has hit something. It's named {0}", hitList[i].gameObject.name);
                 if (hitList[i].GetComponent<IDamageable>() != null && hitList[i]) 
-                { hitList[i].GetComponent<IDamageable>().Hit(damageToPass, transform.position);
+                {
+                    if (hitList[i].GetComponent<EnemyController>() != null)
+                    {
+                        EventSystem.current.EnemyMeleeHitTrigger(damageToPass, transform.position, null, hitList[i].GetComponent<EnemyController>());
+                    }
                     if (isChargePunch)
                     {
                         CameraBehavior cameraBehavior = FindObjectOfType<CameraBehavior>();

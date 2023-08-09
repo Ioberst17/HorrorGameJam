@@ -247,7 +247,7 @@ public class Cutscene : MonoBehaviour
         // while any of these are not true
         while (!gameController.PlayerInputIdle() ||  // check if XInput and YInput are 0
                     !playerAnimator.CheckIfAnimationIsPlaying("PlayerIdle") || // Check if player idle animation is playing
-                                    playerController.Rb.velocity.x != 0)  // check if X motion is 0
+                                    playerController.RB.velocity.x != 0)  // check if X motion is 0
         { gameController.ResetPlayerMotionAndInput(); yield return null; } // attempt to reset motion
     }
 

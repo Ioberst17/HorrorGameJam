@@ -73,7 +73,7 @@ public class StatusEffect : MonoBehaviour
     {
         if (affectsMovement)
         {
-            if (GetComponentInParent<EnemyController>() != null) { GetComponentInParent<EnemyController>().isStunned = state; }
+            if (GetComponentInParent<EnemyController>() != null) { GetComponentInParent<EnemyController>().IsStunned = state; }
             //else if (gameObject.layer == LayerMask.NameToLayer("Player")) { // affect movement }
         }
     }
@@ -89,7 +89,7 @@ public class StatusEffect : MonoBehaviour
 
     public virtual void TakeDamage(int damage)
     {
-        if (GetComponentInParent<EnemyController>() != null) { GetComponentInParent<EnemyController>().TakeDamage(damage); }
+        if (GetComponentInParent<EnemyController>() != null) { GetComponentInParent<EnemyHealth>().TakeDamage(damage); }
         //else if (gameObject.layer == LayerMask.NameToLayer("Player")) { gameObject.GetComponent<PlayerHealth>().TakeDamage(damage); }
     }
 

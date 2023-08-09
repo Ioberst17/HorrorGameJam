@@ -2,202 +2,113 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpiderBehavior : MonoBehaviour
+public class SpiderBehavior : EnemyAttackBehavior
 {
-    private EnemyController enemyController;
-    private SpriteRenderer spriteRenderer;
-    public bool OnCeiling;
-    public bool isGrounded;
-    public bool initialFall;
-    public int attackCooldown;
     public int attackSet;
-    private Vector2 newVelocity;
-    [SerializeField]
-    private LayerMask whatIsGround;
+    public int attackCooldown;
     private int spiderCooldown;
-    private int flipCooldown;
-    public bool isattacking;
 
-    // Start is called before the first frame update
-    void Start()
+    override protected void Start()
     {
-        enemyController = GetComponentInParent<EnemyController>();
-        spriteRenderer = GetComponentInParent<SpriteRenderer>();
-        OnCeiling = true;
-        spriteRenderer.flipY = true;
-        enemyController.rb.gravityScale = 0;
-        initialFall = false;
-        spiderCooldown = 0;
-        flipCooldown = 0;
+        base.Start();
+
+        enemyController.IsAttacking = false;
+        enemyController.IsOnCeiling = true;
+        enemyController.SpriteRenderer.flipY = true;
+        enemyController.RB.gravityScale = 0;
+        enemyController.GroundCheckRadius = 0.15f;
     }
 
-    // Update is called once per frame
-    void Update()
+    override protected void Passover()
     {
-        isattacking = enemyController.isAttacking;
-        if (attackCooldown > 0)
-        {
-            attackCooldown--;
-        }
-        if (spiderCooldown > 0)
-        {
-            spiderCooldown--;
-        }
-        if (enemyController.rb.velocity.y == 0.0f)
-        {
-            isGrounded = Physics2D.OverlapCircle(new Vector2(transform.position.x, transform.position.y -.5f), .15f, whatIsGround);
-        }
-        else
-        {
-            isGrounded = false;
-        }
-        if (initialFall && isGrounded)
-        {
-            initialFall = false;
-            enemyController.animator.Play("SpiderLand");
-            enemyController.isAttacking = false;
-        }
-        if(enemyController.isAttacking && isGrounded)
-        {
-            enemyController.isAttacking = false;
-            enemyController.animator.Play("SpiderWalk");
-            spiderCooldown = 8;
-        }
-        if (enemyController.rb.velocity.x >= 0.5f && enemyController.facingDirection == -1 && !enemyController.isAttacking && isGrounded)
-        {
-            if (flipCooldown == 0)
-            {
-                enemyController.Flip();
+        // cool downs
+        if (attackCooldown > 0) { attackCooldown--; }
+        if (spiderCooldown > 0) { spiderCooldown--; }
 
-                flipCooldown = 10;
+        UpdatePatrolID();
+
+        Flip();
+
+        // behaviors
+        if (enemyController.IsGrounded)
+        {
+            if (enemyController.JustLanded)
+            {
+                enemyController.JustLanded = false;
+                enemyController.animator.Play("SpiderLand");
+                enemyController.IsAttacking = false;
             }
-
-        }
-        else if (enemyController.rb.velocity.x <= -0.5f && enemyController.facingDirection == 1 && !enemyController.isAttacking && isGrounded)
-        {
-            if (flipCooldown == 0)
+            if (enemyController.IsAttacking)
             {
-                enemyController.Flip();
-                flipCooldown = 10;
+                enemyController.IsAttacking = false;
+                enemyController.animator.Play("SpiderWalk");
+                spiderCooldown = 8;
             }
         }
-    }
-    public void spiderPassover()
-    {
-        if (attackCooldown > 0)
-        {
-            attackCooldown--;
-        }
-        if (spiderCooldown > 0)
-        {
-            spiderCooldown--;
-        }
-        if (flipCooldown > 0)
-        {
-            flipCooldown--;
-        }
-        if (enemyController.rb.velocity.y == 0.0f)
-        {
-            isGrounded = Physics2D.OverlapCircle(new Vector2(transform.position.x, transform.position.y - .5f), .15f, whatIsGround);
-        }
-        else
-        {
-            isGrounded = false;
-        }
-        if (enemyController.transform.position.x >= enemyController.patrol1Point.x)
-        {
-            enemyController.patrolID = 1;
-        }
-        else if (enemyController.transform.position.x <= enemyController.patrol2Point.x)
-        {
-            enemyController.patrolID = 2;
-        }
-        if((attackCooldown == 0) && (spiderCooldown == 0))
-        {
 
-        }
         if (enemyController.playerInZone)
         {
-            if (OnCeiling)
+            if (enemyController.IsOnCeiling)
             {
-                OnCeiling = false;
-                SpiderAttackCeiling();
-                spriteRenderer.flipY = false;
-                enemyController.rb.gravityScale = 1;
+                enemyController.IsOnCeiling = false;
+                CeilingAttack();
+                enemyController.SpriteRenderer.flipY = false;
+                enemyController.RB.gravityScale = 1;
             }
-            else if(!initialFall && isGrounded && !enemyController.isAttacking)
-            {
-                StartCoroutine(SpiderAttackGround());
-            }
+            else if(!enemyController.JustLanded && enemyController.IsGrounded && !enemyController.IsAttacking) { StartCoroutine(GroundAttack()); }
         }
-        else if (!enemyController.isAttacking)
-        {
-            SpiderPatrolFloor();
-        }
+        else if (!enemyController.IsAttacking) { Patrol(); }
         
     }
-    private void SpiderPatrolFloor()
-    {
-        switch (enemyController.patrolID)
-        {
-            case 0:
-                newVelocity.Set(enemyController.patrolSpeed, enemyController.rb.velocity.y);
-                enemyController.rb.velocity = newVelocity;
-                break;
-            case 1:
-                newVelocity.Set(-enemyController.patrolSpeed, enemyController.rb.velocity.y);
-                enemyController.rb.velocity = newVelocity;
-                break;
-            case 2:
-                newVelocity.Set(enemyController.patrolSpeed, enemyController.rb.velocity.y);
-                enemyController.rb.velocity = newVelocity;
-                break;
-            default:
-                break;
-        }
-    }
-    private void SpiderAttackCeiling()
+
+    private void CeilingAttack()
     {
         enemyController.animator.Play("SpiderFall");
-        enemyController.isAttacking = true;
-        initialFall = true;
+        enemyController.IsAttacking = true;
+        enemyController.JustLanded = true;
     }
-    IEnumerator SpiderAttackGround()
+    IEnumerator GroundAttack()
     {
         Debug.Log("Spider Attack!");
         attackCooldown = attackSet;
-        if (transform.position.x <= enemyController.playerLocation.position.x)
-        {
-            if (enemyController.facingDirection == -1)
-            {
-                enemyController.Flip();
-            }
 
-        }
-        else
-        {
-            if (enemyController.facingDirection == 1)
-            {
-                enemyController.Flip();
-            }
+        FlipToFacePlayer();
 
-        }
         enemyController.animator.Play("SpiderCrouch");
         yield return new WaitForSeconds(0.50f);
-        if (enemyController.damageInterupt)
+        if (enemyHealth.damageInterupt)
         {
-            isattacking = false;
-            enemyController.isAttacking = false;
-            enemyController.damageInterupt = false;
+            enemyController.IsAttacking = false;
+            enemyHealth.damageInterupt = false;
         }
         else
         {
             enemyController.animator.Play("SpiderPounce");
-            newVelocity.Set(0.0f, 0.0f);
-            enemyController.rb.velocity = newVelocity;
-            enemyController.rb.AddForce(new Vector2(4.0f * enemyController.facingDirection, 1.0f), ForceMode2D.Impulse);
-            enemyController.isAttacking = true;
+            enemyController.SetVelocity();
+            enemyController.AddForce(4.0f * enemyController.FacingDirection, 1.0f);
+            enemyController.IsAttacking = true;
         }
         yield return new WaitForSeconds(0.01f);
+    }
+
+    override protected void Flip()
+    {
+        // Flip logic
+        if (enemyController.RB.velocity.x >= 0.5f && enemyController.FacingDirection == -1 && !enemyController.IsAttacking && enemyController.IsGrounded)
+        {
+            if (flipCoolDown == 0)
+            {
+                enemyController.Flip();
+                flipCoolDown = 10;
+            }
+        }
+        else if (enemyController.RB.velocity.x <= -0.5f && enemyController.FacingDirection == 1 && !enemyController.IsAttacking && enemyController.IsGrounded)
+        {
+            if (flipCoolDown == 0)
+            {
+                enemyController.Flip();
+                flipCoolDown = 10;
+            }
+        }
     }
 }

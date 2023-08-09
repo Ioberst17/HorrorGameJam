@@ -15,5 +15,10 @@ public class EnemyProjectile : Projectile
         GetDamage();
     }
 
-    public virtual void GetDamage() { damageValue = enemyDatabase.GetAttackDamages(gameObject.tag, attackNumber); }
+    public virtual void GetDamage() 
+    {
+        if (projectileSource != null) { damageValue = GetDamageSupport(projectileSource); }
+        else { damageValue = GetDamageSupport(gameObject.tag); }
+    }
+    int GetDamageSupport(string stringToUse) { return enemyDatabase.GetAttackDamages(stringToUse, attackNumber); }
 }

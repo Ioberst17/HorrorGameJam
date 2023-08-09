@@ -7,14 +7,16 @@ using System.Linq;
 [RequireComponent(typeof(BoxCollider2D))]
 public class EnemySpawnManager : MonoBehaviour
 {
+    // external references
+    public DataManager dataManager;
+    QuestUpdaterSupport questUpdater;
+
+    // variables to track
     public int areaID;
     public bool enemiesCleared; // used to track if area has been beaten
     public bool respawnEveryTimePlayerEnters;
     public Collider2D spawnTrigger;
     private int index; // for search
-
-    public DataManager dataManager;
-    QuestUpdaterSupport questUpdater;
 
     [System.Serializable]
     public struct SpawnPoint
@@ -62,7 +64,7 @@ public class EnemySpawnManager : MonoBehaviour
         for (int i = 0; i < numEnemiesSpawned; i++)
         {
             GameObject enemy = Instantiate(currentWave.enemyPrefabs[i], currentWave.spawnPoints[i].position, currentWave.spawnPoints[i].rotation);
-            enemy.GetComponent<EnemyController>().OnDeath += OnEnemyDefeated;
+            enemy.GetComponent<EnemyHealth>().OnDeath += OnEnemyDefeated;
         }
     }
 

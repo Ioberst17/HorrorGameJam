@@ -5144,11 +5144,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8510aba45a1cc748b6c83b0038d2073, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dataManager: {fileID: 0}
   areaID: 0
   enemiesCleared: 0
   respawnEveryTimePlayerEnters: 0
   spawnTrigger: {fileID: 0}
-  dataManager: {fileID: 0}
   waves:
   - enemyPrefabs:
     - {fileID: 1210534858597401461, guid: 753c88793f4c0c64bac60ae5dddc5200, type: 3}
@@ -6691,6 +6691,14 @@ PrefabInstance:
     - target: {fileID: 1156582538, guid: eb2664123c277934fb626507fe6ad021, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1547142142, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: MaxHealth
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1547142142, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+      propertyPath: _maxHealth
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 1547280756, guid: eb2664123c277934fb626507fe6ad021, type: 3}
       propertyPath: m_Materials.Array.data[0]

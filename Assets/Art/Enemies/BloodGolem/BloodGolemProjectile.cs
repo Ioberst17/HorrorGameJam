@@ -23,7 +23,6 @@ public class BloodGolemProjectile : EnemyProjectile
     }
     public void Setup(Vector3 ShotDirection, string nameofParent)
     {
-        //Debug.Log("Bloodballsetup");
         MyDirection = ShotDirection;
         ParentName = nameofParent;
         enemyController = GameObject.Find(ParentName).GetComponent<EnemyController>();
@@ -33,8 +32,6 @@ public class BloodGolemProjectile : EnemyProjectile
     {
         //Debug.Log("I See something " + collider.name);
         if (collider.gameObject.layer == LayerMask.NameToLayer("Player")){
-            //Debug.Log("I See player " + collider.name);
-            //enemyController.OnTriggerEnter2DHelper(collider);
             BGController.BloodBallReset();
             Destroy(gameObject);
         }

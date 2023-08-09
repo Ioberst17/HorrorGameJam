@@ -20,7 +20,6 @@ public class GroundSlam : MonoBehaviour
     [Header("Ground Slam Settings")]
     [SerializeField] private float groundSlamSpeed = -20f;
     [SerializeField] private int attackDamage = 10;
-    [SerializeField] private float reboundForceX = 10f;
     [SerializeField] private float reboundForceY = 10f;
     [SerializeField] private int framesSinceLastGroundSlamVFX;
     [SerializeField] private int minFramesBetweenGroundSlamVFX;
@@ -58,7 +57,7 @@ public class GroundSlam : MonoBehaviour
 
     public void Execute()
     {
-        IsGroundSlam = true; playerHealth.IsInvincible = true; groundSlamStop = false; //ActivateDetection(true); // turn on update conditions
+        IsGroundSlam = true; playerController.IsInvincible = true; groundSlamStop = false; //ActivateDetection(true); // turn on update conditions
         playerAnimator.Play("PlayerGroundSlam");
     }
 
@@ -116,5 +115,5 @@ public class GroundSlam : MonoBehaviour
         Invoke("InvincibilityOff", .5f);
     }
 
-    void InvincibilityOff() { playerHealth.IsInvincible = false; }
+    void InvincibilityOff() { playerController.IsInvincible = false; }
 }

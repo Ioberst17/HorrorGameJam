@@ -10,6 +10,7 @@ using static PlayerAnimator;
 
 public class PlayerAnimator : BodyPartAnimator 
 {
+    [Header("PlayerAnimator Interfaces Into Player Parts")]
     [SerializeField] private Transform body, rightArm, leftArm, weapon;
     [SerializeField] private Animator baseAnimator, rightArmAnimator, leftArmAnimator, weaponAnimator;
     [SerializeField] private float maxIdleNormalizedTime, baseIdleNormalizedTime, rightArmIdleNormalizedTime, leftArmIdleNormalizedTime, weaponIdleNormalizedTime;
@@ -41,7 +42,7 @@ public class PlayerAnimator : BodyPartAnimator
     [SerializeField] private SpriteRenderer[] spriteRenderers;
 
     // Get all references
-    override public void Start()
+    private void Awake()
     {
         body = GetComponentInChildrenByNameAndType<Transform>("Base", gameObject);
         baseAnimator = GetComponentInChildrenByNameAndType<Animator>("SpriteAndAnimations", body.gameObject);

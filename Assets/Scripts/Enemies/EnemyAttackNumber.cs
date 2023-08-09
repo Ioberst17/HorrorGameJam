@@ -6,8 +6,5 @@ public class EnemyAttackNumber : MonoBehaviour
 {
     public int enemyAttackNumber;
 
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (collision.gameObject.GetComponent<PlayerShield>() != null) { }
-    }
+    private void OnTriggerStay2D(Collider2D collision) { if (collision.gameObject.GetComponent<PlayerShield>() != null) { } }
 }

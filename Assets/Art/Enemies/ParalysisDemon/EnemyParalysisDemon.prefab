@@ -220,6 +220,37 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!1 &6456030438620091875
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5068913951452289234}
+  m_Layer: 0
+  m_Name: GroundCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5068913951452289234
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6456030438620091875}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.28, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8819910788059392028}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7304809796473481666
 GameObject:
   m_ObjectHideFlags: 0
@@ -587,6 +618,7 @@ Transform:
   - {fileID: 2405839095313753244}
   - {fileID: 2940369781448379761}
   - {fileID: 4943663539511302653}
+  - {fileID: 5068913951452289234}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -654,14 +686,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58fdb91a52e72ef47818dfecf12d5abe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  rb: {fileID: 0}
+  _rb: {fileID: 0}
+  groundCheck: {fileID: 0}
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 0
+  wallCheck: {fileID: 0}
+  _movementSpeed: 0
+  _isGrounded: 0
+  _justLanded: 0
+  _isCrouching: 0
+  _isRunning: 0
+  _isAgainstWall: 0
+  _isOnCeiling: 0
+  _isWallHanging: 0
+  _canWallJump: 0
+  _isAttacking: 0
+  _isDead: 0
+  _isInvincible: 0
+  _isStunned: 0
+  _inHitStun: 0
   playerLocation: {fileID: 0}
+  animator: {fileID: 0}
+  hitBox: {fileID: 0}
   patrol1: {fileID: 8819910788042896287}
   patrol1Point: {x: 0, y: 0, z: 0}
   patrol2: {fileID: 8819910787451771405}
   patrol2Point: {x: 0, y: 0, z: 0}
-  patrolSpeed: 3
   patrolID: 0
   enemyDatabase: {fileID: 0}
   dmgVal1: 0
@@ -671,18 +722,11 @@ MonoBehaviour:
   dmgVal5: 0
   dmgVal6: 0
   mostRecentAttack: 0
-  HP_MAX: 0
-  HP: 0
-  isStunned: 0
-  blinkFrequency: 30
+  hpMultiplier: 0
+  apMultiplier: 0
   invincibilityCount: 0
-  invincibilitySet: 30
-  isAttacking: 0
   playerInZone: 0
-  weaponDatabase: {fileID: 0}
   knockbackForce: 0
-  facingDirection: 1
-  damageInterupt: 0
 --- !u!50 &8819910788059392031
 Rigidbody2D:
   serializedVersion: 4
@@ -857,8 +901,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa40e798ce81f574b964fc28998e2fc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageTaken: 0
+  _maxHealth: 0
+  _hp: 0
   healthChecker: 0
-  HP_Max: 0
+  invincibilitySet: 0
+  damageInterupt: 0
   healthSliderUI: {fileID: 0}
   healthSliderFill: {fileID: 0}
 --- !u!1001 &2882652761072291183

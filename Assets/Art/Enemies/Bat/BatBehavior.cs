@@ -2,132 +2,54 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BatBehavior : MonoBehaviour
+public class BatBehavior : EnemyAttackBehavior
 {
-    private Vector2 newVelocity;
-    EnemyController enemyController;
-
-    // Start is called before the first frame update
-    void Start()
+    // Override the base passover called in Parent FixedUpdate
+    override protected void Passover()
     {
-        enemyController = GetComponent<EnemyController>();
-        enemyController.isAttacking = true;
+        UpdatePatrolID();
+
+        // Check if the player is in the attack zone
+        if (enemyController.playerInZone) { Chase(); } // If yes, chase
+        else { Patrol(); } // If no, patrol
+
+        Flip();
     }
 
-    // Update is called once per frame
-    void Update()
+    // Override the Patrol method, called when player not in zone
+    override protected void Patrol()
     {
+        targetXVelocity = 0;
+        targetYVelocity = 0;
 
-    }
-    public void BatPassover()
-    {
-        if (enemyController.transform.position.x >= enemyController.patrol1Point.x)
-        {
-            enemyController.patrolID = 1;
-        }
-        else if (enemyController.transform.position.x <= enemyController.patrol2Point.x)
-        {
-            enemyController.patrolID = 2;
-        }
-        if (!enemyController.playerInZone)
-        {
-            BatPatrol();
-        }
-        else
-        {
-            BatChase();
-        }
-        if (enemyController.rb.velocity.x >= 0.5f && enemyController.facingDirection == -1)
-        {
-            enemyController.Flip();
-        }
-        else if (enemyController.rb.velocity.x <= -0.5f && enemyController.facingDirection == 1)
-        {
-            enemyController.Flip();
-        }
-    }
-
-    private void BatPatrol()
-    {
         switch (enemyController.patrolID)
         {
             case 0:
-                if(transform.position.y < enemyController.patrol1Point.y)
-                {
-                    newVelocity.Set(enemyController.patrolSpeed, enemyController.patrolSpeed);
-                }
-                else if (transform.position.y > enemyController.patrol1Point.y)
-                {
-                    newVelocity.Set(enemyController.patrolSpeed, -enemyController.patrolSpeed);
-                }
-                else
-                {
-                    newVelocity.Set(enemyController.patrolSpeed, 0);
-                }
-                enemyController.rb.velocity = newVelocity;
+                targetXVelocity = enemyController.MovementSpeed;
+                targetYVelocity = enemyController.MovementSpeed;
                 break;
             case 1:
-                if (transform.position.y < enemyController.patrol1Point.y)
-                {
-                    newVelocity.Set(-enemyController.patrolSpeed, enemyController.patrolSpeed);
-                }
-                else if (transform.position.y > enemyController.patrol1Point.y)
-                {
-                    newVelocity.Set(-enemyController.patrolSpeed, -enemyController.patrolSpeed);
-                }
-                else
-                {
-                    newVelocity.Set(-enemyController.patrolSpeed, 0);
-                }
-                enemyController.rb.velocity = newVelocity;
+                targetXVelocity = -enemyController.MovementSpeed;
+                targetYVelocity = enemyController.MovementSpeed;
                 break;
             case 2:
-                if (transform.position.y < enemyController.patrol1Point.y)
-                {
-                    newVelocity.Set(enemyController.patrolSpeed, enemyController.patrolSpeed);
-                }
-                else if (transform.position.y > enemyController.patrol1Point.y)
-                {
-                    newVelocity.Set(enemyController.patrolSpeed, -enemyController.patrolSpeed);
-                }
-                else
-                {
-                    newVelocity.Set(enemyController.patrolSpeed, 0);
-                }
-                enemyController.rb.velocity = newVelocity;
+                targetXVelocity = enemyController.MovementSpeed;
+                targetYVelocity = enemyController.MovementSpeed;
                 break;
+
             default:
                 break;
         }
-    }
-    private void BatChase()
-    {
-        if (enemyController.playerLocation.position.x >= transform.position.x)
-        {
-            if(enemyController.playerLocation.position.y < transform.position.y)
-            {
-                newVelocity.Set(enemyController.patrolSpeed * 1.5f, -enemyController.patrolSpeed);
-            }
-            else
-            {
-                newVelocity.Set(enemyController.patrolSpeed * 1.5f, enemyController.patrolSpeed);
-            }
-            
-            enemyController.rb.velocity = newVelocity;
-        }
-        else
-        {
-            if (enemyController.playerLocation.position.y < transform.position.y)
-            {
-                newVelocity.Set(-enemyController.patrolSpeed * 1.5f, -enemyController.patrolSpeed);
-            }
-            else
-            {
-                newVelocity.Set(-enemyController.patrolSpeed * 1.5f, enemyController.patrolSpeed);
-            }
-            enemyController.rb.velocity = newVelocity;
-        }
-    }
 
+        if (transform.position.y < enemyController.patrol1Point.y)
+        {
+            enemyController.SetVelocity(targetXVelocity, targetYVelocity);
+        }
+        else if (transform.position.y > enemyController.patrol1Point.y)
+        {
+            enemyController.SetVelocity(targetXVelocity, -targetYVelocity);
+        }
+        else { enemyController.SetVelocity(targetXVelocity, 0); }
+    }
 }
 

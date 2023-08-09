@@ -35,12 +35,15 @@ public class EventSystem : MonoBehaviour
     public void EnemyEnviroDamage(int damage, Vector3 position, string statusModifier, EnemyController enemyController)
     { { if (onEnemyEnviroDamage != null) { onEnemyEnviroDamage(damage, position, statusModifier, enemyController); } } }
 
-    public event Action<int, int, Vector3, string, EnemyController> onEnemyHitCollision;
-    public void EnemyHitTrigger(int weaponID, int weaponLevel, Vector3 position, string statusModifier, EnemyController enemyController)
-    { { if (onEnemyHitCollision != null) { onEnemyHitCollision(weaponID, weaponLevel, position, statusModifier, enemyController); } } }
+    public event Action<int, int, Vector3, string, EnemyController> onEnemyAmmoHitCollision;
+    public void EnemyAmmoHitTrigger(int weaponID, int weaponLevel, Vector3 position, string statusModifier, EnemyController enemyController)
+    { { if (onEnemyAmmoHitCollision != null) { onEnemyAmmoHitCollision(weaponID, weaponLevel, position, statusModifier, enemyController); } } }
 
+    public event Action<int, Vector3, string, EnemyController> onEnemyMeleeHitCollision;
+    public void EnemyMeleeHitTrigger(int attackDamage, Vector3 playerPosition, string statusModifier, EnemyController enemyController)
+    { { if (onEnemyMeleeHitCollision != null) { onEnemyMeleeHitCollision(attackDamage, playerPosition, statusModifier, enemyController); } } }
+    
     public event Action<int, int> onWaveFinished;
-
     public void WaveFinishedTrigger(int areaID, int waveNum) { if (onWaveFinished != null) { onWaveFinished(areaID, waveNum); } }
 
     public event Action <int> onAllWavesFinished;

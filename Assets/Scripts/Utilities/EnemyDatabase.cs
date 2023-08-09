@@ -13,47 +13,11 @@ public class EnemyDatabase : Database<EnemyData>
 
     private void Awake()
     {
-        numOfColumns = 61;
+        numOfColumns = 62;
         textAssetData = Resources.Load<TextAsset>("TextFiles/EnemyDatabase");
         string[] data = ReadCSV();
         CreateDatabase(data);
     }
-
-    //private void Awake() // load CSV from Resources folder then add it to the Weapon Database game object
-    //{
-    //    ReadCSV();
-    //}
-
-    //void ReadCSV() // adds database to the enemyDatabase game object that should be in scene, from a csv file
-    //{
-    //    List<Dictionary<string, string>> testData = CSVReader.Read("TextFiles/EnemyDatabase");
-
-    //    enemyDatabase.entries = new EnemyData[testData.Count];
-
-    //    for (int i = 0; i < testData.Count; i++) 
-    //    {
-    //        enemyDatabase.entries[i] = new EnemyData(); // creates new row entry in memory
-
-    //        FieldInfo[] fields = enemyDatabase.entries[i].GetType().GetFields(); // used to validate the data type of fields that need to be read in (below)
-
-    //        for (int j = 0; j < fields.Length; j++)
-    //        {
-    //            if(typeof(int) == fields[j].FieldType) { // if the variable that's being loaded is meant to be an INT, use the below
-    //                try { fields[j].SetValue(enemyDatabase.entries[i], int.Parse(testData[i].Values.ElementAt(j))); }
-    //                catch { fields[j].SetValue(enemyDatabase.entries[i], 0); } // if can't parse the value set this default value*/
-    //            }
-    //            else if (typeof(bool) == fields[j].FieldType) // else, if it's meant to be a bool, use the below to parse in data
-    //            {
-    //                try { fields[j].SetValue(enemyDatabase.entries[i], bool.Parse(testData[i].Values.ElementAt(j))); }
-    //                catch { fields[j].SetValue(enemyDatabase.entries[i], false); } // if can't parse the value set this default value*/
-    //            }
-    //            else if(typeof(string) == fields[j].FieldType){ // selse if it's a string...
-    //                try { fields[j].SetValue(enemyDatabase.entries[i], testData[i].Values.ElementAt(j)); }
-    //                catch { fields[j].SetValue(enemyDatabase.entries[i], "No Value"); } // if can't parse the value set this default value*/
-    //            }
-    //        }
-    //    }
-    //}
 
     private int GetSpecificAttackDamage(EnemyData enemy, int attackNumber)
     {

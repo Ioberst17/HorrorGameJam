@@ -258,7 +258,7 @@ public class Database<T> : MonoBehaviour where T : IDatabaseItem
     public T ReturnItemFromID(int id)
     {
         foundItemToReturn = false;
-        for (int i = 0; i < this.data.entries.Length; i++) { if (id == this.data.entries[i].id) { foundItemToReturn = true; return this.data.entries[i]; } }
+        for (int i = 0; i < data.entries.Length; i++) { if (id == data.entries[i].id) { foundItemToReturn = true; return data.entries[i]; } }
         if(foundItemToReturn == false) { Debug.LogFormat("Could not find item with ID: {0}; Check for presence or mispellings", id); }
         return default(T);
     }
@@ -266,7 +266,7 @@ public class Database<T> : MonoBehaviour where T : IDatabaseItem
     public T ReturnItemFromName(string name)
     {
         foundItemToReturn = false;
-        for (int i = 0; i < this.data.entries.Length; i++) { if (name == this.data.entries[i].name) { foundItemToReturn = true; return this.data.entries[i]; } }
+        for (int i = 0; i < data.entries.Length; i++) { if (name == data.entries[i].name) { foundItemToReturn = true; return data.entries[i]; } }
         if (foundItemToReturn == false) { Debug.LogFormat("Could not find item with name: {0}; Check for presence or mispellings", name); }
         return default(T);
     }
