@@ -8202,7 +8202,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1458881044282191581, guid: eb2664123c277934fb626507fe6ad021, type: 3}
   m_PrefabInstance: {fileID: 1458881044282191579}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1710262913}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6a6ce5bb97ae69b488bca95d24433bd3, type: 3}
@@ -8213,7 +8213,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1303225425, guid: eb2664123c277934fb626507fe6ad021, type: 3}
   m_PrefabInstance: {fileID: 1458881044282191579}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1710262913}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aabaca13367a4da4ab709f3c672dfe6f, type: 3}
@@ -8224,7 +8224,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1458881045126449813, guid: eb2664123c277934fb626507fe6ad021, type: 3}
   m_PrefabInstance: {fileID: 1458881044282191579}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1710262913}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0784064bb41568e408515a9ee4f1d3bf, type: 3}
@@ -9291,6 +9291,10 @@ PrefabInstance:
       propertyPath: playerDataUI
       value: 
       objectReference: {fileID: 1249356267}
+    - target: {fileID: 875260258206832728, guid: 2cc0a389dddc2894da33afd8db18c1f1, type: 3}
+      propertyPath: questManager
+      value: 
+      objectReference: {fileID: 1710262916}
     - target: {fileID: 875260258206832728, guid: 2cc0a389dddc2894da33afd8db18c1f1, type: 3}
       propertyPath: gameController
       value: 
@@ -11374,6 +11378,55 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1647959373}
   m_CullTransparentMesh: 1
+--- !u!1 &1710262913 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1458881045126449814, guid: eb2664123c277934fb626507fe6ad021, type: 3}
+  m_PrefabInstance: {fileID: 1458881044282191579}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1710262916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1710262913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 537b1bf2e7371ab4ca32af73fc1ccdd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  quests: []
+  activeQuest:
+    _id: 0
+    _name: 
+    description: 
+    numOfSubQuests: 0
+    _currentSubQuestIndex: 0
+    _isStarted: 0
+    _isActive: 0
+    _isCompleted: 0
+    subQuests: []
+  activeQuestIndex: 0
+--- !u!114 &1710262917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1710262913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f933c126b8391b548a706810e5ab2949, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialoguesToTrack: []
+  cachedDialogueTracker:
+    questName: 
+    questIndex: 0
+    isActive: 0
+    numOfSubTasksCompleted: 0
+    percentOfTaskComplete: 0
+    dialogues: []
 --- !u!1 &1719028218
 GameObject:
   m_ObjectHideFlags: 0

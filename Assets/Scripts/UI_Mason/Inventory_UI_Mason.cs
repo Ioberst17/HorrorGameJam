@@ -13,7 +13,7 @@ public class Inventory_UI_Mason : MonoBehaviour
     public ConsumablesManager consumablesManager;
     public PlayerData_UI_Mason playerDataUI;
     public WeaponDatabase weaponDatabase;
-
+    public QuestManager questManager;
 
     [SerializeField]
     public InventoryManager inventoryManager;
@@ -113,6 +113,9 @@ public class Inventory_UI_Mason : MonoBehaviour
     [SerializeField] private TextMeshProUGUI consumable_count_slot2;
 
 
+    
+
+
     public bool InventoryOpen { get; set; }
 
     private static int ammo;
@@ -172,14 +175,19 @@ public class Inventory_UI_Mason : MonoBehaviour
         consumableCount.Add(consumable_count_slot2);
 
         //adding in a narrative and consumable item for testing
+        //narrativeItemsManager.AddItem(0);
         //narrativeItemsManager.AddItem(1);
         //consumablesManager.AddNewItemToInv(1, 1);
 
+
+        Debug.Log("NarrativeItemList Length: " + dataManager.sessionData.narrativeItems.Count.ToString());
 
 
         for (int i = 0; i < narrativeSlots.Count; i++)
         {
             narrativeSlots[i].SetActive(false); // hide unused melee weapon slots
+
+
 
             //Debug.Log("melee slots hidden.\n");
         }
@@ -217,6 +225,7 @@ public class Inventory_UI_Mason : MonoBehaviour
         {
             narrativeSlots[i].SetActive(true); //turn on inventory slots for melee weapons the player has in their inventory.
 
+            narrativeSlots[i].GetComponent<Image>().sprite = dataManager.sessionData.narrativeItems[i].sprite;
             //Debug.Log("weapon=" + dataManager.sessionData.primaryWeapons[i].id + " /n");
         }
 
@@ -225,6 +234,8 @@ public class Inventory_UI_Mason : MonoBehaviour
             rangedSlots[i].SetActive(true); //turn on inventory slots for ranged weapons the player has in their inventory.
 
             rangedAmmoNumbers[i].text = dataManager.sessionData.secondaryWeapons[i].ammo.ToString();
+
+            //rangedSlots[i].sprite = dataManager.sessionData.secondaryWeapons[i].sprite;
 
             //Debug.Log(" rangedweapon=" + dataManager.sessionData.secondaryWeapons[i].id + " /n");
         }
@@ -269,7 +280,7 @@ public class Inventory_UI_Mason : MonoBehaviour
 
     public void OpenNarrativeItemInventory() //switch ui to melee weapons.
     {
-        Debug.Log("Weapons Button Pressed!!!\n");
+        Debug.Log("Narrative Tab Pressed!!!\n");
         narrative_Inventory.SetActive(true);
         ranged_Inventory.SetActive(false);
         consumables_Inventory.SetActive(false);
@@ -279,6 +290,7 @@ public class Inventory_UI_Mason : MonoBehaviour
 
     public void OpenRangedInventory() //switch ui to ranged weapons
     {
+        Debug.Log("Weapon Tab Pressed!!!\n");
         narrative_Inventory.SetActive(false);
         ranged_Inventory.SetActive(true);
         consumables_Inventory.SetActive(false);
@@ -288,6 +300,7 @@ public class Inventory_UI_Mason : MonoBehaviour
 
     public void OpenConsumablesInventory() //switch ui to consumable panel and items.
     {
+        Debug.Log("Consumable Tab Pressed!!!\n");
         narrative_Inventory.SetActive(false);
         ranged_Inventory.SetActive(false);
         consumables_Inventory.SetActive(true);
@@ -297,6 +310,7 @@ public class Inventory_UI_Mason : MonoBehaviour
 
     public void OpenObjectiveInventory() //switch ui to objective panel and items.
     {
+        Debug.Log("Quest Tab Pressed!!!\n");
         narrative_Inventory.SetActive(false);
         ranged_Inventory.SetActive(false);
         consumables_Inventory.SetActive(false);
@@ -305,7 +319,7 @@ public class Inventory_UI_Mason : MonoBehaviour
     }
 
 
-    public void OpenInfoPanelNarrativeItem(int slotNum) //opens the narrative item panel in the inventory and turns on the text fields and fills them with the info of the current selected weapon.
+    public void OpenInfoPanelNarrativeItem(int slotNum) //opens the narrative item panel in the inventory and turns on the text fields and fills them with the info of the current selected item.
     {
         infoPanel.SetActive(true);
 
@@ -313,7 +327,7 @@ public class Inventory_UI_Mason : MonoBehaviour
         equipButton.SetActive(false);
 
         //DisableSideButtons();
-
+        weaponName.enabled = true;
         effectText.enabled = true;
         effectText.text = "Lucidity:";
         effectAmount.enabled = true;
@@ -342,7 +356,7 @@ public class Inventory_UI_Mason : MonoBehaviour
         equipButton.SetActive(true);
 
         //DisableSideButtons();
-
+        weaponName.enabled = true;
         effectText.enabled = true;
         effectText.text = "Damage:";
         effectAmount.enabled = true;
@@ -381,7 +395,7 @@ public class Inventory_UI_Mason : MonoBehaviour
         equipButton.SetActive(false);
 
         //DisableSideButtons();
-
+        weaponName.enabled = true;
         effectText.enabled = true;
         effectText.text = "Healing";
         //effectAmount.enabled = true;
@@ -432,7 +446,9 @@ public class Inventory_UI_Mason : MonoBehaviour
         currentObjectiveSlotNum = slotNum;
 
         //todo grab current objective title/description/steps and assign to above text fields in the infopanel
-        
+        objectiveTitle.text = questManager.activeQuest.name;
+        objectiveDescription.text = questManager.activeQuest.description;
+        //currentObjectiveStepText.text = questManager.activeQuest.
     }
 
     public void EquipWeapon()
