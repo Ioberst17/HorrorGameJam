@@ -135,4 +135,30 @@ public class SimpleSerializableDictionary<TKey, TValue>
         dictionary.TryGetValue(key, out value);
         return value;
     }
+
+    public void IncrementAllValues()
+    {
+        foreach (var key in keys)
+        {
+            if (dictionary.TryGetValue(key, out TValue value))
+            {
+                value = IncrementValue(value);
+                dictionary[key] = value;
+            }
+        }
+    }
+
+    private TValue IncrementValue(TValue value)
+    {
+        if (value is int intValue)
+        {
+            intValue++;
+            return (TValue)(object)intValue;
+        }
+        else
+        {
+            Debug.LogError("Unsupported value type for increment: " + value.GetType());
+            return value;
+        }
+    }
 }

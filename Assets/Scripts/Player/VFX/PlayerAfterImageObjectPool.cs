@@ -31,9 +31,9 @@ public class PlayerAfterImageObjectPool : ObjectPool
     void OnSceneLoaded(Scene currentScene, LoadSceneMode mode)
     {
         playerController = FindObjectOfType<PlayerController>();
-        spriteRendererRightArm = GetComponentInChildrenByNameAndType<RightArmAnimator>("SpriteAndAnimations", playerController.gameObject).GetComponent<SpriteRenderer>();
-        spriteRendererLeftArm = GetComponentInChildrenByNameAndType<LeftArmAnimator>("SpriteAndAnimations", playerController.gameObject).GetComponent<SpriteRenderer>();
-        spriteRendererBase = GetComponentInChildrenByNameAndType<BaseAnimator>("SpriteAndAnimations", playerController.gameObject).GetComponent<SpriteRenderer>();
+        spriteRendererRightArm = GetComponentInChildrenByNameAndType<PlayerRightArmAnimator>("SpriteAndAnimations", playerController.gameObject).GetComponent<SpriteRenderer>();
+        spriteRendererLeftArm = GetComponentInChildrenByNameAndType<PlayerLeftArmAnimator>("SpriteAndAnimations", playerController.gameObject).GetComponent<SpriteRenderer>();
+        spriteRendererBase = GetComponentInChildrenByNameAndType<PlayerBodyAnimator>("SpriteAndAnimations", playerController.gameObject).GetComponent<SpriteRenderer>();
         bodyPartSpriteRenderers = new SpriteRenderer[] { spriteRendererRightArm, spriteRendererLeftArm, spriteRendererBase };
     }
 

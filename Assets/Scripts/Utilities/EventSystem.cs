@@ -22,12 +22,45 @@ public class EventSystem : MonoBehaviour
     
     public event Action onThrowWeaponRelease;
 
-    public void ThrowWeaponTrigger() { if (onThrowWeaponRelease != null) { onThrowWeaponRelease(); } }
+    public void ThrowWeaponTrigger() { if (onThrowWeaponRelease != null) { onThrowWeaponRelease(); } }    
+    
+    public event Action inActiveMeleeAttack;
+
+    public void ActiveMeleeTrigger() { if (inActiveMeleeAttack != null) { inActiveMeleeAttack(); } }    
+    public event Action endActiveMeleeAttack;
+
+    public void EndActiveMeleeTrigger() { if (endActiveMeleeAttack != null) { endActiveMeleeAttack(); } }
 
     // right arm
     public event Action OnShotFired;
 
     public void OnFireAnimationRelease() { if (OnShotFired != null) { OnShotFired(); } }
+
+    // ANIMATIONS RELATED TO ENEMIES
+
+    public event Action<int> enemyInActiveMeleeAttack;
+
+    public void EnemyActiveMeleeTrigger(int instanceID) { if (enemyInActiveMeleeAttack != null) { enemyInActiveMeleeAttack(instanceID); } }
+    public event Action<int> enemyEndActiveMeleeAttack;
+
+    public void EnemyEndActiveMeleeTrigger(int instanceID) { if (enemyEndActiveMeleeAttack != null) { enemyEndActiveMeleeAttack(instanceID); } }
+
+    // Other ANIMATION
+
+    public event Action<int> projectileColliderOn;
+    public void ProjectileColliderOnTrigger(int instanceID) { if(projectileColliderOn != null) { projectileColliderOn(instanceID); } }    
+    
+    public event Action<int> projectileColliderOff;
+    public void ProjectileColliderOffTrigger(int instanceID) { if(projectileColliderOff != null) { projectileColliderOff(instanceID); } }    
+    
+    public event Action<int> projectileLaunch;
+    public void ProjectileLaunchTrigger(int instanceID) { if(projectileLaunch != null) { projectileLaunch(instanceID); } }
+
+
+
+
+
+
 
     // COMBAT-CALCULATIONS (WITH ENEMIES)
 
@@ -35,19 +68,27 @@ public class EventSystem : MonoBehaviour
     public void EnemyEnviroDamage(int damage, Vector3 position, string statusModifier, EnemyController enemyController)
     { { if (onEnemyEnviroDamage != null) { onEnemyEnviroDamage(damage, position, statusModifier, enemyController); } } }
 
-    public event Action<int, int, Vector3, string, EnemyController> onEnemyAmmoHitCollision;
-    public void EnemyAmmoHitTrigger(int weaponID, int weaponLevel, Vector3 position, string statusModifier, EnemyController enemyController)
-    { { if (onEnemyAmmoHitCollision != null) { onEnemyAmmoHitCollision(weaponID, weaponLevel, position, statusModifier, enemyController); } } }
+    public event Action<int, Vector3, string, EnemyController> onEnemyAmmoHitCollision;
+    public void EnemyAmmoHitTrigger(int baseDamage, Vector3 position, string statusModifier, EnemyController enemyController)
+    { { if (onEnemyAmmoHitCollision != null) { onEnemyAmmoHitCollision(baseDamage, position, statusModifier, enemyController); } } }
 
     public event Action<int, Vector3, string, EnemyController> onEnemyMeleeHitCollision;
     public void EnemyMeleeHitTrigger(int attackDamage, Vector3 playerPosition, string statusModifier, EnemyController enemyController)
-    { { if (onEnemyMeleeHitCollision != null) { onEnemyMeleeHitCollision(attackDamage, playerPosition, statusModifier, enemyController); } } }
+    { { if (onEnemyMeleeHitCollision != null) { onEnemyMeleeHitCollision(attackDamage, playerPosition, statusModifier, enemyController); } } }    
+    
+    public event Action<int, Vector3, string, EnemyController> onEnemyParryCollision;
+    public void EnemyParryHitTrigger(int attackDamage, Vector3 playerPosition, string statusModifier, EnemyController enemyController)
+    { { if (onEnemyParryCollision != null) { onEnemyParryCollision(attackDamage, playerPosition, statusModifier, enemyController); } } }
     
     public event Action<int, int> onWaveFinished;
     public void WaveFinishedTrigger(int areaID, int waveNum) { if (onWaveFinished != null) { onWaveFinished(areaID, waveNum); } }
 
     public event Action <int> onAllWavesFinished;
     public void AllWavesFinishedTrigger(int areaID) { if (onAllWavesFinished != null) { onAllWavesFinished(areaID); } }
+
+
+
+
 
     // WEAPON-RELATED EVENTS
 
@@ -138,6 +179,10 @@ public class EventSystem : MonoBehaviour
 
     public void UpdateSecondaryWeaponTrigger(int weaponID, string weaponName, int weaponLevel) { if(onUpdateSecondaryWeaponTrigger != null) { onUpdateSecondaryWeaponTrigger(weaponID, weaponName, weaponLevel); } }
 
+
+
+
+
     // PLAYER HEALTH-RELATED
 
     public event Action<Collider2D> onPlayerShieldHitTrigger;
@@ -146,11 +191,21 @@ public class EventSystem : MonoBehaviour
 
     public event Action<Vector3, int, int, float, float, bool> onPlayerHitCalcTrigger;
 
-    public void PlayerHitCalcTrigger(Vector3 attackerPosition, int damageNumber, int damageType, float damageMod, float knockbackMod, bool hitInActiveShieldZone) 
+    public void PlayerHitHealthTrigger(Vector3 attackerPosition, int damageNumber, int damageType, float damageMod, float knockbackMod, bool hitInActiveShieldZone) 
     { 
         if(onPlayerHitCalcTrigger != null) 
         { 
             onPlayerHitCalcTrigger(attackerPosition, damageNumber, damageType, damageMod, knockbackMod, hitInActiveShieldZone); 
+        } 
+    }    
+    
+    public event Action<Vector3, float, bool> onPlayerHitPostHealthTrigger;
+
+    public void PlayerHitPostHealthTrigger(Vector3 attackerPosition, float knockbackMod, bool hitInActiveShieldZone) 
+    { 
+        if(onPlayerHitPostHealthTrigger != null) 
+        {
+            onPlayerHitPostHealthTrigger(attackerPosition, knockbackMod, hitInActiveShieldZone); 
         } 
     }
 
@@ -162,11 +217,19 @@ public class EventSystem : MonoBehaviour
 
     public void AddHealthTrigger(int healthToAdd) { if (onAddHealthTrigger != null) { onAddHealthTrigger(healthToAdd); } }
 
+
+
+
+
     // QUEST RELATED
 
     public event Action<string, int> onQuestUpdateTrigger;
 
     public void UpdateQuestTrigger(string questToUpdate, int subQuestIndex) { if (onQuestUpdateTrigger != null) { onQuestUpdateTrigger(questToUpdate, subQuestIndex); } }
+
+
+
+
 
     // OTHER PLAYER-RELATED
 

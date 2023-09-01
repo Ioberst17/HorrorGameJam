@@ -1,16 +1,16 @@
-EnemyDatabase (not in Folder) - contains the information used in the below scripts
+EnemyDatabase and EnemyAttackDatabase(not in Folder) - contains the information used in the below scripts
 ---
-
-EnemyController - basic logic and data of an enemy e.g. health, attacks, etc.
-
-EnemyAttackBehavior - parent class that controls how an enemy interacts with the world (patrols, updates its actions)
-EnemyAttackNumber - 
+EnemyBehaviour - parent class that controls how an enemy interacts with the world (patrols, updates its actions); a specific version of it will control behaviour e.g. BatBehavior controls bats
+EnemyController - basic state data and physics of an enemy
+EnemyHealth - stores health data and references to its display (Health UI Slider)
+EnemyAttackManager - controls melee attacks
+EnemyProjectileManager - assists with launch of projectile attacks
 EnemyDetectionBehavior - Detector that updates values in EnemyController
 
 N.B. Not In This Folder: Specific Behavior scripts are stored with enemy prefabs in the Art/Enemies Folders
 --
 EnemyLoot - Used to create loot drops from enemies
 ---
-EnemyProjectile - 
+EnemyProjectile - primarily used as a tag to determine if a projectile is Enemy or not
 ---
 EnemySpawnManager - Attached to an object with a collider to trigger enemy spawning

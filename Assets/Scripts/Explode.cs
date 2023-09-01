@@ -24,13 +24,13 @@ public class Explode : MonoBehaviour
         Destroy(gameObject, 1f);
     }
 
-    public void AmmoExplosion(float radius, float pushForce, string weaponName, int weaponID, int weaponLevel)
+    public void AmmoExplosion(float radius, float pushForce, string weaponName)
     {
         AddExplosionEffects(weaponName);
         foreach (Collider2D touchedObject in GetObjectsInExplosionRadius(radius))
         {
             PushObject(touchedObject, radius, pushForce);
-            PassAmmoDamage(touchedObject, radius, weaponID, weaponLevel);
+            PassAmmoDamage(touchedObject, radius);
         }
         Destroy(gameObject, 1f);
     }
@@ -54,7 +54,7 @@ public class Explode : MonoBehaviour
         else { target.Hit(damageToGive, transform.position, gameObject); } // last case is breakable objects
     }
 
-    private void PassAmmoDamage(Collider2D touchedObject, float pushForce, int weaponID, int weaponLevel)
+    private void PassAmmoDamage(Collider2D touchedObject, float pushForce)
     {
         var target = touchedObject.gameObject.GetComponent<IDamageable>();
 
@@ -64,7 +64,10 @@ public class Explode : MonoBehaviour
         else if (touchedObject.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         { 
             var enemyController = touchedObject.GetComponent<EnemyController>();
-            if (enemyController != null) { EventSystem.current.EnemyAmmoHitTrigger(weaponID, weaponLevel, transform.position, null, enemyController); } }
+            if (enemyController != null) { EventSystem.current.EnemyAmmoHitTrigger(GetComponent<ProjectileBase>().projectile.baseDamage, 
+                                                                                    transform.position, 
+                                                                                    null, 
+                                                                                    enemyController); } }
 
         else { target.Hit(touchedObject.gameObject); } // last case is breakable objects
     }

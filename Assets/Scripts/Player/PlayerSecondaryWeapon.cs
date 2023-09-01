@@ -7,78 +7,78 @@ using UnityEngine;
 using static ComponentFinder;
 using UnityEngine.InputSystem;
 
-public class PlayerSecondaryWeapon : MonoBehaviour
+public class PlayerSecondaryWeapon : ProjectileManager
 {
     // EXTERNAL REFERENCES
-    private GameController gameController;
-    private SecondaryWeaponsManager secondaryWeaponsManager;
-    private GameObject utilities;
-    private PlayerAnimator animator;
-    [SerializeField] private SpriteRenderer weaponSprite;
-    private float weaponWidth;
-    private float weaponHeight;
-
-    [Header("Ammo Settings")]
-    public List<GameObject> ammoPrefabs;
-    public Transform projectileSpawnPoint; // assigned in inspector
-    private float projectileSpawnOffset = 0f; // distance from weaponSprite and projectile generation
-    private float projectileXOffset;
-    private float projectileYOffset;
-    public int ammoSpeed;
-    private int ammoGravity = 0;
+    GameController gameController;
+    PlayerAnimator animator;
 
     [Header("Weapon Settings")]
-    private WeaponDatabase weaponDatabase;
-    [SerializeField] private GameObject fixedDistanceAmmo;
-    private bool fixedDistanceCheck;
-    [SerializeField] private int currentWeaponID;
+    WeaponDatabase weaponDatabase;
+    PlayerProjectileDatabase playerProjectileDatabase;
+    [SerializeField] GameObject fixedDistanceAmmo;
+
+    [SerializeField] int currentWeaponID;
     public Weapons currentWeapon;
-    [SerializeField] private int currentWeaponLevel;
-    public int currentAmmoIndex;
+    [SerializeField] int currentWeaponLevel;
     [SerializeField] private string currentWeaponSpriteLocation;
 
     [Header("Throw Weapon Settings")]
-    public PlayerSecondaryWeaponThrowHandler throwHandler;
+    public PlayerThrowHandler throwHandler;
 
     [Header("Weapon Rotation Settings")]
-    [SerializeField] private float weaponDirection;
-    private PlayerController playerController;
-    private Vector3 lookDirection;
-    private Vector3 playerPos;
+    [SerializeField] float weaponDirection;
+    Vector3 lookDirection;
+    Vector3 playerPos;
     float bufferZone, bufferZoneMax, bufferZoneMin;
 
-    private float rotationZ; //used for weapon direction
-
-    void Start()
+    override protected void Start()
     {
+        base.Start();
         // get object and component references
         gameController = FindObjectOfType<GameController>();
-        playerController = transform.parent.GetComponent<PlayerController>();
-        animator = GetComponentInChildrenByNameAndType<PlayerAnimator>("Animator", playerController.gameObject, true);
+        playerProjectileDatabase = FindObjectOfType<PlayerProjectileDatabase>();
+        BuildProjectileInfoDictionaries();
+        animator = FindObjectOfType<PlayerAnimator>();
         var parentOfWeaponSprite = GetComponentInChildrenByNameAndType<Transform>("Weapon", animator.gameObject);
         weaponSprite = GetComponentInChildrenByNameAndType<SpriteRenderer>("SpriteAndAnimations", parentOfWeaponSprite.gameObject);
-        secondaryWeaponsManager = playerController.GetComponentInParent<SecondaryWeaponsManager>();
+        projectileSpawnPoint = GetComponentInChildrenByNameAndType<Transform>("FirePointSprite");
         fixedDistanceAmmo = GetComponentInChildrenByNameAndType<Transform>("FixedDistanceAmmo", animator.gameObject).gameObject;
-        throwHandler = GetComponent<PlayerSecondaryWeaponThrowHandler>();
-
-        utilities = GameObject.Find("Utilities");
-        weaponDatabase = utilities.GetComponentInChildren<WeaponDatabase>();
-
-
-        // load ammo prefabs to a list
-        ammoPrefabs = Resources.LoadAll<GameObject>("AmmoPrefabs").ToList();
-
-        // go through the list and sort them in order by ammo IDs
-        ammoPrefabs.Sort((randomAmmo, ammoToCompareTo) => randomAmmo.GetComponent<Ammo>().GetAmmoID().CompareTo(ammoToCompareTo.GetComponent<Ammo>().GetAmmoID()));
-    
+        throwHandler = GetComponent<PlayerThrowHandler>();
+        weaponDatabase = FindObjectOfType<WeaponDatabase>();
+        
+        // ensure fixed fire is off
         StopFixedFire();
 
         // subscribe to events
         EventSystem.current.onUpdateSecondaryWeaponTrigger += WeaponChanged;
         EventSystem.current.onWeaponFire += WeaponFired;
-        EventSystem.current.onWeaponStopTrigger += WeaponStop;
+        EventSystem.current.onWeaponStopTrigger += StopFixedFire;
+    }
+    // Called in start of child function
+    protected override void LoadProjectileObjects()
+    {
+        // load ammo prefabs to a list
+        projectilesToUse = Resources.LoadAll<GameObject>("AmmoPrefabs").ToList();
+
+        // go through the list and sort them in order by ammo IDs
+        projectilesToUse.Sort((randomAmmo, ammoToCompareTo) => randomAmmo.GetComponent<Ammo>().GetAmmoID().CompareTo(ammoToCompareTo.GetComponent<Ammo>().GetAmmoID()));
     }
 
+    protected override void BuildProjectileInfoDictionaries()
+    {
+        foreach (var projectile in playerProjectileDatabase.data.entries)
+        {
+            projectiles.Add(projectile); 
+        }
+
+        base.BuildProjectileInfoDictionaries();
+    }
+
+    /// <summary>
+    /// Used to determine weapon point direction
+    /// </summary>
+    /// <returns></returns>
     public bool WeaponIsPointedToTheRight()
     {
         bool weaponIsPointedRight = false;
@@ -98,26 +98,13 @@ public class PlayerSecondaryWeapon : MonoBehaviour
     private void WeaponFired(int weaponID, int weaponLevel, int ammoChange, int direction)
     {
         // Note: throw logic by contrast is almost exclusively handled in PlayerSecondaryWeaponThrowHandler
-        if (weaponDatabase.data.entries[weaponID].isShot == true) { Shoot();}
-        else if (weaponDatabase.data.entries[weaponID].isFixedDistance == true) { FixedDistanceFire(); fixedDistanceCheck = true; }
+        if (weaponDatabase.data.entries[weaponID].isShot == true) { Shoot(projectilesToUse[currentAmmoIndex]);}
+        else if (weaponDatabase.data.entries[weaponID].isFixedDistance == true) { FixedDistanceFire(); }
         else { Debug.Log("Check WeaponDatabase, weapon is missing a TRUE value for if ammo should be shot, thrown, be a fixed distance, etc."); }
     }
-
-    private void WeaponStop() { StopFixedFire(); }
-
-    private void Shoot()
-    {
-        GameObject shot = Instantiate(ammoPrefabs[currentAmmoIndex], projectileSpawnPoint.position, projectileSpawnPoint.transform.rotation);
-        FindObjectOfType<AudioManager>().PlaySFX("WeaponFire");
-
-        shot.GetComponent<Rigidbody2D>().gravityScale = ammoGravity;
-
-        shot.GetComponent<Rigidbody2D>().AddForce(projectileSpawnPoint.transform.right * ammoSpeed);
-    }
-
     public void HandleThrowing(string inputState, string currentControlScheme)
     {
-        throwHandler.HandleThrowing(inputState, currentControlScheme);
+        throwHandler.Execute(inputState, currentControlScheme);
     }
 
     private void FixedDistanceFire() { fixedDistanceAmmo.SetActive(true); ToggleFlamethrowerEffects(true); }
@@ -134,7 +121,6 @@ public class PlayerSecondaryWeapon : MonoBehaviour
 
     private void WeaponChanged(int weaponID, string weaponName, int weaponLevel)
     {
-
         currentWeapon = weaponDatabase.ReturnItemFromID(weaponID); 
         UpdateAmmoUsed(weaponID, weaponLevel);
         UpdateFirePoint();
@@ -142,10 +128,10 @@ public class PlayerSecondaryWeapon : MonoBehaviour
 
     private void UpdateAmmoUsed(int weaponID, int weaponLevel)
     {
-        for(int i = 0; i < ammoPrefabs.Count; i++)
+        for(int i = 0; i < projectilesToUse.Count; i++)
         {
-            if (ammoPrefabs[i].GetComponent<Ammo>().weaponID == weaponID &&
-                ammoPrefabs[i].GetComponent<Ammo>().weaponLevel == weaponLevel) 
+            if (projectilesToUse[i].GetComponent<Ammo>().weaponID == weaponID &&
+                projectilesToUse[i].GetComponent<Ammo>().weaponLevel == weaponLevel) 
             {
                 currentWeaponID = weaponID;
                 currentWeaponLevel = weaponLevel;
@@ -169,6 +155,6 @@ public class PlayerSecondaryWeapon : MonoBehaviour
         // unsubscribe from events
         EventSystem.current.onUpdateSecondaryWeaponTrigger -= WeaponChanged;
         EventSystem.current.onWeaponFire -= WeaponFired;
-        EventSystem.current.onWeaponStopTrigger -= WeaponStop;
+        EventSystem.current.onWeaponStopTrigger -= StopFixedFire;
     }
 }

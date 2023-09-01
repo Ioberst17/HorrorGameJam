@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpiderBehavior : EnemyAttackBehavior
+public class SpiderBehavior : EnemyBehaviour
 {
     public int attackSet;
     public int attackCooldown;
@@ -15,7 +15,7 @@ public class SpiderBehavior : EnemyAttackBehavior
         enemyController.IsAttacking = false;
         enemyController.IsOnCeiling = true;
         enemyController.SpriteRenderer.flipY = true;
-        enemyController.RB.gravityScale = 0;
+        enemyController.SetGravityScale(0);
         enemyController.GroundCheckRadius = 0.15f;
     }
 
@@ -53,7 +53,7 @@ public class SpiderBehavior : EnemyAttackBehavior
                 enemyController.IsOnCeiling = false;
                 CeilingAttack();
                 enemyController.SpriteRenderer.flipY = false;
-                enemyController.RB.gravityScale = 1;
+                enemyController.SetGravityScale(1);
             }
             else if(!enemyController.JustLanded && enemyController.IsGrounded && !enemyController.IsAttacking) { StartCoroutine(GroundAttack()); }
         }
@@ -76,10 +76,10 @@ public class SpiderBehavior : EnemyAttackBehavior
 
         enemyController.animator.Play("SpiderCrouch");
         yield return new WaitForSeconds(0.50f);
-        if (enemyHealth.damageInterupt)
+        if (enemyHealth.DamageInterrupt)
         {
             enemyController.IsAttacking = false;
-            enemyHealth.damageInterupt = false;
+            enemyHealth.DamageInterrupt = false;
         }
         else
         {

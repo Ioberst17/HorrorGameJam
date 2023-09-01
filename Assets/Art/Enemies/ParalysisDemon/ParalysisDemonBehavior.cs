@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ParalysisDemonBehavior : EnemyAttackBehavior
+public class ParalysisDemonBehavior : EnemyBehaviour
 {
     override protected void Start()
     {
@@ -25,13 +25,13 @@ public class ParalysisDemonBehavior : EnemyAttackBehavior
         switch (enemyController.patrolID)
         {
             case 0:
-                enemyController.SetVelocity(enemyController.MovementSpeed, enemyController.RB.velocity.y);
+                enemyController.SetVelocity(enemyController.MovementSpeed, null);
                 break;
             case 1:
-                enemyController.SetVelocity(-enemyController.MovementSpeed, enemyController.RB.velocity.y);
+                enemyController.SetVelocity(-enemyController.MovementSpeed, null);
                 break;
             case 2:
-                enemyController.SetVelocity(enemyController.MovementSpeed, enemyController.RB.velocity.y);
+                enemyController.SetVelocity(enemyController.MovementSpeed, null);
                 break;
             default:
                 break;
@@ -43,14 +43,20 @@ public class ParalysisDemonBehavior : EnemyAttackBehavior
         {
             if (enemyController.playerLocation.position.x >= transform.position.x - 0.1f)
             {
-                enemyController.SetVelocity(enemyController.MovementSpeed * 1.5f, enemyController.RB.velocity.y);
+                enemyController.SetVelocity
+                    (enemyController.MovementSpeed * 1.5f,
+                    null);
             }
             else if (enemyController.playerLocation.position.x < transform.position.x + 0.1f)
             {
-                enemyController.SetVelocity(-enemyController.MovementSpeed * 1.5f, enemyController.RB.velocity.y);
+                enemyController.SetVelocity(
+                    -enemyController.MovementSpeed * 1.5f, 
+                    null);
             }
-            else { enemyController.SetVelocity(0, enemyController.RB.velocity.y); }
+            else { enemyController.SetVelocity(0, null); }
         }
+
+        attackManager.StartAttack(0, "ParalysisDemonSlash");
         
     }
 

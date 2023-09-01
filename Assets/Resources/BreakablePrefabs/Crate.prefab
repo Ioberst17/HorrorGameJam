@@ -127,7 +127,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 82
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
@@ -148,8 +148,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72f01fe8b98d91c4a9c39b84303ca59e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitCount: 3
+  needsToBeHitWithExplosion: 0
   BrokenVersion: {fileID: 424449650224081242, guid: 20a005cd154d5e64fa101bc9424b5446, type: 3}
-  breakableName: 
+  hasBroken: 0
 --- !u!114 &-4088981778093339716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -178,5 +180,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8caa3a4426aabe478b0d423098eefbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pulseTrigger: 0
+  continuousPulse: 0
   sizeShift: 0.02
-  stepCounter: 0.2
+  pulseSpeed: 1

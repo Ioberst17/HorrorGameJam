@@ -6,7 +6,6 @@ public class SecondaryWeaponsManager : WeaponsManager
 {
     private float lastWeaponUseTime;
     private PlayerController playerController;
-    private PlayerPrimaryWeapon playerPrimaryWeapon;
     private ChargePunch chargePunch;
 
     // Variables that track whether a weapon can be fired
@@ -17,8 +16,6 @@ public class SecondaryWeaponsManager : WeaponsManager
     bool isNotWallHanging;
     bool isNotMeleeing;
 
-
-
     public override void Start()
     {
         base.Start();
@@ -27,7 +24,6 @@ public class SecondaryWeaponsManager : WeaponsManager
 
         player = GameObject.Find("Player");
         playerController = player.GetComponentInChildren <PlayerController>();
-        playerPrimaryWeapon = player.GetComponentInChildren <PlayerPrimaryWeapon>();
         playerSecondaryWeapon = player.GetComponentInChildren<PlayerSecondaryWeapon>();
         chargePunch = player.GetComponentInChildren<ChargePunch>();
     }
@@ -81,10 +77,10 @@ public class SecondaryWeaponsManager : WeaponsManager
     {
         hasAmmo = weaponList[currentWeaponIndex].ammo > 0;
         doesNotExceedFireRate = Time.time > lastWeaponUseTime + weaponList[currentWeaponIndex].fireRate;
-        canThrow = !playerSecondaryWeapon.throwHandler.inActiveThrow;
+        canThrow = !playerSecondaryWeapon.throwHandler.inActiveThrow; 
         notChargePunching = !chargePunch.IsCharging;
         isNotWallHanging = !playerController.IsWallHanging;
-        isNotMeleeing = !playerPrimaryWeapon.IsAttacking;
+        isNotMeleeing = !playerController.IsAttacking;
 
         if (hasAmmo && doesNotExceedFireRate && canThrow && notChargePunching && isNotWallHanging && isNotMeleeing)
         {

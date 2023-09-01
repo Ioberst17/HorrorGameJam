@@ -13,7 +13,7 @@ public class EnemyDatabase : Database<EnemyData>
 
     private void Awake()
     {
-        numOfColumns = 62;
+        numOfColumns = 26;
         textAssetData = Resources.Load<TextAsset>("TextFiles/EnemyDatabase");
         string[] data = ReadCSV();
         CreateDatabase(data);
@@ -21,12 +21,13 @@ public class EnemyDatabase : Database<EnemyData>
 
     private int GetSpecificAttackDamage(EnemyData enemy, int attackNumber)
     {
-        if (attackNumber == 1) { return enemy.attack1Damage; }
-        else if (attackNumber == 2) { return enemy.attack2Damage; }
-        else if (attackNumber == 3) { return enemy.attack3Damage; }
-        else if (attackNumber == 4) { return enemy.attack4Damage; }
-        else if (attackNumber == 5) { return enemy.attack5Damage; }
-        else if (attackNumber == 6) { return enemy.attack6Damage; }
+
+        if (attackNumber == 1) { return 1; }
+        else if (attackNumber == 2) { return 1; }
+        else if (attackNumber == 3) { return 1; }
+        else if (attackNumber == 4) { return 1; }
+        else if (attackNumber == 5) { return 1; }
+        else if (attackNumber == 6) { return 1; }
 
         Debug.Log("No attackNumber matches the number listed in EnemyDatabase.cs");
         return -1;

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(WeaponAnimator))]
+[CustomEditor(typeof(PlayerWeaponAnimator))]
 public class SerializableDictionaryInspector : Editor
 {
     //private SerializedProperty weaponAnimationClips;

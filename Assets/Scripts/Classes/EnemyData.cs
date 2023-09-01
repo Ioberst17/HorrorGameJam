@@ -23,26 +23,6 @@ public class EnemyData : IDatabaseItem // are added in the same order as the col
     public float easyHPMultiplier, mediumHPMultiplier, hardHPMultiplier;
     public float easyAPMultiplier, mediumAPMultiplier, hardAPMultiplier;    
 
-    //ATTACK INFO
-    public string attack1;
-    public bool attack1Kinetic,attack1Melee, attack1Ranged, attack1Elemental;
-    public int attack1Damage;
-    public string attack2;
-    public bool attack2Kinetic, attack2Melee, attack2Ranged, attack2Elemental;
-    public int attack2Damage;
-    public string attack3;
-    public bool attack3Kinetic, attack3Melee, attack3Ranged, attack3Elemental;
-    public int attack3Damage;
-    public string attack4;
-    public bool attack4Kinetic, attack4Melee, attack4Ranged, attack4Elemental;
-    public int attack4Damage;
-    public string attack5;
-    public bool attack5Kinetic, attack5Melee, attack5Ranged, attack5Elemental;
-    public int attack5Damage;
-    public string attack6;
-    public bool attack6Kinetic, attack6Melee, attack6Ranged, attack6Elemental;
-    public int attack6Damage;
-
     // OTHER
     public string description;
 

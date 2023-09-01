@@ -12,6 +12,7 @@ public abstract class Health : MonoBehaviour, IDamageable
     public int damageTaken;
     [SerializeField] protected int _maxHealth; public int MaxHealth { get { return _maxHealth; } set { _maxHealth = value; } }
     [SerializeField] protected int _hp; public int HP { get { return _hp; } set { _hp = value; } }
+    [SerializeField] private bool _damageInterrupt; public bool DamageInterrupt { get { return _damageInterrupt; } set { _damageInterrupt = value; } }
     protected float StandardInvincibilityLength { get; set; } = 1.5f;
 
     void Awake()

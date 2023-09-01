@@ -8,12 +8,12 @@ public class ComboSystem : MonoBehaviour
     [SerializeField] private float lastInputTime;
     [SerializeField] private int comboCount = 0;
     [SerializeField] private int maxComboCount = 3;
-    PlayerPrimaryWeapon playerPrimaryWeapon;
+    PlayerAttackManager playerPrimaryWeapon;
 
     // Start is called before the first frame update
     void Start()
     {
-        playerPrimaryWeapon = GetComponent<PlayerPrimaryWeapon>();
+        playerPrimaryWeapon = GetComponent<PlayerAttackManager>();
     }
 
     // Check for input and track combocount
@@ -34,25 +34,23 @@ public class ComboSystem : MonoBehaviour
             case 1:
                 // Perform first punch
                 Debug.Log("First punch!");
-                StartCoroutine(playerPrimaryWeapon.AttackActiveFrames(attackDirection, "PlayerBasicAttack1"));
+                playerPrimaryWeapon.StartAttack(attackDirection, "PlayerBasicAttack1");
                 break;
             case 2:
                 // Perform second punch
                 Debug.Log("Second punch!");
-                StartCoroutine(playerPrimaryWeapon.AttackActiveFrames(attackDirection, "PlayerBasicAttack2"));
+                playerPrimaryWeapon.StartAttack(attackDirection, "PlayerBasicAttack2");
                 break;
             case 3:
                 // Perform third punch
                 Debug.Log("Third punch!");
-                StartCoroutine(playerPrimaryWeapon.AttackActiveFrames(attackDirection, "PlayerBasicAttack3"));
-                //StartCoroutine(playerPrimaryWeapon.AttackActiveFrames(attackDirection, "PlayerThirdPunch"));
+                playerPrimaryWeapon.StartAttack(attackDirection, "PlayerBasicAttack3");
                 break;
             case 4:
                 // Perform third punch
                 Debug.Log("Restart Combo!");
                 comboCount = 0;
-                StartCoroutine(playerPrimaryWeapon.AttackActiveFrames(attackDirection, "PlayerBasicAttack1"));
-                //StartCoroutine(playerPrimaryWeapon.AttackActiveFrames(attackDirection, "PlayerThirdPunch"));
+                playerPrimaryWeapon.StartAttack(attackDirection, "PlayerBasicAttack1");
                 break;
         }
 

@@ -16,27 +16,31 @@ public class PlayerHealth : Health
 
     private void Start() 
     { 
-        EventSystem.current.onPlayerHitCalcTrigger += Hit;
         playerController = GetComponent<PlayerController>(); 
         shield = GetComponentInChildren<Shield>();
         chargePunch = GetComponentInChildren<ChargePunch>();
         damageDisplay = GetComponentInChildren<UIHealthChangeDisplay>();
         animator = ComponentFinder.GetComponentInChildrenByNameAndType<PlayerAnimator>("Animator", this.gameObject, true);
         lucidityDamageModifier = 1;
+        EventSystem.current.onPlayerHitCalcTrigger += Hit;
+    }
+
+    private void OnDestroy()
+    {
+        EventSystem.current.onPlayerHitCalcTrigger -= Hit;
     }
 
     public void Hit(Vector3 enemyPos, int damageNumber, int damageType, float damageMod, float knockbackMod, bool hitInActiveShieldZone)
     {
-        if (hitInActiveShieldZone && !playerController.IsInvincible)
+        if (hitInActiveShieldZone)
         {
             TakeDamage(damageNumber, damageMod);
-            playerController.HandleHitPhysics(enemyPos, knockbackMod);
+            EventSystem.current.PlayerHitPostHealthTrigger(enemyPos, knockbackMod, hitInActiveShieldZone);
         }
         else if (!playerController.IsInvincible)
         {
             TakeDamage(damageNumber, damageMod);
-            playerController.HandleHitPhysics(enemyPos, knockbackMod);
-            StartCoroutine(playerController.HitStun());
+            EventSystem.current.PlayerHitPostHealthTrigger(enemyPos, knockbackMod, hitInActiveShieldZone);
         }
     }
 
@@ -50,9 +54,4 @@ public class PlayerHealth : Health
     public void TakeDamage(int damageNumber) { TakeDamage(damageNumber, 0); }
 
     public new void HPZero() { Debug.Log("Player Death"); HP = MaxHealth; EventSystem.current.PlayerDeathTrigger(); }
-
-    private void OnDestroy()
-    {
-        EventSystem.current.onPlayerHitCalcTrigger -= Hit;
-    }
 }
