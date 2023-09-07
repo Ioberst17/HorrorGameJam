@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class EnemyProjectileManager : ProjectileManager
 {
@@ -17,13 +18,15 @@ public class EnemyProjectileManager : ProjectileManager
     {
         enemyData = GetComponentInParent<EnemyDataLoader>();
         if (enemyData != null) { enemyData.DataLoaded += BuildProjectileInfoDictionaries; }
-        EventSystem.current.projectileLaunch += UseTargetedSpell;
+        EventSystem.current.projectileLaunch += DirectShotFromAnimation;
+        EventSystem.current.targetedSpellTrigger += UseTargetedSpell;
     }
 
     private void OnDestroy() 
     { 
         enemyData.DataLoaded -= BuildProjectileInfoDictionaries;
-        EventSystem.current.projectileLaunch -= UseTargetedSpell;
+        EventSystem.current.projectileLaunch -= DirectShotFromAnimation;
+        EventSystem.current.targetedSpellTrigger -= UseTargetedSpell;
     }
 
 
@@ -66,82 +69,60 @@ public class EnemyProjectileManager : ProjectileManager
         // projectilesToUse.Sort((randomAmmo, ammoToCompareTo) => randomAmmo.GetComponent<Ammo>().GetAmmoID().CompareTo(ammoToCompareTo.GetComponent<Ammo>().GetAmmoID()));
     }
 
-    override public void Shoot(GameObject ammoToUse, Vector3 target = default(Vector3))
+    /// <summary>
+    /// Called for the case of direct shots and has an overload for targeted thrown shots
+    /// </summary>
+    /// <param name="ammoToUse"></param>
+    /// <param name="target"></param>
+    override public void ShootHandler(GameObject ammoToUse, Vector3 target = default(Vector3))
     {
-        var referenceID = ammoToUse.GetComponent<ProjectileBase>().projectile.referenceID;
+        var referenceID = ammoToUse.GetComponent<ProjectileBase>().referenceID;
+
         if (HasNotExceededFireRate(referenceID))
         {
             projectileFramesSinceLastShot[referenceID] = 0;
-            base.Shoot(ammoToUse, target);
+            base.ShootHandler(ammoToUse, target);
         }
     }
 
-    public void StartChargeAttack(int referenceID, string animationName = "")
+    /// <summary>
+    /// Called to start an attack that launches on an animation frame; requires a projectile reference ID from the relevant database. 
+    /// Optionally, can input an animation name to play with projectile
+    /// </summary>
+    /// <param name="referenceID"></param>
+    /// <param name="animationName"></param>
+    public void Shoot(int referenceID, string animationName)
     {
         if(HasNotExceededFireRate(referenceID))
         {
+            // reset shot frames to 0
             projectileFramesSinceLastShot[referenceID] = 0;
-            enemyController.IsAttacking = true;
 
+            // important to cache so projectile manager has information to launch with later in the animation
             CacheMostRecentProjectile(referenceID);
-            if (animationName != "") { animator.Play(animationName); }
+            animator.Play(animationName); 
         } 
-        
-        //// Stop any ongoing charge coroutine
-        //if (chargeCoroutine != null) { StopCoroutine(chargeCoroutine); } 
+    }
 
-        //chargeCoroutine = StartCoroutine(ChargeAttackCoroutine());
+    override protected void DirectShotFromAnimation(int instanceID)
+    {
+        if (transform.parent.gameObject.GetInstanceID() == instanceID)
+        {
+            // reset shot frames to 0
+            projectileFramesSinceLastShot[MostRecentProjectile.referenceID] = 0;
+
+            base.DirectShotFromAnimation(instanceID);
+            //enemyController.IsAttacking = false;
+        }
     }
 
     override protected void UseTargetedSpell(int instanceID)
     {
         if (transform.parent.gameObject.GetInstanceID() == instanceID)
         {
-            GameObject projectileToUse = projectilesToUse.Find(proj =>
-                                                                proj.GetComponent<ProjectileBase>().referenceID == MostRecentProjectile.referenceID);
+            base.UseTargetedSpell(instanceID);
 
-            projectileToUse.GetComponent<ProjectileBase>().projectile = MostRecentProjectile;
-
-            // update position with any targeting modifiers e.g. adjust up from the player location
-            var positionToUse = ReturnModifiedPosition(GetComponentInParent<EnemyController>().playerLocation.position,
-                                                                                               MostRecentProjectile.targetingModifierX,
-                                                                                               MostRecentProjectile.targetingModifierY);
-
-            // instantiate 
-            GameObject projectile = Instantiate(projectileToUse,
-                                                positionToUse,
-                                                Quaternion.identity);
-
-            enemyController.IsAttacking = false;
+            //enemyController.IsAttacking = false;
         }
     }
-
-    //public void InterruptChargeAttack()
-    //{
-    //    if (chargeCoroutine != null)
-    //    {
-    //        StopCoroutine(chargeCoroutine);
-    //        // Perform quit logic immediately
-    //        QuitLogic();
-    //    }
-    //}
-
-    //private IEnumerator ChargeAttackCoroutine()
-    //{
-    //    yield return null; //new WaitForSeconds(chargeTime);
-
-    //    // At this point, the charge attack has finished
-    //    // Perform the charge attack logic
-    //    PerformChargeAttack();
-    //}
-
-    //private void PerformChargeAttack()
-    //{
-    //    // Perform charge attack logic here
-    //}
-
-    //private void QuitLogic()
-    //{
-    //    // Perform your quit logic here
-    //}
 }

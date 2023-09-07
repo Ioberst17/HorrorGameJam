@@ -55,7 +55,12 @@ public class EnemyController : Controller
         LoadInValues();
     }
 
-    // called in FixedUpdate of the parent when a player is hit
+    public float XDistanceFromPlayer()
+    {
+        return transform.position.x - playerLocation.position.x;
+    }
+
+    // called in FixedUpdate of the parent when hit
     override protected void HitStunBlink()
     {
         if (InHitStun)
@@ -66,13 +71,6 @@ public class EnemyController : Controller
             SpriteRenderer.enabled = (blinkTime > 0f);
         }
         else { SpriteRenderer.enabled = true; /*hitBox.enabled = true;*/ }
-    }
-
-    public void StatusModifier(string mod)
-    {
-        if (mod == "DemonBlood") { if (GetComponentInChildren<Poisoned>() != null) { GetComponentInChildren<Poisoned>().Execute(); } }
-        else if (mod == "Burn") { if (GetComponentInChildren<Burnable>() != null) { GetComponentInChildren<Burnable>().Execute(); } }
-        else if (mod == "Stunned") { if (GetComponentInChildren<Stunned>() != null) { GetComponentInChildren<Stunned>().Execute(); } }
     }
 
     override public void HandleHitPhysics(Vector3 playerPosition, float knockbackMod) 

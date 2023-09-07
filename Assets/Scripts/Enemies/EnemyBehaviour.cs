@@ -26,11 +26,20 @@ public class EnemyBehaviour : MonoBehaviour
 
     virtual protected void Start()
     {
+        EventSystem.current.objectIsShooting += IsShooting;
+        EventSystem.current.objectIsNotShooting += IsNotShooting;
+
         enemyHealth = GetComponent<EnemyHealth>();
         enemyController = GetComponent<EnemyController>();
         enemyData = GetComponent<EnemyDataLoader>();
         attackManager = GetComponentInChildren<EnemyAttackManager>();
         projectileManager = GetComponentInChildren<EnemyProjectileManager>();
+    }
+
+    virtual protected void OnDestroy()
+    {
+        EventSystem.current.objectIsShooting -= IsShooting;
+        EventSystem.current.objectIsNotShooting -= IsNotShooting;
     }
 
     virtual protected void FixedUpdate()
@@ -51,30 +60,24 @@ public class EnemyBehaviour : MonoBehaviour
     virtual protected void Passover()
     {
         // if attacking or charging attack, don't do this
-        if (!(enemyController.IsAttackingOrChargingAttack))
-        {
-            UpdatePatrolID();
-
-            if (!enemyController.playerInZone)
-            {
-                enemyController.animator.Play(patrolAnimation);
-                Patrol();
-            }
-            else
-            {
-                enemyController.animator.Play(chaseAnimation);
-                Chase();
-            }
-        }
+        if (!(enemyController.IsAttackingOrChargingAttack || enemyController.IsShooting)) { PatrolVsChaseLogic(); }
 
         Flip();
     }
+    virtual protected void PatrolVsChaseLogic()
+    {
+        UpdatePatrolID();
 
+        if (!enemyController.playerInZone) { Patrol(); }
+        else { Chase(); }
+    }
     /// <summary>
     /// Defines how an enemy is meant to 'patrol' a given area; toggles between two patrol points: P1 and P2
     /// </summary>
     virtual protected void Patrol()
     {
+        enemyController.animator.Play(patrolAnimation);
+
         switch (enemyController.patrolID)
         {
             case 0:
@@ -106,6 +109,8 @@ public class EnemyBehaviour : MonoBehaviour
     /// </summary>
     virtual protected void Chase()
     {
+        enemyController.animator.Play(chaseAnimation);
+
         chaseSpeed = enemyController.MovementSpeed * 1.5f;
         targetXVelocity = (enemyController.playerLocation.position.x >= transform.position.x) ? chaseSpeed : -chaseSpeed;
         if (enemyData.data.isFlying) { targetYVelocity = (enemyController.playerLocation.position.y < transform.position.y) ? -enemyController.MovementSpeed : enemyController.MovementSpeed; }
@@ -122,6 +127,9 @@ public class EnemyBehaviour : MonoBehaviour
     /// Overriden in child classes for specific attacks
     /// </summary>
     virtual public void ProjectileTrigger() { }
+
+    void IsShooting(int instanceID) { if (gameObject.GetInstanceID() == instanceID) {enemyController.IsShooting = true; } }
+    void IsNotShooting(int instanceID) { if (gameObject.GetInstanceID() == instanceID) { enemyController.IsShooting = false; } }
 
     // COMMON PHYSICS BEHAVIORS
 

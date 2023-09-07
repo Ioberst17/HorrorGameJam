@@ -86,7 +86,7 @@ public class PlayerShield : Shield
             EventSystem.current.PlayerHitHealthTrigger(
                 collision.gameObject.transform.position,
                 damageToPass,
-                1,
+                lastReceivedAttack.statusModifier,
                 damageMod,
                 knockbackMod,
                 hitWithinActiveShieldZone);
@@ -96,7 +96,7 @@ public class PlayerShield : Shield
             EventSystem.current.PlayerHitHealthTrigger(
                               collision.gameObject.transform.position,
                               collision.gameObject.GetComponent<ProjectileBase>().projectile.baseDamage,
-                              1,
+                              collision.gameObject.GetComponent<ProjectileBase>().projectile.statusModifier,
                               damageMod,
                               knockbackMod,
                               hitWithinActiveShieldZone);
@@ -106,7 +106,7 @@ public class PlayerShield : Shield
             EventSystem.current.PlayerHitHealthTrigger(
                               collision.gameObject.transform.position,
                               10,
-                              1,
+                              collision.gameObject.GetComponent<ProjectileBase>().projectile.statusModifier,
                               damageMod,
                               knockbackMod,
                               hitWithinActiveShieldZone);

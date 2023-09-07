@@ -30,16 +30,12 @@ public class PlayerHealth : Health
         EventSystem.current.onPlayerHitCalcTrigger -= Hit;
     }
 
-    public void Hit(Vector3 enemyPos, int damageNumber, int damageType, float damageMod, float knockbackMod, bool hitInActiveShieldZone)
+    public void Hit(Vector3 enemyPos, int damageNumber, string statusEffect, float damageMod, float knockbackMod, bool hitInActiveShieldZone)
     {
-        if (hitInActiveShieldZone)
+        if (hitInActiveShieldZone || !playerController.IsInvincible)
         {
             TakeDamage(damageNumber, damageMod);
-            EventSystem.current.PlayerHitPostHealthTrigger(enemyPos, knockbackMod, hitInActiveShieldZone);
-        }
-        else if (!playerController.IsInvincible)
-        {
-            TakeDamage(damageNumber, damageMod);
+            if (statusEffect != null) { playerController.StatusModifier(statusEffect); }
             EventSystem.current.PlayerHitPostHealthTrigger(enemyPos, knockbackMod, hitInActiveShieldZone);
         }
     }

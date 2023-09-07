@@ -55,7 +55,7 @@ public class AttackManager : MonoBehaviour
     virtual protected IEnumerator ReleaseChargeAttack(Attack currentAttack, string animationToPlay, string successAnimationToPlay, IEnumerator AdditionalReleaseConditions = null) { yield return null; }
 
     /// <summary>
-    /// Grabbed by attacked object's shield to calculate damage calculations
+    /// Caches an attack, so it can be used by attacked object's shield for damage calculations
     /// </summary>
     /// <param name="animationToPlay"></param>
     protected void CacheMostRecentAttack(string animationToPlay)
@@ -72,11 +72,15 @@ public class AttackManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Primary collision checker
+    /// </summary>
     virtual protected void CollisionCheck()
     {
         if (HitBox.activeSelf) { CheckForCollisions(hitBoxPoint1.position, hitBoxPoint2.position); }
     }
 
+    // handles generic cases and offer 
     virtual protected void CheckForCollisions(Vector2 point1, Vector2 point2)
     {
         hitListLength = Physics2D.OverlapArea(point1, point2, normalCollisionFilter, hitList);
@@ -90,7 +94,8 @@ public class AttackManager : MonoBehaviour
                     PassBreakableObjectDamage(hitList[i]);
                     AdditionalAbilitySpecificChecksDamagable(hitList[i]);
                 }
-                else if (hitList[i].gameObject.layer == LayerMask.NameToLayer("Environment") && hitList[i].gameObject.tag == "Boundary")
+                else if (hitList[i].gameObject.layer == LayerMask.NameToLayer("Environment") 
+                                    && (hitList[i].gameObject.tag == "Boundary" || hitList[i].gameObject.tag == "Floor"))
                 {
                     AdditionalAbilitySpecificChecksNonDamagable(hitList[i]);
                 }
@@ -114,6 +119,10 @@ public class AttackManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Loads the proper hitbox into the attack object
+    /// </summary>
+    /// <param name="animationToPlay"></param>
     virtual protected void LoadHitBox(string animationToPlay)
     {
         if (attackDimensions.TryGetValue(animationToPlay, out HitBox value))
@@ -123,8 +132,14 @@ public class AttackManager : MonoBehaviour
         }
         else { Debug.Log("Key '" + animationToPlay + "' not found in the dictionary: " + attackDimensions); }
     }
-
+    /// <summary>
+    /// Toggled by animation events to turn hitbox on
+    /// </summary>
     virtual protected void HitBoxOn() { }
+
+    /// <summary>
+    /// Toggled by animation events to turn hitbox off
+    /// </summary>
     virtual protected void HitBoxOff() { }
 
     virtual protected void PassBreakableObjectDamage(Collider2D breakableObject) 

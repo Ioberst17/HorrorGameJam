@@ -27,8 +27,6 @@ public class BloodGolemBehavior : EnemyBehaviour
             if (!enemyController.IsAttackingOrChargingAttack)
             {
                 StartCoroutine(BloodBallCharge());
-                projectileManager.Shoot(projectileManager.projectilesToUse[0],
-                                                enemyController.playerLocation.position);
             }
         }
         FlipToFacePlayer();
@@ -39,6 +37,8 @@ public class BloodGolemBehavior : EnemyBehaviour
         particleEffect.SetActive(true);
         yield return new WaitForSeconds(1f);
         particleEffect.SetActive(false);
+        projectileManager.ShootHandler(projectileManager.projectilesToUse[0],
+                                enemyController.playerLocation.position);
         yield return null;
     }
 }

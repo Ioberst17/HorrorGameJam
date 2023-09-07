@@ -12,8 +12,11 @@ public class EnemyProjectile : ProjectileBase
 
     override protected void HitEnemyObject(Collision2D col) 
     {
-        if (col.gameObject.GetComponent<PlayerController>() != null)
+        if (col.gameObject.GetComponent<PlayerShield>() != null ||
+                col.gameObject.GetComponent<PlayerController>() != null ||
+                    col.gameObject.GetComponent<Ammo>())
         {
+            RigidbodyEnabled = false;
             if (projectile.isExplosive) { ExplosionHandler(); }
             else if (!projectile.isExplosive) { Remove(); }
         }

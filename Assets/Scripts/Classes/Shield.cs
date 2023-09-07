@@ -129,8 +129,8 @@ public class Shield : MonoBehaviour
         // GENERIC DAMAGE CHECKS
         if (overlap.gameObject.tag == "EnemyAttack") { checkStatus = true; Debug.Log(transform.parent.gameObject.name + " was hit by EnemyAttack"); }
         else if (overlap.gameObject.tag == "PlayerAttack" && overlap.enabled) { checkStatus = true; Debug.Log(transform.parent.gameObject.name + " was hit by PlayerAttack"); }
-        else if(overlap.gameObject.layer == LayerMask.NameToLayer("Player Ammo")) { checkStatus = true; Debug.Log(transform.parent.gameObject.name + " was hit by Ammo"); }
-        else if(overlap.gameObject.tag == "Enemy Projectile") { checkStatus = true; Debug.Log(transform.parent.gameObject.name + " was hit by Enemy Projectile"); }
+        else if(overlap.gameObject.layer == LayerMask.NameToLayer("PlayerAmmo")) { checkStatus = true; Debug.Log(transform.parent.gameObject.name + " was hit by Ammo"); }
+        else if(overlap.gameObject.layer == LayerMask.NameToLayer("EnemyProjectile")) { checkStatus = true; Debug.Log(transform.parent.gameObject.name + " was hit by Enemy Projectile"); }
 
         SpecificDamageChecks(overlap);
 
@@ -159,8 +159,8 @@ public class Shield : MonoBehaviour
 
     virtual protected void AddLayersToCheckOn(string shieldedObject)
     {
-        if (shieldedObject == "Player") { attackerFilter.SetLayerMask((1 << LayerMask.NameToLayer("Enemy") /*| 1 << LayerMask.NameToLayer("Player Ammo")*/)); }
-        else if (shieldedObject == "Enemy") { attackerFilter.SetLayerMask((1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Player Ammo"))); }
+        if (shieldedObject == "Player") { attackerFilter.SetLayerMask((1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("EnemyProjectile"))); }
+        else if (shieldedObject == "Enemy") { attackerFilter.SetLayerMask((1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("PlayerAmmo"))); }
         else { Debug.Log("Shielded object needs a tag; make sure it is tagged correctly in CheckObjectType() of this script"); }
     }
 

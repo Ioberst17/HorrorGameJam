@@ -27,7 +27,8 @@ public class Projectile : IDatabaseItem
 
     public float firePointX, firePointY;
 
-    public float fireRate, fireRateFrames;
+    public float fireRate;
+    public int fireRateFrames;
 
     // force is used if adding force, speed is used if launching at velocity
     public float launchForceX, launchForceY, launchSpeedX, launchSpeedY;
@@ -45,7 +46,7 @@ public class Projectile : IDatabaseItem
                   bool playTillEnd, string statusModifier, 
                   bool isKinetic, bool isElemental, bool isHeavy,
                   int baseDamage, int maxDamage, 
-                  float firePointX, float firePointY, float fireRate, float fireRateFrames,
+                  float firePointX, float firePointY, float fireRate, int fireRateFrames,
                   float launchForceX, float launchForceY, float launchSpeedX, float launchSpeedY,
                   float startingGravityScale,
                   float targetingModifierX, float targetingModifierY)

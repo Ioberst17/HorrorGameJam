@@ -163,9 +163,12 @@ public class PlayerAttackManager : AttackManager
     /// <param name="hitObject"></param>
     override protected void AdditionalAbilitySpecificChecksNonDamagable(Collider2D hitObject)
     {
-        if (groundSlam.IsGroundSlam)
+        if(hitObject.tag == "Floor")
         {
-            groundSlam.Finished(hitObject.gameObject, GroundSlam.TypeOfHit.NonDamagable);
+            if (groundSlam.IsGroundSlam)
+            {
+                groundSlam.Finished(hitObject.gameObject, GroundSlam.TypeOfHit.NonDamagable);
+            }
         }
     }
 }

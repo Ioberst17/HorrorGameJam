@@ -44,6 +44,7 @@ public class Controller : MonoBehaviour
     [SerializeField] protected bool _isAttacking; virtual public bool IsAttacking { get { return _isAttacking; } set { _isAttacking = value; } }
     [SerializeField] protected bool _isChargingAttack; virtual public bool IsChargingAttack { get { return _isChargingAttack; } set { _isChargingAttack = value; } }
     virtual public bool IsAttackingOrChargingAttack { get { return (IsAttacking || IsChargingAttack); } }
+    [SerializeField] protected bool _isShooting; virtual public bool IsShooting { get { return _isShooting; } set { _isShooting = value; } }
     [SerializeField] protected bool _isDead; virtual public bool IsDead { get { return _isDead; } set { _isDead = true; } }
     [SerializeField] protected bool _isInvincible; virtual public bool IsInvincible { get { return _isInvincible; } set { _isInvincible = value; } }
     public int InvincibilityCount { get; set; }
@@ -154,5 +155,13 @@ public class Controller : MonoBehaviour
     public void SetGravityScale(float gravityScale)
     {
         RB.gravityScale = gravityScale;
+    }
+
+    public void StatusModifier(string mod)
+    {
+        Debug.Log("Applying a status effect named: " + mod + " to: " + gameObject.name);
+        if (mod == "DemonBlood") { if (GetComponentInChildren<Poisoned>() != null) { GetComponentInChildren<Poisoned>().Execute(); } }
+        else if (mod == "Burn") { if (GetComponentInChildren<Burnable>() != null) { GetComponentInChildren<Burnable>().Execute(); } }
+        else if (mod == "Stunned") { if (GetComponentInChildren<Stunned>() != null) { GetComponentInChildren<Stunned>().Execute(); } }
     }
 }

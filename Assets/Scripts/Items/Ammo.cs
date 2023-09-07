@@ -12,6 +12,7 @@ public class Ammo : ProjectileBase
     {
         if (col.gameObject.GetComponent<EnemyController>() != null)
         {
+            RigidbodyEnabled = false;
             if (projectile.isExplosive) { ExplosionHandler(); }
             else if (!projectile.isExplosive) { Remove(); }
         }

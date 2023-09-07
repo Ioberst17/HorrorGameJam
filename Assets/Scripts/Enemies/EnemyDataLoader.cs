@@ -42,6 +42,7 @@ public class EnemyDataLoader : MonoBehaviour
         else if (GetComponentInChildren<BloodGolemBehavior>()) { enemyID = 4; }
         else if (GetComponentInChildren<GargoyleBehavior>()) { enemyID = 5; }
         else if (GetComponentInChildren<DeathBringerBehaviour>()) { enemyID = 7; }
+        else if (GetComponentInChildren<FireWyrmBehaviour>()) { enemyID = 8; }
         else { enemyID = -1; }
 
         if (enemyID != -1) { data = enemyDatabase.data.entries[enemyID]; }

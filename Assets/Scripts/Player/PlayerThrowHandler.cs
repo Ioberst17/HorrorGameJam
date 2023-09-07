@@ -88,11 +88,19 @@ public class PlayerThrowHandler : MonoBehaviour
 
     public void ThrowWeapon()
     {
-        var projectile = GetComponent<ProjectileBase>().projectile;
+        // instantiate thrown weapon
         GameObject toss = Instantiate(playerSecondaryWeapon.projectilesToUse[playerSecondaryWeapon.currentAmmoIndex], projectileSpawnPoint.position, projectileSpawnPoint.transform.rotation);
+
+        // get relevant data
+        var projectile = toss.GetComponent<ProjectileBase>().projectile;
+
+        // set direction
         Vector3 bulletDir = ((Vector3)gameController.lookInput - (Vector3)gameController.playerPositionScreen).normalized;
+        
+        // play toss audio
         FindObjectOfType<AudioManager>().PlaySFX(projectile.audioOnUse);
 
+        // give proper gravity
         toss.GetComponent<Rigidbody2D>().gravityScale = projectile.startingGravityScale;
 
         if (10 > transform.rotation.eulerAngles.z && transform.rotation.eulerAngles.z > -10)
@@ -101,6 +109,7 @@ public class PlayerThrowHandler : MonoBehaviour
         }
         else { toss.GetComponent<Rigidbody2D>().AddForce( bulletDir * currentThrowForce, ForceMode2D.Impulse); }
 
+        // reset conditions
         inActiveThrow = false;
         secondaryWeaponsManager.ChangingIsBlocked = false;
         EventSystem.current.FinishChargedAttackTrigger();

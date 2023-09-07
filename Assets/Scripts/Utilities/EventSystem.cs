@@ -51,13 +51,19 @@ public class EventSystem : MonoBehaviour
     public void ProjectileColliderOnTrigger(int instanceID) { if(projectileColliderOn != null) { projectileColliderOn(instanceID); } }    
     
     public event Action<int> projectileColliderOff;
-    public void ProjectileColliderOffTrigger(int instanceID) { if(projectileColliderOff != null) { projectileColliderOff(instanceID); } }    
-    
+    public void ProjectileColliderOffTrigger(int instanceID) { if(projectileColliderOff != null) { projectileColliderOff(instanceID); } }
+
     public event Action<int> projectileLaunch;
-    public void ProjectileLaunchTrigger(int instanceID) { if(projectileLaunch != null) { projectileLaunch(instanceID); } }
+    public void ProjectileLaunchTrigger(int instanceID) { if (projectileLaunch != null) { projectileLaunch(instanceID); } }
 
+    public event Action<int> targetedSpellTrigger;
+    public void TargetedSpellTrigger(int instanceID) { if(targetedSpellTrigger != null) { targetedSpellTrigger(instanceID); } }
 
+    public event Action<int> objectIsShooting;
+    public void ObjectIsShootingTrigger(int instanceID) { if (objectIsShooting != null) { objectIsShooting(instanceID); } }
 
+    public event Action<int> objectIsNotShooting;
+    public void ObjectIsNotShootingTrigger(int instanceID) { if (objectIsNotShooting != null) { objectIsNotShooting(instanceID); } }
 
 
 
@@ -189,9 +195,9 @@ public class EventSystem : MonoBehaviour
 
     public void PlayerShieldHitTrigger(Collider2D attacker) { if(onPlayerShieldHitTrigger != null) { onPlayerShieldHitTrigger(attacker); } }
 
-    public event Action<Vector3, int, int, float, float, bool> onPlayerHitCalcTrigger;
+    public event Action<Vector3, int, string, float, float, bool> onPlayerHitCalcTrigger;
 
-    public void PlayerHitHealthTrigger(Vector3 attackerPosition, int damageNumber, int damageType, float damageMod, float knockbackMod, bool hitInActiveShieldZone) 
+    public void PlayerHitHealthTrigger(Vector3 attackerPosition, int damageNumber, string damageType, float damageMod, float knockbackMod, bool hitInActiveShieldZone) 
     { 
         if(onPlayerHitCalcTrigger != null) 
         { 

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7794076940791225026}
   - component: {fileID: 7539518129023006919}
   - component: {fileID: 5385226731142359446}
-  m_Layer: 8
+  m_Layer: 15
   m_Name: Animator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 6683411310108108138}
   - component: {fileID: -7086905221497193101}
   - component: {fileID: -1071998373309066254}
-  m_Layer: 8
+  m_Layer: 15
   m_Name: BloodBall
   m_TagString: BloodGolem
   m_Icon: {fileID: 0}
@@ -206,14 +206,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73c57cd01d333f548b827bb7a084fd66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectileSource: BloodGolem
-  weaponName: BloodGolem
+  projectile:
+    _id: 0
+    referenceID: 0
+    owner: 
+    ownerNoSpace: 
+    _name: 
+    nameNoSpace: 
+    audioOnUse: 
+    audioOnHit: 
+    isShot: 0
+    isThrown: 0
+    isExplosive: 0
+    isFixedDistance: 0
+    isTargeted: 0
+    playTillEnd: 0
+    statusModifier: 
+    isKinetic: 0
+    isElemental: 0
+    isHeavy: 0
+    baseDamage: 0
+    maxDamage: 0
+    firePointX: 0
+    firePointY: 0
+    fireRate: 0
+    fireRateFrames: 0
+    launchForceX: 0
+    launchForceY: 0
+    launchSpeedX: 0
+    launchSpeedY: 0
+    startingGravityScale: 0
+    targetingModifierX: 0
+    targetingModifierY: 0
+  referenceID: 0
+  instanceID: 0
   weaponID: 0
   weaponLevel: 0
   ammoID: 0
-  damageValue: 10
-  isFixedDistance: 0
-  isThrown: 0
-  isExplosive: 0
-  statusModifier: 
+  usesDestroyOnAnimationEnd: 0
   animator: {fileID: 0}

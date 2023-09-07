@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7062693442842593833}
   - component: {fileID: 7062693442842593831}
   - component: {fileID: 7062693442842593834}
-  m_Layer: 8
+  m_Layer: 15
   m_Name: DeathBringerSpell
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -50,6 +50,7 @@ MonoBehaviour:
     _id: 0
     referenceID: 0
     owner: 
+    ownerNoSpace: 
     _name: 
     nameNoSpace: 
     audioOnUse: 
@@ -69,17 +70,20 @@ MonoBehaviour:
     firePointX: 0
     firePointY: 0
     fireRate: 0
+    fireRateFrames: 0
     launchForceX: 0
     launchForceY: 0
     launchSpeedX: 0
     launchSpeedY: 0
     startingGravityScale: 0
+    targetingModifierX: 0
+    targetingModifierY: 0
   referenceID: 1
   instanceID: 0
   weaponID: 0
   weaponLevel: 0
   ammoID: 1
-  hitCollider: {fileID: 0}
+  usesDestroyOnAnimationEnd: 0
   animator: {fileID: 0}
 --- !u!61 &7062693442842593834
 BoxCollider2D:
@@ -119,7 +123,7 @@ GameObject:
   - component: {fileID: 7062693443820228759}
   - component: {fileID: 7062693443820228758}
   - component: {fileID: 7062693443820228760}
-  m_Layer: 8
+  m_Layer: 15
   m_Name: Animator
   m_TagString: Untagged
   m_Icon: {fileID: 0}

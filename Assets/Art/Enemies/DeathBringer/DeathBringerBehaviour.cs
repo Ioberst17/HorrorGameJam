@@ -10,12 +10,6 @@ public class DeathBringerBehaviour : EnemyBehaviour
         patrolAnimation = chaseAnimation = "DeathBringerWalk";
     }
 
-    // Override the base passover called in Parent Fixed Update
-    override protected void Passover() 
-    {
-        base.Passover();
-    }
-
     /// <summary>
     /// Called by AttackTrigger object when player is in reach
     /// </summary>
@@ -34,7 +28,7 @@ public class DeathBringerBehaviour : EnemyBehaviour
     {
         if (!(enemyController.IsAttackingOrChargingAttack))
         {
-            projectileManager.StartChargeAttack(1, "DeathBringerCast");
+            projectileManager.Shoot(1, "DeathBringerCast");
         }
     }
 }

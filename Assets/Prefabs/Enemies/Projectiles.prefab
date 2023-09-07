@@ -79,10 +79,14 @@ MonoBehaviour:
   projectileDictionary:
     keys: 
     values: []
+  projectileFramesSinceLastShot:
+    keys: 
+    values: 
   _mostRecentProjectile:
     _id: 0
     referenceID: 0
     owner: 
+    ownerNoSpace: 
     _name: 
     nameNoSpace: 
     audioOnUse: 
@@ -102,13 +106,18 @@ MonoBehaviour:
     firePointX: 0
     firePointY: 0
     fireRate: 0
+    fireRateFrames: 0
     launchForceX: 0
     launchForceY: 0
     launchSpeedX: 0
     launchSpeedY: 0
     startingGravityScale: 0
+    targetingModifierX: 0
+    targetingModifierY: 0
   weaponSprite: {fileID: 0}
   projectilesToUse: []
   currentAmmoIndex: 0
   projectileSpawnPoint: {fileID: 0}
-  projectilePath: BloodGolem
+  animator: {fileID: 0}
+  instanceID: 0
+  projectilePath: 

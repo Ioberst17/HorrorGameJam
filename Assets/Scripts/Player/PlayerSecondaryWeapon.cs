@@ -98,7 +98,7 @@ public class PlayerSecondaryWeapon : ProjectileManager
     private void WeaponFired(int weaponID, int weaponLevel, int ammoChange, int direction)
     {
         // Note: throw logic by contrast is almost exclusively handled in PlayerSecondaryWeaponThrowHandler
-        if (weaponDatabase.data.entries[weaponID].isShot == true) { Shoot(projectilesToUse[currentAmmoIndex]);}
+        if (weaponDatabase.data.entries[weaponID].isShot == true) { ShootHandler(projectilesToUse[currentAmmoIndex]);}
         else if (weaponDatabase.data.entries[weaponID].isFixedDistance == true) { FixedDistanceFire(); }
         else { Debug.Log("Check WeaponDatabase, weapon is missing a TRUE value for if ammo should be shot, thrown, be a fixed distance, etc."); }
     }
