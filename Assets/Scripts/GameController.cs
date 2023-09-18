@@ -15,15 +15,12 @@ public class GameController : MonoBehaviour
     // Player Related
     private SecondaryWeaponsManager secondaryWeaponsManager;
     private PlayerController playerController;
-    private PlayerAnimator playerAnimator;
-    private PlayerHealth playerHealth;
     private PlayerShield playerShield;
     private PlayerDash playerDash;
     private PlayerJump playerJump;
     private PlayerSkillsManager skills;
-    private PlayerPrimaryWeapon playerPrimaryWeapon;
+    private PlayerAttackManager playerPrimaryWeapon;
     private PlayerSecondaryWeapon playerSecondaryWeapon;
-    private UIController UIController;
     private Inventory_UI_Mason inventoryUI;
     private PauseMenuHandler_Mason pauseMenu;
 
@@ -59,7 +56,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private bool AttackButtonDown, AttackButtonHeld, AttackButtonRelease, ShootButtonDown, ShootButtonHeld, ShootButtonRelease;
 
     // buffers between button presses
-    private int AttackBuffer, ShootBuffer, JumpBuffer, DashBuffer;
+    private int AttackBuffer, JumpBuffer, DashBuffer;
 
     // Stores analog information for other functions; uses properties (vs fields) to make sure to know where values are changed or pullede.g. 'references'
     [SerializeField] private float _xInput; public float XInput { get { return _xInput; } set { _xInput = value; } }
@@ -79,7 +76,9 @@ public class GameController : MonoBehaviour
     // UI Actions from InputSystemAsset
     private InputAction pause, inventory, submit, cancel;
 
-    void Start() { AttackBuffer = 0; ShootBuffer = 0; JumpBuffer = 0; DashBuffer = 0; AddReferences(); }
+    float directionalInputThreshold = 0.8f;
+
+    void Start() { AttackBuffer = 0; JumpBuffer = 0; DashBuffer = 0; AddReferences(); }
 
     void AddReferences()
     {
@@ -87,12 +86,10 @@ public class GameController : MonoBehaviour
         {
             secondaryWeaponsManager = FindObjectOfType<SecondaryWeaponsManager>();
             playerController = secondaryWeaponsManager.GetComponentInChildren<PlayerController>();
-            playerAnimator = playerController.GetComponentInChildren<PlayerAnimator>();
-            playerHealth = playerController.GetComponent<PlayerHealth>();
             playerShield = playerController.GetComponentInChildren<PlayerShield>();
             playerDash = playerController.GetComponentInChildren<PlayerDash>();
             playerJump = playerController.GetComponentInChildren<PlayerJump>();
-            playerPrimaryWeapon = playerController.GetComponentInChildren<PlayerPrimaryWeapon>();
+            playerPrimaryWeapon = playerController.GetComponentInChildren<PlayerAttackManager>();
             playerSecondaryWeapon = playerController.GetComponentInChildren<PlayerSecondaryWeapon>();
             skills = playerController.GetComponentInChildren<PlayerSkillsManager>();
             inventoryUI = FindObjectOfType<Inventory_UI_Mason>();
@@ -251,14 +248,10 @@ public class GameController : MonoBehaviour
             else if (IsPaused && pauseMenu.pauseMenu.activeSelf) // navigation and submits are handled stock by Unity's UI Input System
             {
                 LimitToOnlyUIActions(true);
-                //UITriggerChecks();
-                //if (cancelButtonDown) { pauseMenu.Resume(); }
             }
             else if (IsPaused && pauseMenu.controlsMenu.activeSelf)
             {
                 LimitToOnlyUIActions(true);
-                //UITriggerChecks();
-                //if (cancelButtonDown) { pauseMenu.LoadPauseMenu(); }
             }
             else if (IsPaused && inventoryUI.InventoryOpen)
             {
@@ -301,6 +294,7 @@ public class GameController : MonoBehaviour
                 if (Keyboard.current.digit4Key.wasPressedThisFrame) { enemySpawner.SpawnEnemy(3); };
                 if (Keyboard.current.digit5Key.wasPressedThisFrame) { enemySpawner.SpawnEnemy(4); };
                 if (Keyboard.current.digit6Key.wasPressedThisFrame) { enemySpawner.SpawnEnemy(5); };
+                if (Keyboard.current.digit7Key.wasPressedThisFrame) { enemySpawner.SpawnEnemy(6); };
 
                 // For Inventory
                 InventoryTriggerCheck();
@@ -386,22 +380,22 @@ public class GameController : MonoBehaviour
     {
         if (AttackButtonDown && !(AttackBuffer > 5))
         {
-            if (YInput > 0.2f) { playerPrimaryWeapon.Attack(0, ButtonState.Pressed); }
-            else if (YInput < -0.2f) { playerPrimaryWeapon.Attack(1, ButtonState.Pressed); }
+            if (YInput > directionalInputThreshold) { playerPrimaryWeapon.Attack(0, ButtonState.Pressed); }
+            else if (YInput < -directionalInputThreshold) { playerPrimaryWeapon.Attack(1, ButtonState.Pressed); }
             else { playerPrimaryWeapon.Attack(2, ButtonState.Pressed); }
             ++AttackBuffer;
             AttackButtonDown = false;
         }
         if (AttackButtonHeld)
         {
-            if (YInput > 0.2f) { playerPrimaryWeapon.Attack(0, ButtonState.Held); }
-            else if (YInput < -0.2f) { playerPrimaryWeapon.Attack(1, ButtonState.Held); }
+            if (YInput > directionalInputThreshold) { playerPrimaryWeapon.Attack(0, ButtonState.Held); }
+            else if (YInput < -directionalInputThreshold) { playerPrimaryWeapon.Attack(1, ButtonState.Held); }
             else { playerPrimaryWeapon.Attack(2, ButtonState.Held); }
         }
         if (AttackButtonRelease)
         {
-            if (YInput > 0.2f) { playerPrimaryWeapon.Release(0); }
-            else if (YInput < -0.2f) { playerPrimaryWeapon.Release(1); }
+            if (YInput > directionalInputThreshold) { playerPrimaryWeapon.Release(0); }
+            else if (YInput < -directionalInputThreshold) { playerPrimaryWeapon.Release(1); }
             else { playerPrimaryWeapon.Release(2); }
             AttackButtonRelease = false; AttackButtonHeld = false;
         }
@@ -498,7 +492,7 @@ public class GameController : MonoBehaviour
         InputSystem.ResetHaptics();
     }
 
-    public void ResetPlayerMotionAndInput() { XInput = 0; YInput = 0; playerController.IdlePlayer(true); }
+    public void ResetPlayerMotionAndInput() { XInput = 0; YInput = 0; playerController.PlayerIdle(true); }
     public bool PlayerInputIdle() { if (XInput != 0 && YInput != 0) { return false; } else { return true; } }
 
     public void TriggerInteractButton() { InteractButton = true; } // used by cutscenes 

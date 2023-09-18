@@ -8,22 +8,26 @@ using UnityEngine;
 using static ComponentFinder;
 using static PlayerAnimator;
 
-public class PlayerAnimator : BodyPartAnimator 
+
+/// <summary>
+/// Interface into the players different animation parts: Base, RightArm, LeftArm, Weapon
+/// </summary>
+public class PlayerAnimator : PlayerBaseAnimator 
 {
     [Header("PlayerAnimator Interfaces Into Player Parts")]
-    [SerializeField] private Transform body, rightArm, leftArm, weapon;
-    [SerializeField] private Animator baseAnimator, rightArmAnimator, leftArmAnimator, weaponAnimator;
-    [SerializeField] private float maxIdleNormalizedTime, baseIdleNormalizedTime, rightArmIdleNormalizedTime, leftArmIdleNormalizedTime, weaponIdleNormalizedTime;
-    [SerializeField] private BaseAnimator baseAnimatorScript;
-    [SerializeField] private RightArmAnimator rightArmScript;
-    [SerializeField] private LeftArmAnimator leftArmScript;
-    [SerializeField] private WeaponAnimator weaponAnimScript;
+    [SerializeField] Transform body, rightArm, leftArm, weapon;
+    [SerializeField] Animator baseAnimator, rightArmAnimator, leftArmAnimator, weaponAnimator;
+    [SerializeField] float maxIdleNormalizedTime, baseIdleNormalizedTime, rightArmIdleNormalizedTime, leftArmIdleNormalizedTime, weaponIdleNormalizedTime;
+    [SerializeField] PlayerBodyAnimator baseAnimatorScript;
+    [SerializeField] PlayerRightArmAnimator rightArmScript;
+    [SerializeField] PlayerLeftArmAnimator leftArmScript;
+    [SerializeField] PlayerWeaponAnimator weaponAnimatorScript;
     public enum PlayerPart { All, Body, RightArm, LeftArm, Weapon }
 
     public float synchronizationThreshold = 0.05f; // the threshold of difference needed before idle animations need to be synced
 
     [System.Serializable]
-    public class AnimatorAndScript<T> where T : BodyPartAnimator
+    public class AnimatorAndScript<T> where T : ObjectAnimator
     {
         public Animator anim;
         [SerializeField]
@@ -37,7 +41,7 @@ public class PlayerAnimator : BodyPartAnimator
     }
 
     // dictionary that maps a enum to a relevant animator and a script (for calling more specific animations)
-    [SerializeField] private SimpleSerializableDictionary<PlayerPart, AnimatorAndScript<BodyPartAnimator>> EnumToAnimatorMap = new SimpleSerializableDictionary<PlayerPart, AnimatorAndScript<BodyPartAnimator>>();
+    [SerializeField] private SimpleSerializableDictionary<PlayerPart, AnimatorAndScript<ObjectAnimator>> EnumToAnimatorMap = new SimpleSerializableDictionary<PlayerPart, AnimatorAndScript<ObjectAnimator>>();
 
     [SerializeField] private SpriteRenderer[] spriteRenderers;
 
@@ -46,23 +50,23 @@ public class PlayerAnimator : BodyPartAnimator
     {
         body = GetComponentInChildrenByNameAndType<Transform>("Base", gameObject);
         baseAnimator = GetComponentInChildrenByNameAndType<Animator>("SpriteAndAnimations", body.gameObject);
-        baseAnimatorScript = GetComponentInChildrenByNameAndType<BaseAnimator>("SpriteAndAnimations", body.gameObject);
-        EnumToAnimatorMap.Add(PlayerPart.Body, new AnimatorAndScript<BodyPartAnimator>(baseAnimator, baseAnimatorScript)); 
+        baseAnimatorScript = GetComponentInChildrenByNameAndType<PlayerBodyAnimator>("SpriteAndAnimations", body.gameObject);
+        EnumToAnimatorMap.Add(PlayerPart.Body, new AnimatorAndScript<ObjectAnimator>(baseAnimator, baseAnimatorScript)); 
 
         rightArm = GetComponentInChildrenByNameAndType<Transform>("RightArm", gameObject);
         rightArmAnimator = GetComponentInChildrenByNameAndType<Animator>("SpriteAndAnimations", rightArm.gameObject);
-        rightArmScript = GetComponentInChildrenByNameAndType<RightArmAnimator>("SpriteAndAnimations", rightArm.gameObject);
-        EnumToAnimatorMap.Add(PlayerPart.RightArm, new AnimatorAndScript<BodyPartAnimator>(rightArmAnimator, rightArmScript));
+        rightArmScript = GetComponentInChildrenByNameAndType<PlayerRightArmAnimator>("SpriteAndAnimations", rightArm.gameObject);
+        EnumToAnimatorMap.Add(PlayerPart.RightArm, new AnimatorAndScript<ObjectAnimator>(rightArmAnimator, rightArmScript));
 
         leftArm = GetComponentInChildrenByNameAndType<Transform>("LeftArm", gameObject);
         leftArmAnimator = GetComponentInChildrenByNameAndType<Animator>("SpriteAndAnimations", leftArm.gameObject);
-        leftArmScript = GetComponentInChildrenByNameAndType<LeftArmAnimator>("SpriteAndAnimations", leftArm.gameObject);
-        EnumToAnimatorMap.Add(PlayerPart.LeftArm, new AnimatorAndScript<BodyPartAnimator>(leftArmAnimator, leftArmScript));         
+        leftArmScript = GetComponentInChildrenByNameAndType<PlayerLeftArmAnimator>("SpriteAndAnimations", leftArm.gameObject);
+        EnumToAnimatorMap.Add(PlayerPart.LeftArm, new AnimatorAndScript<ObjectAnimator>(leftArmAnimator, leftArmScript));         
         
         weapon = GetComponentInChildrenByNameAndType<Transform>("Weapon", gameObject);
         weaponAnimator = GetComponentInChildrenByNameAndType<Animator>("SpriteAndAnimations", weapon.gameObject);
-        weaponAnimScript = GetComponentInChildrenByNameAndType<WeaponAnimator>("SpriteAndAnimations", weapon.gameObject);
-        EnumToAnimatorMap.Add(PlayerPart.Weapon, new AnimatorAndScript<BodyPartAnimator>(weaponAnimator, weaponAnimScript)); 
+        weaponAnimatorScript = GetComponentInChildrenByNameAndType<PlayerWeaponAnimator>("SpriteAndAnimations", weapon.gameObject);
+        EnumToAnimatorMap.Add(PlayerPart.Weapon, new AnimatorAndScript<ObjectAnimator>(weaponAnimator, weaponAnimatorScript)); 
 
         spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
     }
@@ -78,10 +82,10 @@ public class PlayerAnimator : BodyPartAnimator
     {
         if (playerPart == PlayerPart.All)
         {
-            if (playBase) { baseAnimatorScript.Play(animationName); }
+            if (playBase) { if (animationName == "PlayerBasicAttack1") { Debug.Log("Attempting to play PlayerBasicAttack1"); } baseAnimatorScript.Play(animationName); }
             if (playRightArm) { rightArmScript.Play(animationName); }
             if (playLeftArm) { leftArmScript.Play(animationName); }
-            if (playWeapon) { weaponAnimScript.Play(animationName);  }
+            if (playWeapon) { weaponAnimatorScript.Play(animationName);  }
         }
         else 
         { 
@@ -124,6 +128,21 @@ public class PlayerAnimator : BodyPartAnimator
         }
     }
 
+    override public void UpdateAnimationStatePriority(string name, int priorityLevel, PlayerPart playerPart = PlayerPart.All)
+    {
+        if (playerPart == PlayerPart.All)
+        {
+            baseAnimatorScript.UpdateAnimationStatePriority(name, priorityLevel);
+            rightArmScript.UpdateAnimationStatePriority(name, priorityLevel);
+            leftArmScript.UpdateAnimationStatePriority(name, priorityLevel);
+            weaponAnimatorScript.UpdateAnimationStatePriority(name, priorityLevel);
+        }
+        else
+        {
+
+        }
+    }
+
     public bool CheckIfAnimationIsPlaying(string animationName, PlayerPart playerPart = PlayerPart.All)
     {
         if (playerPart == PlayerPart.All)
@@ -148,11 +167,13 @@ public class PlayerAnimator : BodyPartAnimator
         //if idle animations are playing
         if (IsIdleAnimationPlaying())
         {
+            // get there normalized times
             baseIdleNormalizedTime = baseAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime;
             rightArmIdleNormalizedTime = rightArmAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime;
             leftArmIdleNormalizedTime = leftArmAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime;
             weaponIdleNormalizedTime = weaponAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime;
 
+            // synchronize them if they exceed the need to sync threshold
             if (Mathf.Abs(baseIdleNormalizedTime - rightArmIdleNormalizedTime) > synchronizationThreshold ||
                 Mathf.Abs(baseIdleNormalizedTime - leftArmIdleNormalizedTime) > synchronizationThreshold ||
                 Mathf.Abs(rightArmIdleNormalizedTime - leftArmIdleNormalizedTime) > synchronizationThreshold)

@@ -2,23 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyProjectile : Projectile
+public class EnemyProjectile : ProjectileBase
 {
-    private EnemyDatabase enemyDatabase;
-    public int attackNumber;
-    public int damageValue;
-    
-    // Start is called before the first frame update
-    virtual public void Start()
+    protected override void Start()
     {
-        enemyDatabase = GameObject.Find("EnemyDatabase").GetComponent<EnemyDatabase>();
-        GetDamage();
+        base.Start();
+        UpdateInstanceID();
     }
 
-    public virtual void GetDamage() 
+    override protected void HitEnemyObject(Collision2D col) 
     {
-        if (projectileSource != null) { damageValue = GetDamageSupport(projectileSource); }
-        else { damageValue = GetDamageSupport(gameObject.tag); }
+        if (col.gameObject.GetComponent<PlayerShield>() != null ||
+                col.gameObject.GetComponent<PlayerController>() != null ||
+                    col.gameObject.GetComponent<Ammo>())
+        {
+            RigidbodyEnabled = false;
+            if (projectile.isExplosive) { ExplosionHandler(); }
+            else if (!projectile.isExplosive) { Remove(); }
+        }
     }
-    int GetDamageSupport(string stringToUse) { return enemyDatabase.GetAttackDamages(stringToUse, attackNumber); }
+
+    override protected void UpdateInstanceID() { Debug.Log("Instance ID is: " + gameObject.GetInstanceID()); instanceID = gameObject.GetInstanceID(); }
+
+    override protected void ColliderOn(int instanceID) { if (instanceID == gameObject.GetInstanceID()) { hitCollider.enabled = true; Debug.Log("ColliderOn"); } }
+
+    override protected void ColliderOff(int instanceID) { if (instanceID == gameObject.GetInstanceID()) { hitCollider.enabled = false; } Debug.Log("ColliderOff"); }
 }

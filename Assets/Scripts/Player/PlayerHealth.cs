@@ -6,37 +6,32 @@ using UnityEngine;
 public class PlayerHealth : Health
 {
     // External References
-    private PlayerAnimator animator;
     public PlayerController playerController;
-    private ChargePunch chargePunch;
-
 
     [SerializeField] private UIHealthChangeDisplay damageDisplay;
     public float lucidityDamageModifier;
 
     private void Start() 
     { 
-        EventSystem.current.onPlayerHitCalcTrigger += Hit;
         playerController = GetComponent<PlayerController>(); 
         shield = GetComponentInChildren<Shield>();
-        chargePunch = GetComponentInChildren<ChargePunch>();
         damageDisplay = GetComponentInChildren<UIHealthChangeDisplay>();
-        animator = ComponentFinder.GetComponentInChildrenByNameAndType<PlayerAnimator>("Animator", this.gameObject, true);
         lucidityDamageModifier = 1;
+        EventSystem.current.onPlayerHitCalcTrigger += Hit;
     }
 
-    public void Hit(Vector3 enemyPos, int damageNumber, int damageType, float damageMod, float knockbackMod, bool hitInActiveShieldZone)
+    private void OnDestroy()
     {
-        if (hitInActiveShieldZone && !playerController.IsInvincible)
+        EventSystem.current.onPlayerHitCalcTrigger -= Hit;
+    }
+
+    public void Hit(Vector3 enemyPos, int damageNumber, string statusEffect, float damageMod, float knockbackMod, bool hitInActiveShieldZone)
+    {
+        if (hitInActiveShieldZone || !playerController.IsInvincible)
         {
             TakeDamage(damageNumber, damageMod);
-            playerController.HandleHitPhysics(enemyPos, knockbackMod);
-        }
-        else if (!playerController.IsInvincible)
-        {
-            TakeDamage(damageNumber, damageMod);
-            playerController.HandleHitPhysics(enemyPos, knockbackMod);
-            StartCoroutine(playerController.HitStun());
+            if (statusEffect != null) { playerController.StatusModifier(statusEffect); }
+            EventSystem.current.PlayerHitPostHealthTrigger(enemyPos, knockbackMod, hitInActiveShieldZone);
         }
     }
 
@@ -50,9 +45,4 @@ public class PlayerHealth : Health
     public void TakeDamage(int damageNumber) { TakeDamage(damageNumber, 0); }
 
     public new void HPZero() { Debug.Log("Player Death"); HP = MaxHealth; EventSystem.current.PlayerDeathTrigger(); }
-
-    private void OnDestroy()
-    {
-        EventSystem.current.onPlayerHitCalcTrigger -= Hit;
-    }
 }

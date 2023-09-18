@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// component on enemies used to detect whether player is inzone
+/// <summary>
+/// Component on enemies used to detect whether player is detected
+/// </summary>
 public class EnemyDetectionBehavior : MonoBehaviour
 {
     [SerializeField] private EnemyController enemyController;

@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+/// <summary>
+/// Base class for any status effect; controls the child's basic behavior e.g. damage, duration, movement modifier, etc.
+/// </summary>
 [RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(Animator))]
 public class StatusEffect : MonoBehaviour
@@ -14,20 +18,26 @@ public class StatusEffect : MonoBehaviour
     private AudioManager audioManager;
 
     // default values
-    public float totalTimePassed = 0.0f;
-    public float intervalToApply = 1.0f;
-    public float counterToApplyAffect = 0;
-    public bool applyStatusEffect;
-    public float vfxDelay; // used for particle system loop delays to set a minimum
-    public float vfxDelayTimer; // tracks time to measure against delay
-    public bool vfxTrigger;
+    protected float totalTimePassed = 0.0f;
+    protected float intervalToApply = 1.0f;
+    protected float counterToApplyAffect = 0;
+    protected bool applyStatusEffect;
+    protected float vfxDelay; // used for particle system loop delays to set a minimum
+    protected float vfxDelayTimer; // tracks time to measure against delay
+    protected bool vfxTrigger;
 
-    // should be filled in the child Status Effect
-    public float effectDuration;
-    public int damageToPass;
-    public bool affectsMovement;
-    public string nameOfSFXToPlay;
-    public bool loopSFX;
+    // USED BY CHILD STATUS EFFECTS
+    // characteristics
+    protected float effectDuration;
+    protected int damageToPass;
+    protected bool affectsMovement;
+    // sfx
+    protected string nameOfSFXToPlay;
+    protected bool loopSFX;
+    // animator
+    protected bool useAnimator;
+    protected string animationStartState;
+    protected string animationEndState;
 
 
     public virtual void Start()
@@ -67,14 +77,12 @@ public class StatusEffect : MonoBehaviour
         }
     }
 
-    // Status Impacts
-
     public virtual void MovementHandler(bool state)
     {
         if (affectsMovement)
         {
             if (GetComponentInParent<EnemyController>() != null) { GetComponentInParent<EnemyController>().IsStunned = state; }
-            //else if (gameObject.layer == LayerMask.NameToLayer("Player")) { // affect movement }
+            else if (GetComponentInParent<PlayerController>() != null) { GetComponentInParent<PlayerController>().IsStunned = state; }
         }
     }
 
@@ -90,7 +98,7 @@ public class StatusEffect : MonoBehaviour
     public virtual void TakeDamage(int damage)
     {
         if (GetComponentInParent<EnemyController>() != null) { GetComponentInParent<EnemyHealth>().TakeDamage(damage); }
-        //else if (gameObject.layer == LayerMask.NameToLayer("Player")) { gameObject.GetComponent<PlayerHealth>().TakeDamage(damage); }
+        else if (GetComponentInParent<PlayerController>() != null) { GetComponentInParent<PlayerHealth>().TakeDamage(damage); }
     }
 
     public virtual void SFXHandler(bool state)
@@ -116,6 +124,10 @@ public class StatusEffect : MonoBehaviour
                 vfxDelayTimer = 0;
                 vfxTrigger = false;
             } 
+            if (useAnimator)
+            {
+
+            }
         }
         else // start up VFX
         {

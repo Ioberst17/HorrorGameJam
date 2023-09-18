@@ -7,8 +7,12 @@ public class StatusEffectData
     public float movementModifier = .5f;
 
     // Burnable
-    public int burnDamage = 2;
+    public int burnDamage = 3;
     public float burnDuration = 5;
+
+    // Frozen
+    public int freezeDamage = 1;
+    public float freezeDuration = 5;
 
     // Poisoned "DemonBlood"
     public int poisonedDamage = 1;

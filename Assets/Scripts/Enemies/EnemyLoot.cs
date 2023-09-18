@@ -3,51 +3,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(EnemyController))]
 public class EnemyLoot : MonoBehaviour
 {
+    // external reference
+    EnemyDataLoader enemyData;
+    List<GameObject> itemPrefabs;
+
     public GameObject droppedItemPrefab;
     [SerializeField] List<Loot> lootList = new List<Loot>();
-    private List<PickupableItem> ammoList = new List<PickupableItem>();
-    private int enemyTypeID = -1;
-    private EnemyDatabase.DB enemyDB;
-    private ConsumablesDatabase.DB consumablesDB;
-    private List<GameObject> itemPrefabs;
+    List<PickupableItem> ammoList = new List<PickupableItem>();
     float lootLaunchForce = 5f;
 
+    private void Awake()
+    {
+        enemyData = GetComponentInParent<EnemyDataLoader>();
+        if (enemyData != null) { enemyData.DataLoaded += CreateLootList; }
+    }
+
+    private void OnDestroy() { enemyData.DataLoaded -= CreateLootList; }
 
     private void Start()
     {
-        enemyDB = GameObject.Find("EnemyDatabase").GetComponent<EnemyDatabase>().data;
-        consumablesDB = GameObject.Find("ConsumablesDatabase").GetComponent<ConsumablesDatabase>().data;
-        itemPrefabs = GameObject.Find("ItemPrefabs").GetComponent<ItemPrefabs>().itemPrefabs;
-
-        if (CompareTag("Hellhound")) { enemyTypeID = 0; } // add enemyID as in enemy database + behavior component
-        else if (CompareTag("Bat")) { enemyTypeID = 1; }
-        else if (CompareTag("ParalysisDemon")) { enemyTypeID = 2; }
-        else if (CompareTag("Spider")) { enemyTypeID = 3; }
-        else if (CompareTag("BloodGolem")) { enemyTypeID = 4; }
-        else if (CompareTag("Gargoyle")) { enemyTypeID = 5; }
-        else { enemyTypeID = -1;  Debug.Log("Check for an object named: " + name + "; it is missing an enemy tag"); }
-
-        CreateLootList();
+        itemPrefabs = FindObjectOfType<ItemPrefabs>().itemPrefabs;
     }
 
     void CreateLootList()
     {
-        if (enemyTypeID != -1)
-        {
-            for (int i = 0; i < enemyDB.entries.Length; i++)
-            {
-                if (enemyDB.entries[i].id == enemyTypeID)
-                {
-                    var entry = enemyDB.entries[i];
-                    lootList.Add(new Loot(entry.loot1name, entry.loot1dropChance, entry.loot1amount));
-                    lootList.Add(new Loot(entry.loot2name, entry.loot2dropChance, entry.loot2amount));
-                    lootList.Add(new Loot(entry.loot3name, entry.loot3dropChance, entry.loot3amount));
-                }
-            }
-        }
+        var entry = enemyData.data;
+        
+        lootList.Add(new Loot(entry.loot1name, entry.loot1dropChance, entry.loot1amount));
+        lootList.Add(new Loot(entry.loot2name, entry.loot2dropChance, entry.loot2amount));
+        lootList.Add(new Loot(entry.loot3name, entry.loot3dropChance, entry.loot3amount));
     }
 
     List<Loot> CreateLootDrop()
@@ -83,7 +69,7 @@ public class EnemyLoot : MonoBehaviour
                     if(item.lootName == itemPrefabs[i].name)
                     {
                         GameObject lootGameObject = Instantiate(itemPrefabs[i], spawnPosition, Quaternion.identity);
-                        Debug.Log("Loot was instantiated, it's called: " + lootGameObject.name); // is not being called
+                        Debug.Log("Loot was instantiated, it's called: " + lootGameObject.name); 
                         lootGameObject.GetComponent<PickupableItem>().pickupAmount = item.amount;
                         lootLaunch(lootGameObject);
                     }

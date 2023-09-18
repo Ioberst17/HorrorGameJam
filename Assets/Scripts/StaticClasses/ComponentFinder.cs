@@ -49,7 +49,17 @@ public static class ComponentFinder
         return false;
     }
 
-    // Search for a component by name and type
+    /// <summary>
+    /// Search for a component by name and type; T is the type of component, componentName is the name of the gameObject the component is on.
+    /// Optional parameters include an alternative starting GameObject, includingInactive components, and if the componentName only needs to be contained in the gameObject name (vs an exact match)
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="componentName"></param>
+    /// <param name="rootObject"></param>
+    /// <param name="includeInactive"></param>
+    /// <param name="componentNameCanBeJustAPartOfGameObjectName"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
     public static T GetComponentInChildrenByNameAndType<T>(string componentName, GameObject rootObject = null, bool includeInactive = false, bool componentNameCanBeJustAPartOfGameObjectName = false) where T : Component
     {
         if (string.IsNullOrEmpty(componentName))
@@ -60,7 +70,7 @@ public static class ComponentFinder
         T[] components;
         if (rootObject == null)
         {
-            components = UnityEngine.Object.FindObjectsOfType<T>(); // gets a list of objects of the type you're looking for from the entire hierarchy
+            components = UnityEngine.Object.FindObjectsOfType<T>(includeInactive); // gets a list of objects of the type you're looking for from the entire hierarchy
         }
         else
         {
@@ -91,6 +101,42 @@ public static class ComponentFinder
 
             return null;
         }
-
     }
+
+    public static T TryGetComponentInParent<T>(GameObject gameObject) where T : Component
+    {
+        T component = gameObject.GetComponent<T>();
+
+        if (component == null)
+        {
+            Transform parent = gameObject.transform.parent;
+
+            while (parent != null && component == null)
+            {
+                component = parent.GetComponent<T>();
+                parent = parent.parent;
+            }
+
+            if (component == null)
+            {
+                Debug.Log($"Component {typeof(T).Name} not found in the parent hierarchy of {gameObject.name}");
+            }
+        }
+
+        return component;
+    }
+
+    public static T TryGetComponentInChildren<T>(GameObject gameObject) where T : Component
+    {
+        T component = gameObject.GetComponentInChildren<T>();
+
+        if (component == null)
+        {
+            Debug.Log($"Component {typeof(T).Name} not found among children of {gameObject.name}");
+        }
+
+        return component;
+    }
+
+
 }

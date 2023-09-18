@@ -16,7 +16,6 @@ public class Breakable : MonoBehaviour, IDamageable
     public bool hasBroken = false;
     private UIPulse pulse;
 
-    // Start is called before the first frame update
     public void Start()
     {
         pulse = GetComponent<UIPulse>();

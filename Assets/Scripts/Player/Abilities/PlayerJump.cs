@@ -6,11 +6,10 @@ using UnityEngine.VFX;
 public class PlayerJump : MonoBehaviour
 {
     // references to other objects
-    private GameController gameController;
-    private PlayerController controller;
+    private PlayerController playerController;
     private PlayerDash dash;
     private PlayerAnimator animator;
-    private PlayerParticleSystems visualEffects;
+    private PlayerVisualEffectsController visualEffects;
 
     // internal properties
     [SerializeField] private float numberOfJumps;
@@ -18,14 +17,12 @@ public class PlayerJump : MonoBehaviour
     [SerializeField] private float _jumpForce; public float JumpForce { get { return _jumpForce; } set { _jumpForce = value; } }
     [SerializeField] private bool _canJump = true; public bool CanJump { get { return _canJump; } set { _canJump = value; } } 
 
-    // Start is called before the first frame update
     void Awake()
     {
-        gameController = FindObjectOfType<GameController>();
-        controller = FindObjectOfType<PlayerController>();
+        playerController = FindObjectOfType<PlayerController>();
         animator = ComponentFinder.GetComponentInChildrenByNameAndType<PlayerAnimator>("Animator", transform.parent.gameObject);
         dash = ComponentFinder.GetComponentInChildrenByNameAndType<PlayerDash>("Dash", transform.parent.gameObject);
-        visualEffects = controller.transform.Find("VisualEffects").gameObject.GetComponent<PlayerParticleSystems>();
+        visualEffects = ComponentFinder.GetComponentInChildrenByNameAndType<PlayerVisualEffectsController>("VisualEffects", transform.parent.gameObject);
     }
 
     public void Execute()
@@ -36,26 +33,26 @@ public class PlayerJump : MonoBehaviour
             {
                 _canJump = false;
                 _isJumping = true;
-                controller.SetVelocity();
-                controller.AddForce(0f, _jumpForce);
+                playerController.SetVelocity();
+                playerController.AddForce(0f, _jumpForce);
                 
                 // VFX/SFX
                 animator.Play("PlayerJump");
                 PlayRandomJumpSound();
             }
-            else if (controller.IsAgainstWall && controller.CanWallJump && !controller.IsGrounded)
+            else if (playerController.IsAgainstWall && playerController.CanWallJump && !playerController.IsGrounded)
             {
-                controller.ControlMomentum = 20 * -controller.FacingDirection;
-                controller.Flip();
-                controller.CanWallJump = false;
+                playerController.ControlMomentum = 20 * -playerController.FacingDirection;
+                playerController.Flip();
+                playerController.CanWallJump = false;
                 _isJumping = true;
-                controller.SetVelocity();
-                controller.AddForce(_jumpForce / 2 * -controller.FacingDirection, _jumpForce);
+                playerController.SetVelocity();
+                playerController.AddForce(_jumpForce / 2 * -playerController.FacingDirection, _jumpForce);
 
                 // VFX/SFX
                 PlayRandomJumpSound();
                 animator.Play("PlayerJump");
-                controller.visualEffects.PlayParticleSystem("MovementDust");
+                visualEffects.PlayParticleSystem("MovementDust");
             }
         }
     }

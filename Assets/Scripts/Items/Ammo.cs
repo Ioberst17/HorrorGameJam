@@ -2,73 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ammo : MonoBehaviour
+public class Ammo : ProjectileBase
 {
-    public string weaponName;
-    public int weaponID; //used in damage calculations when looking up in Weapon Database
-    public int weaponLevel;
-    public int ammoID;
-    public bool isFixedDistance;
-    public bool isThrown;
-    public bool isExplosive;
-    public string statusModifier;
-    public Animator animator;
-    private int BreakableEnviroLayer;
-
     public int GetAmmoID() { return ammoID;}
 
-    private void Start() { animator = GetComponent<Animator>(); BreakableEnviroLayer = LayerMask.NameToLayer("BreakableEnviro"); }
+    override protected void Start() { base.Start(); animator = GetComponent<Animator>(); }
 
-    private void OnCollisionEnter2D(Collision2D col) { if (!isFixedDistance) { HandleStandardAmmo(col); }}
-
-    private void OnTriggerStay2D(Collider2D other) { if (isFixedDistance) { HandleFixedDistanceAmmo(other); } }
-
-    private void HandleStandardAmmo(Collision2D col)
+    override protected void HitEnemyObject(Collision2D col)
     {
-        if (col.gameObject.GetComponent<EnemyController>() != null)
+        if (col.gameObject.GetComponent<EnemyController>() != null ||
+                col.gameObject.GetComponent<EnemyProjectile>() != null)
         {
-            var enemyController = col.gameObject.GetComponent<EnemyController>();
-            if (isExplosive) { ExplosionHandler(); }
-            else if (!isExplosive) { PassDamage(weaponID, weaponLevel, transform.position, statusModifier, enemyController);}        
-        }
-
-
-        if (col.gameObject.tag == "Boundary" || col.gameObject.layer == BreakableEnviroLayer)
-        {
-            if (isExplosive)  { ExplosionHandler(); }
-            else
-            {
-                if(col.gameObject.GetComponent<IDamageable>() != null) { col.gameObject.GetComponent<IDamageable>().Hit(); }
-                Instantiate(Resources.Load("VFXPrefabs/DamageImpact"), transform.position, Quaternion.identity);
-                Destroy(gameObject);
-            }
-            
+            RigidbodyEnabled = false;
+            if (projectile.isExplosive) { ExplosionHandler(); }
+            else if (!projectile.isExplosive) { Remove(); }
         }
     }
-
-    private void HandleFixedDistanceAmmo(Collider2D other)
-    {
-        if(other.gameObject.GetComponent<EnemyController>() != null)
-        {
-            var enemyController = other.gameObject.GetComponent<EnemyController>();
-            EventSystem.current.EnemyAmmoHitTrigger(weaponID, weaponLevel, GetComponentInParent<Transform>().position, statusModifier, enemyController);
-        }
-    }
-
-    private void ExplosionHandler()
-    {
-        if (GetComponent<Explode>() != null) { GetComponent<Explode>().AmmoExplosion(2f, 10f, weaponName, weaponID, weaponLevel) ; }
-        else { Debug.Log("Trying to call Explode function, but does not have Explode.cs script attached"); }
-        DisableInteractions();
-    }
-
-    private void PassDamage(int weaponID, int weaponLevel, Vector3 position, string statusModifier, EnemyController enemyController)
-    {
-        EventSystem.current.EnemyAmmoHitTrigger(weaponID, weaponLevel, transform.position, statusModifier, enemyController);
-        Instantiate(Resources.Load("VFXPrefabs/DamageImpact"), transform.position, Quaternion.identity);
-        Destroy(gameObject);
-    }
-
-    private void DisableInteractions() { GetComponent<Collider2D>().enabled = false; GetComponent<SpriteRenderer>().enabled = false; }
-
 }

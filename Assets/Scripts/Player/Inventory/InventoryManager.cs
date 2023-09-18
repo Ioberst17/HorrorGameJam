@@ -7,17 +7,17 @@ using System;
 public class InventoryManager : MonoBehaviour // INTENDED TO MANAGE ITEM ACTIVITIES THAT CROSS MULTIPLE PLAYER ITEMS
 {
     // DECLARATIONS
-    private GameObject utilities;
-    private GameObject player;
-    private ConsumablesDatabase consumablesDatabase;
-    [SerializeField] private PlayerVisualEffectsController playerVisualEffectsController;
-    private PlayerSecondaryWeapon playerSecondaryWeapon;
-    private PlayerHealth playerHealth;
-    private Lucidity lucidity;
+    GameObject utilities;
+    GameObject player;
+    ConsumablesDatabase consumablesDatabase;
+    PlayerVisualEffectsController playerVisualEffectsController;
+    PlayerSecondaryWeapon playerSecondaryWeapon;
+    PlayerHealth playerHealth;
+    Lucidity lucidity;
 
     // PLAYER ITEM MANAGERS
-    private NarrativeItemsManager narrativeItemsManager;
-    private ConsumablesManager consumablesManager;
+    NarrativeItemsManager narrativeItemsManager;
+    ConsumablesManager consumablesManager;
     public PrimaryWeaponsManager primaryWeaponsManager;
     public SecondaryWeaponsManager secondaryWeaponsManager;
 

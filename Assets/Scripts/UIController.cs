@@ -8,7 +8,7 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameController GameController;
     private PlayerController playerController;
     private PlayerHealth playerHealth;
-    private PlayerStamina playerStamina;
+    private Stamina playerStamina;
     private PlayerMana playerMana;
 
     [SerializeField] private Text HPtext;
@@ -22,7 +22,7 @@ public class UIController : MonoBehaviour
     {
         playerController = FindObjectOfType<PlayerController>();
         playerHealth = playerController.GetComponent<PlayerHealth>();
-        playerStamina = playerController.GetComponentInChildren<PlayerStamina>();
+        playerStamina = playerController.GetComponentInChildren<Stamina>();
         playerMana = playerController.GetComponentInChildren<PlayerMana>();
     }
 

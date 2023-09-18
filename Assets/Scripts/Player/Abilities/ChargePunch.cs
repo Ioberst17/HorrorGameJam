@@ -7,149 +7,119 @@ using Unity.VisualScripting;
 using System.Linq;
 using static ComponentFinder;
 
-[RequireComponent(typeof(PlayerPrimaryWeapon))]
+[RequireComponent(typeof(PlayerAttackManager))]
 public class ChargePunch : MonoBehaviour
 {
     // external references
     GameController gameController;
     CameraBehavior cameraBehavior;
-    PlayerPrimaryWeapon playerPrimaryWeapon;
+    PlayerAttackManager playerAttackManager;
+    PlayerVisualEffectsController playerVisualEffectsController;
     AudioManager audioManager;
 
     // internal variables
-    public float maxChargeTime = 2f;      // the maximum time the punch can be charged for
-    public float chargeSpeed = 1f;        // the speed at which the punch charge increases
-    private float minChargeTime = 0.35f; // minimum time before charge counts
-    [SerializeField] public int damageToPass;
-    [SerializeField] private float maxDamageToAdd = 10f;
-    [SerializeField] private float holdTimeNormalized;
-    [SerializeField] int attackDirection;
+    [SerializeField] float maxChargeTime = 2f;      // the maximum time the punch can be charged for
+    [SerializeField] float chargeSpeed = 1f;        // the speed at which the punch charge increases
+    [SerializeField] float minChargeTime = 0.35f; // minimum time before charge counts
+    int BaseDamage {get; set; }
+    int DamageToPass { get; set; }
+    [SerializeField] float holdTimeNormalized;
 
-    [SerializeField] private float chargeTime; // the current charge time
-    [SerializeField] private bool _isCharging; public bool IsCharging { get { return _isCharging; } set { _isCharging = value; } } // whether the punch is currently being charged
+    [SerializeField] float chargeTime; // the current charge time
+    [SerializeField] bool _isCharging; public bool IsCharging { get { return _isCharging; } set { _isCharging = value; } } // whether the punch is currently being charged
 
 
     // MODIFY COLLIDERS BASED ON CHARGE LENGTH, update based on the size of the charge punch sprite
-    [SerializeField] private Vector3 _upperRightCorner; public Vector3 UpperRightCorner { get { return _upperRightCorner; } set { _upperRightCorner = value; } }
-    [SerializeField] private Vector3 _bottomLeftCorner; public Vector3 BottomLeftCorner { get { return _bottomLeftCorner; } set { _bottomLeftCorner = value; } }
+    [SerializeField] Vector3 _upperRightCorner; public Vector3 UpperRightCorner { get { return _upperRightCorner; } set { _upperRightCorner = value; } }
+    [SerializeField] Vector3 _bottomLeftCorner; public Vector3 BottomLeftCorner { get { return _bottomLeftCorner; } set { _bottomLeftCorner = value; } }
 
 
     [Header("VFX Related")]
-    // particle system related
-    private GameObject visualEffects;
-    private GameObject particleParent;
-    [SerializeField] List<ParticleSystem> particleSystems = new List<ParticleSystem>();
-    ParticleSystem partSystem1, partSystem2, partSystem3, partSystem4, partSystem5;
+    // these should match the names of the game objects in the VisualEffectsController
+    List<string> FirstWaveParticleSystems = new List<string>
+    {
+            "PunchWindParticlesTop1",
+            "PunchWindParticlesTop2",
+            "PunchWindParticlesTop3",
+            "PunchWindParticlesFloor1",
+            "PunchWindParticlesFloor2"
+    };
+    List<string> SecondWaveParticleSystems = new List<string>
+        {
+            "ChargePunchInitialBlast",
+            "ChargePunchInitialElectricity",
+            "ChargePunchInitialElectricity2", 
+        };    
+    
+    List<string> ThirdWaveParticleSystems = new List<string> { "ChargePunchFinalElectricity", "ChargePunchFireSpiral" };
+
+    // add together particle systems above to get a full list at runtime
+    List<string> AllParticleSystems = new List<string> { };
+
+    // tracked to ensure particle systems don't multitrigger
     bool particleTrigger;
 
-    // delayed one time trigger particles
-    ParticleSystem initialBuildParticleBlast;
-    string initialBuildParticleBlastObjectName = "ChargePunchInitialBlast";
-    ParticleSystem chargePunchElectricityInitial;
-    string chargePunchElectricityInitialObjectName = "ChargePunchInitialElectricity";
-    ParticleSystem chargePunchElectricityInitial2;
-    string chargePunchElectricityInitial2ObjectName = "ChargePunchInitialElectricity2";
-    ParticleSystem chargePunchElectricityFinal;
-    string chargePunchElectricityFinalObjectName = "ChargePunchFinalElectricity";   
-    ParticleSystem chargePunchFireSpiral;
-    string chargePunchFireSpiralObjectName = "ChargePunchFireSpiral";
+    [SerializeField] float firstWaveParticleSystemsTimeDelay; // used to match electricity start and SFX loop
 
-
-    [SerializeField] float chargePunchElectricityStagger; // used to match electricity start and SFX loop
-
-    // player glow related
-    [SerializeField] private SpriteGlowEffect spriteGlow; private bool glowTrigger;
-    float glowFrequency = 5, glowAmplitude = 4;
-    float outlineFrequency = 2, outlineAmplitude = 2;
-    [SerializeField] int glowVal;
-    [SerializeField] int outlineVal;
-    int glowMidPoint = 6, outlineMidpoint = 5;
-    
     // charge punch sprite related
-    public SpriteRenderer PunchSprite { get; set; }
-    Bounds punchSpriteBounds;
-    public float maxScale = 2.0f; // SETS MAX SCALE OF SPRITE IN CHARGING, IMPORTANT FOR COLLISIONS
-    public float offsetAmount = 1.0f;
-    private Color originalColor;
-    private Vector2 originalLocalPosition;
-    private float fadeDuration = 0.5f;
+    public string PunchSprite = "ChargePunchSprite";
+    float maxScale = 2.0f; // SETS MAX SCALE OF SPRITE IN CHARGING, IMPORTANT FOR COLLISIONS
+    float offsetAmount = 1.0f;
+    float fadeDuration = 0.5f;
 
     //SFX Related
-    private bool falconSFXFlag;
-    private bool falconSFXPlaying;
-    private float punch1Length;
-    private float sfxPlayTime;
-    private float additionalSFXWaitTime;
+    bool falconSFXFlag, falconSFXPlaying;
+    float punch1Length, sfxPlayTime, additionalSFXWaitTime;
 
     private void Start()
     {
-        EventSystem.current.onChargePunchRelease += ReleasePunchOnFrame;
-        playerPrimaryWeapon = GetComponent<PlayerPrimaryWeapon>();
-        gameController = FindObjectOfType<GameController>();
+        GetSupportingComponents();
         LoadVFXReferences();
-        audioManager = FindObjectOfType<AudioManager>();
-        Sound punch1Sound = audioManager.GetSFX("ChargePunch1");
-        punch1Length = punch1Sound.clip.length;
-        ParticleSystemsOn(false);
+        LoadAudioReferences();
+        EventSystem.current.onChargePunchRelease += ReleasePunchOnFrame;
+        EventSystem.current.onPlayerHitPostHealthTrigger += ReleaseChargeIfHit;
     }
 
-    private void OnDestroy()
-    {
+    private void OnDestroy() 
+    { 
         EventSystem.current.onChargePunchRelease -= ReleasePunchOnFrame;
+        EventSystem.current.onPlayerHitPostHealthTrigger -= ReleaseChargeIfHit;
+    }
+
+    void GetSupportingComponents()
+    {
+        playerAttackManager = GetComponent<PlayerAttackManager>();
+        BaseDamage = 10;
+        gameController = FindObjectOfType<GameController>();
     }
 
     void LoadVFXReferences()
     {
-        // PARTICLES
-        visualEffects = transform.GetSibling("VisualEffects").gameObject;
-
-        // load in particles from PunchWindParticles
-        particleParent = visualEffects.transform.Find("PunchWindParticles").gameObject;
-        ParticleSystem[] childParticleSystems = particleParent.GetComponentsInChildren<ParticleSystem>();
-        foreach (ParticleSystem ps in childParticleSystems) { particleSystems.Add(ps); }
-
-        // add charge punch electricity + initial build particles
-        chargePunchElectricityInitial = GetComponentInChildrenByNameAndType<ParticleSystem>(chargePunchElectricityInitialObjectName, visualEffects, true);
-        chargePunchElectricityInitial2 = GetComponentInChildrenByNameAndType<ParticleSystem>(chargePunchElectricityInitial2ObjectName, visualEffects, true);
-        chargePunchElectricityFinal = GetComponentInChildrenByNameAndType<ParticleSystem>(chargePunchElectricityFinalObjectName, visualEffects, true);
-        initialBuildParticleBlast = GetComponentInChildrenByNameAndType<ParticleSystem>(initialBuildParticleBlastObjectName, visualEffects, true);
-        chargePunchFireSpiral = GetComponentInChildrenByNameAndType<ParticleSystem>(chargePunchFireSpiralObjectName, visualEffects, true);
-        
-        particleSystems.Add(chargePunchElectricityInitial);
-        particleSystems.Add(chargePunchElectricityInitial2);
-        particleSystems.Add(chargePunchElectricityFinal);
-        particleSystems.Add(initialBuildParticleBlast);
-        particleSystems.Add(chargePunchFireSpiral);
+        playerVisualEffectsController = SiblingComponentUtils.GetSiblingComponent<PlayerVisualEffectsController>(gameObject);
 
         // screen shake related to build particles blast
         cameraBehavior = FindObjectOfType<CameraBehavior>();
 
-        // GLOW
-        var spriteGlowParent = GetComponentInChildrenByNameAndType<Transform>("Base", transform.parent.gameObject);
-        spriteGlow = GetComponentInChildrenByNameAndType<SpriteGlowEffect>("SpriteAndAnimations", spriteGlowParent.gameObject);
+        AllParticleSystems.AddRange(FirstWaveParticleSystems);
+        AllParticleSystems.AddRange(SecondWaveParticleSystems);
+        AllParticleSystems.AddRange(ThirdWaveParticleSystems);
 
-        // SPRITE-RELATED
-        PunchSprite = GetComponentInChildrenByNameAndType<SpriteRenderer>("ChargePunchSprite", gameObject, true);
-        PunchSprite.gameObject.SetActive(true);
-        originalColor = PunchSprite.color;
-        originalLocalPosition = PunchSprite.transform.localPosition;
-        PunchSprite.gameObject.SetActive(false);
+        ParticleSystemsOn(false);
     }
 
-    public void Execute() 
-    { 
-        IsCharging = true;
-        // sprite renderer
-        PunchSprite.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-        PunchSprite.transform.localPosition += new Vector3(offsetAmount, 0.0f, 0.0f);
+    void LoadAudioReferences()
+    {
+        audioManager = FindObjectOfType<AudioManager>();
+        Sound punch1Sound = audioManager.GetSFX("ChargePunch1");
+        punch1Length = punch1Sound.clip.length;
     }
 
-    public void Release(int attackDirection) { this.attackDirection = attackDirection; ReleasePunch();  } 
+    public void Execute() { IsCharging = true; }
+
+    public void Release(int attackDirection) {  if (IsCharging) { playerAttackManager.StartAttack(attackDirection, "PlayerChargePunch"); } } 
 
     void FixedUpdate()
     {
-        if (!IsCharging) { chargePunchElectricityInitial.Stop(); chargePunchElectricityFinal.Stop(); chargePunchFireSpiral.Stop(); } // run to ensure a stop
-
         if (IsCharging)
         {
             chargeTime = chargeTime + (Time.deltaTime * chargeSpeed);
@@ -157,8 +127,7 @@ public class ChargePunch : MonoBehaviour
             HandleSpriteSize();
             HandleChargeVFX();
             HandleChargeSound();
-            if (glowTrigger) { HandleGlow(); }
-
+            playerVisualEffectsController.HandleGlow();
         }
         if (falconSFXPlaying) { sfxPlayTime += Time.deltaTime; }
     }
@@ -166,13 +135,16 @@ public class ChargePunch : MonoBehaviour
     private void CalcForce()
     {
         holdTimeNormalized = Mathf.Clamp01(chargeTime / maxChargeTime);
-        damageToPass = (int)(holdTimeNormalized * maxDamageToAdd);
+        if(playerAttackManager.MostRecentAttack.name != "Charge Punch")
+        {
+            DamageToPass = (int)(holdTimeNormalized * BaseDamage);
+        }
     }
 
     private void HandleSpriteSize() // scales with charge punch time
     {
         float scale = Mathf.Lerp(1.0f, maxScale, chargeTime / maxChargeTime);
-        PunchSprite.transform.localScale = new Vector3(scale, scale, 1.0f);
+        playerVisualEffectsController.SetSpriteLocalScale(PunchSprite, new Vector3(scale, scale, 1.0f));
     }
 
     private void HandleChargeSound()
@@ -199,16 +171,6 @@ public class ChargePunch : MonoBehaviour
         }
     }
 
-    void HandleGlow()
-    {
-        // Calculate the oscillating values for glow and outline properties
-        glowVal = Mathf.Max(1, Mathf.RoundToInt(Mathf.Sin(Time.time * glowFrequency) * glowAmplitude + glowMidPoint));
-        outlineVal = Mathf.Max(1, Mathf.RoundToInt(Mathf.Sin(Time.time * outlineFrequency) * outlineAmplitude + outlineMidpoint));
-
-        spriteGlow.GlowBrightness = glowVal;
-        spriteGlow.OutlineWidth = outlineVal;
-    }
-
     // Invoked in Handle Finish Sound, although reference says 0; this is due to Invoke allowing a wait time before executing
     void FinishSound() 
     {
@@ -223,145 +185,108 @@ public class ChargePunch : MonoBehaviour
         {
             EventSystem.current.StartChargedAttackTrigger(holdTimeNormalized, gameObject.transform, null);
             if (particleTrigger == false) { ParticleSystemsOn(true); }
-            if (glowTrigger == false) { GlowOn(true); spriteGlow.GlowBrightness = 0; spriteGlow.OutlineWidth = 0; }
+            playerVisualEffectsController.GlowOn(true);
         } 
     }
 
-    void UpdateSpriteBounds()
+    void UpdateSpriteCorners()
     {
-        punchSpriteBounds = PunchSprite.bounds;
-        UpperRightCorner = punchSpriteBounds.max;
-        BottomLeftCorner = punchSpriteBounds.min;
-        PunchSprite.enabled = true; // enabled so that PlayerPrimaryWeapon can validate that it's on for collisions
+        (UpperRightCorner, BottomLeftCorner) = playerVisualEffectsController.GetSpriteUpperRightAndLowerLeftCorners(PunchSprite);
+        playerVisualEffectsController.ToggleSpriteEnabled(PunchSprite, true); // enabled so that PlayerPrimaryWeapon can validate that it's on for collisions
     }
 
     void HandleFinishVFX()
     {
-        if(chargeTime > minChargeTime) { StartCoroutine(FadeInFadeOutSprite()); } // only call if hit a minimum threshold
-        else { ResetColorAndPosition(); }
+        if(chargeTime > minChargeTime) 
+        { 
+            StartCoroutine(playerVisualEffectsController.FadeInFadeOutSprite(PunchSprite, fadeDuration));
+            StartCoroutine(CloseHitBoxAfterSpriteFade(fadeDuration));
+        } // only call if hit a minimum threshold
+        else { playerVisualEffectsController.ResetColorAndPosition(PunchSprite); }
     }
 
-    private IEnumerator FadeInFadeOutSprite()
+    IEnumerator CloseHitBoxAfterSpriteFade(float fadeDuration)
     {
-        PunchSprite.gameObject.SetActive(true);
-        PunchSprite.color = originalColor;
-
-        float timer = 0.0f;
-
-        while (timer < fadeDuration)
-        {
-            timer += Time.deltaTime;
-
-            // Calculate the current alpha value based on the fade duration
-            float alpha = Mathf.Lerp(1.0f, 0.0f, timer / fadeDuration);
-
-            // Set the target color with the modified alpha value
-            Color targetColor = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
-
-            // Update the sprite's color
-            PunchSprite.color = targetColor;
-
-            yield return null;
-        }
-
-        ResetColorAndPosition();
-    }
-
-    void ResetColorAndPosition()
-    {
-        // Ensure the final color is set correctly
-        PunchSprite.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0.0f);
-        PunchSprite.gameObject.SetActive(false);
-
-        // reset position
-        PunchSprite.transform.localPosition = originalLocalPosition;
-        PunchSprite.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+        yield return new WaitForSeconds(fadeDuration);
+        EventSystem.current.EndActiveMeleeTrigger();
     }
 
     void ParticleSystemsOn(bool status)
     {
         if (status == true)
         {
-            foreach (ParticleSystem ps in particleSystems)
+            // initial particles
+            foreach(string particles in FirstWaveParticleSystems) 
             {
-                // first wave of effects after start
-                if (ps.name == chargePunchElectricityInitialObjectName || 
-                    ps.name == chargePunchElectricityInitial2ObjectName || 
-                    ps.name == initialBuildParticleBlastObjectName) 
-                {
-                    // specific to chargePunchElectricity and backing SFX track, stagger the start of electricity to match SFX backing track
-                    // also used by initial build particle blast
-                    Invoke("TriggerOneTimeBuildFX", minChargeTime + chargePunchElectricityStagger);
-                }
-                // second wave of effects
-                else if(ps.name == chargePunchElectricityFinalObjectName || ps.name == chargePunchFireSpiralObjectName)
-                {
-                    Invoke("TriggerFinalBuildFX", maxChargeTime);
-                }
-                // else it should play at start
-                else { ps.Play();  }
-                particleTrigger = true;
+                playerVisualEffectsController.PlayParticleSystem(particles);
             }
+
+            // first wave of effects after chargepunch start
+            // specific to chargePunchElectricity and backing SFX track, stagger the start of electricity to match SFX backing track
+            foreach (string particles in SecondWaveParticleSystems)
+            {
+                StartCoroutine(PlayParticleSystemWithDelay(particles, minChargeTime + firstWaveParticleSystemsTimeDelay));
+            }
+            TriggerOneTimeBuildFX();
+
+            // second wave of effects
+            foreach (string particles in ThirdWaveParticleSystems)
+            {
+                StartCoroutine(PlayParticleSystemWithDelay(particles, maxChargeTime));
+            }
+            particleTrigger = true;
         }
-        else { foreach (ParticleSystem ps in particleSystems) { ps.Stop(); } particleTrigger = false; }
+        else 
+        { 
+            foreach (string ps in AllParticleSystems) { playerVisualEffectsController.StopParticleSystem(ps); }
+            particleTrigger = false;
+        }
     }
 
     void TriggerOneTimeBuildFX() 
     {
-        if (IsCharging) // make sure still charging before loading in, otherwise player may execute punch and these will fire after the fact
+        // make sure still charging before loading in, otherwise player may execute punch and these will fire after the fact
+        if (IsCharging) 
         {
-            particleSystems.FirstOrDefault(ps => ps == chargePunchElectricityInitial).Play();
-            particleSystems.FirstOrDefault(ps => ps == chargePunchElectricityInitial2).Play();
-            particleSystems.FirstOrDefault(ps => ps == initialBuildParticleBlast).Play();
-
             cameraBehavior.ShakeScreen(0.5f);
             StartCoroutine(gameController.PlayHaptics());
         }
     }
 
-    void TriggerFinalBuildFX()
+    IEnumerator PlayParticleSystemWithDelay(string particleSystemName, float delay) 
     {
-        if (IsCharging) 
-        { 
-            particleSystems.FirstOrDefault(ps => ps == chargePunchElectricityFinal).Play(); 
-            particleSystems.FirstOrDefault(ps => ps == chargePunchFireSpiral).Play(); 
-        }
+        yield return new WaitForSeconds(delay);
+        if (IsCharging) { playerVisualEffectsController.PlayParticleSystem(particleSystemName); }
     }
 
-    void GlowOn(bool status)
-    {
-        if (status == true) { glowTrigger = true; }
-        else { glowTrigger = false; spriteGlow.GlowBrightness = 0; spriteGlow.OutlineWidth = 0; }
-    }
-
-    // calls animation
-    void ReleasePunch()
-    {
-        if (IsCharging) {StartCoroutine(playerPrimaryWeapon.AttackActiveFrames(attackDirection, "PlayerChargePunch")); }
-    }
-
-    // called by specific key frame on player's base animator, so 
+    /// <summary>
+    /// Called by specific key frame on player's base animator, so 
+    /// </summary>
     void ReleasePunchOnFrame()
     {
-        playerPrimaryWeapon.damageToPass = playerPrimaryWeapon.minDamage + damageToPass;
-        IsCharging = false;
-        UpdateSpriteBounds();
-        HandleFinishSound();
-        HandleFinishVFX();
-        ParticleSystemsOn(false); GlowOn(false); chargeTime = 0; holdTimeNormalized = 0;
-        //Instantiate(punchEffect, transform.position, Quaternion.identity);
-        EventSystem.current.FinishChargedAttackTrigger();
+        EventSystem.current.ActiveMeleeTrigger();
+        if (playerAttackManager.MostRecentAttack.name == "Charge Punch") { playerAttackManager.MostRecentAttack.baseDamage = BaseDamage + DamageToPass; }
+        ReleaseCharge();
     }
     
-    // used if a player is hit vs. 
-    public void ReleaseCharge()
+    /// <summary>
+    /// Called if a player is hit while charging charge punch. 
+    /// </summary>
+    public void ReleaseChargeIfHit(Vector3 enemyPos, float knockbackMod, bool HitInActiveShieldZone)
+    {
+        ReleaseCharge();
+    }
+
+    public void ReleaseCharge() 
     {
         IsCharging = false;
-        playerPrimaryWeapon.IsAttacking = false;
-        UpdateSpriteBounds();
+        UpdateSpriteCorners();
         HandleFinishSound();
         HandleFinishVFX();
-        ParticleSystemsOn(false); GlowOn(false); chargeTime = 0; holdTimeNormalized = 0;
+        ParticleSystemsOn(false);
+        playerVisualEffectsController.GlowOn(false);
+        chargeTime = 0;
+        holdTimeNormalized = 0;
         EventSystem.current.FinishChargedAttackTrigger();
     }
 }

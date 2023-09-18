@@ -3,50 +3,76 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static PlayerPrimaryWeapon;
+using static PlayerAttackManager;
 
 // Handles the concept of health and its display
 public class EnemyHealth : Health
 {
-    private EnemyController enemyController;
+    EnemyDataLoader enemyData;
+    EnemyController enemyController;
     WeaponDatabase weaponDatabase;
+    EnemyLoot enemyLoot;
 
     public int healthChecker;
-    private int damageToPass;
+    [SerializeField] float healthDifficultyMultiplier;
 
     public event Action<EnemyController> OnDeath;
 
-    public bool damageInterupt = false;
-
     // Handles UI Display
-    private UIHealthChangeDisplay display;
-    [SerializeField] private CanvasGroup healthSliderUI;
-    [SerializeField] private Image healthSliderFill;
+    UIHealthChangeDisplay display;
+    [SerializeField] CanvasGroup healthSliderUI;
+    [SerializeField] Image healthSliderFill;
 
     void Start()
     {
         // External References
+        enemyLoot = GetComponentInChildren<EnemyLoot>();
         enemyController = GetComponent<EnemyController>();
         display = GetComponentInChildren<UIHealthChangeDisplay>();
         healthSliderUI = GetComponentInChildren<CanvasGroup>();
         healthSliderFill = healthSliderUI.gameObject.GetComponentInChildren<Image>();
-        weaponDatabase = GameObject.Find("WeaponDatabase").GetComponent<WeaponDatabase>();
+        weaponDatabase = FindObjectOfType<WeaponDatabase>();
 
         // Set values
         healthSliderUI.alpha = 0;
+    }
 
+    private void Awake()
+    {
+        enemyData = GetComponentInParent<EnemyDataLoader>();
+        if (enemyData != null) { enemyData.DataLoaded += LoadInValues; }
+
+        // Load events
         EventSystem.current.onEnemyEnviroDamage += Hit;
         EventSystem.current.onEnemyAmmoHitCollision += Hit;
         EventSystem.current.onEnemyMeleeHitCollision += Hit;
+        EventSystem.current.onEnemyParryCollision += Hit;
     }
 
     private void OnDestroy()
     {
         // unsubscribe from events
+        enemyData.DataLoaded -= LoadInValues;
         EventSystem.current.onEnemyEnviroDamage -= Hit;
         EventSystem.current.onEnemyAmmoHitCollision -= Hit;
         EventSystem.current.onEnemyMeleeHitCollision -= Hit;
+        EventSystem.current.onEnemyParryCollision -= Hit;
     }
+
+    void LoadInValues()
+    {
+        // assume medium, but otherwise get the difficulty level from player prefs
+        string difficultyLevel = "Medium";
+        if (PlayerPrefs.HasKey("DifficultyLevel")) { difficultyLevel = PlayerPrefs.GetString("DifficultyLevel"); }
+
+        // set multipliers based on value
+        if (difficultyLevel == "Easy") { healthDifficultyMultiplier = enemyData.data.easyHPMultiplier;  }
+        else if (difficultyLevel == "Hard") { healthDifficultyMultiplier = enemyData.data.hardHPMultiplier; }
+        else { healthDifficultyMultiplier = enemyData.data.mediumHPMultiplier; }
+
+        (MaxHealth, HP) = ((int)(enemyData.data.health * healthDifficultyMultiplier), (int)(enemyData.data.health * healthDifficultyMultiplier));
+    }
+
 
     // VARIOUS OVERRIDES OF WAYS ENEMY CAN BE HIT
     public void Hit(int attackDamage, Vector3 playerPosition, string statusEffect, EnemyController enemyController)
@@ -57,7 +83,7 @@ public class EnemyHealth : Health
             {
                 if (!enemyController.IsInvincible)
                 {
-                    damageInterupt = true; 
+                    DamageInterrupt = true; 
                     Debug.Log("Hit is being called");
                     if (statusEffect != null) { enemyController.StatusModifier(statusEffect); }
                     TakeDamage(attackDamage);
@@ -68,11 +94,20 @@ public class EnemyHealth : Health
         }
     }
 
-    public void Hit(int weaponID, int LevelOfWeapon, Vector3 playerPosition, string statusEffect, EnemyController enemyController) // used by shots / ammo
+    // used by shots / ammo
+    public void Hit(int damageToPass, int LevelOfWeapon, Vector3 playerPosition, string statusEffect, EnemyController enemyController) 
     {
-        damageToPass = weaponDatabase.GetWeaponDamage(weaponID, LevelOfWeapon);
-        statusEffect = weaponDatabase.GetWeaponEffect(weaponID);
         Hit(damageToPass, playerPosition, statusEffect, enemyController);
+    }
+
+    // used by parry (shield mechanic)
+    public void Hit(int damageValue, Vector3 playerPosition, GameObject enemyObject)
+    {
+        if (enemyObject.TryGetComponent(out EnemyController enemy))
+        {
+            var damageToPass = damageValue;
+            Hit(damageToPass, playerPosition, null, enemy);
+        }   
     }
 
     public void TakeDamage(int damage)
@@ -87,13 +122,13 @@ public class EnemyHealth : Health
     {
         Instantiate(Resources.Load("VFXPrefabs/EnemyDeath"), transform.position, Quaternion.identity);
         Debug.Log(name + " is dead!");
+        enemyController.HitBox.enabled = false;
+        enemyController.SpriteRenderer.enabled = false;
         enemyController.IsDead = true;
         if (OnDeath != null) { OnDeath(enemyController); }
-        enemyController.hitBox.enabled = false;
-        enemyController.SpriteRenderer.enabled = false;
         string enemyDeathSound = gameObject.tag.ToString() + "Death"; // creates string that AudioManager recognizes; tag should match asset in AudioManager
         FindObjectOfType<AudioManager>().PlaySFX(enemyDeathSound);
-        if (GetComponent<EnemyLoot>() != null) { GetComponent<EnemyLoot>().InstantiateLoot(transform.position); }
+        enemyLoot.InstantiateLoot(transform.position);
         Destroy(gameObject);
     }
 

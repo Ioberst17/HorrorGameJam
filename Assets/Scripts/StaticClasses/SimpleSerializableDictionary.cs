@@ -8,6 +8,11 @@ public class SimpleSerializableDictionary<TKey, TValue>
     [SerializeField]
     private List<TKey> keys = new List<TKey>();
 
+    public int Count
+    {
+        get { return keys.Count; }
+    }
+
     [SerializeField]
     private List<TValue> values = new List<TValue>();
 
@@ -66,7 +71,7 @@ public class SimpleSerializableDictionary<TKey, TValue>
     {
         if (dictionary.ContainsKey(key))
         {
-            Debug.LogError("Duplicate key found: " + key.ToString());
+            Debug.Log("WARNING: Duplicate key found called: " + key.ToString());
             return;
         }
 
@@ -135,4 +140,53 @@ public class SimpleSerializableDictionary<TKey, TValue>
         dictionary.TryGetValue(key, out value);
         return value;
     }
+
+    public void IncrementAllValues()
+    {
+        foreach (var key in keys)
+        {
+            if (dictionary.TryGetValue(key, out TValue value))
+            {
+                value = IncrementValue(value);
+                dictionary[key] = value;
+            }
+        }
+    }
+
+    private TValue IncrementValue(TValue value)
+    {
+        if (value is int intValue)
+        {
+            intValue++;
+            return (TValue)(object)intValue;
+        }
+        else
+        {
+            Debug.LogError("Unsupported value type for increment: " + value.GetType());
+            return value;
+        }
+    }
+
+    public int GetIndexByKey(TKey keyToFind)
+    {
+        int index = keys.IndexOf(keyToFind);
+        return index;
+    }
+
+    public int FindIndexByValueProperty(Func<TValue, bool> predicate)
+    {
+        for (int i = 0; i < keys.Count; i++)
+        {
+            TKey key = keys[i];
+            TValue value = values[i];
+
+            if (predicate(value))
+            {
+                return i; // Return the index of the matching object
+            }
+        }
+        Debug.Log("Did not find a value match");
+        return -1; // No match found
+    }
+
 }

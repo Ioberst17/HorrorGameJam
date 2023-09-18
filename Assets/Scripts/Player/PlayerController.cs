@@ -1,39 +1,26 @@
 using JetBrains.Annotations;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using Unity.Burst.CompilerServices;
 //using UnityEditorInternal;
 //using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
-using UnityEngine.Windows;
 
 public class PlayerController : Controller
 {
     [Header("Player Specific Controller Values")]
     //External References
     DataManager dataManager;
-    private GameController gameController;
-    [SerializeField] private Transform cameraFocus;
-    [SerializeField] private LayerMask whatIsEnemy;
+    GameController gameController;
+    [SerializeField] Transform cameraFocus;
+    [SerializeField] LayerMask whatIsEnemy;
 
     // Other player references e.g. animators and abilities
-    private PlayerAnimator animator;
-    public PlayerVisualEffectsController visualEffects;
-    private PlayerPrimaryWeapon playerPrimaryWeapon;
-    private PlayerShield playerShield;
+    PlayerAnimator animator;
+    PlayerVisualEffectsController visualEffects;
+    PlayerShield playerShield;
     PlayerDash playerDash;
     PlayerJump playerJump;
-    private GroundSlam groundSlam;
-    private ChargePunch chargePunch;
-    private PlayerSecondaryWeaponThrowHandler playerSecondaryWeaponThrowHandler;
-    //Health points, magic points, soul points (currency)
-    [SerializeField] private PlayerHealth playerHealth;
-    [SerializeField] private PlayerStamina playerStamina;
-    [SerializeField] private PlayerMana playerMana;
+    ChargePunch chargePunch;
+    PlayerThrowHandler playerSecondaryWeaponThrowHandler;
 
     // alt idle animations
     public float thresholdToTransitionToIdle;
@@ -44,13 +31,29 @@ public class PlayerController : Controller
 
     [SerializeField] private Transform parentTransform;
 
+    override public bool IsAttacking
+    {
+        get { return _isAttacking; }
+        set
+        {
+            if (value == false) { EventSystem.current.EndActiveMeleeTrigger(); }
+            _isAttacking = value;
+        }
+    }
 
-    //Set all the initial values
 
     private void OnEnable()
     {
         EventSystem.current.onPlayerDeathTrigger += PlayerDeath;
         EventSystem.current.onGameFileLoaded += SetPosition;
+        EventSystem.current.onPlayerHitPostHealthTrigger += PlayerHitHandler;
+    }
+
+    private void OnDestroy()
+    {
+        EventSystem.current.onPlayerDeathTrigger -= PlayerDeath;
+        EventSystem.current.onGameFileLoaded -= SetPosition;
+        EventSystem.current.onPlayerHitPostHealthTrigger -= PlayerHitHandler;
     }
 
     override protected void Start()
@@ -59,7 +62,6 @@ public class PlayerController : Controller
         dataManager = DataManager.Instance;
 
         gameController = FindObjectOfType<GameController>();
-        playerPrimaryWeapon = GetComponentInChildren<PlayerPrimaryWeapon>();
         playerShield = GetComponentInChildren<PlayerShield>();
         playerJump = GetComponentInChildren<PlayerJump>();
         playerDash = GetComponentInChildren<PlayerDash>();
@@ -70,10 +72,7 @@ public class PlayerController : Controller
         animator = GetComponentInChildren<PlayerAnimator>(true);
         visualEffects = GetComponentInChildren<PlayerVisualEffectsController>();
 
-        if (GetComponent<PlayerHealth>() != null) { playerHealth = GetComponent<PlayerHealth>(); }
-        else { Debug.Log("PlayerHealth.cs is being requested as a component of the same object as PlayerController.cs, but could not be found on the object"); }
-        groundSlam = GetComponentInChildren<GroundSlam>();
-        playerSecondaryWeaponThrowHandler = GetComponentInChildren<PlayerSecondaryWeaponThrowHandler>();
+        playerSecondaryWeaponThrowHandler = GetComponentInChildren<PlayerThrowHandler>();
     }
 
     override protected void FixedUpdate() // these dataManager points are used during save to have a last known location
@@ -83,10 +82,12 @@ public class PlayerController : Controller
         dataManager.sessionData.lastKnownWorldLocationY = transform.position.y;
     }
 
-    //Does anything in the environment layer overlap with the circle while not on the way up
+    /// <summary>
+    /// Updates by using the groundcheck circle below - checks for overlap circle with the 'Environment' layer
+    /// </summary>
     override public void CheckGround()
     {
-        if (RB.velocity.y == 0.0f) { _isGrounded = Physics2D.OverlapCircle(groundCheck.position, GroundCheckRadius, whatIsGround); }
+        if (RB.velocity.y == 0.0f) { _isGrounded = Physics2D.OverlapCircle(GroundCheck.position, GroundCheckRadius, whatIsGround); }
         else 
         {
             _isGrounded = false;
@@ -108,10 +109,7 @@ public class PlayerController : Controller
             if (!playerDash.IsDashing) { playerDash.CanDash = true; }
             PlayerCrouch(); 
         }
-        else if (!_isGrounded)
-        {
-            playerJump.CanJump = false;
-        }
+        else if (!_isGrounded) { playerJump.CanJump = false; }
 
         if(_isAgainstWall && !_isGrounded) { animator.Play("PlayerWallLand"); _isWallHanging = true; }
         else { _isWallHanging = false; }
@@ -133,31 +131,33 @@ public class PlayerController : Controller
         }
     }
 
-    //called by the GameController, Cutscenes (Cutscene.cs), and by PlayerController for idling
-    //'optional' parameters are used by cutscenes
+    /// <summary>
+    /// Called by the GameController, Cutscenes (Cutscene.cs), and by PlayerController for idling 'optional' parameters are used by cutscenes
+    /// </summary>
+    /// <param name="optionalCutsceneDestination"></param>
+    /// <param name="optionalXAdjustment"></param>
     public void ApplyMovement(Vector3? optionalCutsceneDestination = null, float optionalXAdjustment = 0f) 
     {
         // if you have a target destination / cutscene, automate movement
         if (optionalCutsceneDestination.HasValue) { CutsceneMovementHandler(optionalCutsceneDestination, optionalXAdjustment); }
 
-        if (!InHitStun && !playerDash.IsDashing && !chargePunch.IsCharging && !playerSecondaryWeaponThrowHandler.inActiveThrow)
+        if (!IsStunned && !InHitStun && !playerDash.IsDashing && !chargePunch.IsCharging && !playerSecondaryWeaponThrowHandler.inActiveThrow)
         {
-            if (_isGrounded && !playerJump.IsJumping) //if on ground
+            if (_isGrounded && !playerJump.IsJumping && !IsCrouching) //if on ground
             {
-                SetVelocity(MovementSpeed * ControlMomentum/10, RB.velocity.y);
+                SetVelocity(MovementSpeed * ControlMomentum/10, null);
                 
-                if(!IsAttacking && !playerJump.IsJumping)
+                if(/*!IsAttacking && */!playerJump.IsJumping)
                 {
                     if ((RB.velocity.x == 0 && !playerShield.shieldOn && !IsCrouching) || DialogueManager.GetInstance().DialogueIsPlaying) // if still and not shielding or cutscene manager is on
                     {
                         if (gameController.timeSinceInput > thresHoldToLoopAlternativeIdleAnimation) { animator.Play("PlayerMeditate"); }
                         else if (gameController.timeSinceInput > thresholdToTransitionToIdle) { animator.Play("PlayerStandToMeditate"); }
-                        else { IdlePlayer(); }     
+                        else { PlayerIdle(); }     
                     }
                     else if(RB.velocity.x != 0 && !IsCrouching) // if moving
                     {
-                        animator.Play("PlayerRun");
-                        IsRunning = true;
+                        PlayerRun();
                         visualEffects.PlayParticleSystem("MovementDust");
                     }
                 }
@@ -166,7 +166,7 @@ public class PlayerController : Controller
             else if (!_isGrounded) //If in air
             {
                 IsRunning = false;
-                SetVelocity(MovementSpeed * ControlMomentum/10, RB.velocity.y);
+                SetVelocity(MovementSpeed * ControlMomentum / 10, null); 
             }
         }
         else if (chargePunch.IsCharging) 
@@ -195,12 +195,15 @@ public class PlayerController : Controller
         // use ints, since player and position floats exactly overlapping is rare
         if ((int)transform.position.x == (int)(pointToReach.x + adjustmentInXDirection)) 
         {
-            IdlePlayer();
+            PlayerIdle();
             return false; 
         } 
         return true;
     }
 
+    /// <summary>
+    /// Updates player's momentum variable based on player input
+    /// </summary>
     public void UpdateMomentum()
     {
         if (gameController.XInput > 0 && ControlMomentum < 10)
@@ -224,6 +227,13 @@ public class PlayerController : Controller
         else if (gameController.XInput < 0 && ControlMomentum < -10) { ControlMomentum += 1; }
     }
 
+    void PlayerHitHandler(Vector3 enemyPost, float knockBackMod, bool hitInActiveShieldZone) 
+    {
+        HandleHitPhysics(enemyPost, knockBackMod);
+        if (!hitInActiveShieldZone) { StartCoroutine(HitStun()); }
+    }
+
+
     //Calculated direction of hit for knockback direction.
     override public void HandleHitPhysics(Vector3 enemyPos, float knockbackMod)
     {
@@ -238,7 +248,7 @@ public class PlayerController : Controller
             AddForce(0.0f, knockbackForce / 3);
         }
     }
-
+    
     override protected void HitStunBlink()
     {
         if (InHitStun)
@@ -266,21 +276,30 @@ public class PlayerController : Controller
     // handles crouching logic, assumes player is grounded
     void PlayerCrouch()
     {
-        if(IsCrouching == true && gameController.YInput >= 0) { IsCrouching = false; animator.Play("PlayerCrouchToStand"); }
-        else if (IsCrouching == true && gameController.YInput < 0) { animator.Play("PlayerCrouch"); }
-        else if(IsCrouching == false && gameController.YInput < 0) { IsCrouching = true; animator.Play("PlayerStandToCrouch"); }
+        if(IsCrouching == true && gameController.YInput >= 0f) { IsCrouching = false; animator.Play("PlayerCrouchToStand"); }
+        else if (IsCrouching == true && gameController.YInput < -0.8f) { animator.Play("PlayerCrouch"); }
+        else if(IsCrouching == false && gameController.YInput < -0.8f) { IsCrouching = true; animator.Play("PlayerStandToCrouch"); }
         
     }
-    public void IdlePlayer(bool doRegardlessOfPlayerInput = false) // if this optional value is called with a true, animator will play idle 
+    public void PlayerIdle(bool doRegardlessOfPlayerInput = false) // if this optional value is called with a true, animator will play idle 
     {
         SetVelocity();
         IsRunning = false; IsCrouching = false; IsGrounded = true;
+        ToggleRunAndIdleAnimationPriority("PlayerIdle");
         if (doRegardlessOfPlayerInput || gameController.XInput == 0)  { animator.Play("PlayerIdle");  }
     }
 
-    private void OnDestroy()
+    public void PlayerRun()
     {
-        EventSystem.current.onPlayerDeathTrigger -= PlayerDeath;
-        EventSystem.current.onGameFileLoaded -= SetPosition;
+        IsRunning = true;
+        ToggleRunAndIdleAnimationPriority("PlayerRun");
+        animator.Play("PlayerRun");
+    }
+
+    // allows run and idle to switch priority; helpful when stopping
+    void ToggleRunAndIdleAnimationPriority(string animationName)
+    {
+        if(animationName == "PlayerRun") { animator.UpdateAnimationStatePriority("PlayerRun", -2); animator.UpdateAnimationStatePriority("PlayerIdle", -3); }
+        else if(animationName == "PlayerIdle") { animator.UpdateAnimationStatePriority("PlayerRun", -3); animator.UpdateAnimationStatePriority("PlayerIdle", -2); }
     }
 }

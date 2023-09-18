@@ -16,6 +16,10 @@ public class EnemyCreationForTesting : MonoBehaviour
     public Transform[] areaSpawnPoints;
     [SerializeField] private SpawnPoint[] levelSpawnPoints;
 
+    // enemy spawnings
+    public GameObject spawnedEnemy;
+    public Collider2D enemyCollider;
+
     // used for as data for positioning
     public GameObject player;
     public PlayerController playerController;
@@ -79,26 +83,31 @@ public class EnemyCreationForTesting : MonoBehaviour
 
     public void SpawnEnemy(int idNum) // main function
     {
-        if (idNum >= 0 && idNum <=6)
+        if (idNum >= 0 && idNum <=7)
         {
             if (SceneManager.GetActiveScene().name == "CombatMode") // in combat mode spawning, from spawnPoints
             {
                 chosenSpawnPoint = PickSpawnPoint();
-                chosenSpawnPoint = AdjustIfSpawnHasCollision(idNum, chosenSpawnPoint);
-                Instantiate(enemyPrefabs[idNum], chosenSpawnPoint, Quaternion.identity);
-                Debug.Log("Spawned " + enemyPrefabs[idNum].name + " at location " + chosenSpawnPoint);
+                spawnedEnemy = Instantiate(enemyPrefabs[idNum], chosenSpawnPoint, Quaternion.identity);
+                enemyCollider = spawnedEnemy.GetComponent<Collider2D>();
+                spawnedEnemy.transform.position = AdjustIfSpawnHasCollision(spawnedEnemy.transform.position, enemyCollider);
+                Debug.Log("Spawned " + enemyPrefabs[idNum].name + " at location; " + spawnedEnemy.transform.position + ". Its position before any adjustment was: " + chosenSpawnPoint);  ;
             }
             else // in standard game debug spawning, relative to player spawnpoint
             {
                 var spawnLocation = player.transform.position + new Vector3(spawnX, spawnY, spawnZ);
-                Instantiate(enemyPrefabs[idNum], spawnLocation, Quaternion.identity);
+                spawnedEnemy = Instantiate(enemyPrefabs[idNum], spawnLocation, Quaternion.identity);
                 Debug.Log("Spawned " + enemyPrefabs[idNum].name + " at location " + chosenSpawnPoint);
             }  
             TrackDataInMixPanel(idNum);
         }
     }
 
-    Vector3 PickSpawnPoint() // get all distances and choose a spawnPoint based on the public array levelSpawnPoints
+    /// <summary>
+    /// // Get all distances and choose a spawnPoint based on the public array levelSpawnPoints
+    /// </summary>
+    /// <returns>Returns Vector3 world position information for pawn</returns>
+    Vector3 PickSpawnPoint() 
     {
         return ChooseASpawnPoint(GetSpawnPointDistances());
     }
@@ -120,43 +129,46 @@ public class EnemyCreationForTesting : MonoBehaviour
         return levelSpawnPoints[SelectionLogic(possibleSpawnPointDistances)].position;
     }
 
-    private Vector3 AdjustIfSpawnHasCollision(int idNum, Vector3 spawnLocation) // adjust up if collides with ground ('Environment' Layer)
+    /// <summary>
+    /// Adjusts the spawn position of an enemy upwards to avoid ground collisions.
+    /// </summary>
+    /// <param name="idNum">Index of the enemy prefab in the array.</param>
+    /// <param name="spawnLocation">Original spawn location.</param>
+    /// <returns>New spawn position.</returns>
+    private Vector3 AdjustIfSpawnHasCollision(Vector3 currentPosition, Collider2D enemyCollider)
     {
-        // get the collider of the enemy prefab
-        Collider2D enemyCollider = enemyPrefabs[idNum].GetComponent<Collider2D>();
+        // OverlapBoxAll requires half extents, not bounds size directly
+        Vector2 halfExtents = enemyCollider.bounds.extents * 0.5f;
 
-        // get an array of colliders within the bounds of the enemy's collider
-        Collider2D[] colliders = Physics2D.OverlapBoxAll(spawnLocation + (Vector3)enemyCollider.offset, enemyCollider.bounds.size, 0f, LayerMask.GetMask("Environment"));
+        // Gets all ground/environment colliders that overlap with the enemy collider
+        Collider2D[] colliders = Physics2D.OverlapBoxAll(currentPosition + (Vector3)enemyCollider.offset, halfExtents, 0f, LayerMask.GetMask("Environment"));
 
-        // check if any of the colliders overlap with the ground collider
-        bool overlap = true;
-        while (overlap)
+        // Adjust enemy position up until it doesn't overlap with any environment colliders
+        foreach (Collider2D collider in colliders)
         {
-            overlap = false;
-            foreach (Collider2D collider in colliders)
+            if (collider == null) continue;
+
+            // Check if the collider is on the "Environment" layer
+            if (collider.gameObject.layer == LayerMask.NameToLayer("Environment"))
             {
-                if (collider == null) { continue; }
-                if (collider.gameObject.layer == LayerMask.NameToLayer("Environment"))
+                // Adjust the spawn location and recheck
+                while (enemyCollider.bounds.Intersects(collider.bounds))
                 {
-                    // check if the enemy collides with the other collider
-                    if (enemyCollider.bounds.Intersects(collider.bounds))
-                    {
-                        // adjust the spawn location and repeat the check
-                        spawnLocation += Vector3.up * 0.5f;
-                        colliders = Physics2D.OverlapBoxAll(spawnLocation + (Vector3)enemyCollider.offset, enemyCollider.bounds.size, 0f, LayerMask.GetMask("Environment"));
-                        overlap = true;
-                        break;
-                    }
+                    currentPosition += Vector3.up * 0.5f;
                 }
             }
         }
 
-        // adjust the spawn location to be above ground (in case overlapBoxAll missed something)
-        RaycastHit2D hit = Physics2D.Raycast(spawnLocation, Vector2.down, 100f, LayerMask.GetMask("Environment"));
-        if (hit.collider != null) { spawnLocation = hit.point + Vector2.up * 0.5f; }
+        // Adjust the spawn location to be above ground (in case overlapBoxAll missed something)
+        RaycastHit2D hit = Physics2D.Raycast(currentPosition, Vector2.down, 100f, LayerMask.GetMask("Environment"));
+        if (hit.collider != null)
+        {
+            currentPosition = hit.point + Vector2.up * 0.5f;
+        }
 
-        return spawnLocation;
+        return currentPosition;
     }
+
 
     void TrackDataInMixPanel(int idNum)
     {
