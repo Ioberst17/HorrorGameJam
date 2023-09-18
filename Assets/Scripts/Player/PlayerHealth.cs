@@ -6,10 +6,7 @@ using UnityEngine;
 public class PlayerHealth : Health
 {
     // External References
-    private PlayerAnimator animator;
     public PlayerController playerController;
-    private ChargePunch chargePunch;
-
 
     [SerializeField] private UIHealthChangeDisplay damageDisplay;
     public float lucidityDamageModifier;
@@ -18,9 +15,7 @@ public class PlayerHealth : Health
     { 
         playerController = GetComponent<PlayerController>(); 
         shield = GetComponentInChildren<Shield>();
-        chargePunch = GetComponentInChildren<ChargePunch>();
         damageDisplay = GetComponentInChildren<UIHealthChangeDisplay>();
-        animator = ComponentFinder.GetComponentInChildrenByNameAndType<PlayerAnimator>("Animator", this.gameObject, true);
         lucidityDamageModifier = 1;
         EventSystem.current.onPlayerHitCalcTrigger += Hit;
     }

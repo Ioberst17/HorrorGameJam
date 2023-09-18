@@ -1,11 +1,5 @@
-using Ink.Parsed;
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using Unity.Burst.CompilerServices;
 using UnityEngine;
-using UnityEngine.Networking;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 [RequireComponent(typeof(Collider2D))] // for detection
 public class Shield : MonoBehaviour

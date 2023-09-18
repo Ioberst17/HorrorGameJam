@@ -104,6 +104,10 @@ public class EnemyProjectileManager : ProjectileManager
         } 
     }
 
+    /// <summary>
+    ///  This is called from a keyframe in an animation
+    /// </summary>
+    /// <param name="instanceID"></param>
     override protected void DirectShotFromAnimation(int instanceID)
     {
         if (transform.parent.gameObject.GetInstanceID() == instanceID)

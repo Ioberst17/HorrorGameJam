@@ -162,6 +162,7 @@ public class Controller : MonoBehaviour
         Debug.Log("Applying a status effect named: " + mod + " to: " + gameObject.name);
         if (mod == "DemonBlood") { if (GetComponentInChildren<Poisoned>() != null) { GetComponentInChildren<Poisoned>().Execute(); } }
         else if (mod == "Burn") { if (GetComponentInChildren<Burnable>() != null) { GetComponentInChildren<Burnable>().Execute(); } }
+        else if (mod == "Freeze") { if (GetComponentInChildren<Frozen>() != null) { GetComponentInChildren<Frozen>().Execute(); } }
         else if (mod == "Stunned") { if (GetComponentInChildren<Stunned>() != null) { GetComponentInChildren<Stunned>().Execute(); } }
     }
 }

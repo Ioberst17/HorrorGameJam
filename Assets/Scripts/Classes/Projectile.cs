@@ -17,6 +17,7 @@ public class Projectile : IDatabaseItem
 
     public bool isShot, isThrown, isExplosive, isFixedDistance, isTargeted;
 
+    // used by projectiles that must complete a cycle e.g. targeted spells that will play through the animation
     public bool playTillEnd;
 
     public string statusModifier;

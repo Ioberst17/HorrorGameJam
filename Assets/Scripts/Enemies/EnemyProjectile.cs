@@ -21,6 +21,7 @@ public class EnemyProjectile : ProjectileBase
             else if (!projectile.isExplosive) { Remove(); }
         }
     }
+
     override protected void UpdateInstanceID() { Debug.Log("Instance ID is: " + gameObject.GetInstanceID()); instanceID = gameObject.GetInstanceID(); }
 
     override protected void ColliderOn(int instanceID) { if (instanceID == gameObject.GetInstanceID()) { hitCollider.enabled = true; Debug.Log("ColliderOn"); } }

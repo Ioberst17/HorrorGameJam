@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting.ReorderableList;
 using UnityEngine;
 
 /// <summary>
@@ -70,7 +69,8 @@ public class ProjectileBase : MonoBehaviour
     {
         if (!projectile.playTillEnd)
         {
-            if (col.gameObject.tag == "Boundary" || col.gameObject.tag == "Platform" || col.gameObject.layer == BreakableEnviroLayer)
+            if (col.gameObject.tag == "Boundary" || col.gameObject.tag == "Platform" || 
+                    col.gameObject.layer == BreakableEnviroLayer)
             {
                 RigidbodyEnabled = false;
                 if (projectile.isExplosive) { ExplosionHandler(); }

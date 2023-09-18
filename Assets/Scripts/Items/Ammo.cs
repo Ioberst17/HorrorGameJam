@@ -10,7 +10,8 @@ public class Ammo : ProjectileBase
 
     override protected void HitEnemyObject(Collision2D col)
     {
-        if (col.gameObject.GetComponent<EnemyController>() != null)
+        if (col.gameObject.GetComponent<EnemyController>() != null ||
+                col.gameObject.GetComponent<EnemyProjectile>() != null)
         {
             RigidbodyEnabled = false;
             if (projectile.isExplosive) { ExplosionHandler(); }

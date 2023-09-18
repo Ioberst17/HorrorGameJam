@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,9 +20,14 @@ public class EnemyBehaviour : MonoBehaviour
     protected float targetXVelocity = 0;
     protected float targetYVelocity = 0;
     protected float chaseSpeed;
-    
-    // used during passover function
-    protected string patrolAnimation, chaseAnimation;
+    protected float StopPursuitAtThisDistance { get; set; } // used for enemies that need to keep distance from player e.g. those that shoot
+
+    // used during passover function, stores string of the animation state to call
+    protected string PatrolAnimation { get; set; }
+    protected string ChaseAnimation { get; set; }
+    protected string ProjectileAnimation { get; set; }
+    protected string ChargeAttackAnimation { get; set; }
+
 
 
     virtual protected void Start()
@@ -76,7 +82,7 @@ public class EnemyBehaviour : MonoBehaviour
     /// </summary>
     virtual protected void Patrol()
     {
-        enemyController.animator.Play(patrolAnimation);
+        enemyController.animator.Play(PatrolAnimation);
 
         switch (enemyController.patrolID)
         {
@@ -109,13 +115,17 @@ public class EnemyBehaviour : MonoBehaviour
     /// </summary>
     virtual protected void Chase()
     {
-        enemyController.animator.Play(chaseAnimation);
+        if (Math.Abs(enemyController.playerLocation.position.x - transform.position.x) > StopPursuitAtThisDistance)
+        {
+            enemyController.animator.Play(ChaseAnimation);
 
-        chaseSpeed = enemyController.MovementSpeed * 1.5f;
-        targetXVelocity = (enemyController.playerLocation.position.x >= transform.position.x) ? chaseSpeed : -chaseSpeed;
-        if (enemyData.data.isFlying) { targetYVelocity = (enemyController.playerLocation.position.y < transform.position.y) ? -enemyController.MovementSpeed : enemyController.MovementSpeed; }
+            chaseSpeed = enemyController.MovementSpeed * 1.5f;
+            targetXVelocity = (enemyController.playerLocation.position.x >= transform.position.x) ? chaseSpeed : -chaseSpeed;
+            if (enemyData.data.isFlying) { targetYVelocity = (enemyController.playerLocation.position.y < transform.position.y) ? -enemyController.MovementSpeed : enemyController.MovementSpeed; }
 
-        enemyController.SetVelocity(targetXVelocity, targetYVelocity);
+            enemyController.SetVelocity(targetXVelocity, targetYVelocity);
+        }
+        else { /* do nothing */ }
     }
 
     /// <summary>
