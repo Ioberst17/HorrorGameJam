@@ -276,9 +276,9 @@ public class PlayerController : Controller
     // handles crouching logic, assumes player is grounded
     void PlayerCrouch()
     {
-        if(IsCrouching == true && gameController.YInput >= 0f) { IsCrouching = false; animator.Play("PlayerCrouchToStand"); }
-        else if (IsCrouching == true && gameController.YInput < -0.8f) { animator.Play("PlayerCrouch"); }
-        else if(IsCrouching == false && gameController.YInput < -0.8f) { IsCrouching = true; animator.Play("PlayerStandToCrouch"); }
+        if(IsCrouching == true && gameController.YInput >= 0f) { IsCrouching = false; animator.Play("PlayerCrouchToStand"); SetVelocity(); }
+        else if (IsCrouching == true && gameController.YInput < -0.8f && !playerDash.IsDashing) { animator.Play("PlayerCrouch"); SetVelocity(); }
+        else if(IsCrouching == false && gameController.YInput < -0.8f) { IsCrouching = true; animator.Play("PlayerStandToCrouch"); SetVelocity(); }
         
     }
     public void PlayerIdle(bool doRegardlessOfPlayerInput = false) // if this optional value is called with a true, animator will play idle 
@@ -299,6 +299,7 @@ public class PlayerController : Controller
     // allows run and idle to switch priority; helpful when stopping
     void ToggleRunAndIdleAnimationPriority(string animationName)
     {
+        // If running, run should have higher priority, else idle should
         if(animationName == "PlayerRun") { animator.UpdateAnimationStatePriority("PlayerRun", -2); animator.UpdateAnimationStatePriority("PlayerIdle", -3); }
         else if(animationName == "PlayerIdle") { animator.UpdateAnimationStatePriority("PlayerRun", -3); animator.UpdateAnimationStatePriority("PlayerIdle", -2); }
     }

@@ -35,6 +35,9 @@ public class PlayerBodyAnimator : PlayerBaseAnimator
         CheckIfAttackFlagShouldBeCancelled();
     }
 
+    /// <summary>
+    /// Failsafe to ensure that player's IsAttacking status is turned off if not animation an attack
+    /// </summary>
     void CheckIfAttackFlagShouldBeCancelled()
     {
         if (!attackAnimations.Contains(CurrentAnimationName))

@@ -43,5 +43,8 @@ public class PlayerAnimationStates
             "PlayerSideKick",
             "PlayerSideKnee",
             "PlayerThrow",
+
+        // SHOOTING
+        "PlayerShoot", "PlayerShootReturn"
     };
 }

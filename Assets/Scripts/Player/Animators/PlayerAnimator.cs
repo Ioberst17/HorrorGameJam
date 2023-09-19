@@ -10,7 +10,7 @@ using static PlayerAnimator;
 
 
 /// <summary>
-/// Interface into the players different animation parts: Base, RightArm, LeftArm, Weapon
+/// Interface into the players different animation parts: Base, RightArm, LeftArm, Weapon.
 /// </summary>
 public class PlayerAnimator : PlayerBaseAnimator 
 {
@@ -74,9 +74,12 @@ public class PlayerAnimator : PlayerBaseAnimator
     void Update()
     {
         CheckIfIdleAnimationIsSynced();
+        CheckIfArmsAndWeaponNeedToBeSynced();
     }
 
-    // play an animation
+    /// <summary>
+    /// Plays 
+    /// </summary>
     public void Play(string animationName, PlayerPart playerPart = PlayerPart.All,
         bool playBase = true, bool playRightArm = true, bool playLeftArm = true, bool playWeapon = true) // optional: used to exclude by turning to false
     {
@@ -93,7 +96,11 @@ public class PlayerAnimator : PlayerBaseAnimator
         }
     }    
     
-    // invokes a function from an animator; calls all unless a specific animator is needed, in which case it gets it from the enum
+    /// <summary>
+    /// Invokes a function from an animator; calls all unless a specific animator is needed, in which case it gets it from the enum
+    /// </summary>
+    /// <param name="animationName"></param>
+    /// <param name="playerPartPassedIn"></param>
     public void PlayFunction(string animationName, PlayerPart playerPartPassedIn = PlayerPart.All)
     {
         if (playerPartPassedIn == PlayerPart.All)
@@ -112,7 +119,11 @@ public class PlayerAnimator : PlayerBaseAnimator
         }
     }
 
-    // play a coroutine that triggers a sequence of animations
+    /// <summary>
+    /// Play a coroutine that triggers a sequence of code involving animations
+    /// </summary>
+    /// <param name="animationName"></param>
+    /// <param name="playerPart"></param>
     virtual public void PlayCoroutine(string animationName, PlayerPart playerPart = PlayerPart.All)
     {
         if (playerPart == PlayerPart.All)
@@ -128,6 +139,12 @@ public class PlayerAnimator : PlayerBaseAnimator
         }
     }
 
+    /// <summary>
+    /// Used to update animation state priority; this can be used to toggle if an animation needs to be played vs another animation
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="priorityLevel"></param>
+    /// <param name="playerPart"></param>
     override public void UpdateAnimationStatePriority(string name, int priorityLevel, PlayerPart playerPart = PlayerPart.All)
     {
         if (playerPart == PlayerPart.All)
@@ -162,33 +179,26 @@ public class PlayerAnimator : PlayerBaseAnimator
         foreach(SpriteRenderer sprite in spriteRenderers) { sprite.enabled = state; }
     }
 
+    /// <summary>
+    /// Checks if idle animation is synced across player i.e. if body is in idle state, every other part should be in idle state
+    /// </summary>
     void CheckIfIdleAnimationIsSynced()
     {
         //if idle animations are playing
         if (IsIdleAnimationPlaying())
         {
             // get there normalized times
-            baseIdleNormalizedTime = baseAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime;
-            rightArmIdleNormalizedTime = rightArmAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime;
-            leftArmIdleNormalizedTime = leftArmAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime;
-            weaponIdleNormalizedTime = weaponAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+            GetNormalizedTimes();
 
             // synchronize them if they exceed the need to sync threshold
-            if (Mathf.Abs(baseIdleNormalizedTime - rightArmIdleNormalizedTime) > synchronizationThreshold ||
-                Mathf.Abs(baseIdleNormalizedTime - leftArmIdleNormalizedTime) > synchronizationThreshold ||
-                Mathf.Abs(rightArmIdleNormalizedTime - leftArmIdleNormalizedTime) > synchronizationThreshold)
-            {
-                maxIdleNormalizedTime = Mathf.Max(baseIdleNormalizedTime, rightArmIdleNormalizedTime, leftArmIdleNormalizedTime);
-
-                baseAnimator.Play("PlayerIdle", 0, maxIdleNormalizedTime);
-                rightArmAnimator.Play("PlayerIdle", 0, maxIdleNormalizedTime);
-                leftArmAnimator.Play("PlayerIdle", 0, maxIdleNormalizedTime);
-                weaponAnimator.Play("PlayerIdle", 0, maxIdleNormalizedTime);
-            }
+            if (OutsideOfIdleSyncThreshold()) { SyncIdleStates(); }
         }
     }
 
-    // check if idle animation is playing in all animators
+    /// <summary>
+    /// Check if idle animation is playing in all animators
+    /// </summary>
+    /// <returns></returns>
     private bool IsIdleAnimationPlaying()
     {
         return baseAnimator.GetCurrentAnimatorStateInfo(0).IsName("PlayerIdle") &&
@@ -196,4 +206,67 @@ public class PlayerAnimator : PlayerBaseAnimator
                leftArmAnimator.GetCurrentAnimatorStateInfo(0).IsName("PlayerIdle") &&
                weaponAnimator.GetCurrentAnimatorStateInfo(0).IsName("PlayerIdle");
     }
+
+    /// <summary>
+    /// Gets the normalized time of each animator
+    /// </summary>
+    private void GetNormalizedTimes()
+    {
+        baseIdleNormalizedTime = baseAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+        rightArmIdleNormalizedTime = rightArmAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+        leftArmIdleNormalizedTime = leftArmAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+        weaponIdleNormalizedTime = weaponAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+    }
+
+    /// <summary>
+    /// Checks if the animators are outside of their sync thresholds
+    /// </summary>
+    /// <returns></returns>
+    private bool OutsideOfIdleSyncThreshold()
+    {
+        return Mathf.Abs(baseIdleNormalizedTime - rightArmIdleNormalizedTime) > synchronizationThreshold ||
+                Mathf.Abs(baseIdleNormalizedTime - leftArmIdleNormalizedTime) > synchronizationThreshold ||
+                Mathf.Abs(rightArmIdleNormalizedTime - leftArmIdleNormalizedTime) > synchronizationThreshold;
+    }
+
+    /// <summary>
+    /// Animations are synced based on the normalized time of the furthest idle state
+    /// </summary>
+    void SyncIdleStates()
+    {
+        maxIdleNormalizedTime = Mathf.Max(baseIdleNormalizedTime, rightArmIdleNormalizedTime, leftArmIdleNormalizedTime);
+
+        SetNormalizedTime(baseAnimator, maxIdleNormalizedTime);
+        SetNormalizedTime(rightArmAnimator, maxIdleNormalizedTime);
+        SetNormalizedTime(leftArmAnimator, maxIdleNormalizedTime);
+        SetNormalizedTime(weaponAnimator, maxIdleNormalizedTime);
+    }
+
+    private void SetNormalizedTime(Animator animator, float normalizedTime)
+    {
+        animator.Play("PlayerIdle", 0, normalizedTime);
+    }
+
+    void CheckIfArmsAndWeaponNeedToBeSynced()
+    {
+        if (CheckAnimationState("PlayerIdle", rightArmAnimator))
+        {
+            GetNormalizedTimes();
+            SyncArmsAndWeapon();
+        }
+    }
+
+    void SyncArmsAndWeapon()
+    {
+        if(maxIdleNormalizedTime < 0.5f)
+        {
+            maxIdleNormalizedTime = Mathf.Max(baseIdleNormalizedTime, rightArmIdleNormalizedTime, leftArmIdleNormalizedTime);
+
+            rightArmAnimator.Play("PlayerIdle", 0, rightArmIdleNormalizedTime);
+            leftArmAnimator.Play("PlayerIdle", 0, rightArmIdleNormalizedTime);
+            weaponAnimator.Play("PlayerIdle", 0, rightArmIdleNormalizedTime);
+        }
+    }
+
+
 }
