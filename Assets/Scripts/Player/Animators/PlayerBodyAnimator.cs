@@ -43,9 +43,9 @@ public class PlayerBodyAnimator : PlayerBaseAnimator
         if (!attackAnimations.Contains(CurrentAnimationName))
         {
             if (playerController.IsAttacking != false) { playerController.IsAttacking = false; }
-            if (previousAnimationName == "PlayerGroundSlam" ||
-                (previousAnimationName != "PlayerGroundSlam" && CurrentAnimationName != "PlayerGroundSlam"))
-            { groundSlam.IsGroundSlam = false; }
+            //if (previousAnimationName == "PlayerGroundSlam" ||
+            //    (previousAnimationName != "PlayerGroundSlam" && CurrentAnimationName != "PlayerGroundSlam"))
+            //{ groundSlam.IsGroundSlam = false; }
         }
     }
 }

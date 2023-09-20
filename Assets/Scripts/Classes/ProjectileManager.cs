@@ -23,6 +23,7 @@ public class ProjectileManager : MonoBehaviour
     public int currentAmmoIndex;
 
     [SerializeField] public Transform projectileSpawnPoint; // assigned in inspector
+    protected Vector3 bulletDir; // used for throws
 
     protected virtual void Start()
     {
@@ -132,6 +133,50 @@ public class ProjectileManager : MonoBehaviour
         // Apply force to the projectile in the calculated direction
         Rigidbody2D rb = shot.GetComponent<Rigidbody2D>();
         rb.velocity = GetParabolicVelocityNeeded(direction);
+    }
+
+    protected void ThrowWeapon()
+    {
+        // instantiate thrown weapon
+        GameObject toss = Instantiate(projectilesToUse[currentAmmoIndex], projectileSpawnPoint.position, projectileSpawnPoint.transform.rotation);
+
+        toss.GetComponent<ProjectileBase>().projectile = MostRecentProjectile;
+
+        // get relevant data
+        var projectile = toss.GetComponent<ProjectileBase>().projectile;
+
+        // set direction
+        if (GetComponent<PlayerSecondaryWeapon>() != null) { bulletDir = GetThrowDirection(); }
+
+        // play toss audio
+        FindObjectOfType<AudioManager>().PlaySFX(projectile.audioOnUse);
+
+        // give proper gravity
+        toss.GetComponent<Rigidbody2D>().gravityScale = projectile.startingGravityScale;
+
+        // add throw force
+        AddThrowForce(toss);
+
+        // reset conditions
+        ResetThrow();
+    }
+
+    /// <summary>
+    /// Used by player's secondary weapon / projectile manager to add a bullet direction; To-Do: there should be a version for enemies as well
+    /// </summary>
+    virtual protected Vector3 GetThrowDirection()
+    {
+        return Vector3.zero;
+    }
+
+    virtual protected void AddThrowForce(GameObject toss)
+    {
+
+    }
+
+    virtual protected void ResetThrow()
+    {
+
     }
 
     virtual protected void UseTargetedSpell(int instanceID) 

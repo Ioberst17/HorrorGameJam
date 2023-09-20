@@ -12,6 +12,8 @@ public class PlayerSecondaryWeapon : ProjectileManager
     // EXTERNAL REFERENCES
     GameController gameController;
     PlayerAnimator animator;
+    SecondaryWeaponsManager secondaryWeaponsManager;
+    PlayerThrowHandler playerThrowHandler;
 
     [Header("Weapon Settings")]
     WeaponDatabase weaponDatabase;
@@ -38,6 +40,8 @@ public class PlayerSecondaryWeapon : ProjectileManager
         // get object and component references
         gameController = FindObjectOfType<GameController>();
         playerProjectileDatabase = FindObjectOfType<PlayerProjectileDatabase>();
+        secondaryWeaponsManager = GetComponentInParent<SecondaryWeaponsManager>();
+        playerThrowHandler = GetComponent<PlayerThrowHandler>();
         BuildProjectileInfoDictionaries();
         animator = FindObjectOfType<PlayerAnimator>();
         var parentOfWeaponSprite = GetComponentInChildrenByNameAndType<Transform>("Weapon", animator.gameObject);
@@ -54,7 +58,18 @@ public class PlayerSecondaryWeapon : ProjectileManager
         EventSystem.current.onUpdateSecondaryWeaponTrigger += WeaponChanged;
         EventSystem.current.onWeaponFire += WeaponFired;
         EventSystem.current.onWeaponStopTrigger += StopFixedFire;
+        EventSystem.current.onThrowWeaponRelease += ThrowWeapon;
     }
+
+    private void OnDestroy()
+    {
+        // unsubscribe from events
+        EventSystem.current.onUpdateSecondaryWeaponTrigger -= WeaponChanged;
+        EventSystem.current.onWeaponFire -= WeaponFired;
+        EventSystem.current.onWeaponStopTrigger -= StopFixedFire;
+        EventSystem.current.onThrowWeaponRelease -= ThrowWeapon;
+    }
+
     // Called in start of child function
     protected override void LoadProjectileObjects()
     {
@@ -102,10 +117,6 @@ public class PlayerSecondaryWeapon : ProjectileManager
         else if (weaponDatabase.data.entries[weaponID].isFixedDistance == true) { FixedDistanceFire(); }
         else { Debug.Log("Check WeaponDatabase, weapon is missing a TRUE value for if ammo should be shot, thrown, be a fixed distance, etc."); }
     }
-    public void HandleThrowing(string inputState, string currentControlScheme)
-    {
-        throwHandler.Execute(inputState, currentControlScheme);
-    }
 
     private void FixedDistanceFire() { fixedDistanceAmmo.SetActive(true); ToggleFlamethrowerEffects(true); }
     private void StopFixedFire() 
@@ -149,12 +160,30 @@ public class PlayerSecondaryWeapon : ProjectileManager
         projectileSpawnPoint.transform.localPosition = firePointPos;
     }
 
-
-    private void OnDestroy()
+    public void HandleThrowing(string inputState, string currentControlScheme)
     {
-        // unsubscribe from events
-        EventSystem.current.onUpdateSecondaryWeaponTrigger -= WeaponChanged;
-        EventSystem.current.onWeaponFire -= WeaponFired;
-        EventSystem.current.onWeaponStopTrigger -= StopFixedFire;
+        CacheMostRecentProjectile(Mathf.FloorToInt(currentAmmoIndex / 3));
+        throwHandler.Execute(inputState, currentControlScheme);
+    }
+
+    override protected Vector3 GetThrowDirection()
+    {
+        return (((Vector3)gameController.lookInput - (Vector3)gameController.playerPositionScreen).normalized);
+    }
+
+    protected override void AddThrowForce(GameObject toss)
+    {
+        if (10 > transform.rotation.eulerAngles.z && transform.rotation.eulerAngles.z > -10)
+        {
+            toss.GetComponent<Rigidbody2D>().AddForce(bulletDir * playerThrowHandler.CurrentThrowForce, ForceMode2D.Impulse);
+        }
+        else { toss.GetComponent<Rigidbody2D>().AddForce(bulletDir * playerThrowHandler.CurrentThrowForce, ForceMode2D.Impulse); }
+    }
+
+    protected override void ResetThrow()
+    {
+        playerThrowHandler.InActiveThrow = false;
+        secondaryWeaponsManager.ChangingIsBlocked = false;
+        EventSystem.current.FinishChargedAttackTrigger();
     }
 }

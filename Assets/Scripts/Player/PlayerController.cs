@@ -47,6 +47,8 @@ public class PlayerController : Controller
         EventSystem.current.onPlayerDeathTrigger += PlayerDeath;
         EventSystem.current.onGameFileLoaded += SetPosition;
         EventSystem.current.onPlayerHitPostHealthTrigger += PlayerHitHandler;
+        EventSystem.current.lockPlayerXMovement += LockXMovement;
+        EventSystem.current.unlockPlayerXMovement += UnlockXMovement;
     }
 
     private void OnDestroy()
@@ -54,6 +56,8 @@ public class PlayerController : Controller
         EventSystem.current.onPlayerDeathTrigger -= PlayerDeath;
         EventSystem.current.onGameFileLoaded -= SetPosition;
         EventSystem.current.onPlayerHitPostHealthTrigger -= PlayerHitHandler;
+        EventSystem.current.lockPlayerXMovement -= LockXMovement;
+        EventSystem.current.unlockPlayerXMovement -= UnlockXMovement;
     }
 
     override protected void Start()
@@ -141,9 +145,9 @@ public class PlayerController : Controller
         // if you have a target destination / cutscene, automate movement
         if (optionalCutsceneDestination.HasValue) { CutsceneMovementHandler(optionalCutsceneDestination, optionalXAdjustment); }
 
-        if (!IsStunned && !InHitStun && !playerDash.IsDashing && !chargePunch.IsCharging && !playerSecondaryWeaponThrowHandler.inActiveThrow)
+        if (!IsStunned && !InHitStun && !playerDash.IsDashing && !chargePunch.IsCharging && !playerSecondaryWeaponThrowHandler.InActiveThrow)
         {
-            if (_isGrounded && !playerJump.IsJumping && !IsCrouching) //if on ground
+            if (_isGrounded && !playerJump.IsJumping && !IsCrouching && CanMoveX) //if on ground
             {
                 SetVelocity(MovementSpeed * ControlMomentum/10, null);
                 
@@ -174,7 +178,7 @@ public class PlayerController : Controller
             if (animator.CheckIfAnimationIsPlaying("PlayerBasicAttack")){ }
             else { if (!IsCrouching) { animator.Play("PlayerCharge"); } } 
         }
-        else if (playerSecondaryWeaponThrowHandler.inActiveThrow)
+        else if (playerSecondaryWeaponThrowHandler.InActiveThrow)
         {
             if (!IsCrouching) { animator.Play("PlayerCharge"); }
         }
@@ -303,4 +307,7 @@ public class PlayerController : Controller
         if(animationName == "PlayerRun") { animator.UpdateAnimationStatePriority("PlayerRun", -2); animator.UpdateAnimationStatePriority("PlayerIdle", -3); }
         else if(animationName == "PlayerIdle") { animator.UpdateAnimationStatePriority("PlayerRun", -3); animator.UpdateAnimationStatePriority("PlayerIdle", -2); }
     }
+
+    void LockXMovement() { CanMoveX = false; }
+    void UnlockXMovement() { CanMoveX = true; }
 }

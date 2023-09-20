@@ -20,6 +20,9 @@ public class EventSystem : MonoBehaviour
 
     public void GroundSlamDropTrigger() { if (onGroundSlamDrop != null) { onGroundSlamDrop(); } }    
     
+    public event Action onGroundSlamFinish;    
+    public void GroundSlamFinished() { if (onGroundSlamFinish != null) { onGroundSlamFinish(); } }    
+    
     public event Action onThrowWeaponRelease;
 
     public void ThrowWeaponTrigger() { if (onThrowWeaponRelease != null) { onThrowWeaponRelease(); } }    
@@ -30,6 +33,9 @@ public class EventSystem : MonoBehaviour
     public event Action endActiveMeleeAttack;
 
     public void EndActiveMeleeTrigger() { if (endActiveMeleeAttack != null) { endActiveMeleeAttack(); } }
+
+    public event Action<int> playerCombo;
+    public void PlayerComboTrigger(int comboNumber) { if (playerCombo != null) { playerCombo(comboNumber); } }
 
     // right arm
     public event Action OnShotFired;
@@ -251,5 +257,11 @@ public class EventSystem : MonoBehaviour
     public event Action <DataManager.GameData> onGameFileLoaded;
 
     public void GameFileLoadedTrigger(DataManager.GameData dataToSend) { if(onGameFileLoaded != null) { onGameFileLoaded(dataToSend); } }
+
+    public event Action lockPlayerXMovement;
+    public void LockPlayerXMovementTrigger() { if (lockPlayerXMovement != null) { lockPlayerXMovement(); } }
+    
+    public event Action unlockPlayerXMovement;
+    public void UnlockPlayerXMovementTrigger() { if (unlockPlayerXMovement != null) { unlockPlayerXMovement(); } }
 
 }

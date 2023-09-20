@@ -25,8 +25,8 @@ public class PlayerThrowHandler : MonoBehaviour
     [SerializeField] private float throwKeyHeldDownTime;
     [SerializeField] private float holdTimeNormalized;
     [SerializeField] private float throwDistanceNormalized;
-    public bool inActiveThrow = false;
-    private float currentThrowForce = 0;
+    [SerializeField] private bool _inActiveThrow; public bool InActiveThrow { get { return _inActiveThrow; } set { _inActiveThrow = value; } }
+    [SerializeField] private float _currentThrowForce; public float CurrentThrowForce { get { return _currentThrowForce; } set { _currentThrowForce = value; } }
     private int currentThrowDirection = 0;
 
     [SerializeField] private Vector3 throwMouseStartingPos;
@@ -55,7 +55,7 @@ public class PlayerThrowHandler : MonoBehaviour
         {
             if (playerSecondaryWeapon.currentWeapon.isThrown)
             {
-                inActiveThrow = true;
+                InActiveThrow = true;
                 secondaryWeaponsManager.ChangingIsBlocked = true;
                 if (currentControlScheme == "Keyboard and Mouse") { throwMouseStartingPos = gameController.playerPosition; }
                 if (currentControlScheme == "Gamepad") { throwMouseStartingPos = gameController.playerPositionScreen; } 
@@ -64,15 +64,15 @@ public class PlayerThrowHandler : MonoBehaviour
         else if (inputState == "Button Released")
         {
             throwKeyReleased = Time.time;
-            if (inActiveThrow) { animator.Play("PlayerThrow"); }
+            if (InActiveThrow) { animator.Play("PlayerThrow"); }
         }
         if (inputState == "Button Held")
         {
-            if (inActiveThrow)
+            if (InActiveThrow)
             {
                 if (currentControlScheme == "Keyboard and Mouse") { throwMouseFinishingPos = gameController.lookInputWorld; }
                 throwDistanceToPass = Vector2.Distance(throwMouseFinishingPos, throwMouseStartingPos) * throwMultiplier;
-                currentThrowForce = CalcThrowForce(throwDistanceToPass);
+                CurrentThrowForce = CalcThrowForce(throwDistanceToPass);
             }
         }
     }
@@ -91,6 +91,8 @@ public class PlayerThrowHandler : MonoBehaviour
         // instantiate thrown weapon
         GameObject toss = Instantiate(playerSecondaryWeapon.projectilesToUse[playerSecondaryWeapon.currentAmmoIndex], projectileSpawnPoint.position, projectileSpawnPoint.transform.rotation);
 
+        toss.GetComponent<ProjectileBase>().projectile = playerSecondaryWeapon.MostRecentProjectile;
+
         // get relevant data
         var projectile = toss.GetComponent<ProjectileBase>().projectile;
 
@@ -105,12 +107,12 @@ public class PlayerThrowHandler : MonoBehaviour
 
         if (10 > transform.rotation.eulerAngles.z && transform.rotation.eulerAngles.z > -10)
         {
-            toss.GetComponent<Rigidbody2D>().AddForce(bulletDir * currentThrowForce, ForceMode2D.Impulse);
+            toss.GetComponent<Rigidbody2D>().AddForce(bulletDir * CurrentThrowForce, ForceMode2D.Impulse);
         }
-        else { toss.GetComponent<Rigidbody2D>().AddForce( bulletDir * currentThrowForce, ForceMode2D.Impulse); }
+        else { toss.GetComponent<Rigidbody2D>().AddForce( bulletDir * CurrentThrowForce, ForceMode2D.Impulse); }
 
         // reset conditions
-        inActiveThrow = false;
+        InActiveThrow = false;
         secondaryWeaponsManager.ChangingIsBlocked = false;
         EventSystem.current.FinishChargedAttackTrigger();
     }

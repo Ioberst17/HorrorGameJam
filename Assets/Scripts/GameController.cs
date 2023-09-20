@@ -202,22 +202,23 @@ public class GameController : MonoBehaviour
         playerPosition = playerController.transform.position;
     }
 
-    void CheckAttackInputEvents(InputAction.CallbackContext ctx, string check) // NOTE: THESE ARE EVENTS AND FIRE AS INITIALIZED IN OnEnable(), THEREFORE THEY ARE NOT IN CheckInput()
+    // NOTE: THESE ARE EVENTS AND FIRE AS INITIALIZED IN OnEnable(), THEREFORE THEY ARE NOT IN CheckInput()
+    void CheckAttackInputEvents(InputAction.CallbackContext ctx, string check) 
     {
         if ("Started" == check)
         {
             if (ctx.interaction is TapInteraction) { AttackButtonDown = true; Debug.Log(ctx.interaction + " - Started"); PlayerIsInputting = true; }
-            if (ctx.interaction is SlowTapInteraction) { AttackButtonHeld = true;  Debug.Log(ctx.interaction + " - Started"); PlayerIsInputting = true; }
+            if (ctx.interaction is HoldInteraction) { Debug.Log(ctx.interaction + " - Started"); PlayerIsInputting = true; }
         }
         if ("Performed" == check)
         {
             if (ctx.interaction is TapInteraction) { Debug.Log(ctx.interaction + " - Performed"); }
-            if (ctx.interaction is SlowTapInteraction) { AttackButtonRelease = true; Debug.Log(ctx.interaction + " - Performed"); PlayerIsInputting = true; }
+            if (ctx.interaction is HoldInteraction) { AttackButtonHeld = true; Debug.Log(ctx.interaction + " - Performed"); PlayerIsInputting = true; }
         }
         if ("Cancelled" == check) 
         {
-            if (ctx.interaction is TapInteraction) { Debug.Log(ctx.interaction + " - Cancelled"); }
-            if (ctx.interaction is SlowTapInteraction) { Debug.Log(ctx.interaction + " - Cancelled"); }
+            if (ctx.interaction is TapInteraction) { AttackButtonHeld = true; Debug.Log(ctx.interaction + " - Cancelled"); PlayerIsInputting = true; }
+            if (ctx.interaction is HoldInteraction) { AttackButtonHeld = true; Debug.Log(ctx.interaction + " - Cancelled"); PlayerIsInputting = true; }
         }
     }
 

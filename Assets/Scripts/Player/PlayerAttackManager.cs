@@ -90,7 +90,6 @@ public class PlayerAttackManager : AttackManager
                     else { comboSystem.PerformCombo(attackDirection); }
                 }
             }
-            else { comboSystem.PerformCombo(attackDirection); }
         }
     }
 

@@ -116,7 +116,7 @@ public class ObjectAnimator : MonoBehaviour
     {
         GetCurrentAnimationInfo();
 
-        if (animationStates[newAnimation].priorityLevel > currentAnimationState.priorityLevel || currentAnimation.normalizedTime >= 0.99f) { shouldNewAnimationPlay = true; return newAnimation; } // if so, then it can play
+        if (animationStates[newAnimation].priorityLevel > currentAnimationState.priorityLevel || currentAnimation.normalizedTime >= 0.9f) { shouldNewAnimationPlay = true; return newAnimation; } // if so, then it can play
         else { shouldNewAnimationPlay = false; return currentAnimationState.animationName; }
     }
 
