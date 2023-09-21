@@ -34,7 +34,7 @@ public class ProjectileTrigger : MonoBehaviour
     // tracks when an 'enemy' exits and marks false if so
     private void OnTriggerExit2D(Collider2D collider) { if (CollisionToWatchForHasHappened(collider)) { enemyInAttackRange = false; } }
 
-    // returns true if collider is in a layer tro check for
+    // returns true if collider is in a layer to check for
     bool CollisionToWatchForHasHappened(Collider2D collider)
     {
         return (layersToCheck.value & (1 << collider.gameObject.layer)) != 0;

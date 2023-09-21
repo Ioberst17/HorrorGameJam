@@ -15,7 +15,7 @@ public class Ammo : ProjectileBase
         {
             RigidbodyEnabled = false;
             if (projectile.isExplosive) { ExplosionHandler(); }
-            else if (!projectile.isExplosive) { Remove(); }
+            else if (!projectile.isExplosive) { Remove(true); }
         }
     }
 }

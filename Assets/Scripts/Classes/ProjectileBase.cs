@@ -1,3 +1,4 @@
+using Ink.Parsed;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,6 +27,9 @@ public class ProjectileBase : MonoBehaviour
     // mark true in Inspector, if an animator OnStateExit behavior is meant to destroy the object
     public bool usesDestroyOnAnimationEnd;
     public string destroyAnimation;
+    public bool usesAdditionalEndAnimations;    
+    public string pathToAdditionalEndAnimation;
+    protected string pathToBasicEndAnimation = "VFXPrefabs/DamageImpact";
 
     protected void OnDestroy()
     {
@@ -77,7 +81,7 @@ public class ProjectileBase : MonoBehaviour
                 else
                 {
                     if (col.gameObject.GetComponent<IDamageable>() != null) { col.gameObject.GetComponent<IDamageable>().Hit(); }
-                    Instantiate(Resources.Load("VFXPrefabs/DamageImpact"), transform.position, Quaternion.identity);
+                    Instantiate(Resources.Load(pathToBasicEndAnimation), transform.position, Quaternion.identity);
                     Remove();
                 }
             }
@@ -94,13 +98,18 @@ public class ProjectileBase : MonoBehaviour
 
     protected void DisableInteractions() { HitColliderEnabled = false; GetComponent<SpriteRenderer>().enabled = false; }
 
-    protected void Remove()
+    protected void Remove(bool hitEnemy = false)
     {
-        if (!usesDestroyOnAnimationEnd) 
+        if (hitEnemy) { Instantiate(Resources.Load(pathToAdditionalEndAnimation), transform.position, Quaternion.identity); }
+
+        if (usesDestroyOnAnimationEnd)
         {
-            Instantiate(Resources.Load("VFXPrefabs/DamageImpact"), transform.position, Quaternion.identity);
+            animator.Play(destroyAnimation);
+        }
+        else
+        {
+            Instantiate(Resources.Load(pathToBasicEndAnimation), transform.position, Quaternion.identity); 
             Destroy(gameObject);
         }
-        else { animator.Play(destroyAnimation); }
     }
 }

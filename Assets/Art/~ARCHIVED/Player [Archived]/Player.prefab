@@ -5774,8 +5774,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
-  runtimeAnimator: {fileID: 0}
-  animatorOverrideController: {fileID: 0}
   specificFilePathToAnimations: 
   currentAnimationState:
     animationName: 
@@ -5793,7 +5791,6 @@ MonoBehaviour:
   transformToRotateAround: {fileID: 0}
   initialArmPosition: {x: 0, y: 0, z: 0}
   initialArmPositionWhenCrouching: {x: 0, y: 0, z: 0}
-  startedShotOnLeft: 0
   elapsedTime: 0
   rotationTime: 1
   rotationRightSpeed: 1
@@ -11138,8 +11135,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
-  runtimeAnimator: {fileID: 0}
-  animatorOverrideController: {fileID: 0}
   specificFilePathToAnimations: 
   currentAnimationState:
     animationName: 
@@ -11157,7 +11152,6 @@ MonoBehaviour:
   transformToRotateAround: {fileID: 0}
   initialArmPosition: {x: 0, y: 0, z: 0}
   initialArmPositionWhenCrouching: {x: 0, y: 0, z: 0}
-  startedShotOnLeft: 0
   elapsedTime: 0
   rotationTime: 1
   rotationRightSpeed: 1
@@ -11339,8 +11333,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
-  runtimeAnimator: {fileID: 0}
-  animatorOverrideController: {fileID: 0}
   specificFilePathToAnimations: 
   currentAnimationState:
     animationName: 
@@ -11372,7 +11364,7 @@ MonoBehaviour:
   rightArmScript: {fileID: 0}
   leftArmScript: {fileID: 0}
   weaponAnimatorScript: {fileID: 0}
-  synchronizationThreshold: 0.05
+  synchronizationThreshold: 1
   EnumToAnimatorMap:
     keys: 
     values: []
@@ -11696,8 +11688,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
-  runtimeAnimator: {fileID: 0}
-  animatorOverrideController: {fileID: 0}
   specificFilePathToAnimations: 
   currentAnimationState:
     animationName: 
@@ -11844,8 +11834,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
-  runtimeAnimator: {fileID: 0}
-  animatorOverrideController: {fileID: 0}
   specificFilePathToAnimations: 
   currentAnimationState:
     animationName: 
@@ -12078,8 +12066,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
-  runtimeAnimator: {fileID: 0}
-  animatorOverrideController: {fileID: 0}
   specificFilePathToAnimations: 
   currentAnimationState:
     animationName: 
@@ -12097,7 +12083,6 @@ MonoBehaviour:
   transformToRotateAround: {fileID: 0}
   initialArmPosition: {x: 0, y: 0, z: 0}
   initialArmPositionWhenCrouching: {x: 0, y: 0, z: 0}
-  startedShotOnLeft: 0
   elapsedTime: 0
   rotationTime: 10
   rotationRightSpeed: 25
@@ -13663,7 +13648,8 @@ MonoBehaviour:
   throwKeyHeldDownTime: 0
   holdTimeNormalized: 0
   throwDistanceNormalized: 0
-  inActiveThrow: 0
+  _inActiveThrow: 0
+  _currentThrowForce: 0
   throwMouseStartingPos: {x: 0, y: 0, z: 0}
   throwMouseFinishingPos: {x: 0, y: 0, z: 0}
 --- !u!1001 &383693631468220920

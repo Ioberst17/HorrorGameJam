@@ -17,9 +17,28 @@ public class Frozen : StatusEffect
         damageToPass = statusData.freezeDamage;
         affectsMovement = true;
         useAnimator = true;
+        animationStartState = "IceStart";
+        animationEndState = "IceMelt";
     }
 
     public override void Execute() { base.Execute(); }
 
     public override void FixedUpdate() { base.FixedUpdate(); }
+
+    /// <summary>
+    /// The Freeze status effect handles its VFX separately vs. other status effects, which use the base implamentation
+    /// </summary>
+    /// <param name="state"></param>
+    protected override void VFXHandler(bool state)
+    {
+        if (state == true) 
+        {
+            spriteRenderer.enabled = true;
+            AnimationHandler(state);
+        }
+        else 
+        { 
+            AnimationHandler(state);
+        }
+    }
 }

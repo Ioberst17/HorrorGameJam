@@ -40,12 +40,6 @@ public class PlayerThrowHandler : MonoBehaviour
         animator = ComponentFinder.GetComponentInChildrenByNameAndType<PlayerAnimator>("Animator", transform.parent.gameObject);
         playerSecondaryWeapon = GetComponent<PlayerSecondaryWeapon>();
         projectileSpawnPoint = ComponentFinder.GetComponentInChildrenByNameAndType<Transform>("FirePointSprite");
-        EventSystem.current.onThrowWeaponRelease += ThrowWeapon;
-    }
-
-    private void OnDestroy()
-    {
-        EventSystem.current.onThrowWeaponRelease -= ThrowWeapon;
     }
 
     // tracks data around clicks and time held
@@ -86,34 +80,34 @@ public class PlayerThrowHandler : MonoBehaviour
         return force;
     }
 
-    public void ThrowWeapon()
-    {
-        // instantiate thrown weapon
-        GameObject toss = Instantiate(playerSecondaryWeapon.projectilesToUse[playerSecondaryWeapon.currentAmmoIndex], projectileSpawnPoint.position, projectileSpawnPoint.transform.rotation);
+    //public void ThrowWeapon()
+    //{
+    //    // instantiate thrown weapon
+    //    GameObject toss = Instantiate(playerSecondaryWeapon.projectilesToUse[playerSecondaryWeapon.currentAmmoIndex], projectileSpawnPoint.position, projectileSpawnPoint.transform.rotation);
 
-        toss.GetComponent<ProjectileBase>().projectile = playerSecondaryWeapon.MostRecentProjectile;
+    //    toss.GetComponent<ProjectileBase>().projectile = playerSecondaryWeapon.MostRecentProjectile;
 
-        // get relevant data
-        var projectile = toss.GetComponent<ProjectileBase>().projectile;
+    //    // get relevant data
+    //    var projectile = toss.GetComponent<ProjectileBase>().projectile;
 
-        // set direction
-        Vector3 bulletDir = ((Vector3)gameController.lookInput - (Vector3)gameController.playerPositionScreen).normalized;
+    //    // set direction
+    //    Vector3 bulletDir = ((Vector3)gameController.lookInput - (Vector3)gameController.playerPositionScreen).normalized;
         
-        // play toss audio
-        FindObjectOfType<AudioManager>().PlaySFX(projectile.audioOnUse);
+    //    // play toss audio
+    //    FindObjectOfType<AudioManager>().PlaySFX(projectile.audioOnUse);
 
-        // give proper gravity
-        toss.GetComponent<Rigidbody2D>().gravityScale = projectile.startingGravityScale;
+    //    // give proper gravity
+    //    toss.GetComponent<Rigidbody2D>().gravityScale = projectile.startingGravityScale;
 
-        if (10 > transform.rotation.eulerAngles.z && transform.rotation.eulerAngles.z > -10)
-        {
-            toss.GetComponent<Rigidbody2D>().AddForce(bulletDir * CurrentThrowForce, ForceMode2D.Impulse);
-        }
-        else { toss.GetComponent<Rigidbody2D>().AddForce( bulletDir * CurrentThrowForce, ForceMode2D.Impulse); }
+    //    if (10 > transform.rotation.eulerAngles.z && transform.rotation.eulerAngles.z > -10)
+    //    {
+    //        toss.GetComponent<Rigidbody2D>().AddForce(bulletDir * CurrentThrowForce, ForceMode2D.Impulse);
+    //    }
+    //    else { toss.GetComponent<Rigidbody2D>().AddForce( bulletDir * CurrentThrowForce, ForceMode2D.Impulse); }
 
-        // reset conditions
-        InActiveThrow = false;
-        secondaryWeaponsManager.ChangingIsBlocked = false;
-        EventSystem.current.FinishChargedAttackTrigger();
-    }
+    //    // reset conditions
+    //    InActiveThrow = false;
+    //    secondaryWeaponsManager.ChangingIsBlocked = false;
+    //    EventSystem.current.FinishChargedAttackTrigger();
+    //}
 }

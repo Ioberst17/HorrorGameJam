@@ -18,13 +18,21 @@ public class EnemyProjectile : ProjectileBase
         {
             RigidbodyEnabled = false;
             if (projectile.isExplosive) { ExplosionHandler(); }
-            else if (!projectile.isExplosive) { Remove(); }
+            else if (!projectile.isExplosive) { Remove(true); }
         }
     }
 
-    override protected void UpdateInstanceID() { Debug.Log("Instance ID is: " + gameObject.GetInstanceID()); instanceID = gameObject.GetInstanceID(); }
+    override protected void UpdateInstanceID() { instanceID = gameObject.GetInstanceID(); }
 
+    /// <summary>
+    /// Used to turn on collider by timed projectiles, e.g. targeted spells
+    /// </summary>
+    /// <param name="instanceID"></param>
     override protected void ColliderOn(int instanceID) { if (instanceID == gameObject.GetInstanceID()) { hitCollider.enabled = true; Debug.Log("ColliderOn"); } }
 
+    /// <summary>
+    /// Used to turn off collider by timed projectiles, e.g. targeted spells
+    /// </summary>
+    /// <param name="instanceID"></param>
     override protected void ColliderOff(int instanceID) { if (instanceID == gameObject.GetInstanceID()) { hitCollider.enabled = false; } Debug.Log("ColliderOff"); }
 }
