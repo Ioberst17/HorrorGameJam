@@ -24,10 +24,10 @@ public class Shield : MonoBehaviour
 
     // used to filter and store collisions
     // IMPORTANT FILTER: SPECIFIC SHIELD TO ONLY REGISTER SPECIFIC LAYERS E.G. Player shield will check on Enemy layer
-    public ContactFilter2D attackerFilter;
-    public Collider2D[] attackingObjects = new Collider2D[10];
+    public ContactFilter2D filteringForThis;
+    public Collider2D[] collidingObjects = new Collider2D[10];
 
-    [SerializeField] public List<ShieldZone> shieldZones = new List<ShieldZone>();
+    [SerializeField] public List<ShieldZone> shieldZones = new();
     ShieldZone hitShield;
 
     // optional ability to attach and use
@@ -43,23 +43,36 @@ public class Shield : MonoBehaviour
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         shieldCollider = GetComponent<Collider2D>();
         bodyCollider = transform.parent.GetComponent<Collider2D>();
+
         ShieldOn(false);
         CheckObjectType();
     }
 
     virtual protected void Update() 
     {
-        if(shieldCollider.enabled) { GetOverlap(shieldCollider); }
-        else { GetOverlap(bodyCollider); }
+        if(shieldCollider.enabled) { GetOverlap(shieldCollider, "Circle"); }
+        else { GetOverlap(bodyCollider, "Box"); }
 
-        DamageHandler(attackingObjects);
+        DamageHandler(collidingObjects);
     }
 
-    void GetOverlap(Collider2D colliderToUse)
+    void GetOverlap(Collider2D colliderToUse, string colliderShape)
     {
-        attackingObjects = Physics2D.OverlapCircleAll(colliderToUse.bounds.center,
+        // typicall of player and most enemies
+        if (colliderShape == "Box")
+        {
+            collidingObjects = Physics2D.OverlapBoxAll(transform.position,
+                                                      bodyCollider.bounds.size,
+                                                      0f,
+                                                      filteringForThis.layerMask);
+        }
+        // use the shield collider, a circle
+        else
+        {
+            collidingObjects = Physics2D.OverlapCircleAll(colliderToUse.bounds.center,
                                                       colliderToUse.bounds.extents.x,
-                                                      attackerFilter.layerMask);
+                                                      filteringForThis.layerMask);
+        }
     }
 
     public void FixedUpdate()
@@ -121,8 +134,8 @@ public class Shield : MonoBehaviour
         checkStatus = false;
 
         // GENERIC DAMAGE CHECKS
-        if (overlap.gameObject.tag == "EnemyAttack") { checkStatus = true; Debug.Log(transform.parent.gameObject.name + " was hit by EnemyAttack"); }
-        else if (overlap.gameObject.tag == "PlayerAttack" && overlap.enabled) { checkStatus = true; Debug.Log(transform.parent.gameObject.name + " was hit by PlayerAttack"); }
+        if (overlap.gameObject.CompareTag("EnemyAttack")) { checkStatus = true; Debug.Log(transform.parent.gameObject.name + " was hit by EnemyAttack"); }
+        else if (overlap.gameObject.CompareTag("PlayerAttack") && overlap.enabled) { checkStatus = true; Debug.Log(transform.parent.gameObject.name + " was hit by PlayerAttack"); }
         else if(overlap.gameObject.layer == LayerMask.NameToLayer("PlayerAmmo")) { checkStatus = true; Debug.Log(transform.parent.gameObject.name + " was hit by Ammo"); }
         else if(overlap.gameObject.layer == LayerMask.NameToLayer("EnemyProjectile")) { checkStatus = true; Debug.Log(transform.parent.gameObject.name + " was hit by Enemy Projectile"); }
 
@@ -153,8 +166,8 @@ public class Shield : MonoBehaviour
 
     virtual protected void AddLayersToCheckOn(string shieldedObject)
     {
-        if (shieldedObject == "Player") { attackerFilter.SetLayerMask((1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("EnemyProjectile"))); }
-        else if (shieldedObject == "Enemy") { attackerFilter.SetLayerMask((1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("PlayerAmmo"))); }
+        if (shieldedObject == "Player") { filteringForThis.SetLayerMask((1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("EnemyProjectile"))); }
+        else if (shieldedObject == "Enemy") { filteringForThis.SetLayerMask((1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("PlayerAmmo"))); }
         else { Debug.Log("Shielded object needs a tag; make sure it is tagged correctly in CheckObjectType() of this script"); }
     }
 

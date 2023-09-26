@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpiderBehavior : EnemyBehaviour
+public class SpiderBehaviour : EnemyBehaviour
 {
     public int attackSet;
     public int attackCooldown;
@@ -46,7 +46,7 @@ public class SpiderBehavior : EnemyBehaviour
             }
         }
 
-        if (enemyController.playerInZone)
+        if (enemyController.PlayerInZone)
         {
             if (enemyController.IsOnCeiling)
             {

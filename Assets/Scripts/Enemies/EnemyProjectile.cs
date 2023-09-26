@@ -16,9 +16,8 @@ public class EnemyProjectile : ProjectileBase
                 col.gameObject.GetComponent<PlayerController>() != null ||
                     col.gameObject.GetComponent<Ammo>())
         {
-            RigidbodyEnabled = false;
             if (projectile.isExplosive) { ExplosionHandler(); }
-            else if (!projectile.isExplosive) { Remove(true); }
+            else if (!projectile.isExplosive) { Remove(true); Debug.Log("Has hit gameObject named: " + col.gameObject.name); }
         }
     }
 

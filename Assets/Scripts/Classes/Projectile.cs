@@ -26,7 +26,7 @@ public class Projectile : IDatabaseItem
 
     public int baseDamage, maxDamage;
 
-    public float firePointX, firePointY;
+    public float firePointXPosition, firePointYPosition;
 
     public float fireRate;
     public int fireRateFrames;
@@ -78,8 +78,8 @@ public class Projectile : IDatabaseItem
         this.maxDamage = maxDamage;
         // shooting modifiers
         // firing
-        this.firePointX = firePointX;
-        this.firePointY = firePointY;
+        this.firePointXPosition = firePointX;
+        this.firePointYPosition = firePointY;
         this.fireRate = fireRate;
         this.fireRateFrames = fireRateFrames;
         // launching

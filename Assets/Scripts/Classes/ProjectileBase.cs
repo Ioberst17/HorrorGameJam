@@ -24,11 +24,17 @@ public class ProjectileBase : MonoBehaviour
     public Animator animator;
 
     [Header("Animation Destroy Alternative")]
-    // mark true in Inspector, if an animator OnStateExit behavior is meant to destroy the object
+    [Tooltip("Mark true in Inspector, if an animator OnStateExit behavior is meant to destroy the object vs being destroyed after instantiating a default animation")]
     public bool usesDestroyOnAnimationEnd;
     public string destroyAnimation;
-    public bool usesAdditionalEndAnimations;    
-    public string pathToAdditionalEndAnimation;
+    // additional and standard end animations
+    [Tooltip("Use if VFX on hitting enemy differs from standard")]
+    public bool usesAdditionalEnemyHitVFX;
+    public string pathToAdditionalEnemyHitVFX;
+
+    [Tooltip("Used as an addon to add additional VFX to a projectile hitting")]
+    public bool usesAdditionalEndVFX;    
+    public string pathToAdditionalEndVFX;
     protected string pathToBasicEndAnimation = "VFXPrefabs/DamageImpact";
 
     protected void OnDestroy()
@@ -73,10 +79,9 @@ public class ProjectileBase : MonoBehaviour
     {
         if (!projectile.playTillEnd)
         {
-            if (col.gameObject.tag == "Boundary" || col.gameObject.tag == "Platform" || 
+            if (col.gameObject.CompareTag("Boundary") || col.gameObject.CompareTag("Platform") || 
                     col.gameObject.layer == BreakableEnviroLayer)
             {
-                RigidbodyEnabled = false;
                 if (projectile.isExplosive) { ExplosionHandler(); }
                 else
                 {
@@ -100,16 +105,30 @@ public class ProjectileBase : MonoBehaviour
 
     protected void Remove(bool hitEnemy = false)
     {
-        if (hitEnemy) { Instantiate(Resources.Load(pathToAdditionalEndAnimation), transform.position, Quaternion.identity); }
+        // if using add on end VFX
+        if(usesAdditionalEndVFX)
+        {
+            Instantiate(Resources.Load(pathToAdditionalEndVFX), transform.position, Quaternion.identity);
+        }
 
+        // if using add on VFX specifically when hitting an enemy
+        if (hitEnemy && usesAdditionalEnemyHitVFX) 
+        {
+            Instantiate(Resources.Load(pathToAdditionalEnemyHitVFX), transform.position, Quaternion.identity); 
+        }
+
+        // if destroyed at the end of animation that calls its destruction via keyframe or state-based animation event
         if (usesDestroyOnAnimationEnd)
         {
             animator.Play(destroyAnimation);
         }
         else
         {
-            Instantiate(Resources.Load(pathToBasicEndAnimation), transform.position, Quaternion.identity); 
-            Destroy(gameObject);
+            Instantiate(Resources.Load(pathToBasicEndAnimation), transform.position, Quaternion.identity);
+
+            // disable spriteRenderer and use delayed destruction (to ensure collisions happen)
+            GetComponentInChildren<SpriteRenderer>().enabled = false;
+            Destroy(gameObject, .1f);
         }
     }
 }

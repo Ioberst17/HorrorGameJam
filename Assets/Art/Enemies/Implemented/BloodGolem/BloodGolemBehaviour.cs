@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BloodGolemBehavior : EnemyBehaviour
+public class BloodGolemBehaviour : EnemyBehaviour
 {
     public int ChargeCountdown;
     public bool chargeInterupt;
@@ -22,7 +22,7 @@ public class BloodGolemBehavior : EnemyBehaviour
 
     override protected void Passover()
     {
-        if (enemyController.playerInZone && !enemyHealth.DamageInterrupt)
+        if (enemyController.PlayerInZone && !enemyHealth.DamageInterrupt)
         {
             if (!enemyController.IsAttackingOrChargingAttack)
             {

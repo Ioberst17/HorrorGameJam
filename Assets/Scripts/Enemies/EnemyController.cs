@@ -24,8 +24,8 @@ public class EnemyController : Controller
     
     //to vary different types of patrols
     public int patrolID;
-    
-    public bool playerInZone;
+
+    [SerializeField] bool _playerInZone; public bool PlayerInZone { get { return _playerInZone; } set {_playerInZone = value; } }
     public int KnockBackForce { get; set; }
 
 

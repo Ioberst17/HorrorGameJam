@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GargoyleBehavior : EnemyBehaviour
+public class GargoyleBehaviour : EnemyBehaviour
 {
     // STATES
     public string bossAction;
@@ -83,7 +83,7 @@ public class GargoyleBehavior : EnemyBehaviour
 
     void WakingLogic()
     {
-        if (bossAction == "Dormant" && enemyController.playerInZone)
+        if (bossAction == "Dormant" && enemyController.PlayerInZone)
         {
             bossAction = "Waking";
             enemyController.animator.Play("GargoyleWake");

@@ -18,13 +18,13 @@ public class EnemyDetectionBehavior : MonoBehaviour
     private void OnTriggerStay2D(Collider2D collider)
     {
         // if playerInZone isn't true and player has collided, mark playerInZone as true
-        if (collider.gameObject.layer == LayerMask.NameToLayer("Player")) { if (!enemyController.playerInZone) { enemyController.playerInZone = true; } }
+        if (collider.gameObject.layer == LayerMask.NameToLayer("Player")) { if (!enemyController.PlayerInZone) { enemyController.PlayerInZone = true; } }
 
     }
 
     private void OnTriggerExit2D(Collider2D collider)
     {
         // mark when player has left
-        if (collider.gameObject.layer == LayerMask.NameToLayer("Player")) { enemyController.playerInZone = false; }
+        if (collider.gameObject.layer == LayerMask.NameToLayer("Player")) { enemyController.PlayerInZone = false; }
     }
 }

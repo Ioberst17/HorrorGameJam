@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ParalysisDemonBehavior : EnemyBehaviour
+public class ParalysisDemonBehaviour : EnemyBehaviour
 {
     override protected void Start()
     {
@@ -14,7 +14,7 @@ public class ParalysisDemonBehavior : EnemyBehaviour
     {        
         UpdatePatrolID();
         
-        if (!enemyController.playerInZone) { Patrol(); }
+        if (!enemyController.PlayerInZone) { Patrol(); }
         else { Chase(); }
 
         Flip();

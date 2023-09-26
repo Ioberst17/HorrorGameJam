@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor.Rendering;
 using UnityEngine;
 
-public class HellHoundBehavior : EnemyBehaviour
+public class HellHoundBehaviour : EnemyBehaviour
 {
     protected override void Start()
     {

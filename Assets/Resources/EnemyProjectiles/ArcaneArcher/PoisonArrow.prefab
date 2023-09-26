@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 2333084694305722678}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6683411310108108137}
@@ -75,12 +75,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 1058990608, guid: 1b7ccc341941b9e459ea7aaf4b78e2dd, type: 3}
+  m_Sprite: {fileID: 1334974494, guid: 513fb808ed08a1e489cb677091206b11, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.2, y: 0.2}
+  m_Size: {x: 0.31, y: 0.03}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -96,7 +96,7 @@ Animator:
   m_GameObject: {fileID: 2333084694305722678}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 22100000, guid: 7b427f6e567861e4f896053926ab7565, type: 2}
+  m_Controller: {fileID: 0}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -133,9 +133,9 @@ GameObject:
   - component: {fileID: 6683411310108108137}
   - component: {fileID: -7086905221497193101}
   - component: {fileID: -1071998373309066254}
-  - component: {fileID: 524750365834156921}
+  - component: {fileID: 4178575761472427924}
   m_Layer: 15
-  m_Name: IceBall
+  m_Name: PoisonArrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -150,7 +150,7 @@ Transform:
   m_GameObject: {fileID: 6683411310108108142}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5973181862473854438}
@@ -211,8 +211,8 @@ MonoBehaviour:
     isHeavy: 0
     baseDamage: 0
     maxDamage: 0
-    firePointX: 0
-    firePointY: 0
+    firePointXPosition: 0
+    firePointYPosition: 0
     fireRate: 0
     fireRateFrames: 0
     launchForceX: 0
@@ -222,19 +222,19 @@ MonoBehaviour:
     startingGravityScale: 0
     targetingModifierX: 0
     targetingModifierY: 0
-  referenceID: 3
+  referenceID: 4
   instanceID: 0
   weaponID: 0
   weaponLevel: 0
   ammoID: 0
   animator: {fileID: 0}
-  usesDestroyOnAnimationEnd: 1
-  destroyAnimation: Destroy
-  usesEnemyHitVFX: 1
-  pathToEnemyHitVFX: VFX/IceEffectImpact
+  usesDestroyOnAnimationEnd: 0
+  destroyAnimation: 
+  usesAdditionalEnemyHitVFX: 0
+  pathToAdditionalEnemyHitVFX: 
   usesAdditionalEndVFX: 0
   pathToAdditionalEndVFX: 
---- !u!61 &524750365834156921
+--- !u!61 &4178575761472427924
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -247,7 +247,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.011534333, y: 0.000000014901161}
+  m_Offset: {x: 0.008902609, y: 0.00080216303}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -258,5 +258,5 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.46365058, y: 0.37714252}
+  m_Size: {x: 0.35865772, y: 0.07730193}
   m_EdgeRadius: 0

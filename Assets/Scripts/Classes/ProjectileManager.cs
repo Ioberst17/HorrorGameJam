@@ -96,9 +96,22 @@ public class ProjectileManager : MonoBehaviour
     private void DirectShot(GameObject shot, bool needToInstantiate = false)
     {
         if (needToInstantiate) 
-        { 
+        {
             // instantiate the shot
-            shot = Instantiate(shot, projectileSpawnPoint.position, projectileSpawnPoint.transform.rotation);
+            Vector3 projectileSpawnPointLoc = gameObject.transform.position;
+            
+            if(GetComponentInParent<Controller>().FacingDirection == -1) 
+            { 
+                projectileSpawnPointLoc += new Vector3(MostRecentProjectile.firePointXPosition * -1,
+                                                      MostRecentProjectile.firePointYPosition);
+            }
+            else 
+            {
+                projectileSpawnPointLoc += new Vector3(MostRecentProjectile.firePointXPosition,
+                                      MostRecentProjectile.firePointYPosition);
+            }
+
+            shot = Instantiate(shot, projectileSpawnPointLoc, projectileSpawnPoint.transform.rotation);
             
             // load the projectile information into the shot
             shot.GetComponent<ProjectileBase>().projectile = MostRecentProjectile;
