@@ -35,14 +35,17 @@ public class PlayerBodyAnimator : PlayerBaseAnimator
         CheckIfAttackFlagShouldBeCancelled();
     }
 
+    /// <summary>
+    /// Failsafe to ensure that player's IsAttacking status is turned off if not animation an attack
+    /// </summary>
     void CheckIfAttackFlagShouldBeCancelled()
     {
         if (!attackAnimations.Contains(CurrentAnimationName))
         {
             if (playerController.IsAttacking != false) { playerController.IsAttacking = false; }
-            if (previousAnimationName == "PlayerGroundSlam" ||
-                (previousAnimationName != "PlayerGroundSlam" && CurrentAnimationName != "PlayerGroundSlam"))
-            { groundSlam.IsGroundSlam = false; }
+            //if (previousAnimationName == "PlayerGroundSlam" ||
+            //    (previousAnimationName != "PlayerGroundSlam" && CurrentAnimationName != "PlayerGroundSlam"))
+            //{ groundSlam.IsGroundSlam = false; }
         }
     }
 }

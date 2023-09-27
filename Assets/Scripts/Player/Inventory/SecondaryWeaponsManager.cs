@@ -77,7 +77,7 @@ public class SecondaryWeaponsManager : WeaponsManager
     {
         hasAmmo = weaponList[currentWeaponIndex].ammo > 0;
         doesNotExceedFireRate = Time.time > lastWeaponUseTime + weaponList[currentWeaponIndex].fireRate;
-        canThrow = !playerSecondaryWeapon.throwHandler.inActiveThrow; 
+        canThrow = !playerSecondaryWeapon.throwHandler.InActiveThrow; 
         notChargePunching = !chargePunch.IsCharging;
         isNotWallHanging = !playerController.IsWallHanging;
         isNotMeleeing = !playerController.IsAttacking;

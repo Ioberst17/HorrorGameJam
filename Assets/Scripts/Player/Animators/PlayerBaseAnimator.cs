@@ -7,7 +7,6 @@ using UnityEngine;
 /// </summary>
 public class PlayerBaseAnimator : ObjectAnimator
 {
-    // Start is called before the first frame update
     override public void Start()
     {
         base.Start();
@@ -35,11 +34,5 @@ public class PlayerBaseAnimator : ObjectAnimator
             animationStates.Add(state, animationProperties);
             animationStatesWithHashAsKey.Add(animationProperties.animationHash, animationProperties);
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

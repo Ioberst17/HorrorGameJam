@@ -55,7 +55,7 @@ public class Controller : MonoBehaviour
     protected float blinkFrequency = 30f; // higher, isfaster blinking for hit stun
 
     [SerializeField] protected bool _canMove; virtual public bool CanMove { get { return _canMove; } set { _canMove = value; } }
-    [SerializeField] protected bool _canMoveX; virtual public bool CanMoveX { get { return _canMoveX; } set { _canMoveX = value; } }
+    [SerializeField] protected bool _canMoveX; virtual public bool CanMoveX { get { return _canMoveX; } set { _canMoveX = value; Debug.Log("CanMoveX was set to: " + value); } }
     [SerializeField] protected bool _canMoveY; virtual public bool CanMoveY { get { return _canMoveY; } set { _canMoveY = value; } }
 
     // STANDARD FUNCTIONS FOR OBJECTS WITH CONTROLLERS

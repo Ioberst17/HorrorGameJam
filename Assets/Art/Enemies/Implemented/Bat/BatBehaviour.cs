@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BatBehavior : EnemyBehaviour
+public class BatBehaviour : EnemyBehaviour
 {
     // Override the base passover called in Parent FixedUpdate
     override protected void Passover()
@@ -10,7 +10,7 @@ public class BatBehavior : EnemyBehaviour
         UpdatePatrolID();
 
         // Check if the player is in the attack zone
-        if (enemyController.playerInZone) { Chase(); attackManager.StartAttack(0, "BatBite"); } // If yes, chase
+        if (enemyController.PlayerInZone) { Chase(); attackManager.StartAttack(0, "BatBite"); } // If yes, chase
         else { Patrol(); } // If no, patrol
 
         Flip();

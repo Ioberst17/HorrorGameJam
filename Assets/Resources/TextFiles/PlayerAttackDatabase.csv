@@ -1,13 +1,13 @@
-﻿id,owner,name,nameNoSpace,nameInEngine,isKinetic,isMelee,isRanged,isElemental,launchForceX,launchForceY,statusModifier,baseDamage,maxDamage,attackBuffer,startupTime,activeTime,recoveryTime,hitBoxPoint1X,hitBoxPoint1Y,hitBoxPoint2X,HitBoxPoint2Y,description
+﻿id,owner,name,nameNoSpace,nameInEngine,isKinetic,isMelee,isRanged,isElemental,launchForceX,launchForceY,statusModifier,baseDamage,maxDamage,attackBuffer,startupTime,activeTime,recoveryTime,hitBoxPoint1X,hitBoxPoint1Y,hitBoxPoint2X,hitBoxPoint2Y,description
 int,string,string,string,string,bool,bool,bool,bool,float,float,string,int,int,float,float,float,float,float,float,float,float,string
 Standard,Unique,Standard,Unique,Unique,Unique,Unique,Unique,Unique,Unique,Unique,Unique,Unique,Unique,Unique,Unique,Unique,Unique,Unique,Unique,Unique,Unique,Standard
 Property,Field,Property,Field,Field,Field,Field,Field,Field,Field,Field,Field,Field,Field,Field,Field,Field,Field,Field,Field,Field,Field,Field
 System.Int32,System.String,System.String,System.String,System.String,System.Bool,System.Bool,System.Bool,System.Bool,System.Float,System.Float,System.String,System.Int,System.Int,System.Float,System.Float,System.Float,System.Float,System.Float,System.Float,System.Float,System.Float,System.String
-0,Melee,Basic Attack 1,BasicAttack1,PlayerBasicAttack1,TRUE,TRUE,FALSE,FALSE,0,0,,10,10,0,0,0,0,0.6,0.237,-0.108,-0.259,The first step of a combo
-1,Melee,Basic Attack 2,BasicAttack2,PlayerBasicAttack2,TRUE,TRUE,FALSE,FALSE,0,0,,10,10,0,0,0,0,0.6,0.237,-0.108,-0.259,The second step of a combo
-2,Melee,Basic Attack 3,BasicAttack3,PlayerBasicAttack3,TRUE,TRUE,FALSE,FALSE,0,0,,10,10,0,0,0,0,0.8,0.284,-0.108,-0.259,The third step of a combo
-3,Melee,Neutral Air,NeutralAir,PlayerNeutralAir,TRUE,TRUE,FALSE,FALSE,0,0,,10,10,0,0,0,0,0.6,0.237,-0.108,-0.6,Attack in the air
+0,Melee,Basic Attack 1,BasicAttack1,PlayerBasicAttack1,TRUE,TRUE,FALSE,FALSE,0,0,,10,10,0,0,0,0,0.762,0.237,-0.108,-0.259,The first step of a combo
+1,Melee,Basic Attack 2,BasicAttack2,PlayerBasicAttack2,TRUE,TRUE,FALSE,FALSE,0,0,,10,10,0,0,0,0,0.762,0.237,-0.108,-0.259,The second step of a combo
+2,Melee,Basic Attack 3,BasicAttack3,PlayerBasicAttack3,TRUE,TRUE,FALSE,FALSE,0,0,,10,10,0,0,0,0,1.01,0.284,-0.108,-0.259,The third step of a combo
+3,Melee,Neutral Air,NeutralAir,PlayerNeutralAir,TRUE,TRUE,FALSE,FALSE,0,0,,10,10,0,0,0,0,0.762,0.237,-0.108,-0.6,Attack in the air
 4,Melee,Neutral Crouch Attack,NeutralCrouchAttack,PlayerNeutralCrouchAttack,TRUE,TRUE,FALSE,FALSE,0,0,,10,10,0,0,0,0,0.451,0.005,-0.108,-0.4,Attack while crouching
-5,Melee,Side Knee,SideKnee,PlayerSideKnee,TRUE,TRUE,FALSE,FALSE,0,0,,10,10,0,0,0,0,0.6,0.237,-0.108,-0.6,Running knee attack
+5,Melee,Side Knee,SideKnee,PlayerSideKnee,TRUE,TRUE,FALSE,FALSE,0,0,,10,10,0,0,0,0,0.762,0.237,-0.108,-0.6,Running knee attack
 6,Melee,Charge Punch,ChargePunch,PlayerChargePunch,TRUE,TRUE,FALSE,FALSE,0,0,,10,20,0,0,0,0,0,0,0,0,Charge up and attack
-7,Melee,Ground Slam,GroundSlam,PlayerGroundSlam,TRUE,TRUE,FALSE,FALSE,0,0,,15,15,0,0,0,0,1.29,-0.615,-1.29,-0.974,Slam down while in the air
+7,Melee,Ground Slam,GroundSlam,PlayerGroundSlam,TRUE,TRUE,FALSE,FALSE,0,0,,15,15,0,0,0,0,1.29,-0.314,-1.29,-0.974,Slam down while in the air

@@ -17,9 +17,6 @@ public class ObjectAnimator : MonoBehaviour
     protected bool priorityAnimationFlag; // used by child classes as a flag to enable priority animation playing e.g. arms and player shooting
 
     // used for overriding animations
-    public RuntimeAnimatorController runtimeAnimator;
-    public AnimatorOverrideController animatorOverrideController;
-    public AnimationClipOverrides clipOverrides;
     public string specificFilePathToAnimations;
 
     // information about animations
@@ -33,21 +30,6 @@ public class ObjectAnimator : MonoBehaviour
     private string _currentAnimationName; public string CurrentAnimationName { get {return _currentAnimationName; } set { _currentAnimationName = value; } }
     [SerializeField] protected string previousAnimationName;
     [SerializeField] protected bool shouldNewAnimationPlay;
-
-    [Serializable]
-    public class AnimationProperties
-    {
-        [SerializeField] public string animationName; // the animation state name, not the animation clip name
-        [SerializeField] public int priorityLevel; // an animation with higher priority will not be played if a higher priority animation is playing
-        [SerializeField] public int animationHash; // hashes are needed because Unity animator stores animation states as hashes, so these need to be converted from the strings that are their names
-
-        public AnimationProperties(string animationName, int priorityLevel)
-        {
-            this.animationName = animationName;
-            this.priorityLevel = priorityLevel;
-            this.animationHash = Animator.StringToHash(animationName);
-        }
-    }
 
     public SimpleSerializableDictionary<string, AnimationProperties> animationStates = new SimpleSerializableDictionary<string, AnimationProperties>(); // animation state names
     public SimpleSerializableDictionary<int, AnimationProperties> animationStatesWithHashAsKey = new SimpleSerializableDictionary<int, AnimationProperties>(); 
@@ -66,10 +48,10 @@ public class ObjectAnimator : MonoBehaviour
         BuildAnimationStateDictionary();
     }
 
-    // used to build a dictionary that lets you reference animation states, note: Unity does not allow you to directly reference an animation by name you need to use a hash
-    virtual protected void BuildAnimationStateDictionary()
-    {
-    }
+    /// <summary>
+    /// Used to build a dictionary that lets you reference animation states, note: Unity does not allow you to directly reference an animation by name you need to use a hash
+    /// </summary>
+    virtual protected void BuildAnimationStateDictionary() { }
 
 
     virtual public void Play(string animationName)
@@ -90,6 +72,12 @@ public class ObjectAnimator : MonoBehaviour
         }
     }
 
+    /// <summary>
+    ///  Used to continuously set animation state
+    /// </summary>
+    /// <param name="targetAnimator"></param>
+    /// <param name="targetAnimState"></param>
+    /// <returns></returns>
     public IEnumerator SetAnimState(Animator targetAnimator, string targetAnimState)
     {
         float timeOut = 1f;
@@ -128,7 +116,7 @@ public class ObjectAnimator : MonoBehaviour
     {
         GetCurrentAnimationInfo();
 
-        if (animationStates[newAnimation].priorityLevel > currentAnimationState.priorityLevel || currentAnimation.normalizedTime >= 0.99f) { shouldNewAnimationPlay = true; return newAnimation; } // if so, then it can play
+        if (animationStates[newAnimation].priorityLevel > currentAnimationState.priorityLevel || currentAnimation.normalizedTime >= 0.9f) { shouldNewAnimationPlay = true; return newAnimation; } // if so, then it can play
         else { shouldNewAnimationPlay = false; return currentAnimationState.animationName; }
     }
 
@@ -156,22 +144,4 @@ public class ObjectAnimator : MonoBehaviour
         }
         else { Debug.LogError("No animator override found at " + animatorOverridePath); } // The prefab was not found
     }
-
-    // used for any animator overrides done by child classes
-    public class AnimationClipOverrides : List<KeyValuePair<AnimationClip, AnimationClip>>
-    {
-        public AnimationClipOverrides(int capacity) : base(capacity) { }
-
-        public AnimationClip this[string name]
-        {
-            get { return this.Find(x => x.Key.name.Equals(name)).Value; }
-            set
-            {
-                int index = this.FindIndex(x => x.Key.name.Equals(name));
-                if (index != -1)
-                    this[index] = new KeyValuePair<AnimationClip, AnimationClip>(this[index].Key, value);
-            }
-        }
-    }
-
 }

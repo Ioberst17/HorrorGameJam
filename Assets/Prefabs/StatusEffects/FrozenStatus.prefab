@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 7428671743248304169}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.075, y: 0.075, z: 1}
+  m_LocalScale: {x: 3, y: 4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -74,9 +74,9 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 3
   m_Sprite: {fileID: -219205102, guid: 4dc7aac5a44801246a00871de3864940, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.3254902}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -96,7 +96,7 @@ Animator:
   m_GameObject: {fileID: 7428671743248304169}
   m_Enabled: 0
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: a945b0fd63260054fb6c2104a80f1de6, type: 2}
+  m_Controller: {fileID: 9100000, guid: 693ac0f7a6ff39344896597facd750af, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -120,15 +120,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 0}
   animator: {fileID: 0}
-  totalTimePassed: 0
-  intervalToApply: 1
-  counterToApplyAffect: 0
-  applyStatusEffect: 0
-  vfxDelay: 0
-  vfxDelayTimer: 0
-  vfxTrigger: 0
-  effectDuration: 0
-  damageToPass: 0
-  affectsMovement: 0
-  nameOfSFXToPlay: 
-  loopSFX: 0

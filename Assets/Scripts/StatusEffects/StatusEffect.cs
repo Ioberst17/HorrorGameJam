@@ -36,6 +36,7 @@ public class StatusEffect : MonoBehaviour
     protected bool loopSFX;
     // animator
     protected bool useAnimator;
+    protected bool oneTimeAnimationUseTracker;
     protected string animationStartState;
     protected string animationEndState;
 
@@ -77,7 +78,7 @@ public class StatusEffect : MonoBehaviour
         }
     }
 
-    public virtual void MovementHandler(bool state)
+    protected virtual void MovementHandler(bool state)
     {
         if (affectsMovement)
         {
@@ -86,7 +87,7 @@ public class StatusEffect : MonoBehaviour
         }
     }
 
-    public virtual void DamageHandler()
+    protected virtual void DamageHandler()
     {
         if (totalTimePassed - counterToApplyAffect >= intervalToApply)
         {
@@ -95,13 +96,13 @@ public class StatusEffect : MonoBehaviour
         }
     }
 
-    public virtual void TakeDamage(int damage)
+    protected virtual void TakeDamage(int damage)
     {
         if (GetComponentInParent<EnemyController>() != null) { GetComponentInParent<EnemyHealth>().TakeDamage(damage); }
         else if (GetComponentInParent<PlayerController>() != null) { GetComponentInParent<PlayerHealth>().TakeDamage(damage); }
     }
 
-    public virtual void SFXHandler(bool state)
+    protected virtual void SFXHandler(bool state)
     {
         if(nameOfSFXToPlay != "")
         {
@@ -114,31 +115,40 @@ public class StatusEffect : MonoBehaviour
         }
     }
 
-    public virtual void VFXHandler(bool state)
+    protected virtual void VFXHandler(bool state)
     {
-        if (state != true) // basically turn off
+        if (state != true) { AnimationHandler(state); }
+        ParticleSystemHandler(state);
+        spriteRenderer.enabled = state;
+    }
+
+    protected void ParticleSystemHandler(bool state)
+    {
+        if(state != true)
         {
-            if (particles != null) 
+            if (particles != null)
             {
-                foreach(ParticleSystem ps in particles) { ps.Stop(); }
+                foreach (ParticleSystem ps in particles) { ps.Stop(); }
                 vfxDelayTimer = 0;
                 vfxTrigger = false;
-            } 
-            if (useAnimator)
-            {
-
             }
         }
-        else // start up VFX
+        else
         {
             vfxDelayTimer = Time.deltaTime;
             if (particles != null && (vfxDelayTimer > vfxDelay || vfxTrigger == false))
-            { 
-                foreach (ParticleSystem ps in particles)  { ps.Play();  }
+            {
+                foreach (ParticleSystem ps in particles) { ps.Play(); }
                 vfxTrigger = true;
-            } 
+            }
         }
-        spriteRenderer.enabled = state;
+
+    }
+
+    protected virtual void AnimationHandler(bool state)
+    {
+        if (state == true && !oneTimeAnimationUseTracker) { animator.Play(animationStartState); oneTimeAnimationUseTracker = true; }
+        else if (state == false) { animator.Play(animationEndState); oneTimeAnimationUseTracker = false; }
     }
 
     public virtual void Reset()

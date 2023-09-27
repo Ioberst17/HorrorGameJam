@@ -230,6 +230,10 @@ MonoBehaviour:
   animator: {fileID: 0}
   usesDestroyOnAnimationEnd: 1
   destroyAnimation: Destroy
+  usesEnemyHitVFX: 1
+  pathToEnemyHitVFX: VFX/IceEffectImpact
+  usesAdditionalEndVFX: 0
+  pathToAdditionalEndVFX: 
 --- !u!61 &524750365834156921
 BoxCollider2D:
   m_ObjectHideFlags: 0

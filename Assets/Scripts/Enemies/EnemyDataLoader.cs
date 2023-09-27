@@ -35,15 +35,16 @@ public class EnemyDataLoader : MonoBehaviour
 
     void GetBaseEnemyData()
     {
-        if (GetComponentInChildren<HellHoundBehavior>()) { enemyID = 0; } // add enemyID as in enemy database + behavior component
-        else if (GetComponentInChildren<BatBehavior>()) { enemyID = 1; }
-        else if (GetComponentInChildren<ParalysisDemonBehavior>()) { enemyID = 2; }
-        else if (GetComponentInChildren<SpiderBehavior>()) { enemyID = 3; }
-        else if (GetComponentInChildren<BloodGolemBehavior>()) { enemyID = 4; }
-        else if (GetComponentInChildren<GargoyleBehavior>()) { enemyID = 5; }
+        if (GetComponentInChildren<HellHoundBehaviour>()) { enemyID = 0; } // add enemyID as in enemy database + behavior component
+        else if (GetComponentInChildren<BatBehaviour>()) { enemyID = 1; }
+        else if (GetComponentInChildren<ParalysisDemonBehaviour>()) { enemyID = 2; }
+        else if (GetComponentInChildren<SpiderBehaviour>()) { enemyID = 3; }
+        else if (GetComponentInChildren<BloodGolemBehaviour>()) { enemyID = 4; }
+        else if (GetComponentInChildren<GargoyleBehaviour>()) { enemyID = 5; }
         else if (GetComponentInChildren<DeathBringerBehaviour>()) { enemyID = 7; }
         else if (GetComponentInChildren<FireWyrmBehaviour>()) { enemyID = 8; }
         else if (GetComponentInChildren<IceWyrmBehaviour>()) { enemyID = 9; }
+        else if (GetComponentInChildren<ArcaneArcherBehaviour>()) { enemyID = 10; }
         else { enemyID = -1; }
 
         if (enemyID != -1) { data = enemyDatabase.data.entries[enemyID]; }

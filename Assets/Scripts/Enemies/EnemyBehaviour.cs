@@ -23,10 +23,15 @@ public class EnemyBehaviour : MonoBehaviour
     protected float StopPursuitAtThisDistance { get; set; } // used for enemies that need to keep distance from player e.g. those that shoot
 
     // used during passover function, stores string of the animation state to call
+    
+    protected string IdleAnimation { get; set; }
     protected string PatrolAnimation { get; set; }
     protected string ChaseAnimation { get; set; }
     protected string ProjectileAnimation { get; set; }
     protected string ChargeAttackAnimation { get; set; }
+
+    // for projectiles
+    public int projectileReferenceID = -1;
 
 
 
@@ -74,7 +79,7 @@ public class EnemyBehaviour : MonoBehaviour
     {
         UpdatePatrolID();
 
-        if (!enemyController.playerInZone) { Patrol(); }
+        if (!enemyController.PlayerInZone) { Patrol(); }
         else { Chase(); }
     }
     /// <summary>
@@ -125,7 +130,10 @@ public class EnemyBehaviour : MonoBehaviour
 
             enemyController.SetVelocity(targetXVelocity, targetYVelocity);
         }
-        else { /* do nothing */ }
+        else 
+        {
+            if (IdleAnimation != "") { enemyController.animator.Play(IdleAnimation); }
+        }
     }
 
     /// <summary>
@@ -136,7 +144,20 @@ public class EnemyBehaviour : MonoBehaviour
     /// <summary>
     /// Overriden in child classes for specific attacks
     /// </summary>
-    virtual public void ProjectileTrigger() { }
+    virtual public void ProjectileTrigger() 
+    {
+        // ensure projectileReference ID is only set once
+        if (projectileReferenceID == -1)
+        {
+            // wyrms only use 1 projectile, it should be the first reference in their projectiles to use section
+            projectileReferenceID = projectileManager.projectilesToUse[0].GetComponent<EnemyProjectile>().referenceID;
+        }
+
+        // if not found, warn
+        if (projectileReferenceID == -1) { Debug.LogWarning(gameObject.name + " does not have a projectile listed in it's projectile manager"); }
+        // else, shoot
+        else { projectileManager.Shoot(projectileReferenceID, ProjectileAnimation); }
+}
 
     void IsShooting(int instanceID) { if (gameObject.GetInstanceID() == instanceID) {enemyController.IsShooting = true; } }
     void IsNotShooting(int instanceID) { if (gameObject.GetInstanceID() == instanceID) { enemyController.IsShooting = false; } }
@@ -172,7 +193,7 @@ public class EnemyBehaviour : MonoBehaviour
     /// </summary>
     virtual protected void FlipToFacePlayer()
     {
-        if (enemyController.playerInZone == true)
+        if (enemyController.PlayerInZone == true)
         {
             // if player is to the left of enemy
             if (transform.position.x > enemyController.playerLocation.position.x)
