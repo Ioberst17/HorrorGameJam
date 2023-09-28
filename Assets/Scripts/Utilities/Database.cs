@@ -14,15 +14,14 @@ public class Database<T> : MonoBehaviour where T : IDatabaseItem
     [Header("Generic Information On the Database")]
     public int numOfColumns;
     public int numOfDataRows;
-    private T returnedItem;
     private bool foundItemToReturn;
 
     // for CSV Header Rows
-    [SerializeField] private List<string> columnNames = new List<string>();
-    [SerializeField] private List<string> columnDataTypes = new List<string>();
-    private List<string> columnItemClass = new List<string>();
-    private List<string> columnClassFieldOrProperty = new List<string>();
-    private List<string> columnDataTypesLong = new List<string>();
+    [SerializeField] private List<string> columnNames = new();
+    [SerializeField] private List<string> columnDataTypes = new();
+    private List<string> columnItemClass = new();
+    private List<string> columnClassFieldOrProperty = new();
+    private List<string> columnDataTypesLong = new();
 
     // Internal variables for building
     private string[] lines, lineData, rawData;
@@ -32,13 +31,13 @@ public class Database<T> : MonoBehaviour where T : IDatabaseItem
     public int length;
     PropertyInfo[] propertyInfo;
     FieldInfo[] fieldInfo;
-    [SerializeField] public string[] dataView;
+    public string[] dataView;
 
     [Header("Single Database Variables")]
     public TextAsset textAssetData; // the CSV to read from, must be assigned in Inspector
     [Serializable]
     public class DB  { public T[] entries; }
-    public DB data = new DB();
+    public DB data = new();
 
     [Header("Array of Databases Variables")]
     [SerializeField] public TextAsset[] arrayOfTextAssetData;
@@ -126,9 +125,9 @@ public class Database<T> : MonoBehaviour where T : IDatabaseItem
 
             // set up data to be edited, give it the right number of rows, and the number of entries should = the default number of the type
             length = data.Length;
-            this.dataArray[x] = new DB();
-            this.dataArray[x].entries = new T[numOfDataRows];
-            this.dataArray[x].entries[0] = (T)Activator.CreateInstance(typeof(T));
+            dataArray[x] = new();
+            dataArray[x].entries = new T[numOfDataRows];
+            dataArray[x].entries[0] = (T)Activator.CreateInstance(typeof(T));
 
             // update the class reference to understand number of fields and properties when parsing
             T currentInstance = (T)Activator.CreateInstance(typeof(T));
@@ -177,7 +176,7 @@ public class Database<T> : MonoBehaviour where T : IDatabaseItem
         try
         {
             // Define a dictionary to map column data types to parsing and setting operations
-            Dictionary<string, Action<string>> typeActions = new Dictionary<string, Action<string>>()
+            Dictionary<string, Action<string>> typeActions = new()
             {
                 { "int", (value) => { int intVal = int.Parse(value); SetValue(entryToChange, dataEntry, intVal); } },
                 { "string", (value) => { SetValue(entryToChange, dataEntry, value); } },
@@ -260,7 +259,7 @@ public class Database<T> : MonoBehaviour where T : IDatabaseItem
         foundItemToReturn = false;
         for (int i = 0; i < data.entries.Length; i++) { if (id == data.entries[i].id) { foundItemToReturn = true; return data.entries[i]; } }
         if(foundItemToReturn == false) { Debug.LogFormat("Could not find item with ID: {0}; Check for presence or mispellings", id); }
-        return default(T);
+        return default;
     }
 
     public T ReturnItemFromName(string name)
@@ -268,7 +267,7 @@ public class Database<T> : MonoBehaviour where T : IDatabaseItem
         foundItemToReturn = false;
         for (int i = 0; i < data.entries.Length; i++) { if (name == data.entries[i].name) { foundItemToReturn = true; return data.entries[i]; } }
         if (foundItemToReturn == false) { Debug.LogFormat("Could not find item with name: {0}; Check for presence or mispellings", name); }
-        return default(T);
+        return default;
     }
 
 }
