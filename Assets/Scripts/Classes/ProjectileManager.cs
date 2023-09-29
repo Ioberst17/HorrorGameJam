@@ -244,11 +244,16 @@ public class ProjectileManager : MonoBehaviour
     /// <returns></returns>
     virtual protected bool HasNotExceededFireRate(int referenceID) 
     {
-        int indexToUse = 0;
+        if (projectilesToUse.Count > 0)
+        {
+            int indexToUse = 0;
 
-        indexToUse = projectileDictionary.GetIndexByKey(referenceID);
+            indexToUse = projectileDictionary.GetIndexByKey(referenceID);
 
-        return projectileDictionary[referenceID].fireRateFrames < projectileFramesSinceLastShot[referenceID];
+            return projectileDictionary[referenceID].fireRateFrames < projectileFramesSinceLastShot[referenceID];
+        }
+
+        return false;
     }
 
     protected GameObject GetCachedProjectileObject()

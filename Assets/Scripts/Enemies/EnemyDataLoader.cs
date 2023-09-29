@@ -45,6 +45,8 @@ public class EnemyDataLoader : MonoBehaviour
         else if (GetComponentInChildren<FireWyrmBehaviour>()) { enemyID = 8; }
         else if (GetComponentInChildren<IceWyrmBehaviour>()) { enemyID = 9; }
         else if (GetComponentInChildren<ArcaneArcherBehaviour>()) { enemyID = 10; }
+        else if (GetComponentInChildren<DarkMageBehaviour>()) { enemyID = 11; }
+        else if (GetComponentInChildren<FlameMageBehaviour>()) { enemyID = 12; }
         else { enemyID = -1; }
 
         if (enemyID != -1) { data = enemyDatabase.data.entries[enemyID]; }

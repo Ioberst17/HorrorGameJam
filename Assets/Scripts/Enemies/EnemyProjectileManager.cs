@@ -38,7 +38,13 @@ public class EnemyProjectileManager : ProjectileManager
         projectileSpawnPoint = transform.Find("ProjectileSpawnPoint");
         BuildProjectileInfoDictionaries();
 
-        if (projectilePath == "") { projectilePath = projectiles[0].ownerNoSpace; }
+        // if has projectiles and no path
+        if (projectiles.Count > 0 && projectilePath == "") 
+        { 
+            // load the first projectile as a fail safe, and fire a debug
+            projectilePath = projectiles[0].ownerNoSpace;
+            Debug.Log("Should add a projectile path for projectile");
+        }
 
         base.Start();
     }
@@ -62,8 +68,11 @@ public class EnemyProjectileManager : ProjectileManager
     /// </summary>
     protected override void LoadProjectileObjects()
     {
-        // load ammo prefabs to a list
-        projectilesToUse = Resources.LoadAll<GameObject>("EnemyProjectiles/" + projectilePath).ToList();
+        // load ammo prefabs to a list, if there are more than 0
+        if (enemyData.projectiles.Count > 0)
+        {
+            projectilesToUse = Resources.LoadAll<GameObject>("EnemyProjectiles/" + projectilePath).ToList();
+        }
 
         // go through the list and sort them in order by ammo IDs
         // projectilesToUse.Sort((randomAmmo, ammoToCompareTo) => randomAmmo.GetComponent<Ammo>().GetAmmoID().CompareTo(ammoToCompareTo.GetComponent<Ammo>().GetAmmoID()));
@@ -120,6 +129,10 @@ public class EnemyProjectileManager : ProjectileManager
         }
     }
 
+    /// <summary>
+    /// Used for spells that are instantiated in a specific location e.g. Death Bringer's thunder
+    /// </summary>
+    /// <param name="instanceID"></param>
     override protected void UseTargetedSpell(int instanceID)
     {
         if (transform.parent.gameObject.GetInstanceID() == instanceID)

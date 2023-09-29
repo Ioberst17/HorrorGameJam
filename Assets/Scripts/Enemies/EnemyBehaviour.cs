@@ -147,14 +147,14 @@ public class EnemyBehaviour : MonoBehaviour
     virtual public void ProjectileTrigger() 
     {
         // ensure projectileReference ID is only set once
-        if (projectileReferenceID == -1)
+        if (projectileReferenceID == -1 && enemyData.projectiles.Count > 0)
         {
             // wyrms only use 1 projectile, it should be the first reference in their projectiles to use section
             projectileReferenceID = projectileManager.projectilesToUse[0].GetComponent<EnemyProjectile>().referenceID;
         }
 
         // if not found, warn
-        if (projectileReferenceID == -1) { Debug.LogWarning(gameObject.name + " does not have a projectile listed in it's projectile manager"); }
+        if (projectileReferenceID == -1 && enemyData.projectiles.Count > 0) { Debug.LogWarning(gameObject.name + " does not have a projectile listed in it's projectile manager"); }
         // else, shoot
         else { projectileManager.Shoot(projectileReferenceID, ProjectileAnimation); }
 }

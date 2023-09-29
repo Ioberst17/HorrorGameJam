@@ -48,18 +48,27 @@ public class EnemyAttackManager : AttackManager
         base.BuildAttackInfoDictionaries();
     }
 
+    /// <summary>
+    /// Handles attack based on an animation; typically the entities Attack state is toggled on the animation state that is being called 
+    /// with scripts
+    /// </summary>
+    /// <param name="attackDirection"></param>
+    /// <param name="animationToPlay"></param>
     override public void StartAttack(int attackDirection, string animationToPlay)
     {
-        LoadHitBox(animationToPlay);
-        CacheMostRecentAttack(animationToPlay);
+        if(AttackLagTimer <= 0)
+        {
+            LoadHitBox(animationToPlay);
+            CacheMostRecentAttack(animationToPlay);
 
-        // load animation
-        animator.Play(animationToPlay);
+            // load animation
+            animator.Play(animationToPlay);
 
-        // to-do: load sound from cached attack
-        // e.g.FindObjectOfType<AudioManager>().PlaySFX(MostRecentAttack.soundToPlay);
+            // to-do: load sound from cached attack
+            // e.g.FindObjectOfType<AudioManager>().PlaySFX(MostRecentAttack.soundToPlay);
 
-        AttackLagTimer = MostRecentAttack.attackBuffer;
+            AttackLagTimer = MostRecentAttack.attackBuffer;
+        }
     }
 
     override public void StartChargeAttack(int attackDirection, string animationToPlay, string successAnimationToPlay, IEnumerator AdditionalEndConditions = null)
@@ -95,6 +104,7 @@ public class EnemyAttackManager : AttackManager
             enemyController.IsChargingAttack = false;
             EventSystem.current.EnemyEndActiveMeleeTrigger(gameObject.GetInstanceID());
         }
+        // else, run attack
         else
         {
             enemyController.IsChargingAttack = false;
